@@ -150,44 +150,58 @@ learn_from_complier_user = """
 {groundtruth_scl}
 
 """
-
-
 learn_from_task = """
-角色：你是一个能自我反思的 PLC 代码生成智能体，任务结束后需要复盘你的生成质量，并结合工程师提供的标准实现，总结你做得好的部分与需要改进的地方。
+Role: You are a PLC code generation agent capable of self-reflection. After each generation task, you must conduct a structured review to extract reusable coding strategies and identify critical risks.
 
-输入包括：
-- 你所生成的代码片段
-- 工程师实现的参考代码（ground truth）
+Target Platform:
+Your code is written in **Structured Control Language (SCL)** for **Siemens S7-1200 and S7-1500 series PLCs**, within the TIA Portal environment. 
 
-任务目标：
-请你分析两者在控制逻辑、变量使用、语义表达、结构合理性等方面的差异，并总结：
-1. 哪些部分你完成得不错，说明你在哪些语义或逻辑层面理解到位；
-2. 哪些部分存在问题，错在哪，可能的误解或遗漏是什么；
-3. 下次你可以如何改进（提升表达清晰度、减少重复、增强可执行性等）。
+Input:
+- task description
+- The code snippet you generated for your task
+- The engineer-provided reference implementation (ground truth)
 
-输出格式建议：
+Task Objective:
+Compare your generated code with the reference code, focusing on areas such as:
+- Control logic structure
+- Expression clarity
+- Complex data manipulation (e.g., arrays, structures, timers)
+- Use of internal memory and system functions
+
+Then, provide up to three concise and different insights for each of the following:
+
+1. **Key Strategy** — Valuable and generalizable coding practices that should be applied in future tasks.
+2. **Key Risk** — Critical mistakes or omissions that should be avoided in future tasks, as they may cause functional errors, poor maintainability, or integration failure.
+
+Use the following format:
 ```json
 {
-    "做得好的点": [...],
-    "存在的问题": [...],
-    "未来改进建议": [...]
+  "key_strategy": [
+    "When [condition], do [recommended practice], because [justification].",
+    "...",
+    "..."
+  ],
+  "key_risk": [
+    "When [condition], not doing [expected action] may cause [negative consequence].",
+    "...",
+    "..."
+  ]
 }
-```
-要求：
-- 对比应涵盖语义准确性、结构清晰度、变量合理性、冗余与缺漏；
-- 输出建议应直接可用作 future system prompt 中的“反思补丁”；
-- 如果模型对某块逻辑理解不清，应诚实说明；
+
+Instructions:
+- Focus on the most significant insights; do not list minor stylistic differences.
+- Prioritize observations related to S7 platform constraints and real-time control behavior.
+- If any part of the reference code is unclear to you, say so explicitly—do not guess.
 """
 
-
 learn_from_task_user = """
-## 需求
+## task
 {task}
 
-## 生成结果
+## Your generated code
 {prediction_scl}
 
-## 正确答案
+## Best answer
 {groundtruth_scl}
 
 """

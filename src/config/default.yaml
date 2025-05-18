@@ -49,7 +49,7 @@ instruction:
 workflow:
   retrieve_disabled: false
   modeling_disabled: false
-  debugger_disabled: false
+  debugger_disabled: true
   api_rec_disabled : false
   auto_learn_disabled : false
   is_coding_fewshot: true
