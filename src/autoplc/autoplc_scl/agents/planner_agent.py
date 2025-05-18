@@ -6,6 +6,10 @@ from typing import Tuple
 from autoplc_scl.tools import PromptResultUtil
 from autoplc_scl.tools import APIDataLoader
 from autoplc_scl.agents.clients import ClientManager, OpenAIClient
+import logging
+
+logger = logging.getLogger("autoplc_scl")
+
 
 class Modeler():
     """
@@ -43,10 +47,10 @@ class Modeler():
         - algorithm_for_this_task: 生成的算法流程描述字符串。
         """
 
-        print("开始执行planner")
+        logger.info("开始执行planner")
         # 记录开始时间，用于计算执行时长
         start_time = time.time()
-        print("\n------------------------------------------------\n")
+        logger.info("\n------------------------------------------------\n")
 
         # 构造消息列表，包括系统提示和用户要求
         messages = [ 
@@ -78,7 +82,7 @@ class Modeler():
         algo = cls.extract_content(response)
 
         # 返回规划内容和令牌使用数量
-        print(f"End - generate plan - Execution Time: {(time.time() - start_time):.6f} seconds")
+        logger.info(f"End - generate plan - Execution Time: {(time.time() - start_time):.6f} seconds")
 
         return algo
 

@@ -6,7 +6,8 @@ from typing import Tuple, List
 from common import Config
 from autoplc_scl.tools import APIDataLoader, TIAPortalCompiler
 from autoplc_scl.agents.clients import ClientManager, OpenAIClient
-
+import logging
+logger = logging.getLogger("autoplc_scl")
 
 class AutoDebugger():
     """
@@ -59,8 +60,8 @@ class AutoDebugger():
         syntax_output_file = os.path.join(cls.base_logs_folder, f"{task['name']}/syntax.log")
         verify_information_log = os.path.join(cls.base_logs_folder, f"{task['name']}/verify_info.jsonl")
 
-        print("[LOG] syntax_output_file is > ",syntax_output_file)
-        print("[LOG] verify_information_log is > ",verify_information_log)
+        logger.info("syntax_output_file is > ",syntax_output_file)
+        logger.info("verify_information_log is > ",verify_information_log)
 
         # 初始化验证计数器和编译器实例
         verify_count = 0
@@ -94,23 +95,23 @@ class AutoDebugger():
             no_error = check_result.success
             
             if no_error:
-                print(task['name'], 'SUCCESS!')
+                logger.info(task['name'], 'SUCCESS!')
                 break
             else:
                 error_list = []
                 # 首选IsDef为true的错误
                 for error in check_result.errors:
                     if error.error_type == "Data Section Error":
-                        print('[LOG] Data Section Error >>> ',str(error))
+                        logger.info('Data Section Error >>> ',str(error))
                         error_list.append(error.to_dict())
                 # 如果没有IsDef为true的错误，则选择IsDef为false的错误
                 if not error_list:
                     for error in check_result.errors:
                         if not error.error_type == "Program Section Error":
-                            print('[LOG] Program Section Error >>>> ',str(error))
+                            logger.info('Program Section Error >>>> ',str(error))
                             error_list.append(error.to_dict())
                 error_log = '\n'.join([str(err) for err in error_list])
-                print('[LOG] ',task['name'], 'Start Verification!')
+                logger.info(task['name'], 'Start Verification!')
                 debugging_process_data["compiler"] = error_list
                 with open(syntax_output_file, "a+", encoding="utf-8") as fp:
                     fp.write(error_log)
@@ -144,11 +145,11 @@ class AutoDebugger():
                 json.dump(debugging_process_data, fp, ensure_ascii=False)
                 fp.write('\n')
                     
-            print(task['name'], f"End-Verify_and_improver ({verify_count}) -Execution time: {(time.time() - start_time):.6f} Seconds")
+            logger.info(task['name'], f"End-Verify_and_improver ({verify_count}) -Execution time: {(time.time() - start_time):.6f} Seconds")
         
         # 将最终的代码结果写入文件 为方便读取，直接覆盖前面写的内容
         code_output_file = os.path.join(cls.base_logs_folder, f"{task['name']}/{task['name']}_{verify_count}.scl")
-        print(code_output_file)
+        logger.info("output file is", code_output_file)
         with open(code_output_file, "w", encoding="utf-8") as fp:
             fp.write(scl_code)
 

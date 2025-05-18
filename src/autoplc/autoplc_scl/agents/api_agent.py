@@ -12,6 +12,8 @@ from flask import config
 from common import Config
 from autoplc_scl.agents.clients import BM25RetrievalInstruction, ClientManager, OpenAIClient, ZhipuAIQAClient
 
+import logging
+logger = logging.getLogger("autoplc_scl")
 
 @dataclass
 class Parameter:
@@ -154,8 +156,8 @@ class ApiAgent():
         library_instructions = list(set(library_instructions))
     
         # 打印推荐的基本指令和库指令
-        print("[DEBUG] 推荐的基本指令：", basic_instructions)
-        print("[DEBUG] 推荐的库指令：", library_instructions)
+        logger.info(f"推荐的基本指令：{basic_instructions}")
+        logger.info(f"推荐的库指令：{library_instructions}")
 
         # 返回推荐的API指令实例
         return basic_instructions, library_instructions

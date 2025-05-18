@@ -2,7 +2,8 @@ from typing import Tuple, List
 from autoplc_scl.tools.prompt_res_util import PromptResultUtil
 from autoplc_scl.tools import APIDataLoader
 from autoplc_scl.agents.clients import ClientManager, OpenAIClient
-
+import logging
+logger = logging.getLogger("autoplc_scl")
 
 class LogicComposer():
     """
@@ -102,7 +103,7 @@ class LogicComposer():
         # 添加用户提示信息到消息列表中
         code_messages.append({"role": "user", "content": instance_prompt})
 
-        print("start generation")   
+        logger.info("start generation")   
         
         response = openai_client.call(code_messages,task_name=task["name"],role_name="editor")
 

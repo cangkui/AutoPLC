@@ -4,6 +4,9 @@ import json
 from autoplc_scl.agents.clients import OpenAIClient
 from typing import List, Dict, Tuple, Any, Optional
 
+import logging
+logger = logging.getLogger("autoplc_scl")
+
 class LearnAgent():
     """
     分别从相似案例、算法描述中推荐
@@ -35,7 +38,7 @@ class LearnAgent():
             json_str = content[json_start:json_end].strip()
             json_data = json.loads(json_str)
         except (ValueError, json.JSONDecodeError) as e:
-            print(f"Error parsing JSON from content: {e}")
+            logger.exception(e)
             json_data = None
         return json_data
 

@@ -4,7 +4,8 @@ import os
 import json
 from typing import List
 from common import ROOTPATH
-
+import logging
+logger = logging.getLogger("autoplc_scl")
 
 class PromptResultUtil():
     RAG_DATA_DIR = ROOTPATH.joinpath("data/rag_data")
@@ -63,7 +64,7 @@ class PromptResultUtil():
     def get_json_content(cls, name: str, code_type: str) -> dict:
         json_path = f"{cls.RAG_DATA_DIR}/{code_type}/{code_type}_case_requirement/{name}.json"
         if not os.path.exists(json_path):
-            print(f"Warning: There is no case json named '{name}' in: {json_path}.")
+            logging.warning(f"Warning: There is no case json named '{name}' in: {json_path}.")
             return None
         with open(json_path, 'r', encoding='utf-8-sig') as f:
             code_json = f.read()
@@ -73,7 +74,7 @@ class PromptResultUtil():
     def get_source_code(cls, name: str, code_type: str) -> str:
         code_path = f"{cls.RAG_DATA_DIR}/{code_type}/{code_type}_case_code/{name}.{code_type}"
         if not os.path.exists(code_path):
-            print(f"Warning: There is no case code named '{name}' in: {code_path}.")
+            logger.warning(f"Warning: There is no case code named '{name}' in: {code_path}.")
             return None
         with open(code_path, 'r', encoding='utf8') as f:
             case_code = f.read()
@@ -83,7 +84,7 @@ class PromptResultUtil():
     def get_plan(cls, name: str, code_type: str) -> str:
         plan_path = f"{cls.RAG_DATA_DIR}/{code_type}/{code_type}_case_plan/{name}.plan"
         if not os.path.exists(plan_path):
-            print(f"Warning: There is no case plan named '{name}' in: {plan_path}.")
+            logger.warning(f"Warning: There is no case plan named '{name}' in: {plan_path}.")
             return None
         with open(plan_path, 'r', encoding='utf8') as f:
             case_plan = f.read()
@@ -93,7 +94,7 @@ class PromptResultUtil():
     def get_plan_diff(cls, name: str, plan_version: str) -> str:
         plan_path = f"{cls.RAG_DATA_DIR}/scl/scl_case_plan/{plan_version}/{name}.plan"
         if not os.path.exists(plan_path):
-            print(f"Warning: There is no case plan named '{name}' in: {plan_path}.")
+            logger.warning(f"Warning: There is no case plan named '{name}' in: {plan_path}.")
             return None
         with open(plan_path, 'r', encoding='utf8') as f:
             case_plan = f.read()

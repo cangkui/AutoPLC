@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 import json
 from autoplc_scl.agents.clients import ClientManager
@@ -14,6 +15,9 @@ from autoplc_scl.agents import (
     init_team_log_path
 )
 from common import Config, ROOTPATH
+import logging
+logger = logging.getLogger("autoplc_scl")
+
 
 root_path = ROOTPATH
 def generate_plans():
@@ -41,44 +45,32 @@ def baseline_in_github_case(model):
     dataset_file = os.path.join(root_path, "data", "benchmarks", "githubcase.jsonl")
     run_baseline_in_github_case(model, dataset_file)
 
-def run_autoplc_scl(
-        benchmark: str,
-        config:Config
-    ):
+def run_autoplc_scl(benchmark: str, config: Config):
     global root_path
     root_path = ROOTPATH
-
     benchmark_file_path = os.path.join(root_path, "data", "benchmarks", f"{benchmark}.jsonl")
     if not os.path.exists(benchmark_file_path):
-        print(f"Benchmark file {benchmark_file_path} not found.")
+        logger.error(f"Benchmark file {benchmark_file_path} not found.")
         return
 
-    # init
     ClientManager().set_config(config)
     APIDataLoader.init_load(code_type="scl")
     base_folder = init_team_log_path()
 
-    import shutil
     os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
     shutil.copy(config.config_path, os.path.join(base_folder, "config", "config.yaml"))
 
-    # workflow
     all_agents_start_time = time.time()
 
     with open(benchmark_file_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
         tasks = [json.loads(line) for line in lines]
-        # tasks = [json.loads(line) for line in lines]
 
     for task in tasks:
-        autoplc_scl_workflow(
-            task, 
-            base_folder,
-            config
-    )
+        autoplc_scl_workflow(task, base_folder, config)
 
     total_time = time.time() - all_agents_start_time
-    print(f"Experiment completed in {total_time:.2f} seconds.")
+    logger.info(f"Experiment completed in {total_time:.2f} seconds.")
 
 
 def autoplc_scl_workflow(
@@ -89,13 +81,13 @@ def autoplc_scl_workflow(
 
     # 检查是否存在对应的 SCL 文件
     scl_file_path = os.path.join(config.SCL_CODE_DIR, f"{task['name']}.scl")
-    print('[INFO] scl file path: ', scl_file_path)
     if os.path.exists(scl_file_path):
         groundtruth_scl = open(scl_file_path, "r", encoding="utf8").read()
-        print(f"[INFO] groundtruth scl:\n {groundtruth_scl[:10]}")
+        logger.info(f"Loaded groundtruth scl: {task['name']}")
     else:
         groundtruth_scl = None
-        print(f"[INFO] groundtruth scl not found")
+        logger.warning(f"Groundtruth scl for {task['name']} not found.")
+
 
     # 获取大模型客户端
     openai_client = ClientManager().get_openai_client()
@@ -120,7 +112,7 @@ def autoplc_scl_workflow(
 
         ################ load related algorithms and possible apis ################
         sample_names = [sample["name"] for sample in retrieved_samples]
-        print(f"[INFO] retrieved samples: {sample_names}")
+        logger.info(f"Retrieved samples: {sample_names}")
 
         related_algorithm = []
         for name in sample_names:
@@ -193,7 +185,7 @@ def autoplc_scl_workflow(
         if not config.AUTOLEARN_DISABLED:
 
             if groundtruth_scl is not None:
-                print(f"[INFO] start auto learner from groundtruth scl")
+                logger.info("Start auto learner from groundtruth scl.")
                 coding_feed_back = LearnAgent.run_learn_from_coding(
                     task=task,
                     prediction_scl=first_gen_scl, # 这里用的是第一次生成的scl代码，因为我们希望模型提高首次生成效率
@@ -210,13 +202,13 @@ def autoplc_scl_workflow(
                     with open(os.path.join(base_folder, f"{task['name']}", "verify_info.jsonl"), "r", encoding="utf-8") as f:
                         debug_history = [json.loads(line) for line in f.readlines()]
                 except Exception as e:
-                    print(f"Error decoding JSON from file: {e}")
+                    logger.error(f"Error decoding JSON from verify_info.jsonl: {e}")
                     debug_history = []
             else:
                 debug_history = []
 
             if len(debug_history) > 0 and groundtruth_scl is not None:
-                print(f"[INFO] start auto learner from debug history")
+                logger.info("Start auto learner from debug history.")
                 debug_feed_back = LearnAgent.run_learn_from_debug(
                     task = task,
                     groundtruth_scl = groundtruth_scl,
@@ -229,7 +221,7 @@ def autoplc_scl_workflow(
 
 
     except Exception as e:
-        print(f"Error occurred: {e}")
-        traceback.print_exc()
+        logger.exception(f"Error occurred while processing task {task['name']}: {e}")
+        logger.exception(e)
     
-    print(f"Task {task['name']} completed in {time.time() - start_time:.2f} seconds.")
+    logger.info(f"Task {task['name']} completed in {time.time() - start_time:.2f} seconds.")

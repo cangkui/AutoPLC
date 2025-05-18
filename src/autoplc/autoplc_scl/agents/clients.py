@@ -17,6 +17,9 @@ from openai.types.chat.chat_completion import ChatCompletion as Completion
 from dataclasses import dataclass, field, asdict
 from typing import List, Union, Dict
 
+import logging
+logger = logging.getLogger("autoplc_scl")
+
 @dataclass
 class TokenUsage:
     """
@@ -176,7 +179,7 @@ class _BaseClient:
             else:
                 content = response.choices[0]['message']['content']
         except (IndexError, KeyError, AttributeError):
-            print("无法从响应中提取内容，请检查响应结构。")
+            logger.error("无法从响应中提取内容，请检查响应结构。")
             content = None        
         return content
 
@@ -357,7 +360,7 @@ class BM25RetrievalInstruction:
         # 初始化API描述和名称
         self.instruction_corpus,self.instruction_names = self.read_ins_desc(config.INSTRUCTION_PATH)
 
-        print("[INFO] loading instruction from >>> ", config.INSTRUCTION_PATH)
+        logger.info(f"loading instruction from >>> {config.INSTRUCTION_PATH}")
 
         def remove_stopwords(token_list, stopwords):
             return [t for t in token_list if t not in stopwords]

@@ -5,8 +5,9 @@ from typing import Any, Tuple, List
 from autoplc_scl.tools.prompt_res_util import PromptResultUtil
 from common import Config
 from autoplc_scl.agents.clients import  ZhipuAIQAClient
-
+import logging
 knowledge_id = os.getenv("SCL_CASE_KNOWLEDGE")
+logger = logging.getLogger("autoplc_scl")
 @dataclass
 class RetrievedExample:
     name: str
@@ -118,8 +119,8 @@ class Retriever():
                         "code": code_scl
                     }))
         except Exception as e:
-            print("Error in retriever agent:", e)
-            traceback.print_exc()
+            logger.error("Error in retriever agent:", e)
+            logger.exception(e)
         
         return res
 
