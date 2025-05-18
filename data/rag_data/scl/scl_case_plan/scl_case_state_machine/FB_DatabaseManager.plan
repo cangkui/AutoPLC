@@ -1,0 +1,39 @@
+这是一个数据处理任务，主要涉及数据库的存储管理和状态监控。根据需求和代码，我将给出算法流程：
+
+1. 初始化阶段：
+   - 设置常量值：数据库总大小(DATABASE_SIZE=20)，状态码(STATUS_OK=16#0000, STATUS_INVALID_DATA_LENGTH=16#8001, STATUS_INSUFFICIENT_SPACE=16#8002)
+   - 初始化变量：已用空间(usedSpace=0)，剩余空间(remainingSpace=20)，错误状态(error=FALSE)，状态码(status=STATUS_OK)
+
+2. 主处理逻辑：
+   a) 当resetTrigger为TRUE时：
+      - 清空数据库所有数据(全部置0)
+      - 重置已用空间和剩余空间计数器
+      - 清除错误状态和状态码
+
+   b) 当storeTrigger为TRUE时：
+      - 从dataInput[0]获取数据长度dataLength
+      - 检查数据长度有效性：
+        * 如果dataLength≤0或>5：
+          → 设置error=TRUE和status=STATUS_INVALID_DATA_LENGTH
+        * 否则检查剩余空间：
+          → 如果剩余空间<dataLength：
+            → 设置error=TRUE和status=STATUS_INSUFFICIENT_SPACE
+          → 否则：
+            * 从dataInput[1]开始，按dataLength长度将数据存入数据库
+            * 更新已用空间和剩余空间计数器
+            * 保持error=FALSE和status=STATUS_OK
+
+3. 状态输出：
+   - 持续输出当前数据库使用情况(usedSpace和remainingSpace)
+   - 输出当前错误状态(error)和状态码(status)
+
+4. 数据库存储规则：
+   - 数据按顺序存储，不覆盖已有数据
+   - 使用statLastItemIndex跟踪最后存储位置
+   - 每次成功存储后更新存储位置指针
+
+5. 错误处理：
+   - 仅当数据长度非法或空间不足时触发错误
+   - 错误状态会保持直到reset操作执行
+
+注意：该算法始终保持数据库使用情况的实时更新，无论是否执行存储或重置操作。

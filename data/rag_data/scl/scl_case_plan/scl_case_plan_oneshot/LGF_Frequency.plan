@@ -1,0 +1,89 @@
+### 算法流程描述（基于需求分析和代码实现）
+
+#### **1. 功能概述**
+该功能块 `LGF_Frequency` 用于生成一个周期性切换 `TRUE/FALSE` 的方波信号（`clock`），其频率和占空比由输入参数 `frequency`（频率，单位Hz）和 `pulsePauseRatio`（脉冲-暂停时间比例）动态控制。输出信号特性如下：
+- **频率**：`frequency` 定义完整周期（高电平 + 低电平）的倒数。
+- **占空比**：`pulsePauseRatio` 定义高电平时间与低电平时间的比例（例如 `1.0` 表示高电平与低电平时间相等）。
+- **附加输出**：`countdown` 实时返回当前电平状态的剩余时间（Time类型）。
+
+---
+
+#### **2. 核心算法逻辑**
+##### **(1) 输入有效性检查**
+- **禁用条件**：若 `frequency ≤ 0` 或 `pulsePauseRatio ≤ 0`，直接关闭输出（`clock := FALSE`）并清零倒计时（`countdown := T#0ms`）。
+- **目的**：避免无效参数导致计算错误。
+
+##### **(2) 动态参数计算（仅在输入变化时触发）**
+- **触发条件**：检测到 `frequency` 或 `pulsePauseRatio` 的值发生变化（通过 `statFrequencyOld` 和 `statPulsePauseRatioOld` 记录旧值）。
+- **计算步骤**：
+  1. **重置计时器**：清除之前的计时状态（`RESET_TIMER`）。
+  2. **计算占空比分配**：
+     - `tempPulseRate = pulsePauseRatio / (pulsePauseRatio + 1)` → 高电平时间占比。
+     - `tempPauseRate = 1 - tempPulseRate` → 低电平时间占比。
+  3. **转换时间为实际值**：
+     - 高电平时间：`statTimePulse = (1000 * tempPulseRate / frequency)`（毫秒转Time类型）。
+     - 低电平时间：`statTimePause = (1000 * tempPauseRate / frequency)`。
+
+##### **(3) 方波生成机制**
+- **双计时器交替触发**：
+  - **Timer1（`instTofTimePulse`）**：
+    - **启动条件**：`Timer2.Q = FALSE`（低电平期间启动高电平计时）。
+    - **计时值**：`statTimePulse`。
+    - **输出**：`Timer1.Q` 直接驱动 `clock` 输出。
+  - **Timer2（`instTofTimePause`）**：
+    - **启动条件**：`Timer1.Q = TRUE`（高电平结束后启动低电平计时）。
+    - **计时值**：`statTimePause`。
+- **倒计时计算**：
+  - 高电平期间：`countdown = statTimePulse - Timer1.ET`（剩余高电平时间）。
+  - 低电平期间：`countdown = statTimePause - Timer2.ET`（剩余低电平时间）。
+
+##### **(4) 输出更新**
+- `clock` 输出由 `Timer1.Q` 直接控制。
+- `countdown` 根据当前活跃的计时器动态更新。
+
+---
+
+#### **3. 关键设计调整建议**
+1. **输入范围保护**：
+   - 增加对 `frequency` 和 `pulsePauseRatio` 上限的约束（如避免过小值导致计时器溢出）。
+2. **初始化逻辑优化**：
+   - 在首次运行时强制计算一次时间参数（避免依赖输入变化的首次触发）。
+3. **计时器类型选择**：
+   - 当前使用 `TOF_TIME`（关断延时计时器），需确保其行为符合预期（如是否需要支持冷启动恢复）。
+4. **性能优化**：
+   - 若频率较高（如 >1kHz），需评估计时器精度是否满足需求（考虑PLC扫描周期影响）。
+
+---
+
+#### **4. 伪代码流程**
+```plaintext
+IF (frequency ≤ 0 OR pulsePauseRatio ≤ 0) THEN
+    clock ← FALSE
+    countdown ← T#0ms
+ELSE
+    IF (frequency OR pulsePauseRatio changed) THEN
+        Reset Timers
+        Calculate tempPulseRate and tempPauseRate
+        Convert to statTimePulse and statTimePause
+    END IF
+    
+    // 交替触发计时器
+    Timer1(IN := NOT Timer2.Q, PT := statTimePulse)
+    Timer2(IN := Timer1.Q, PT := statTimePause)
+    
+    // 动态计算倒计时
+    IF (Timer1 is active) THEN
+        countdown ← statTimePulse - Timer1.ET
+    ELSE
+        countdown ← statTimePause - Timer2.ET
+    END IF
+    
+    clock ← Timer1.Q
+END IF
+```
+
+---
+
+#### **5. 边界案例处理**
+- **高频场景**：当 `frequency` 接近PLC扫描周期时，输出可能无法稳定切换（需增加警告或限制）。
+- **占空比极端值**：如 `pulsePauseRatio → 0` 时，低电平时间趋近于零（需保护最小脉冲宽度）。

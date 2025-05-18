@@ -1,0 +1,93 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_TaddrToString` 用于将 `TADDR_Param` 类型的 IP 地址和端口号转换为字符串格式。输入是一个 `TADDR_Param` 结构体，输出是一个格式化的字符串，例如 `"192.168.1.1:8080"`。
+
+#### 2. **输入和输出**
+- **输入**：`ipAdressTaddr`（`TADDR_Param` 类型）
+  - 包含 IP 地址（4 个字节）和端口号（整数）。
+- **输出**：字符串（`String` 类型）
+  - 格式为 `"<IP1>.<IP2>.<IP3>.<IP4>:<Port>"`，如果端口号为 0，则省略 `:<Port>` 部分。
+
+#### 3. **主要逻辑**
+1. **初始化**：
+   - 清空临时字符串 `tempIpAddressString`。
+
+2. **转换 IP 地址的四个字节**：
+   - 使用 `VAL_STRG` 函数将每个字节转换为字符串，并插入到临时字符串的指定位置。
+   - 在每个字节后插入点号 `.`（除了最后一个字节）。
+
+3. **处理端口号**：
+   - 如果端口号大于 0，则在 IP 地址后插入冒号 `:`，并使用 `VAL_STRG` 将端口号转换为字符串。
+
+4. **清理空格**：
+   - 使用 `FIND` 和 `DELETE` 函数删除字符串中的所有空格。
+
+5. **输出结果**：
+   - 将临时字符串赋值给返回值 `LGF_TaddrToString`。
+
+#### 4. **关键步骤**
+- **IP 地址转换**：
+  - 每个字节转换为 3 位数字（不足补空格）。
+  - 点号 `.` 插入在固定位置（第 4、8、12 字符）。
+- **端口号转换**：
+  - 冒号 `:` 插入在第 16 字符。
+  - 端口号转换为 5 位数字（不足补空格）。
+- **空格清理**：
+  - 循环查找并删除所有空格，直到字符串中无空格。
+
+#### 5. **常量定义**
+- 定义了多个常量用于控制格式和位置：
+  - 点号、冒号、空格的位置。
+  - 转换长度（IP 字节为 3 位，端口为 5 位）。
+  - 字符常量（`.`、`:`、` `）。
+
+#### 6. **异常处理**
+- 无显式错误处理，`ENO` 强制为 `TRUE`。
+
+---
+
+### 代码流程调整建议
+
+1. **优化空格清理**：
+   - 当前使用 `REPEAT` 循环删除空格，效率较低。如果可能，可以尝试一次性替换所有空格。
+
+2. **动态字符串长度**：
+   - 当前使用固定长度 `MAX_IP_ADDRESS_STRING_LENGHT`（21），可以改为动态计算所需长度。
+
+3. **端口号为 0 时的处理**：
+   - 当前逻辑清晰，但可以增加注释说明端口号为 0 时省略 `:<Port>`。
+
+4. **常量命名**：
+   - 常量名称较长，可以适当缩短（如 `DOT_POS_1` 代替 `DOT_POSITION_OCTET_1`），同时保持可读性。
+
+5. **注释补充**：
+   - 在关键步骤（如 `VAL_STRG` 调用）增加注释，说明参数含义。
+
+---
+
+### 伪代码描述
+```plaintext
+FUNCTION LGF_TaddrToString(ipAdressTaddr: TADDR_Param) : String
+    // 初始化
+    tempIpAddressString := ""
+    
+    // 转换 IP 地址的四个字节
+    FOR i FROM 1 TO 4
+        tempIpAddressString := tempIpAddressString + VAL_STRG(ipAdressTaddr.REM_IP_ADDR[i], 3, 0, 16#0000)
+        IF i < 4
+            tempIpAddressString := tempIpAddressString + "."
+    
+    // 处理端口号
+    IF ipAdressTaddr.REM_PORT_NR > 0
+        tempIpAddressString := tempIpAddressString + ":"
+        tempIpAddressString := tempIpAddressString + VAL_STRG(ipAdressTaddr.REM_PORT_NR, 5, 0, 16#0000)
+    
+    // 清理空格
+    WHILE FIND(tempIpAddressString, " ") > 0
+        tempIpAddressString := DELETE(tempIpAddressString, 1, FIND(tempIpAddressString, " "))
+    
+    // 返回结果
+    RETURN tempIpAddressString
+END_FUNCTION
+```

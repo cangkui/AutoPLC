@@ -1,0 +1,491 @@
+FUNCTION "LGF_SearchMinMax" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_SearchMinMax
+   VAR_INPUT 
+      variableArray : Variant;
+   END_VAR
+
+   VAR_OUTPUT 
+      minValue : Variant;
+      minValueIndex : DInt;
+      maxValue : Variant;
+      maxValueIndex : DInt;
+      error : Bool;
+      status : Word;
+      subfunctionStatus : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempArrayEndIndex : DInt;
+      tempCounter : DInt;
+      tempSubfunctionErr : Int;
+      tempArrayIndexMax : DInt;
+      tempArrayIndexMin : DInt;
+      tempActValueInt : Int;
+      tempMinInt : Int;
+      tempMaxInt : Int;
+      tempActValueUInt : UInt;
+      tempMinUInt : UInt;
+      tempMaxUInt : UInt;
+      tempActValueDInt : DInt;
+      tempMinDInt : DInt;
+      tempMaxDInt : DInt;
+      tempActValueUDInt : UDInt;
+      tempMinUDInt : UDInt;
+      tempMaxUDInt : UDInt;
+      tempActValueUSInt : USInt;
+      tempMinUSInt : USInt;
+      tempMaxUSInt : USInt;
+      tempActValueSInt : SInt;
+      tempMinSInt : SInt;
+      tempMaxSInt : SInt;
+      tempActValueReal : Real;
+      tempMinReal : Real;
+      tempMaxReal : Real;
+      tempActValueLReal : LReal;
+      tempMinLReal : LReal;
+      tempMaxLReal : LReal;
+   END_VAR
+
+   VAR CONSTANT 
+      DECREMNT_BY_ONE : DInt := 1;
+      START_FROM_SECOND_ELEMENT : Int := 1;
+      SUBFUNCTION_NO_ERROR : Int := 0;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_NO_ARRAY : Word := 16#8200;
+      ERR_WRONG_TYPE : Word := 16#8201;
+      ERR_NOT_EQUAL_TYPES : Word := 16#8202;
+      ERR_MOVE_BLK_VARIANT : Word := 16#8203;
+   END_VAR
+
+
+BEGIN
+	
+	REGION Initialization
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  #subfunctionStatus := INT_TO_WORD(#SUBFUNCTION_NO_ERROR);
+	  #tempSubfunctionErr := #SUBFUNCTION_NO_ERROR;
+	END_REGION
+	
+	REGION Validation of inputs and outputs 
+	  // Check if the variant-variable is an array if yes cout the elements of the array
+	  IF NOT (IS_ARRAY(#variableArray)) THEN
+	    #error := true;
+	    #status := #ERR_NO_ARRAY;
+	    RETURN;
+	    // Check if the elements of the array and the variables min and max have the same datatype.
+	  ELSIF TypeOfElements(#variableArray) <> TypeOf(#minValue) OR TypeOf(#minValue) <> TypeOf(#maxValue) THEN
+	    #error := true;
+	    #status := #ERR_NOT_EQUAL_TYPES;
+	    RETURN;
+	  ELSE
+	    #tempArrayEndIndex := (UDINT_TO_DINT(CountOfElements(#variableArray)) - #DECREMNT_BY_ONE);
+	  END_IF;
+	  //No need for validation for array max length. It cannot exceed DInt
+	END_REGION
+	
+	REGION Searching the array based on data type
+	  CASE TypeOfElements(#variableArray) OF
+	    Int:
+	      REGION Search Array of Integers
+	        //assign first value as min/max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMaxInt);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMinInt := #tempMaxInt;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          //Read the next element of the array
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueInt);
+	          // check for min
+	          IF #tempActValueInt < #tempMinInt THEN
+	            #tempMinInt := #tempActValueInt;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueInt > #tempMaxInt THEN
+	            #tempMaxInt := #tempActValueInt;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    UInt:
+	      REGION Search Array of Usigned Integers
+	        //Assign first value as min / max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMaxUInt);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMinUInt := #tempMaxUInt;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          //Read the next element of the array
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueUInt);
+	          // check for min
+	          IF #tempActValueUInt < #tempMinUInt THEN
+	            #tempMinUInt := #tempActValueUInt;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueUInt > #tempMaxUInt THEN
+	            #tempMaxUInt := #tempActValueUInt;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    DInt:
+	      REGION Search Array of Double Integers
+	        //Assign first value as min / max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMaxDInt);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMinDInt := #tempMaxDInt;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          //Read the next element of the array
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueDInt);
+	          // check for min
+	          IF #tempActValueDInt < #tempMinDInt THEN
+	            #tempMinDInt := #tempActValueDInt;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueDInt > #tempMaxDInt THEN
+	            #tempMaxDInt := #tempActValueDInt;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    UDInt:
+	      REGION Search Array of Unsigned Double Integers
+	        //Assign first value as min / max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMaxUDInt);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMinUDInt := #tempMaxUDInt;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          //Read the next element of the array
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueUDInt);
+	          // check for min
+	          IF #tempActValueUDInt < #tempMinUDInt THEN
+	            #tempMinUDInt := #tempActValueUDInt;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueUDInt > #tempMaxUDInt THEN
+	            #tempMaxUDInt := #tempActValueUDInt;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    USInt:
+	      REGION Search Array of Unsigned Short Integers
+	        //Assign first value as min/max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMaxUSInt);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMinUSInt := #tempMaxUSInt;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          //Read the next element of the array
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueUSInt);
+	          // check for min
+	          IF #tempActValueUSInt < #tempMinUSInt THEN
+	            #tempMinUSInt := #tempActValueUSInt;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueUSInt > #tempMaxUSInt THEN
+	            #tempMaxUSInt := #tempActValueUSInt;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    SInt:
+	      REGION Search Array of Signed Integers
+	        //Assign first value as min / max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMaxSInt);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMinSInt := #tempMaxSInt;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          //Read the next element of the array
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueSInt);
+	          // check for min
+	          IF #tempActValueSInt < #tempMinSInt THEN
+	            #tempMinSInt := #tempActValueSInt;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueSInt > #tempMaxSInt THEN
+	            #tempMaxSInt := #tempActValueSInt;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    Real:
+	      REGION Search Array of Real
+	        //Assign first value as min / max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMinReal);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMaxReal := #tempMinReal;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueReal);
+	          // check for min
+	          IF #tempActValueReal < #tempMinReal THEN
+	            #tempMinReal := #tempActValueReal;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueReal > #tempMaxReal THEN
+	            #tempMaxReal := #tempActValueReal;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    LReal:
+	      REGION Search Array of LReal
+	        //Assign first value as min / max
+	        #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                COUNT := 1,
+	                                                SRC_INDEX := 0,
+	                                                DEST_INDEX := 0,
+	                                                DEST => #tempMinLReal);
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	        
+	        //Initializa Minimum value
+	        #tempMaxLReal := #tempMinLReal;
+	        //Search the Array for min/max values
+	        FOR #tempCounter := #START_FROM_SECOND_ELEMENT TO #tempArrayEndIndex DO
+	          
+	          #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                                  COUNT := 1,
+	                                                  SRC_INDEX := #tempCounter,
+	                                                  DEST_INDEX := 0,
+	                                                  DEST => #tempActValueLReal);
+	          // check for min
+	          IF #tempActValueLReal < #tempMinLReal THEN
+	            #tempMinLReal := #tempActValueLReal;
+	            #tempArrayIndexMin := #tempCounter;
+	            // check for max
+	          ELSIF #tempActValueLReal > #tempMaxLReal THEN
+	            #tempMaxLReal := #tempActValueLReal;
+	            #tempArrayIndexMax := #tempCounter;
+	          END_IF;
+	        END_FOR;
+	        //Checking return value of subfunction
+	        IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	          #error := true;
+	          #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	          #status := #ERR_MOVE_BLK_VARIANT;
+	          RETURN;
+	        END_IF;
+	      END_REGION
+	      
+	    ELSE
+	      #error := true;
+	      #subfunctionStatus := INT_TO_WORD(#SUBFUNCTION_NO_ERROR);
+	      #status := #ERR_WRONG_TYPE;
+	      RETURN;
+	  END_CASE;
+	END_REGION
+	
+	REGION Writing to outputs
+	  //Copy found values to outputs
+	  //Copy Minimum value
+	  #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                          COUNT := 1,
+	                                          SRC_INDEX := #tempArrayIndexMin,
+	                                          DEST_INDEX := 0,
+	                                          DEST => #minValue);
+	  //Copy Maximum value
+	  #tempSubfunctionErr := MOVE_BLK_VARIANT(SRC := #variableArray,
+	                                          COUNT := 1,
+	                                          SRC_INDEX := #tempArrayIndexMax,
+	                                          DEST_INDEX := 0,
+	                                          DEST => #maxValue);
+	  
+	  //Checking return value of subfunction
+	  IF #tempSubfunctionErr <> #SUBFUNCTION_NO_ERROR THEN
+	    #error := true;
+	    #subfunctionStatus := INT_TO_WORD(#tempSubfunctionErr);
+	    #status := #ERR_MOVE_BLK_VARIANT;
+	    RETURN;
+	  END_IF;
+	  
+	  //Write found indexes to outputs
+	  #minValueIndex := #tempArrayIndexMin;
+	  #maxValueIndex := #tempArrayIndexMax;
+	  
+	  //ENO mechanism is not used, nerror handling via error & status
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

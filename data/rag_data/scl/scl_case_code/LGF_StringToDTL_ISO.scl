@@ -1,0 +1,224 @@
+FUNCTION "LGF_StringToDTL_ISO" : DTL
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_StringToDTL_ISO
+   VAR_INPUT 
+      "date" : String;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempIndex : DInt;
+      tempDateAndTime {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempDateString : String;
+   END_VAR
+
+   VAR CONSTANT 
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      STATUS_NO_JOB : Word := 16#7000;
+      ERR_FORMAT_YEAR : Word := 16#8201;
+      ERR_FORMAT_MONTH : Word := 16#8202;
+      ERR_FORMAT_DAY : Word := 16#8203;
+      ERR_FORMAT_HOUR : Word := 16#8204;
+      ERR_FORMAT_MINUTE : Word := 16#8205;
+      ERR_FORMAT_SECOND : Word := 16#8206;
+      ERR_FORMAT_NANOSECOND : Word := 16#8207;
+      INITIAL_VALUE {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL := DTL#1970-01-01-00:00:00.0;
+      CONVERT_PRECISION : USInt := 0;
+      CONVERT_FORMAT_TO_DECIMAL : Word := 16#0000;
+      CONVERT_START_POSITION : UInt := 1;
+      CONVERT_START_POSITION_YEAR : SInt := 1;
+      CONVERT_START_POSITION_MONTH : SInt := 6;
+      CONVERT_START_POSITION_DAY : SInt := 9;
+      CONVERT_START_POSITION_HOUR : SInt := 12;
+      CONVERT_START_POSITION_MINUTE : SInt := 15;
+      CONVERT_START_POSITION_SECOND : SInt := 18;
+      CONVERT_START_POSITION_NANOSECOND : SInt := 21;
+      CONVERT_SIZE_YEAR : USInt := 4;
+      CONVERT_SIZE_MONTH_DAY_HOUR_MINUTE_SECOND : USInt := 2;
+      CONVERT_SIZE_NANOSECOND : USInt := 9;
+      YEAR_MIN : UInt := 1970;
+      YEAR_MAX : UInt := 2262;
+      MONTH_MIN : USInt := 1;
+      MONTH_MAX : USInt := 12;
+      DAY_MIN : USInt := 1;
+      DAY_MAX : USInt := 31;
+      HOUR_MIN : USInt := 0;
+      HOUR_MAX : USInt := 23;
+      SECOND_MINUTE_MIN : USInt := 0;
+      SECOND_MINUTE_MAX : USInt := 59;
+      NANOSECOND_MIN : UDInt := 0;
+      NANOSECOND_MAX : UDInt := 999999999;
+      NANOSECOND_FOR_COUNTER : DInt := 9;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_StringToDTL_ISO
+	  // Comment/Function: This function converts a character string in international format
+	  //                   with date components into the data type DTL.
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO mechanism is not used, Error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION CONVERTER
+	  IF #date = '' THEN
+	    #error := true;
+	    #status := #STATUS_NO_JOB;
+	    #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	    RETURN;
+	  END_IF;
+	  
+	  // Set format parameters for input string
+	  // International ISO 8601
+	  // DTL  | Y| Y| Y| Y| -| M| M| -| D| D|  | H| H| :| M| M| :| S| S| .|NS|NS|NS|NS|NS|NS|NS|NS|NS
+	  // -----|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--
+	  // Pos  | 1| 2| 3| 4| 5| 6| 7| 8| 9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29
+	  
+	  REGION YEAR
+	    // Separating the input string into components of DTL
+	    #tempDateString := MID(IN := #date, L := #CONVERT_SIZE_YEAR, P := #CONVERT_START_POSITION_YEAR);
+	    // Converting separated String components into DTL values
+	    STRG_VAL(FORMAT := #CONVERT_FORMAT_TO_DECIMAL,
+	             IN     := #tempDateString,
+	             OUT    => #tempDateAndTime.YEAR,
+	             P      := #CONVERT_START_POSITION);
+	    // Format check
+	    IF (#tempDateAndTime.YEAR < #YEAR_MIN) OR (#YEAR_MAX < #tempDateAndTime.YEAR) THEN
+	      #error := TRUE;
+	      #status := #ERR_FORMAT_YEAR;
+	      #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	  
+	  REGION MONTH
+	    #tempDateString := MID(IN := #date, L := #CONVERT_SIZE_MONTH_DAY_HOUR_MINUTE_SECOND, P := #CONVERT_START_POSITION_MONTH);
+	    STRG_VAL(FORMAT := #CONVERT_FORMAT_TO_DECIMAL,
+	             IN     := #tempDateString,
+	             OUT    => #tempDateAndTime.MONTH,
+	             P      := #CONVERT_START_POSITION);
+	    
+	    IF (#tempDateAndTime.MONTH < #MONTH_MIN) OR (#MONTH_MAX < #tempDateAndTime.MONTH) THEN
+	      #error := TRUE;
+	      #status := #ERR_FORMAT_MONTH;
+	      #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	  
+	  REGION DAY
+	    #tempDateString := MID(IN := #date, L := #CONVERT_SIZE_MONTH_DAY_HOUR_MINUTE_SECOND, P := #CONVERT_START_POSITION_DAY);
+	    STRG_VAL(FORMAT := #CONVERT_FORMAT_TO_DECIMAL,
+	             IN     := #tempDateString,
+	             OUT    => #tempDateAndTime.DAY,
+	             P      := #CONVERT_START_POSITION);
+	    
+	    IF (#tempDateAndTime.DAY < #DAY_MIN) OR (#DAY_MAX < #tempDateAndTime.DAY) THEN
+	      #error := TRUE;
+	      #status := #ERR_FORMAT_DAY;
+	      #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	  
+	  REGION HOUR
+	    #tempDateString := MID(IN := #date, L := #CONVERT_SIZE_MONTH_DAY_HOUR_MINUTE_SECOND, P := #CONVERT_START_POSITION_HOUR);
+	    STRG_VAL(FORMAT := #CONVERT_FORMAT_TO_DECIMAL,
+	             IN     := #tempDateString,
+	             OUT    => #tempDateAndTime.HOUR,
+	             P      := #CONVERT_START_POSITION);
+	    
+	    IF (#tempDateAndTime.HOUR < #HOUR_MIN) OR (#HOUR_MAX < #tempDateAndTime.HOUR) THEN
+	      #error := TRUE;
+	      #status := #ERR_FORMAT_HOUR;
+	      #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	  
+	  REGION MINUTE
+	    #tempDateString := MID(IN := #date, L := #CONVERT_SIZE_MONTH_DAY_HOUR_MINUTE_SECOND, P := #CONVERT_START_POSITION_MINUTE);
+	    STRG_VAL(FORMAT := #CONVERT_FORMAT_TO_DECIMAL,
+	             IN     := #tempDateString,
+	             OUT    => #tempDateAndTime.MINUTE,
+	             P      := #CONVERT_START_POSITION);
+	    
+	    IF (#tempDateAndTime.MINUTE < #SECOND_MINUTE_MIN) OR (#SECOND_MINUTE_MAX < #tempDateAndTime.MINUTE) THEN
+	      #error := TRUE;
+	      #status := #ERR_FORMAT_MINUTE;
+	      #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	  
+	  REGION SECOND
+	    #tempDateString := MID(IN := #date, L := #CONVERT_SIZE_MONTH_DAY_HOUR_MINUTE_SECOND, P := #CONVERT_START_POSITION_SECOND);
+	    STRG_VAL(FORMAT := #CONVERT_FORMAT_TO_DECIMAL,
+	             IN     := #tempDateString,
+	             OUT    => #tempDateAndTime.SECOND,
+	             P      := #CONVERT_START_POSITION);
+	    
+	    IF (#tempDateAndTime.SECOND < #SECOND_MINUTE_MIN) OR (#SECOND_MINUTE_MAX < #tempDateAndTime.SECOND) THEN
+	      #error := TRUE;
+	      #status := #ERR_FORMAT_SECOND;
+	      #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	  
+	  REGION NANOSECOND
+	    #tempDateString := MID(IN := #date, L := #CONVERT_SIZE_NANOSECOND, P := #CONVERT_START_POSITION_NANOSECOND);
+	    // Replacing of the "blan" in the nanosecond string by "0"
+	    // Effect:   xx.1 --> xx.1 AND NOT xx.1 --> xx.000000001
+	    FOR #tempIndex := 1 TO #NANOSECOND_FOR_COUNTER DO
+	      IF #tempDateString[#tempIndex] = ' ' THEN
+	        #tempDateString[#tempIndex] := '0';
+	      END_IF;
+	    END_FOR;
+	    
+	    STRG_VAL(FORMAT := #CONVERT_FORMAT_TO_DECIMAL,
+	             IN     := #tempDateString,
+	             OUT    => #tempDateAndTime.NANOSECOND,
+	             P      := #CONVERT_START_POSITION);
+	    
+	    IF (#tempDateAndTime.NANOSECOND < 0) OR (999999999 < #tempDateAndTime.NANOSECOND) THEN
+	      #error := TRUE;
+	      #status := #ERR_FORMAT_NANOSECOND;
+	      #LGF_StringToDTL_ISO := #INITIAL_VALUE;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	  
+	  // Correction of the weekday of DTL
+	  #tempDateAndTime := #tempDateAndTime + t#0ms;
+	END_REGION
+	
+	REGION OUTPUTS
+	  #LGF_StringToDTL_ISO := #tempDateAndTime;
+	  #error := FALSE;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  // no error handling needed because of error bit output
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

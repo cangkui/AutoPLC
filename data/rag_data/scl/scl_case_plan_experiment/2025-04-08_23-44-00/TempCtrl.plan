@@ -1,0 +1,58 @@
+### 温度控制逻辑算法流程描述
+
+#### 1. 变量定义
+- **输入变量**：
+  - `TemperatureSensorInput`：温度传感器输入值（实际温度）
+  - `SetTemperature`：设定温度值
+- **输出变量**：
+  - `CurrentTemperature`：当前温度显示
+  - `SetTempDisplay`：设定温度显示
+  - `HeaterStatus`：加热器状态显示
+  - `OverheatProtection`：过热保护状态显示
+- **输入/输出变量**：
+  - `HeaterOutput`：加热器控制输出
+- **内部变量**：
+  - `HeaterState`：结构体，包含加热器启用状态和过热保护触发状态
+  - `OverheatTimer`：TON定时器，用于检测加热器连续工作时间（5秒）
+  - `CoolTimer`：TON定时器，用于冷却时间（3秒）
+  - `SensorError`：传感器错误标志
+
+#### 2. 主逻辑流程
+1. **温度显示**：
+   - 将`TemperatureSensorInput`的值赋给`CurrentTemperature`。
+   - 将`SetTemperature`的值赋给`SetTempDisplay`。
+
+2. **传感器故障检测**：
+   - 如果`TemperatureSensorInput`小于0或大于100，设置`SensorError`为`TRUE`，否则为`FALSE`。
+
+3. **过热保护逻辑**：
+   - 使用`OverheatTimer`检测加热器是否连续工作超过5秒：
+     - 如果`HeaterOutput`为`TRUE`，启动`OverheatTimer`。
+     - 如果`OverheatTimer`计时完成（`OverheatTimerOutput`为`TRUE`），触发过热保护：
+       - 设置`HeaterState.OverheatProtectionTriggered`为`TRUE`。
+       - 关闭加热器（`HeaterOutput`设为`FALSE`）。
+   - 使用`CoolTimer`检测过热保护是否持续3秒：
+     - 如果`HeaterState.OverheatProtectionTriggered`为`TRUE`，启动`CoolTimer`。
+     - 如果`CoolTimer`计时完成（`CoolTimerOutput`为`TRUE`），解除过热保护（`HeaterState.OverheatProtectionTriggered`设为`FALSE`）。
+
+4. **温度控制逻辑**：
+   - 如果传感器无故障（`SensorError`为`FALSE`）：
+     - 如果当前温度低于设定温度且未触发过热保护：
+       - 如果加热器未启用（`HeaterState.IsEnabled`为`FALSE`），启用加热器（`HeaterOutput`设为`TRUE`）。
+     - 如果当前温度高于设定温度：
+       - 如果加热器已启用（`HeaterState.IsEnabled`为`TRUE`），关闭加热器（`HeaterOutput`设为`FALSE`）。
+   - 如果传感器故障（`SensorError`为`TRUE`）：
+     - 强制关闭加热器（`HeaterOutput`设为`FALSE`）。
+
+5. **状态显示**：
+   - 将`HeaterState.IsEnabled`的值赋给`HeaterStatus`。
+   - 将`HeaterState.OverheatProtectionTriggered`的值赋给`OverheatProtection`。
+
+#### 3. 关键点说明
+- **边缘检测**：通过`OverheatTimer`和`CoolTimer`实现定时功能，确保加热器不会长时间工作或过热保护过早解除。
+- **优先级**：传感器故障的优先级最高，其次是过热保护，最后是温度控制逻辑。
+- **状态管理**：使用`HeaterState`结构体集中管理加热器状态，避免状态混乱。
+
+#### 4. 扩展性考虑
+- 如果需要调整过热保护时间或冷却时间，只需修改`OverheatTimer`和`CoolTimer`的预设值（PT）。
+- 可以增加更多状态指示（如传感器故障显示）或报警功能。

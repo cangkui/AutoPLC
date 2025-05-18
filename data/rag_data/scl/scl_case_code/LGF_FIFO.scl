@@ -1,0 +1,305 @@
+FUNCTION_BLOCK "LGF_FIFO"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_FIFO
+   VAR_INPUT 
+      enqueue : Bool := false;
+      dequeue : Bool := false;
+      reset : Bool;
+      clear : Bool;
+      initialItem : Variant;
+   END_VAR
+
+   VAR_OUTPUT 
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subFunctionStatus { ExternalWritable := 'False'} : Word;
+      elementCount { ExternalWritable := 'False'} : DInt := 0;
+      isEmpty { ExternalWritable := 'False'} : Bool := false;
+   END_VAR
+
+   VAR_IN_OUT 
+      item : Variant;
+      buffer : Variant;
+   END_VAR
+
+   VAR 
+      statEdgesMem { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Struct
+         enqueue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         dequeue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         clear { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      END_STRUCT;
+      statFirstItemIndex { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int := -1;
+      statNextEmptyItemIndex { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int := 0;
+      statElementCount { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;
+   END_VAR
+
+   VAR_TEMP 
+      tempEdges : Struct
+         enqueue : Bool;
+         dequeue : Bool;
+         clear : Bool;
+      END_STRUCT;
+      tempInternalError : Int;
+      tempNewFirstItemIndex : Int;
+      tempNewNextEmptyItemIndex : Int;
+      tempBufferSize : UDInt;
+      tempCounter : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      BUFFER_IS_EMPTY : Int := -1;
+      NO_INTERNAL_ERROR : Int := 0;
+      BUFFER_INITIALIZED : Int := -1;
+      EMPTY_INITIALIZED : Int := 0;
+      INDEX_BEGINNING : Int := 0;
+      COUNT_ELEMENTS : UDInt := 1;
+      INCREMENT : Int := 1;
+      BUFFER_SIZE_CORRECTION : UDInt := 1;
+      COUNTER_LOWER_LIMIT : Int := 0;
+      ZERO_ELEMENTS : DInt := 0;
+      STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_NO_CURRENT_JOBS : Word := 16#7000;
+      ERR_BUFFER_EMPTY : Word := 16#8001;
+      ERR_BUFFER_FULL : Word := 16#8002;
+      ERR_NO_ARRAY : Word := 16#8200;
+      ERR_WRONG_TYPE_ITEM : Word := 16#8201;
+      ERR_WRONG_TYPE_INITIAL_ITEM : Word := 16#8202;
+      ERR_INDEX_IN_ARRAY_LIMITS_1 : Word := 16#8601;
+      ERR_INDEX_IN_ARRAY_LIMITS_2 : Word := 16#8602;
+      ERR_CLEAR_BUFFER : Word := 16#8610;
+      ERR_RETURN_FIRST_ENTRY : Word := 16#8611;
+      ERR_REPLACE_ITEM_BY_INIT_VALUE : Word := 16#8612;
+      ERR_WRITE_ENTRY : Word := 16#8613;
+   END_VAR
+
+
+BEGIN
+	
+	REGION Block execution control
+	  // collect edges
+	  #tempEdges.enqueue := #enqueue AND NOT #statEdgesMem.enqueue;
+	  #tempEdges.dequeue := #dequeue AND NOT #statEdgesMem.dequeue;
+	  #tempEdges.clear := #clear AND NOT #statEdgesMem.clear;
+	  // store values for edge detection
+	  #statEdgesMem.enqueue := #enqueue;
+	  #statEdgesMem.dequeue := #dequeue;
+	  #statEdgesMem.clear := #clear;
+	  
+	  // This program code section is only executed if no trigger input is active
+	  IF NOT (#enqueue OR #dequeue OR #reset OR #clear) THEN
+	    // If an error occurred during program execution,
+	    // the status "No Current Job" is used 16#7000 afterwarts when the triggers are reseted
+	    #error := false;
+	    #status := #STATUS_NO_CURRENT_JOBS;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    // the program processing OF the FB is terminated
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Validation of inputs
+	  // check whether the ring #buffer is an ARRAY.
+	  // IF so, the number OF the ARRAY elements is read out.
+	  // IF it is NOT an ARRAY, the program execution is terminated at this point
+	  IF IS_ARRAY(#buffer) THEN
+	    #tempBufferSize := CountOfElements(#buffer);
+	  ELSE
+	    #error := true;
+	    #status := #ERR_NO_ARRAY;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // check whether the data type OF the ARRAY elements matches
+	  // the data type OF the entry (#item). IF the data types DO NOT match,
+	  // the program execution is terminated at this point
+	  IF (TypeOf(#item) <> TypeOfElements(#buffer)) THEN
+	    #error := true;
+	    #status := #ERR_WRONG_TYPE_ITEM;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // check whether the initial value OF the ring #buffer
+	  // matches the entry (tag #item). IF the data types DO NOT match,
+	  // the program execution is terminated at this point
+	  IF (TypeOf(#item) <> TypeOf(#initialItem)) THEN
+	    #error := true;
+	    #status := #ERR_WRONG_TYPE_INITIAL_ITEM;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // check whether the variable indices are within the ARRAY limits.
+	  // IF they are NOT, the program execution is terminated at this point
+	  IF (#statNextEmptyItemIndex >= #tempBufferSize) THEN
+	    #error := true;
+	    #status := #ERR_INDEX_IN_ARRAY_LIMITS_1;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  ELSIF (#statFirstItemIndex >= #tempBufferSize) THEN
+	    #error := true;
+	    #status := #ERR_INDEX_IN_ARRAY_LIMITS_2;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // If resetBuffer is "TRUE", the buffer counters are reset
+	  IF #reset THEN
+	    #statFirstItemIndex := #BUFFER_INITIALIZED;
+	    #statNextEmptyItemIndex := #EMPTY_INITIALIZED;
+	    #statElementCount := #EMPTY_INITIALIZED;
+	    #elementCount := #EMPTY_INITIALIZED;
+	    #isEmpty := true;
+	    RETURN;
+	  END_IF;
+	  
+	  // If clearBuffer has rising edge, the buffer is initialized by initial values
+	  IF #tempEdges.clear THEN
+	    FOR #tempCounter := #COUNTER_LOWER_LIMIT TO UDINT_TO_INT(#tempBufferSize - #BUFFER_SIZE_CORRECTION) DO
+	      
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #initialItem,
+	                                             COUNT := #COUNT_ELEMENTS,
+	                                             SRC_INDEX := #INDEX_BEGINNING,
+	                                             DEST_INDEX := #tempCounter,
+	                                             DEST => #buffer);
+	    END_FOR;
+	    
+	    // checks whether a local error has occurred.
+	    IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	      #error := true;
+	      #status := #ERR_CLEAR_BUFFER;
+	      #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	    END_IF;
+	    
+	    // reset counters
+	    #statFirstItemIndex := #BUFFER_INITIALIZED;
+	    #statNextEmptyItemIndex := #EMPTY_INITIALIZED;
+	    #statElementCount := #EMPTY_INITIALIZED;
+	    #elementCount := #EMPTY_INITIALIZED;
+	    #isEmpty := true;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION FIFO algorithm  
+	  IF #tempEdges.dequeue THEN
+	    REGION dequeue
+	      // check whether the ring #buffer is empty
+	      // IF this is the CASE, program execution is terminated at this point
+	      IF (#statFirstItemIndex = #BUFFER_IS_EMPTY) THEN
+	        #error := true;
+	        #status := #ERR_BUFFER_EMPTY;
+	        #subFunctionStatus := #STATUS_NO_ERROR;
+	        RETURN;
+	      END_IF;
+	      
+	      // return the first entry of the ring buffer
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #buffer,
+	                                             COUNT := #COUNT_ELEMENTS,
+	                                             SRC_INDEX := #statFirstItemIndex,
+	                                             DEST_INDEX := #INDEX_BEGINNING,
+	                                             DEST => #item);
+	      
+	      // check whether a local error has occurred
+	      IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	        #error := true;
+	        #status := #ERR_RETURN_FIRST_ENTRY;
+	        #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	        RETURN;
+	      END_IF;
+	      
+	      // check whether the ring #buffer contains ARRAY elements
+	      // IF it does, the first entry is passed further on and the index is incremented BY 1
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #initialItem,
+	                                             COUNT := #COUNT_ELEMENTS,
+	                                             SRC_INDEX := #INDEX_BEGINNING,
+	                                             DEST_INDEX := #statFirstItemIndex,
+	                                             DEST => #buffer);
+	      
+	      // check whether a local error has occurred
+	      IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	        #error := true;
+	        #status := #ERR_REPLACE_ITEM_BY_INIT_VALUE;
+	        #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	        RETURN;
+	      END_IF;
+	      
+	      // calculate the new index of the first entry
+	      #tempNewFirstItemIndex := #statFirstItemIndex + #INCREMENT;
+	      #tempNewFirstItemIndex := #tempNewFirstItemIndex MOD UDINT_TO_INT(#tempBufferSize);
+	      
+	      // check whether the ring buffer is empty
+	      IF (#statNextEmptyItemIndex = #tempNewFirstItemIndex) THEN
+	        // If the ring buffer is empty, the index is set to 0
+	        #statFirstItemIndex := #BUFFER_INITIALIZED;
+	        #statNextEmptyItemIndex := #EMPTY_INITIALIZED;
+	      ELSE
+	        // The index of the first entry is changed
+	        #statFirstItemIndex := #tempNewFirstItemIndex;
+	      END_IF;
+	      
+	      // Evaluation of the number of elements in the stack
+	      #statElementCount -= #INCREMENT;
+	      
+	    END_REGION dequeue
+	    
+	  ELSIF #tempEdges.enqueue THEN
+	    REGION enqueue
+	      // check whether the ring #buffer is full
+	      // IF this is the CASE, program execution is terminated at this point
+	      IF (#statNextEmptyItemIndex = #statFirstItemIndex) THEN
+	        #error := true;
+	        #status := #ERR_BUFFER_FULL;
+	        #subFunctionStatus := #STATUS_NO_ERROR;
+	        RETURN;
+	      END_IF;
+	      
+	      // write the entry to the ring buffer
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #item,
+	                                             COUNT := #COUNT_ELEMENTS,
+	                                             SRC_INDEX := #INDEX_BEGINNING,
+	                                             DEST_INDEX := #statNextEmptyItemIndex,
+	                                             DEST => #buffer);
+	      
+	      // check whether a local error has occurred
+	      IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	        #error := true;
+	        #status := #ERR_WRITE_ENTRY;
+	        #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	        RETURN;
+	      END_IF;
+	      
+	      // increment the index by 1 and calculates the new empty entry index
+	      #tempNewNextEmptyItemIndex := (#statNextEmptyItemIndex + #INCREMENT) MOD UDINT_TO_INT(#tempBufferSize);
+	      #statNextEmptyItemIndex := #tempNewNextEmptyItemIndex;
+	      
+	      // check which index the "#firstItemIndex" tag has
+	      // IF the number = -1, the ring buffer is initialized
+	      // AND the entry is written TO the ring #buffer
+	      // Therefore, "0" must be assigned TO the tag
+	      IF (#statFirstItemIndex = #BUFFER_INITIALIZED) THEN
+	        #statFirstItemIndex := #INDEX_BEGINNING;
+	      END_IF;
+	      
+	      // Evaluation of the number of elements in the stack
+	      #statElementCount += #INCREMENT;
+	    END_REGION enqueue
+	  END_IF;
+	END_REGION
+	
+	REGION Writing to outputs
+	  #elementCount := #statElementCount;
+	  #isEmpty := #statElementCount <= #ZERO_ELEMENTS;
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  #subFunctionStatus := #STATUS_NO_ERROR;
+	  // no error handling by ENO needed
+	  ENO := TRUE;
+	END_REGION
+	
+	
+END_FUNCTION_BLOCK

@@ -1,0 +1,65 @@
+### **算法流程描述：FB_LinearizeValue（浮点数区间线性化转换）**
+
+#### **1. 功能概述**
+该功能块用于将输入的浮点数（如传感器测量值）按照不同的区间进行线性化转换，并输出转换后的值。如果输入超出有效范围，则标记错误状态并输出边界值。
+
+#### **2. 变量定义**
+- **输入变量**：
+  - `InputValue`（浮点数）：待转换的原始测量值。
+  
+- **输出变量**：
+  - `LinearizedValue`（浮点数）：转换后的线性化值。
+  - `Error`（布尔型）：错误标志，`TRUE` 表示输入超出范围。
+  - `Status`（字型）：状态码，`16#8001` 表示输入越界错误。
+
+- **常量定义**（用于区间边界和线性化范围）：
+  - `MIN_VALUE_1` ~ `MAX_VALUE_3`：输入值的区间边界。
+  - `MIN_LINEAR_1` ~ `MAX_LINEAR_3`：对应的线性化输出范围。
+
+#### **3. 算法逻辑**
+1. **初始化**：
+   - 默认 `Error = FALSE`，`Status = 0`（无错误）。
+   
+2. **输入有效性检查**：
+   - 如果 `InputValue < MIN_VALUE_1` 或 `InputValue > MAX_VALUE_3`：
+     - 设置 `Error = TRUE`，`Status = 16#8001`（错误状态）。
+     - 如果输入低于最小值，输出 `MIN_LINEAR_1`；如果高于最大值，输出 `MAX_LINEAR_3`。
+   
+3. **区间线性化计算**：
+   - **区间 1（1200 ≤ InputValue ≤ 3600）**：
+     - 线性化公式：
+       \[
+       LinearizedValue = MIN\_LINEAR\_1 + \frac{(InputValue - MIN\_VALUE\_1)}{(MAX\_VALUE\_1 - MIN\_VALUE\_1)} \times (MAX\_LINEAR\_1 - MIN\_LINEAR\_1)
+       \]
+   - **区间 2（3600 < InputValue ≤ 4800）**：
+     - 线性化公式：
+       \[
+       LinearizedValue = MIN\_LINEAR\_2 + \frac{(InputValue - MIN\_VALUE\_2)}{(MAX\_VALUE\_2 - MIN\_VALUE\_2)} \times (MAX\_LINEAR\_2 - MIN\_LINEAR\_2)
+       \]
+   - **区间 3（4800 < InputValue ≤ 7000）**：
+     - 线性化公式：
+       \[
+       LinearizedValue = MIN\_LINEAR\_3 + \frac{(InputValue - MIN\_VALUE\_3)}{(MAX\_VALUE\_3 - MIN\_VALUE\_3)} \times (MAX\_LINEAR\_3 - MIN\_LINEAR\_3)
+       \]
+
+4. **输出结果**：
+   - 根据计算或错误处理结果，更新 `LinearizedValue`、`Error` 和 `Status`。
+
+#### **4. 代码结构**
+- **初始化阶段**：设置默认状态。
+- **输入验证阶段**：检查输入是否越界，并处理错误情况。
+- **线性化计算阶段**：根据输入值所在的区间，应用不同的线性化公式。
+- **输出阶段**：返回计算结果或错误状态。
+
+#### **5. 适用场景**
+- 适用于传感器数据（如温度、压力）的标准化转换。
+- 可用于 PLC 或自动化控制系统中的信号处理模块。
+
+#### **6. 扩展性**
+- 如果需要增加更多区间，只需扩展 `CASE` 或 `IF-ELSIF` 逻辑，并定义新的边界常量。
+- 可以进一步优化为查表法（LUT）以提高计算效率（适用于固定区间转换）。
+
+---
+
+### **总结**
+该算法通过 **区间划分 + 线性插值** 的方式，将输入值映射到不同的输出范围，并处理越界情况。适用于需要标准化或归一化传感器数据的自动化控制系统。

@@ -1,0 +1,51 @@
+### 算法流程描述（CelsiusToKelvin转换函数）
+
+#### 1. **功能概述**
+- 该函数用于将摄氏温度(°C)转换为开尔文温度(K)
+- 转换公式：K = °C + 273.15
+- 无错误处理需求，始终返回有效结果
+
+#### 2. **变量定义**
+- **输入变量**：
+  - `value` (Real类型)：待转换的摄氏温度值
+- **临时变量**：
+  - `tempKelvinTemperature` (Real类型)：存储转换后的开尔文温度
+- **常量**：
+  - `TEMPERATURE_OFFSET` (Real类型，值273.15)：摄氏到开尔文的转换常数
+
+#### 3. **处理逻辑**
+1. **初始化阶段**：
+   - 声明并初始化常量`TEMPERATURE_OFFSET`
+   - 声明临时变量`tempKelvinTemperature`
+
+2. **转换阶段**：
+   - 执行温度转换计算：`tempKelvinTemperature = value + TEMPERATURE_OFFSET`
+
+3. **输出阶段**：
+   - 将计算结果赋值给函数返回值`LGF_CelsiusToKelvin`
+   - 设置ENO(Enable Output)为TRUE，表示函数执行成功
+
+#### 4. **特殊考虑**
+- 该函数设计为无错误处理，因为温度转换是确定性数学运算
+- 使用临时变量`tempKelvinTemperature`可以提高代码可读性
+- 常量`TEMPERATURE_OFFSET`的使用使得转换公式更清晰且易于维护
+
+#### 5. **代码优化建议**
+- 可以省略临时变量，直接返回计算结果（但保留临时变量有助于调试）
+- 可以添加注释说明转换公式
+- 考虑添加输入范围检查（如果需要）
+
+#### 6. **执行流程图**
+```
+开始
+  ↓
+读取输入value
+  ↓
+计算：value + 273.15 → tempKelvinTemperature
+  ↓
+设置函数返回值 = tempKelvinTemperature
+  ↓
+设置ENO = TRUE
+  ↓
+结束
+```

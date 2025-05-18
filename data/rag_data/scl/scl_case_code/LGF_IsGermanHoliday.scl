@@ -1,0 +1,164 @@
+FUNCTION "LGF_IsGermanHoliday" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_IsGermanHoliday
+   VAR_INPUT 
+      "date" {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      threeKings : Bool;
+      roseMonday : Bool;
+      ascension : Bool;
+      corpusChristi : Bool;
+      augsburgerFriedensfest : Bool;
+      assumptionOfMary : Bool;
+      reformationDay : Bool;
+      allSaintDay : Bool;
+      bussUndBettag : Bool;
+   END_VAR
+
+   VAR_TEMP 
+      tempDaysPassedToActDay : DInt;
+      tempOday : UInt;
+      tempEasterInternal {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempDaysPassedToEaster : DInt;
+      tempDTL {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempEasterPartialCalc : UInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : UInt := 0;
+      CLEAR_DTL {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      JANUARY : USInt := 1;
+      MARCH : USInt := 3;
+      APRIL : USInt := 4;
+      MAY : USInt := 5;
+      AUGUST : USInt := 8;
+      OCTOBER : USInt := 10;
+      NOVEMBER : USInt := 11;
+      DECEMBER : USInt := 12;
+      DAY_1 : USInt := 1;
+      DAY_3 : USInt := 3;
+      DAY_6 : USInt := 6;
+      DAY_8 : USInt := 8;
+      DAY_15 : USInt := 15;
+      DAY_23 : USInt := 23;
+      DAY_25 : USInt := 25;
+      DAY_26 : USInt := 26;
+      DAY_31 : USInt := 31;
+      WEDNESDAY : USInt := 4;
+      DAYS_BEFORE_EASTER_48 : USInt := 48;
+      DAYS_BEFORE_EASTER_2 : USInt := 2;
+      DAYS_AFTER_EASTER_1 : USInt := 1;
+      DAYS_AFTER_EASTER_39 : USInt := 39;
+      DAYS_AFTER_EASTER_49 : USInt := 49;
+      DAYS_AFTER_EASTER_50 : USInt := 50;
+      DAYS_AFTER_EASTER_60 : USInt := 60;
+      EASTER_COEFF_1 : USInt := 1;
+      EASTER_COEFF_3 : USInt := 3;
+      EASTER_COEFF_4 : USInt := 4;
+      EASTER_COEFF_7 : USInt := 7;
+      EASTER_COEFF_11 : USInt := 11;
+      EASTER_COEFF_13 : USInt := 13;
+      EASTER_COEFF_19 : USInt := 19;
+      EASTER_COEFF_27 : USInt := 27;
+      EASTER_COEFF_28 : USInt := 28;
+      EASTER_COEFF_30 : USInt := 30;
+      EASTER_COEFF_204 : USInt := 204;
+      BIT_SHIFT_BY_TWO : USInt := 2;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_IsGermanHoliday
+	  // Comment/Function: Function determines whether a given date is a public holiday
+	  //                   All public holidays in Germany are taken into account
+	  //                   Holidays that are NOT uniform nationwide can be switched on or off
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V14 SP1 Upd 5
+	  // Restrictions:     ENO disabled - no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION INITIALISATION
+	  #tempEasterPartialCalc := #ZERO;
+	  #tempDaysPassedToEaster := #ZERO;
+	  #tempOday := #ZERO;
+	  #tempDaysPassedToActDay := #ZERO;
+	  #tempDTL := #CLEAR_DTL;
+	  #tempEasterInternal := #CLEAR_DTL;
+	END_REGION
+	
+	REGION CALC OF EASTER SUNDAY
+	  // Calculation of Easter Sunday
+	  #tempEasterPartialCalc := (#EASTER_COEFF_204 - #EASTER_COEFF_11 * (#date.YEAR MOD #EASTER_COEFF_19)) MOD #EASTER_COEFF_30;
+	  
+	  IF #tempEasterPartialCalc > #EASTER_COEFF_27 THEN
+	    #tempEasterPartialCalc := #tempEasterPartialCalc - #EASTER_COEFF_1;
+	  END_IF;
+	  
+	  #tempOday := #EASTER_COEFF_28 + #tempEasterPartialCalc - ((#date.YEAR + WORD_TO_UINT(SHR(IN := UINT_TO_WORD(#date.YEAR), N := #BIT_SHIFT_BY_TWO)) + #tempEasterPartialCalc - #EASTER_COEFF_13) MOD #EASTER_COEFF_7);
+	  
+	  IF #tempOday > #DAY_31 THEN
+	    #tempEasterInternal.YEAR := #date.YEAR;
+	    #tempEasterInternal.MONTH := #APRIL;
+	    #tempEasterInternal.DAY := UINT_TO_USINT(#tempOday - #DAY_31);
+	  ELSE
+	    #tempEasterInternal.YEAR := #date.YEAR;
+	    #tempEasterInternal.MONTH := #MARCH;
+	    #tempEasterInternal.DAY := UINT_TO_USINT(#tempOday);
+	  END_IF;
+	  
+	  // Calculation of the days from Jan 1st till Easter Sunday and from Jan 1st to the actual day. 
+	  #tempDTL := #date;
+	  #tempDTL.MONTH := #APRIL;
+	  #tempDTL.DAY := #DAY_1;
+	  
+	  #tempDaysPassedToEaster := DATE_TO_DINT(DTL_TO_DATE(#tempEasterInternal)) - DATE_TO_DINT(DTL_TO_DATE(#tempDTL)) + #DAY_1;
+	  #tempDaysPassedToActDay := DATE_TO_DINT(DTL_TO_DATE(#date)) - DATE_TO_DINT(DTL_TO_DATE(#tempDTL)) + #DAY_1;
+	END_REGION
+	
+	REGION GERMAN HOLIDAYS
+	  // Check if actual day is holiday in Germany
+	  // Change here for other countries than germany
+	  IF (#date.MONTH = #JANUARY AND #date.DAY = #DAY_1) OR                             // 1st of January
+	    (#date.MONTH = #JANUARY AND #date.DAY = #DAY_6 AND #threeKings) OR              // 6 of January (Holy Kings)
+	    (#date.MONTH = #MAY AND #date.DAY = #DAY_1) OR                                  // 1st of May
+	    (#date.MONTH = #AUGUST AND #date.DAY = #DAY_8 AND #augsburgerFriedensfest) OR   // Augsburger Friedensfest
+	    (#date.MONTH = #AUGUST AND #date.DAY = #DAY_15 AND #assumptionOfMary) OR        // Assumption of Mary
+	    (#date.MONTH = #OCTOBER AND #date.DAY = #DAY_3) OR                              // 3rd of October
+	    (#date.MONTH = #OCTOBER AND #date.DAY = #DAY_31 AND #reformationDay) OR         // Reformation day
+	    (#date.MONTH = #NOVEMBER AND #date.DAY = #DAY_1 AND #allSaintDay) OR            // 1st of November (all saints day)
+	    (#date.MONTH = #NOVEMBER AND #date.WEEKDAY = #WEDNESDAY AND #date.DAY > #DAY_15 AND #date.DAY < #DAY_23 AND #bussUndBettag) OR //Buß- und Bettag (Day of Repentance and Prayer)
+	    (#date.MONTH = #DECEMBER AND #date.DAY = #DAY_25) OR                              // 25th of December (1st christmas)
+	    (#date.MONTH = #DECEMBER AND #date.DAY = #DAY_26) OR                              // 26th of December (2nd christmas)
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster - #DAYS_BEFORE_EASTER_48 AND #roseMonday) OR     // Rose Monday
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster - #DAYS_BEFORE_EASTER_2) OR                      // Good Friday
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster) OR                                              // Easter Sunday
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster + #DAYS_AFTER_EASTER_1) OR                       // Easter Monday
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster + #DAYS_AFTER_EASTER_39 AND #ascension) OR       // Feast of the Ascension
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster + #DAYS_AFTER_EASTER_49) OR                      // Pentecost
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster + #DAYS_AFTER_EASTER_50) OR                      // Pentecost Monday
+	    (#tempDaysPassedToActDay = #tempDaysPassedToEaster + #DAYS_AFTER_EASTER_60 AND #corpusChristi) THEN // Corpus Christi
+	    
+	    #LGF_IsGermanHoliday := TRUE;
+	  ELSE
+	    #LGF_IsGermanHoliday := FALSE;
+	  END_IF;
+	  
+	  // ENO is not used, forced to TRUE
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

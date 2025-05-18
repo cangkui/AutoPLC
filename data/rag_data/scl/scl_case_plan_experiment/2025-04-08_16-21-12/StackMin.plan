@@ -1,0 +1,88 @@
+### 算法流程描述
+
+#### 1. 变量定义
+- **输入变量**:
+  - `push`: 布尔值，触发入栈操作
+  - `pop`: 布尔值，触发出栈操作
+  - `reset`: 布尔值，复位堆栈指针
+- **输出变量**:
+  - `error`: 布尔值，表示是否发生错误
+  - `status`: 状态码，表示当前操作的状态
+- **输入/输出变量**:
+  - `item`: 整型，用于传递入栈或出栈的元素值
+  - `stack`: 整型数组（大小为4），作为堆栈存储空间
+- **内部变量**:
+  - `statStackIndex`: 整型，堆栈指针，指向当前栈顶位置
+  - `statMin`: 整型，记录当前堆栈中最小值的索引
+- **临时变量**:
+  - `tempStackSize`: 堆栈的最大容量（固定为4）
+  - `tempCount`: 循环计数器
+- **常量**:
+  - `STACK_FULL`: 堆栈已满的状态码（16#8A04）
+  - `STACK_EMPTY`: 堆栈为空的状态码（16#8A05）
+  - `NO_ERROR`: 无错误的状态码（16#0000）
+
+#### 2. 主逻辑流程
+1. **初始化**:
+   - 设置堆栈的最大容量（`tempStackSize = 4`）。
+   - 初始化堆栈指针（`statStackIndex = 0`）。
+
+2. **入栈操作（Push）**:
+   - 检查`push`是否为`TRUE`。
+   - 如果堆栈已满（`statStackIndex >= tempStackSize`）：
+     - 设置`error = TRUE`，`status = STACK_FULL`。
+     - 直接返回，不执行入栈。
+   - 如果堆栈未满：
+     - 将`item`的值存入`stack[statStackIndex]`。
+     - 堆栈指针`statStackIndex`加1。
+
+3. **出栈操作（Pop）**:
+   - 检查`pop`是否为`TRUE`。
+   - 如果堆栈为空（`statStackIndex <= 0`）：
+     - 设置`error = TRUE`，`status = STACK_EMPTY`。
+     - 直接返回，不执行出栈。
+   - 如果堆栈不为空：
+     - 遍历堆栈，找到最小值的索引`statMin`。
+     - 将最小值`stack[statMin]`赋值给`item`。
+     - 如果最小值不在栈顶，将`statMin`之后的元素向前移动一位。
+     - 栈顶元素清零（`stack[statStackIndex - 1] = 0`）。
+     - 堆栈指针`statStackIndex`减1。
+
+4. **复位操作（Reset）**:
+   - 检查`reset`是否为`TRUE`。
+   - 如果是，将堆栈指针`statStackIndex`重置为0。
+
+5. **状态更新**:
+   - 如果没有发生错误，设置`error = FALSE`，`status = NO_ERROR`。
+
+#### 3. 关键逻辑调整
+- **出栈操作优化**:
+  - 当前代码在出栈时遍历堆栈找到最小值，然后移动元素填补空缺。这是正确的，但可以优化为：
+    - 如果最小值在栈顶（`statMin == statStackIndex - 1`），直接出栈，无需移动其他元素。
+    - 否则，移动元素填补空缺。
+- **错误处理**:
+  - 当前代码在入栈或出栈失败时直接返回，但后续会覆盖`error`和`status`。建议在错误处理后直接返回，避免状态被覆盖。
+
+#### 4. 代码调整建议
+- **错误处理**:
+  - 在`Push`和`Pop`区域的错误处理分支中，添加`RETURN`语句，确保错误状态不会被后续代码覆盖。
+- **出栈逻辑**:
+  - 可以增加对`statMin`是否为栈顶的判断，避免不必要的元素移动。
+
+#### 5. 示例流程
+- **入栈**:
+  - `push = TRUE`，`item = 5`：
+    - `stack[0] = 5`，`statStackIndex = 1`。
+  - `push = TRUE`，`item = 3`：
+    - `stack[1] = 3`，`statStackIndex = 2`。
+- **出栈**:
+  - `pop = TRUE`：
+    - 找到最小值`3`（索引1），`item = 3`。
+    - 移动`stack[2]`到`stack[1]`（如果存在）。
+    - `statStackIndex = 1`。
+- **复位**:
+  - `reset = TRUE`：
+    - `statStackIndex = 0`，堆栈清空。
+
+### 总结
+该功能块实现了带有最小值出栈功能的堆栈，支持入栈、出栈和复位操作，并通过状态码和错误标志反馈操作结果。逻辑清晰，但需注意错误处理和出栈优化的细节。

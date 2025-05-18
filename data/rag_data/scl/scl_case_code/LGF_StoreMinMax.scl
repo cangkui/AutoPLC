@@ -1,0 +1,73 @@
+FUNCTION_BLOCK "LGF_StoreMinMax"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_MinMaxHistory
+   VAR_INPUT 
+      value : LReal := 0.0;
+      reset : Bool := false;
+   END_VAR
+
+   VAR_OUTPUT 
+      minValue { ExternalWritable := 'False'} : LReal := 0.0;
+      maxValue { ExternalWritable := 'False'} : LReal := 0.0;
+   END_VAR
+
+   VAR 
+      statStoreMinValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal := #LREAL_MAX;
+      statStoreMaxValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal := #LREAL_MIN;
+   END_VAR
+
+   VAR CONSTANT 
+      LREAL_MAX : LReal := 1.7976931348623157e+308;
+      LREAL_MIN : LReal := -1.7976931348623157e+308;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_MinMaxHistory
+	  // Comment/Function: This function block saves the minimum and maximum value,
+	  //                   since the start of the block.
+	  //                   ENO disabled - no error handling, no failure possible
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     -
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION
+	
+	REGION Compare values
+	  // Save min value
+	  IF (#value < #statStoreMinValue) THEN
+	    #statStoreMinValue := #value;
+	  END_IF;
+	  
+	  // Save max value
+	  IF (#value > #statStoreMaxValue) THEN
+	    #statStoreMaxValue := #value;
+	  END_IF;
+	  
+	  // If reset is TRUE, min and max value are set to #LREAL_MAX and #LREAL_MIN respectively
+	  IF #reset THEN
+	    #statStoreMinValue := #LREAL_MAX;
+	    #statStoreMaxValue := #LREAL_MIN;
+	  END_IF;
+	END_REGION
+	
+	REGION Writting to outputs
+	  #minValue := #statStoreMinValue;
+	  #maxValue := #statStoreMaxValue;
+	  
+	  //ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+	
+END_FUNCTION_BLOCK

@@ -1,0 +1,64 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块用于通过3次多项式对输入值进行平滑处理。它需要至少5个输入值才能计算出一个平滑值。每次在`insert`信号的上升沿时，将当前`value`存入缓冲区，并在缓冲区满5个值时计算平滑值。
+
+#### 2. **输入输出定义**
+- **输入**：
+  - `enable`：激活功能块。
+  - `insert`：在上升沿时，将`value`存入缓冲区。
+  - `value`：待平滑处理的输入值。
+- **输出**：
+  - `smoothedValue`：平滑后的值。
+  - `error`：错误标志（TRUE表示发生错误）。
+  - `status`：功能块的状态码。
+
+#### 3. **内部变量**
+- `statValues`：存储最近5个输入值的数组。
+- `statCount`：已存储的输入值数量。
+- `statSmoothedValue`：计算出的平滑值。
+- `statStatus`：内部状态码。
+- `statEnableOld`和`statInsertOld`：用于检测`enable`和`insert`信号的上升沿。
+
+#### 4. **常量定义**
+- `MINIMUM_NUMBER_OF_VALUES`：最小需要的输入值数量（5个）。
+- 状态码常量（如`STATUS_NO_CALL`、`STATUS_FIRST_CALL`等）。
+
+#### 5. **主逻辑流程**
+1. **初始化检查**：
+   - 检测`enable`信号的上升沿：
+     - 重置`statCount`和`statValues`数组。
+     - 设置状态为`STATUS_FIRST_CALL`。
+   - 如果`enable`为TRUE且非上升沿：
+     - 检测`insert`信号的上升沿：
+       - 将新值`value`存入缓冲区（`statValues`），并更新`statCount`。
+       - 如果`statCount`未达到5，设置状态为`STATUS_NOT_ENOUGH_VALUES`。
+       - 如果`statCount`达到5，计算平滑值并设置状态为`STATUS_SUBSEQUENT_CALL`。
+   - 如果`enable`为FALSE：
+     - 设置状态为`STATUS_NO_CALL`，并重置平滑值。
+
+2. **平滑值计算**：
+   - 使用多项式公式计算平滑值：
+     \[
+     y(n) = \frac{1}{35} \times (-3 \times y(n-2) + 12 \times y(n-1) + 17 \times y(n) + 12 \times y(n+1) - 3 \times y(n+2))
+     \]
+   - 其中，`y(n-2)`到`y(n+2)`对应`statValues`数组中的值。
+
+3. **输出更新**：
+   - 将内部状态和计算结果写入输出变量：
+     - `error`：根据状态码的最高位（%X15）设置。
+     - `status`：直接输出内部状态码。
+     - `smoothedValue`：输出计算出的平滑值。
+
+#### 6. **错误处理**
+- 如果`statCount`未达到5，`error`会被设置为TRUE，且`status`为`STATUS_NOT_ENOUGH_VALUES`。
+- 其他状态码用于指示功能块的运行状态（如首次调用、后续调用等）。
+
+#### 7. **边缘检测**
+- 使用`statEnableOld`和`statInsertOld`检测`enable`和`insert`信号的上升沿，确保仅在信号上升时触发逻辑。
+
+#### 8. **状态管理**
+- 功能块的状态通过`statStatus`管理，并在每次调用时更新。状态码用于指示当前功能块的工作状态（如等待激活、首次调用、数据不足等）。
+
+### 总结
+该功能块的核心是通过缓冲区存储输入值，并在满足条件时计算平滑值。边缘检测和状态管理确保了逻辑的正确执行，而多项式公式则实现了平滑处理。输出变量提供了计算结果和运行状态，便于外部监控和错误处理。

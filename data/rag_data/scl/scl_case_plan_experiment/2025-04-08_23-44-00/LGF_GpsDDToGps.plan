@@ -1,0 +1,114 @@
+### 算法流程描述（GPS-DD 转 GPS DMS 转换器）
+
+#### **1. 功能概述**
+该函数用于将 GPS 坐标从**十进制度数（DD）**格式转换为**度分秒（DMS）**格式，并附带方向（N/S/E/W）。  
+输入：`LGF_typeGPS_DD`（包含 `latitude` 和 `longitude` 的十进制度数）。  
+输出：`LGF_typeGPS`（包含 `latitude` 和 `longitude` 的 DMS 格式数据）。  
+错误处理：通过 `error` 和 `status` 输出错误状态。
+
+---
+
+#### **2. 主要逻辑流程**
+1. **初始化**
+   - 复制输入数据到临时变量（避免直接修改输入）。
+   - 初始化状态码为 `STATUS_EXECUTION_FINISHED_NO_ERROR`（无错误）。
+
+2. **纬度转换（Latitude）**
+   - **方向判定**：
+     - 如果 `latitude ≥ 0`，方向为 `'N'`（北纬）。
+     - 否则，方向为 `'S'`（南纬），并取绝对值。
+   - **度分秒计算**：
+     - **度（Degrees）**：直接取整数部分（`REAL_TO_UINT`）。
+     - **分（Minutes）**：
+       - 取小数部分 `FRAC(latitude)`，乘以 `60` 得到分钟数。
+       - 取整数部分作为分钟值。
+     - **秒（Seconds）**：
+       - 取分钟的小数部分 `FRAC(minutes)`，乘以 `60` 得到秒数。
+       - 取整数部分作为秒值。
+   - **错误检查**：
+     - 如果 `degrees > 90` → 错误 `ERR_LATITUDE_VALUE`。
+     - 如果 `minutes > 59` 或 `seconds > 59` → 错误 `ERR_LATITUDE_VALUE`。
+
+3. **经度转换（Longitude）**
+   - **方向判定**：
+     - 如果 `longitude ≥ 0`，方向为 `'E'`（东经）。
+     - 否则，方向为 `'W'`（西经），并取绝对值。
+   - **度分秒计算**（逻辑同纬度）：
+     - 度：整数部分。
+     - 分：小数部分 × 60。
+     - 秒：剩余小数部分 × 60。
+   - **错误检查**：
+     - 如果 `degrees > 180` → 错误 `ERR_LONGITUDE_VALUE`。
+     - 如果 `minutes > 59` 或 `seconds > 59` → 错误 `ERR_LONGITUDE_VALUE`。
+
+4. **错误处理**
+   - 如果状态码的高位（`%X15`）为 `TRUE`，表示有错误：
+     - 将输出的 `degrees` 强制设为 `0`（安全值）。
+   - 否则，状态码设为 `STATUS_EXECUTION_FINISHED_NO_ERROR`。
+
+5. **输出结果**
+   - 返回转换后的 `LGF_typeGPS` 结构。
+   - 设置 `error` 和 `status` 输出：
+     - `error` = 状态码的高位（`%X15`）。
+     - `status` = 完整状态码。
+
+---
+
+#### **3. 关键注意事项**
+- **数值范围验证**：
+  - 纬度范围：`-90° ≤ latitude ≤ 90°`。
+  - 经度范围：`-180° ≤ longitude ≤ 180°`。
+  - 分和秒的范围：`0–59`。
+- **方向处理**：
+  - 负值自动转换为正数，并标记方向（S/W）。
+- **临时变量**：
+  - 使用 `tempRealStorage` 存储中间计算结果（避免重复计算）。
+- **错误优先级**：
+  - 如果同时存在纬度和经度错误，状态码可能被覆盖（取决于代码顺序）。
+
+---
+
+#### **4. 扩展性建议**
+- 可增加对 `NaN` 或超大值的检查（如 `latitude = 999.0`）。
+- 可支持自定义错误恢复策略（如默认值或上一次有效值）。
+- 可优化分秒的小数部分处理（如四舍五入）。
+
+---
+
+#### **5. 伪代码示意（非具体实现）**
+```plaintext
+FUNCTION LGF_GpsDDToGps:
+    INPUT: gps (DD格式)
+    OUTPUT: error, status, return_value (DMS格式)
+
+    // 初始化
+    tempGPS_DD := gps;
+    status := NO_ERROR;
+
+    // 纬度转换
+    IF latitude >= 0:
+        direction := 'N';
+    ELSE:
+        direction := 'S';
+        latitude := -latitude;
+    
+    degrees := INT(latitude);
+    minutes := INT(FRAC(latitude) * 60);
+    seconds := INT(FRAC(minutes) * 60);
+
+    IF degrees > 90 OR minutes > 59 OR seconds > 59:
+        status := ERR_LATITUDE;
+
+    // 经度转换（类似纬度逻辑，方向为E/W，范围180°）
+    ...
+
+    // 错误处理
+    IF status != NO_ERROR:
+        degrees := 0;  // 安全值
+        error := TRUE;
+    
+    // 返回结果
+    return_value := {degrees, minutes, seconds, direction};
+    RETURN;
+END_FUNCTION
+```

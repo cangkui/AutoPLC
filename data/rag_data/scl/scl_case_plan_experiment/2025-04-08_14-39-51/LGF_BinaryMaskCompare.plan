@@ -1,0 +1,28 @@
+
+
+**算法流程描述**
+
+1. **输入处理**  
+   接收三个DWord输入参数：`source`（原始值）、`compare`（对比值）、`mask`（掩码值）。
+
+2. **掩码过滤**  
+   - 对`source`和`compare`分别应用掩码操作：  
+     - `masked_source = source & mask`  
+     - `masked_compare = compare & mask`  
+   - 掩码为`1`的比特位允许比较，为`0`的比特位被忽略。
+
+3. **异或比对**  
+   - 计算`masked_source`与`masked_compare`的异或值：  
+     - `diff = masked_source XOR masked_compare`  
+   - 若`diff`结果为`0`（所有被掩码选中的比特位相等），则返回`TRUE`；否则返回`FALSE`。
+
+4. **逻辑优化**  
+   - 直接合并计算步骤，避免中间变量：  
+     ```  
+     RETURN ((source & mask) XOR (compare & mask)) == 0  
+     ```
+
+**代码调整说明**  
+- 移除冗余的常量`ALL_BITS_ARE_FALSE`，直接用`0`进行比对以提高可读性。  
+- 保留掩码默认值`16#FFFFFFFF`（隐式全位比较）的初始化逻辑，符合自然语言需求中“pass if TRUE”的定义。  
+- 保持位运算逻辑与自然语言需求完全一致，确保仅关注掩码为`1`的比特位是否匹配。

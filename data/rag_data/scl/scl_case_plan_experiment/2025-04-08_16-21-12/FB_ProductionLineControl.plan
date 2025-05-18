@@ -1,0 +1,94 @@
+### 算法流程描述（基于需求与代码分析）
+
+#### **1. 系统概述**
+该功能块用于控制一个三工位（A/B/C）的自动化生产线，包含**手动/自动模式切换**、**电机正反转控制**和**完成指示灯**功能。核心逻辑采用**状态机（STATE_A~D）**实现自动模式的流程控制。
+
+---
+
+#### **2. 变量定义**
+- **输入变量**  
+  - `Mode`：模式切换（0=手动，1=自动）  
+  - `ForwardButton/ReverseButton`：手动模式下的电机正/反转按钮（互锁）  
+  - `SensorA/B/C`：工位传感器（检测产品到达）  
+  - `ButtonA/B/C`：工位完成按钮（触发产品流转）  
+
+- **输出变量**  
+  - `MotorForward/MotorReverse`：电机控制信号  
+  - `CompletionLight`：完成指示灯  
+
+- **内部变量**  
+  - `currentState`：当前状态（0~3对应STATE_A~D）  
+  - `tempMotorForward/Reverse`：临时电机控制信号（避免直接写输出）  
+  - `tempCompletionLight`：临时指示灯状态  
+
+---
+
+#### **3. 核心逻辑流程**
+##### **手动模式（Mode = FALSE）**
+1. **复位状态机**：强制将`currentState`重置为`STATE_A`（初始状态）。  
+2. **电机控制**：  
+   - 正转条件：`ForwardButton=1`且`ReverseButton=0` → `MotorForward=1`  
+   - 反转条件：`ReverseButton=1`且`ForwardButton=0` → `MotorReverse=1`  
+   - **互锁逻辑**：正反转信号不能同时为真（通过`AND NOT`实现）。  
+
+##### **自动模式（Mode = TRUE）**
+采用**状态机**控制流程，状态转移条件如下：  
+- **STATE_A（工位A）**  
+  - 条件：`SensorA=1`且`ButtonA=1`（产品到达A并完成加工）  
+  - 动作：跳转至`STATE_B`，启动电机正转（`MotorForward=1`）  
+
+- **STATE_B（工位B）**  
+  - 条件：`SensorB=1`且`ButtonB=1`（产品到达B并完成加工）  
+  - 动作：跳转至`STATE_C`，启动电机正转  
+
+- **STATE_C（工位C）**  
+  - 条件：`SensorC=1`且`ButtonC=1`（产品到达C并完成加工）  
+  - 动作：跳转至`STATE_D`，点亮完成指示灯（`CompletionLight=1`）  
+
+- **STATE_D（完成状态）**  
+  - 条件：`SensorC=0`（产品被取走）  
+  - 动作：复位至`STATE_A`，关闭指示灯  
+
+---
+
+#### **4. 关键设计点**
+1. **状态机设计**  
+   - 状态转移严格依赖传感器和按钮的**与逻辑**（避免误触发）。  
+   - 完成状态（STATE_D）需检测传感器下降沿以复位系统。  
+
+2. **手动/自动模式隔离**  
+   - 手动模式下禁用状态机，直接响应按钮输入。  
+   - 自动模式下强制关闭反转信号（`MotorReverse=FALSE`），确保单向流动。  
+
+3. **临时变量使用**  
+   - 通过`temp`变量暂存输出逻辑，避免直接修改输出，增强代码可读性和可维护性。  
+
+---
+
+#### **5. 潜在优化建议**
+1. **边缘检测**  
+   - 当前代码对`ButtonA/B/C`的触发是电平敏感，可能因长按导致重复触发。可增加上升沿检测（如`ButtonA AND NOT lastButtonA`）。  
+
+2. **电机停止逻辑**  
+   - 自动模式下，电机正转后需在下一个工位传感器触发时停止（代码中隐含通过状态转移实现，但未显式停止电机）。建议在状态转移后添加`MotorForward=FALSE`（例如在STATE_B中检测到`SensorB=1`时先停电机，等`ButtonB=1`再启动）。  
+
+3. **异常处理**  
+   - 可增加超时检测（如某工位长时间未完成加工）或传感器冲突报错逻辑。  
+
+---
+
+### 调整后的代码逻辑流程图
+```plaintext
+START
+  │
+  ├── IF Mode = FALSE (Manual) ──┬─ Reset currentState to STATE_A
+  │                             ├─ MotorForward ← ForwardButton AND NOT ReverseButton
+  │                             └─ MotorReverse ← ReverseButton AND NOT ForwardButton
+  │
+  └── IF Mode = TRUE (Auto) ────┬─ STATE_A: Wait for SensorA AND ButtonA → Move to STATE_B, Start Motor
+                                ├─ STATE_B: Wait for SensorB AND ButtonB → Move to STATE_C, Start Motor
+                                ├─ STATE_C: Wait for SensorC AND ButtonC → Move to STATE_D, Light ON
+                                └─ STATE_D: Wait for SensorC=0 → Reset to STATE_A, Light OFF
+```
+
+此设计确保了生产线的顺序控制，同时兼顾手动操作的灵活性。

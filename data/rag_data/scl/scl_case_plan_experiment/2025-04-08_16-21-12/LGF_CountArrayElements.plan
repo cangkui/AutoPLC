@@ -1,0 +1,87 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+   - **功能名称**: `LGF_CountArrayElements`
+   - **功能描述**: 计算输入数组的元素数量，并返回基于零的元素数量（即数组索引范围 `[0..x]`）。如果输入不是数组或输入是布尔数组，则返回特定的错误代码。
+
+#### 2. **输入参数**
+   - **`array`**: 类型为 `Variant` 的输入数组，需要检查其元素数量。
+
+#### 3. **返回值**
+   - **返回值类型**: `DInt`
+   - **返回值描述**:
+     - 如果输入是数组（非布尔类型），返回数组的元素数量（基于零）。
+     - 如果输入不是数组，返回 `-1`。
+     - 如果输入是布尔数组，返回 `-2`（布尔数组不支持）。
+
+#### 4. **状态码**
+   - **`-1`**: `RETURN_NO_ARRAY`，表示输入变量不是数组。
+   - **`-2`**: `RETURN_NO_BOOL_ARRAYS_NOT_SUPPORTED`，表示输入变量是布尔数组（不支持）。
+
+#### 5. **算法流程**
+   1. **检查输入是否为数组**:
+      - 使用 `IS_ARRAY(#array)` 检查输入是否为数组。
+      - 如果输入不是数组，直接返回 `-1`。
+   2. **检查数组元素类型是否为布尔**:
+      - 使用 `TypeOfElements(#array) = Bool` 检查数组元素类型是否为布尔。
+      - 如果是布尔数组，返回 `-2`。
+   3. **计算数组元素数量**:
+      - 如果输入是数组且非布尔类型，使用 `CountOfElements(#array)` 获取数组元素数量。
+      - 将结果转换为 `DInt` 类型并返回。
+   4. **错误处理**:
+      - 无额外的错误处理逻辑，直接通过返回值传递状态信息。
+
+#### 6. **代码调整建议**
+   - **优化检查顺序**: 先检查是否为布尔数组，再检查是否为数组，可以减少不必要的检查。
+   - **常量定义**: 使用常量定义错误代码（如 `RETURN_NO_ARRAY` 和 `RETURN_NO_BOOL_ARRAYS_NOT_SUPPORTED`），提高代码可读性。
+   - **类型转换**: 确保 `CountOfElements` 的结果正确转换为 `DInt` 类型（如使用 `UDINT_TO_DINT`）。
+
+#### 7. **伪代码描述**
+   ```plaintext
+   IF 输入是布尔数组 THEN
+      返回 -2
+   ELSE IF 输入不是数组 THEN
+      返回 -1
+   ELSE
+      返回 数组元素数量（转换为 DInt）
+   END_IF
+   ```
+
+#### 8. **注意事项**
+   - **性能**: 该函数逻辑简单，性能开销主要在于数组类型检查和元素计数。
+   - **兼容性**: 确保 `IS_ARRAY` 和 `CountOfElements` 等函数在目标平台（如 S7-1200/1500）上可用。
+   - **测试**: 需要测试各种输入类型（如非数组、布尔数组、其他类型数组）以确保逻辑正确。
+
+### 最终调整后的代码逻辑
+```scl
+FUNCTION "LGF_CountArrayElements" : DInt
+VAR_INPUT
+  array : Variant;
+END_VAR
+
+VAR_TEMP
+  tempBufferSize : DInt;
+END_VAR
+
+VAR CONSTANT
+  RETURN_NO_ARRAY : DInt := -1;
+  RETURN_NO_BOOL_ARRAYS_NOT_SUPPORTED : DInt := -2;
+END_VAR
+
+BEGIN
+  // 检查是否为布尔数组
+  IF IS_ARRAY(#array) AND TypeOfElements(#array) = Bool THEN
+    #tempBufferSize := #RETURN_NO_BOOL_ARRAYS_NOT_SUPPORTED;
+  // 检查是否为非数组
+  ELSIF NOT IS_ARRAY(#array) THEN
+    #tempBufferSize := #RETURN_NO_ARRAY;
+  // 计算非布尔数组的元素数量
+  ELSE
+    #tempBufferSize := UDINT_TO_DINT(CountOfElements(#array));
+  END_IF;
+
+  // 返回结果
+  #LGF_CountArrayElements := #tempBufferSize;
+  ENO := TRUE;
+END_FUNCTION
+```

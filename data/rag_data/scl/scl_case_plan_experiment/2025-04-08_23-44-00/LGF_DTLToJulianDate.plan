@@ -1,0 +1,52 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于将DTL（日期时间）格式的时间转换为儒略日（Julian Date）和修正儒略日（Modified Julian Date），并以LReal（双精度浮点数）格式输出。转换基于UTC时间，且仅支持1990年1月1日之后的时间。
+
+#### 2. **输入与输出**
+- **输入**：
+  - `timeDTL`：DTL格式的日期时间，表示待转换的时间戳。
+- **输出**：
+  - `julianDate`：转换后的儒略日（LReal）。
+  - `modifiedJulianDate`：转换后的修正儒略日（LReal）。
+  - `error`：布尔值，表示转换过程中是否发生错误。
+  - `status`：状态码，用于标识错误类型或成功状态。
+
+#### 3. **常量定义**
+- `DELTA_1970_1990`：1970年1月1日到1990年1月1日的秒数差（631,152,000秒）。
+- `SEC_PER_DAY`：一天的秒数（86,400秒）。
+- `OFFSET_JULIAN_DATE_TO_UNIX`：Unix时间戳到儒略日的偏移量（2,440,587.5）。
+- `OFFSET_MODIFIED_JULIAN_DATE_TO_JULIAN_DATE`：儒略日到修正儒略日的偏移量（2,400,000.5）。
+- `CONVERSION_LIMIT`：允许转换的最小时间（DTL#1990-01-01-00:00:00）。
+
+#### 4. **算法流程**
+1. **初始化**：
+   - 临时变量清零（`tempUnixTime`、`tempJulianDate`、`tempModifiedJulianDate`）。
+
+2. **输入验证**：
+   - 检查输入的`timeDTL`是否有效（通过`ENO`标志）。
+     - 如果无效，设置错误标志和状态码（`ERR_DTL_INPUT_VALUE_INVALID`），并返回。
+   - 检查`timeDTL`是否早于1990年1月1日。
+     - 如果早于，设置错误标志和状态码（`ERR_TIME_BEFORE_1990`），并返回。
+
+3. **时间转换**：
+   - 将`timeDTL`转换为Unix时间戳：
+     1. 提取日期部分（`DTL_TO_DATE`），转换为从1990年1月1日开始的天数（`DATE_TO_DINT`）。
+     2. 提取时间部分（`DTL_TO_TOD`），转换为从午夜开始的毫秒数（`TOD_TO_DINT`），再除以1000得到秒数。
+     3. 计算总秒数：`天数 * 86400 + 秒数 + DELTA_1970_1990`。
+   - 将Unix时间戳转换为儒略日：
+     - `儒略日 = Unix时间戳 / 86400 + OFFSET_JULIAN_DATE_TO_UNIX`。
+   - 将儒略日转换为修正儒略日：
+     - `修正儒略日 = 儒略日 - OFFSET_MODIFIED_JULIAN_DATE_TO_JULIAN_DATE`。
+
+4. **输出结果**：
+   - 将临时变量赋值给输出变量（`julianDate`、`modifiedJulianDate`）。
+   - 设置错误标志为`FALSE`，状态码为`STATUS_EXECUTION_FINISHED_NO_ERROR`。
+
+#### 5. **错误处理**
+- 如果输入时间无效或早于1990年1月1日，直接返回错误状态，不执行转换逻辑。
+
+#### 6. **注意事项**
+- 仅支持1990年1月1日之后的时间。
+- 转换基于UTC时间，不考虑时区。
+- 使用临时变量存储中间结果，避免直接修改输出变量。

@@ -1,0 +1,86 @@
+FUNCTION_BLOCK "LGF_CountFalInDWord"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry_Support
+FAMILY : LGF
+NAME : LGF_CountFalInDWord
+   VAR_INPUT 
+      value { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DWord;
+   END_VAR
+
+   VAR_OUTPUT 
+      numberOfEdges { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+   END_VAR
+
+   VAR 
+      statDWordPrevCycle { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DWord;
+   END_VAR
+
+   VAR_TEMP 
+      tempCount : Int;
+      tempDWord : DWord;
+      tempIndex : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO_VALUE : Int := 0;
+      INCREMENT_VALUE : Int := 1;
+      LOOP_LOWER_BOUND : Int := 0;
+      LOOP_UPPER_BOUND : Int := 30;
+      SHIFT_BITS_NO : UInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_CountFalInDWord
+	  // Comment/Function: This function detects and counts falling edges in variables of type DWORD
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V15.1 Update 2
+	  // Restrictions:     ENO not in use, no error handling needed
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization
+	  #tempCount := #ZERO_VALUE;
+	  #tempDWord := #value;
+	END_REGION
+	
+	REGION Count edges through loop
+	  // Check LSB from previous value and MSB from actual value for falling edge
+	  IF ((NOT #tempDWord.%X31 AND #statDWordPrevCycle.%X0)) THEN
+	    #tempCount += #INCREMENT_VALUE;
+	  END_IF;
+	  
+	  // Loop through DWord
+	  FOR #tempIndex := #LOOP_LOWER_BOUND TO #LOOP_UPPER_BOUND DO
+	    // Check if there is an edge
+	    IF ((#tempDWord.%X1 AND NOT #tempDWord.%X0)) THEN
+	      #tempCount += #INCREMENT_VALUE;
+	    END_IF;
+	    
+	    // Shift the DWord one digit to the right for next counting iteration
+	    #tempDWord := SHR(IN := #tempDWord, N := #SHIFT_BITS_NO);
+	  END_FOR;
+	  
+	  // Copy DWord actual cycle to DWord previous cycle
+	  #statDWordPrevCycle := #value;
+	END_REGION
+	
+	REGION Outputs
+	  #numberOfEdges := #tempCount;
+	  // ENO mechanism is not used, forced to true
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

@@ -1,0 +1,74 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个函数`LGF_SearchMinMax_LReal`用于在一个`LReal`类型的数组中搜索最大值和最小值，并返回它们的值和索引。
+
+#### 2. **输入输出定义**
+- **输入**：无直接输入参数，但通过`VAR_IN_OUT`传递一个`LReal`数组`values`。
+- **输出**：
+  - `minValue`：数组中的最小值（`LReal`类型）。
+  - `minValueIndex`：最小值的索引（`DInt`类型）。
+  - `maxValue`：数组中的最大值（`LReal`类型）。
+  - `maxValueIndex`：最大值的索引（`DInt`类型）。
+
+#### 3. **临时变量定义**
+- `tempArrayLowerBound`：数组的下界索引。
+- `tempArrayUpperBound`：数组的上界索引。
+- `tempCounter`：循环计数器。
+- `tempArrayIndexMax`：临时存储最大值索引。
+- `tempArrayIndexMin`：临时存储最小值索引。
+- `tempActValue`：当前处理的数组元素值。
+- `tempMinValue`：临时存储最小值。
+- `tempMaxValue`：临时存储最大值。
+
+#### 4. **常量定义**
+- `START_FROM_SECOND_ELEMENT`：从第二个元素开始搜索（值为1）。
+- `DIMENSION_ONE`：数组的维度（值为1）。
+
+#### 5. **算法流程**
+1. **初始化**：
+   - 获取数组的上下界索引`tempArrayLowerBound`和`tempArrayUpperBound`。
+   - 将数组的第一个元素作为初始的最小值和最大值：
+     ```plaintext
+     tempMinValue = values[tempArrayLowerBound]
+     tempMaxValue = values[tempArrayLowerBound]
+     ```
+
+2. **搜索最大值和最小值**：
+   - 从数组的第二个元素开始遍历（`tempCounter`从`tempArrayLowerBound + 1`到`tempArrayUpperBound`）：
+     - 获取当前元素值`tempActValue = values[tempCounter]`。
+     - 如果`tempActValue < tempMinValue`，更新`tempMinValue`和`tempArrayIndexMin`。
+     - 如果`tempActValue > tempMaxValue`，更新`tempMaxValue`和`tempArrayIndexMax`。
+
+3. **输出结果**：
+   - 将找到的最小值和最大值及其索引赋值给输出变量：
+     ```plaintext
+     minValue = values[tempArrayIndexMin]
+     maxValue = values[tempArrayIndexMax]
+     minValueIndex = tempArrayIndexMin
+     maxValueIndex = tempArrayIndexMax
+     ```
+
+4. **错误处理**：
+   - 函数没有显式的错误处理机制，`ENO`始终设置为`TRUE`。
+
+#### 6. **优化和调整建议**
+- **边界检查**：如果数组为空，可能会导致错误。可以添加检查逻辑：
+  ```plaintext
+  IF tempArrayLowerBound > tempArrayUpperBound THEN
+      ENO := FALSE;
+      RETURN;
+  END_IF;
+  ```
+- **初始索引设置**：在初始化时，`tempArrayIndexMin`和`tempArrayIndexMax`应设置为`tempArrayLowerBound`，以避免未定义行为。
+- **并行搜索**：可以同时搜索最小值和最大值，减少循环次数。
+
+#### 7. **代码结构**
+- **区域划分**：
+  - **Block info header**：函数描述和元信息。
+  - **Validation of inputs and outputs**：验证输入输出（主要是数组边界）。
+  - **Searching the array**：核心搜索逻辑。
+  - **Writing to outputs**：结果输出。
+
+#### 8. **总结**
+该函数通过遍历数组一次，高效地找到最大值和最小值。代码结构清晰，但可以进一步增强健壮性（如空数组处理）。

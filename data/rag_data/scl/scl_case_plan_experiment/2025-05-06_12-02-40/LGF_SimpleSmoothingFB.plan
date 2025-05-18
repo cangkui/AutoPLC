@@ -1,0 +1,33 @@
+这是一个数据处理任务的功能块(FUNCTION_BLOCK)，主要用于对输入值进行平滑处理。以下是算法流程描述：
+
+1. 初始化检查：
+   - 检测enable信号的上升沿，当enable从false变为true时：
+     * 重置内部计数器statCount为0
+     * 清空存储的3个历史值(statValues数组)
+     * 设置状态为STATUS_FIRST_CALL
+
+2. 正常运行处理：
+   - 当enable保持为true时：
+     * 检测insert信号的上升沿
+     * 当insert上升沿出现时：
+       - 执行数据移位：将旧值向前移动(statValues[0]←statValues[1], statValues[1]←statValues[2])
+       - 存储新输入值到statValues[2]
+       - 增加计数器statCount
+       - 如果计数器≤2(未收集足够数据)，设置状态为STATUS_NOT_ENOUGH_VALUES
+       - 如果已收集3个值，计算平滑值：(statValues[0]+statValues[1]+statValues[2])/3
+       - 设置状态为STATUS_SUBSEQUENT_CALL
+
+3. 禁用状态处理：
+   - 当enable为false时：
+     * 设置状态为STATUS_NO_CALL
+     * 重置平滑输出值为0
+
+4. 输出处理：
+   - 将内部状态statStatus输出到status
+   - 将内部平滑值statSmoothedValue输出到smoothedValue
+   - 根据状态字最高位设置error标志
+
+5. 边缘检测维护：
+   - 每次循环结束时保存当前enable和insert值到statEnableOld和statInsertOld，用于下次循环的边缘检测
+
+该算法实现了对输入值的3点移动平均平滑处理，通过状态机管理处理过程，并提供了完整的运行状态反馈机制。

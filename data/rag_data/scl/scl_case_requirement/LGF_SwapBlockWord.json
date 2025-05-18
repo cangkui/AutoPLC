@@ -1,0 +1,23 @@
+{
+    "title": "Word Endianness Adjuster",
+    "name": "LGF_SwapBlockWord",
+    "description": "Adjusts/switches the endianness of multibyte data typed values.",
+    "type": "FUNCTION",
+    "input": [],
+    "output": [],
+    "in/out": [
+        {
+            "name": "data",
+            "type": "Array[*] of Word",
+            "description": "Contains the data values, which will be endianness adjusted"
+        }
+    ],
+    "return_value": [
+        {
+            "type": "Void",
+            "description": "Void - Function has no return value"
+        }
+    ],
+    "status_codes": {},
+    "user_defined_types": []
+}

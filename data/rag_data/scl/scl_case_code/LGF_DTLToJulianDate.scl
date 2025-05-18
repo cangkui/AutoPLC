@@ -1,0 +1,97 @@
+FUNCTION "LGF_DTLToJulianDate" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_DTLToJulianDate
+   VAR_INPUT 
+      timeDTL {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+   END_VAR
+
+   VAR_OUTPUT 
+      julianDate : LReal;
+      modifiedJulianDate : LReal;
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempTimeDtl {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempUnixTime : DInt;
+      tempJulianDate : LReal;
+      tempModifiedJulianDate : LReal;
+   END_VAR
+
+   VAR CONSTANT 
+      DELTA_1970_1990 : DInt := 631_152_000;
+      SEC_PER_DAY : DInt := 86400;
+      OFFSET_JULIAN_DATE_TO_UNIX : LReal := 2440587.5;
+      OFFSET_MODIFIED_JULIAN_DATE_TO_JULIAN_DATE : LReal := 2400000.5;
+      TIME_ZERO_FORCE_UPDATE : Time := t#0d;
+      STATUS_EXECUTION_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_DTL_INPUT_VALUE_INVALID : Word := 16#8000;
+      ERR_TIME_BEFORE_1990 : Word := 16#8001;
+      CONVERSION_LIMIT {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL := DTL#1990-01-01-00:00:00;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Comment/Function: This function converts the date and time of data type DTL to the Julian date and as well the modified Julian Date to data type LReal (Double).  
+	  //                   The timestamp is calculated based on UTC. This means that the time zone is not considered.
+	  //                   Only times after 01/01/1990 are permitted.
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-1516F (V2.9)
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     Date type (range from 01.01.1990) is used in the "Function" therefore the conversion limit is set.
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION Block info header
+	
+	REGION INITIALISATION
+	  #tempUnixTime := 0;
+	  #tempJulianDate := 0.0;
+	  #tempModifiedJulianDate := 0.0;
+	END_REGION
+	
+	REGION CONVERT
+	  // adding zero forces the PLC to update the tag and sets EON in case an error happend to the DTL value
+	  #tempTimeDtl := #timeDTL + #TIME_ZERO_FORCE_UPDATE;
+	  
+	  IF NOT ENO THEN // Check if DTL has valid format and data
+	    #julianDate := #tempJulianDate;
+	    #modifiedJulianDate := #tempModifiedJulianDate;
+	    #error := TRUE;
+	    #status := #ERR_DTL_INPUT_VALUE_INVALID;
+	    RETURN;
+	  ELSIF (#tempTimeDtl < #CONVERSION_LIMIT) THEN // Check if timeUnix less than 01.01.1990
+	    #julianDate := #tempJulianDate;
+	    #modifiedJulianDate := #tempModifiedJulianDate;
+	    #error := TRUE;
+	    #status := #ERR_TIME_BEFORE_1990;
+	    RETURN;
+	  END_IF;
+	  
+	  // Convert System Time (UTC) to UNIX time
+	  // DATE range D#1990-01-01 to D#2169-06-06
+	  // DATE_TO_DINT conversion - The number of days since 1/1/1990 is returned as result.
+	  #tempUnixTime := (DATE_TO_DINT(DTL_TO_DATE(#tempTimeDtl)) * #SEC_PER_DAY) + (TOD_TO_DINT(DTL_TO_TOD(#tempTimeDtl)) / 1000) + #DELTA_1970_1990;
+	  
+	  // Convert Unix time to Julian Date
+	  #tempJulianDate := (DINT_TO_LREAL(#tempUnixTime) / #SEC_PER_DAY) + #OFFSET_JULIAN_DATE_TO_UNIX;
+	  // Convert regular Julian date to modified Julian date
+	  #tempModifiedJulianDate := #tempJulianDate - #OFFSET_MODIFIED_JULIAN_DATE_TO_JULIAN_DATE;
+	END_REGION
+	
+	REGION OUTPUTS
+	  #julianDate := #tempJulianDate;
+	  #modifiedJulianDate := #tempModifiedJulianDate;
+	  #error := FALSE;
+	  #status := #STATUS_EXECUTION_FINISHED_NO_ERROR;
+	END_REGION
+	
+END_FUNCTION

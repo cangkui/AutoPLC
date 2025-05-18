@@ -1,0 +1,89 @@
+### 算法流程描述：奇偶校验位检查（DWord）
+
+#### 1. **需求理解**
+- **功能目标**：检查一个32位DWord（双字）中“1”的个数是否为奇数。
+- **输入**：`doubleWord`（32位无符号整数）。
+- **输出**：布尔值（`TRUE`表示“1”的个数为奇数，`FALSE`为偶数）。
+- **关键点**：高效计算32位数据的奇偶性，避免逐位检查。
+
+---
+
+#### 2. **算法设计**
+采用**分治+位运算优化**的策略，核心步骤如下：
+
+##### **步骤1：并行异或折叠**
+- **目的**：将32位数据的奇偶性压缩到低4位。
+- **操作**：
+  1. **第一次折叠**（右移1位并异或）：
+     ```scala
+     tempDword := doubleWord XOR (doubleWord >> 1)
+     ```
+     - 效果：每两位的奇偶性存储到低位（例如，`01`→`1`，`11`→`0`）。
+  2. **第二次折叠**（右移2位并异或）：
+     ```scala
+     tempDword := tempDword XOR (tempDword >> 2)
+     ```
+     - 效果：每4位的奇偶性存储到最低位。
+
+##### **步骤2：掩码与乘法**
+- **目的**：将低4位的奇偶性合并到最低位（LSB）。
+- **操作**：
+  1. **掩码处理**：用`0x11111111`掩码保留每字节的第0位（即所有奇偶位）。
+     ```scala
+     tempDword := tempDword AND 16#11111111
+     ```
+  2. **乘法合并**：乘以掩码自身，通过进位将各字节的奇偶位叠加到最高字节。
+     ```scala
+     tempDword := tempDword * 16#11111111
+     ```
+
+##### **步骤3：提取结果**
+- **右移28位**：将最高字节的奇偶位移动到最低位（`tempDword.%X0`）。
+- **最终结果**：最低位即为整个DWord的奇偶性。
+
+---
+
+#### 3. **代码调整建议**
+- **优化点**：
+  - 移除不必要的`ENO`赋值（函数无错误状态）。
+  - 常量命名更语义化（如`MASK_PARITY_BITS`替代`MASK_FOR_RESULT`）。
+- **调整后代码**：
+  ```scala
+  FUNCTION "LGF_IsParityOdd" : Bool
+  VAR_INPUT 
+    doubleWord : DWord;
+  END_VAR
+  VAR_TEMP 
+    tempDword : DWord;
+  END_VAR
+  VAR CONSTANT 
+    MASK_PARITY_BITS : DWord := 16#11111111;
+    SHIFT_TO_LSB : USInt := 28;
+  END_VAR
+  BEGIN
+    // Step 1: Fold parity bits
+    #tempDword := #doubleWord XOR SHR(IN := #doubleWord, N := 1);
+    #tempDword := #tempDword XOR SHR(IN := #tempDword, N := 2);
+    
+    // Step 2: Merge parity bits to LSB
+    #tempDword := #tempDword AND #MASK_PARITY_BITS;
+    #tempDword := #tempDword * #MASK_PARITY_BITS;
+    
+    // Step 3: Extract result
+    #LGF_IsParityOdd := SHR(IN := #tempDword, N := #SHIFT_TO_LSB).%X0;
+  END_FUNCTION
+  ```
+
+---
+
+#### 4. **算法优势**
+- **高效性**：仅需5次位运算和1次乘法，比逐位检查快约8倍（32位→5步）。
+- **可扩展性**：类似方法可推广到更大位宽（如LWord）。
+
+#### 5. **验证用例**
+| 输入（Hex） | 二进制（1的个数） | 预期输出 |
+|-------------|------------------|----------|
+| `0x00000001` | 1 (Odd)          | `TRUE`   |
+| `0xFFFFFFFF` | 32 (Even)        | `FALSE`  |
+| `0xAAAAAAAA` | 16 (Even)        | `FALSE`  |
+| `0x12345678` | 13 (Odd)         | `TRUE`   |

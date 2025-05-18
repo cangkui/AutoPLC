@@ -1,0 +1,72 @@
+# Profinet接口参数读取功能块(LGF_ReadPnInterfaceParameter)算法流程分析
+
+## 功能概述
+该功能块用于读取Profinet接口的网络参数，包括IP地址、子网掩码、默认网关、MAC地址和Profinet名称。
+
+## 变量定义
+- **输入变量**:
+  - `execute`: 触发信号(上升沿触发)
+  - `hardwareId`: 硬件接口ID
+- **输出变量**:
+  - `done`: 操作完成标志
+  - `busy`: 忙状态标志
+  - `error`: 错误标志
+  - `status`: 状态码
+  - 网络参数输出: `address`, `subnetMask`, `standardGateway`, `macAddress`, `pnName`
+- **内部变量**:
+  - 状态跟踪变量: `statExecuteOld`, `statDone`, `statBusy`, `statError`, `statStatus`
+  - 状态机变量: `statFBState`
+  - 数据记录变量: `statPdInterfaceData`
+  - RDREC功能块实例: `instRedRec`
+
+## 主要算法流程
+
+### 1. 触发检测
+- 检测`execute`输入的上升沿
+- 当检测到上升沿时:
+  - 初始化所有状态标志
+  - 重置输出参数
+  - 设置状态为`STATUS_FIRST_CALL`
+  - 启动状态机(`FB_STATE_READ_RECORD`)
+
+### 2. 状态机处理
+状态机包含以下状态:
+
+#### a) 无处理状态(`FB_STATE_NO_PROCESSING`)
+- 空闲状态，不做任何处理
+
+#### b) 读取记录状态(`FB_STATE_READ_RECORD`)
+- 调用`RDREC`功能块读取接口参数记录
+- 成功读取后进入处理记录状态
+- 读取失败则设置错误状态
+
+#### c) 处理记录状态(`FB_STATE_PROCESS_RECORD`)
+- 解析读取到的数据记录:
+  - 提取Profinet名称(字符串)
+  - 计算MAC地址的偏移量
+  - 提取MAC地址(6字节)
+  - 提取IP地址(4字节)
+  - 提取子网掩码(4字节)
+  - 提取默认网关(4字节)
+- 完成后设置状态为`STATUS_EXECUTION_FINISHED`
+
+### 3. 输出处理
+- 根据状态更新输出标志:
+  - 完成时设置`done=TRUE`, `busy=FALSE`
+  - 错误时设置`error=TRUE`
+  - 当`execute`复位时重置所有输出标志
+- 将内部状态变量值复制到输出变量
+
+## 关键处理逻辑
+1. **边缘检测**: 使用`statExecuteOld`变量检测`execute`输入的上升沿
+2. **状态管理**: 通过`statFBState`和`statStatus`跟踪处理进度
+3. **数据解析**: 从读取的记录中提取各网络参数，处理字节对齐和偏移量计算
+4. **错误处理**: 通过`RDREC`功能块的错误输出和状态机异常状态进行错误检测
+
+## 代码结构优化建议
+1. 将数据解析部分封装为单独的方法提高可读性
+2. 添加更多注释说明各数据字段的偏移量计算逻辑
+3. 考虑添加参数校验逻辑(如硬件ID有效性检查)
+4. 可添加超时机制防止长时间处于忙状态
+
+该功能块实现了完整的Profinet接口参数读取流程，通过状态机管理处理步骤，具有清晰的错误处理和状态报告机制。

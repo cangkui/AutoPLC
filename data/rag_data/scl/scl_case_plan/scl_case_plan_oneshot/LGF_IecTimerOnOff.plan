@@ -1,0 +1,53 @@
+### 算法流程描述（基于自然语言需求和代码实现）
+
+#### 1. **功能概述**
+   - 该功能块 `LGF_IecTimerOnOff` 实现了 **IEC 定时器** 的 `TON`（通电延时）和 `TOF`（断电延时）功能。
+   - 输入信号 `in` 经过 `timeOnDelay` 延时后触发 `TON`，再经过 `timeOffDelay` 延时后触发 `TOF`，最终输出信号 `out`。
+
+#### 2. **输入/输出定义**
+   - **输入变量**：
+     - `in`（`Bool`）：触发信号（`FALSE` 为初始值）。
+     - `timeOnDelay`（`Time`）：通电延时时间（预设值 `T#0s`）。
+     - `timeOffDelay`（`Time`）：断电延时时间（预设值 `T#0s`）。
+   - **输出变量**：
+     - `out`（`Bool`）：经过延时后的输出信号（不可外部写入）。
+
+#### 3. **内部变量**
+   - `instOnDelay`：`IEC_TIMER` 实例，用于实现 `TON` 功能。
+   - `instOffDelay`：`IEC_TIMER` 实例，用于实现 `TOF` 功能。
+
+#### 4. **主逻辑流程**
+   1. **通电延时（TON）**：
+      - 当 `in` 从 `FALSE` 变为 `TRUE` 时，启动 `instOnDelay.TON`。
+      - 延时 `timeOnDelay` 后，`instOnDelay.Q` 变为 `TRUE`。
+   2. **断电延时（TOF）**：
+      - 当 `instOnDelay.Q` 从 `TRUE` 变为 `FALSE` 时，启动 `instOffDelay.TOF`。
+      - 延时 `timeOffDelay` 后，`instOffDelay.Q` 变为 `FALSE`。
+   3. **输出信号**：
+      - `out` 直接取自 `instOffDelay.Q`，即最终经过双重延时的信号。
+
+#### 5. **时序说明**
+   - 输入 `in` 的上升沿触发 `TON`，下降沿触发 `TOF`。
+   - 输出 `out` 的响应时间 = `timeOnDelay` + `timeOffDelay`。
+
+#### 6. **异常处理**
+   - 无显式错误处理，`ENO` 始终为 `TRUE`（表示功能块执行成功）。
+
+#### 7. **代码调整建议**
+   - 如果需支持错误处理，可增加对 `instOnDelay` 和 `instOffDelay` 的状态检查（如 `ET` 或错误标志）。
+   - 可添加输入参数校验（如 `timeOnDelay` 和 `timeOffDelay` 是否为有效时间值）。
+
+#### 8. **伪代码表示**
+```plaintext
+IF in上升沿 THEN
+    启动TON(timeOnDelay)
+    IF TON.Q = TRUE THEN
+        启动TOF(timeOffDelay)
+    END_IF
+END_IF
+out := TOF.Q
+```
+
+#### 9. **适用场景**
+   - 需要组合延时控制的工业自动化场景（如电机启停、阀门开关等）。
+   - 适用于 Siemens S7-1200/1500 PLC，TIA Portal 工程环境。

@@ -1,0 +1,170 @@
+FUNCTION "LGF_CompareVariant" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_CompareVariant
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+      subFunctionStatus : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      variableA : Variant;
+      variableB : Variant;
+   END_VAR
+
+   VAR_TEMP 
+      tempVariableASize : DInt;
+      tempVariableBSize : DInt;
+      tempindex : DInt;
+      tempVariableAToBytes : Array[0..#MAX_LENGTH] of Byte;
+      tempVariableBToBytes : Array[0..#MAX_LENGTH] of Byte;
+      tempSerializeRet : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_INPUT_TYPES_MUST_MATCH : Word := 16#8201;
+      ERR_INPUT_TYPES_LENGTH_NOT_EQUAL : Word := 16#8202;
+      ERR_SERIALIZE_VARIABLE_A : Word := 16#8601;
+      ERR_SERIALIZE_VARIABLE_B : Word := 16#8602;
+      MAX_LENGTH : Int := 200;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_CompareVariant
+	  // Comment/Function: Compare arrays or plc datatypes and their values 
+	  //                   up to a max lengh of 200 Bytes of the connected variables.
+	  //                   If at least one value of an element is not identical -->
+	  //                   set function result = false
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     The attached structure must not include Strings
+	  //                   The attached structure can not exceed 200 bytes,
+	  //                   because of the internal buffer size
+	  //                   --> extend: cut from type, adjust "MAX_LENGHT" constant
+	  //                   ENO disabled - error handling done with error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialisation
+	  // init temporary variables
+	  #tempVariableASize := 0;
+	  #tempVariableBSize := 0;
+	  #tempindex := 0;
+	  
+	  // Set "No current job" #status
+	  #error := FALSE;
+	  #status := #STATUS_NO_ERROR;
+	  #subFunctionStatus := #STATUS_NO_ERROR;
+	  
+	  // Initialisation of function result
+	  #LGF_CompareVariant := FALSE;
+	END_REGION Initialisation
+	
+	REGION Processing
+	  
+	  REGION Check input types
+	    // Check if the datatypes of the connected tags are identical
+	    IF TypeOf(#variableA) <> TypeOf(#variableB) THEN
+	      #error := TRUE;
+	      #status := #ERR_INPUT_TYPES_MUST_MATCH;
+	      #subFunctionStatus := #STATUS_NO_ERROR;
+	      // no error handling needed
+	      ENO := TRUE;
+	      RETURN; // Finish function if conversion fails
+	    END_IF;
+	  END_REGION
+	  
+	  REGION Serialize Input Variable A
+	    // convert variableA Values to serialised binary array of byte
+	    #tempSerializeRet := INT_TO_WORD(
+	                                     Serialize(SRC_VARIABLE := #variableA,
+	                                               DEST_ARRAY => #tempVariableAToBytes,
+	                                               POS := #tempVariableASize)
+	    );
+	    
+	    // Check return value of SERIALIZE
+	    // if not zero - error happend, write error codes and end/leave function
+	    IF #tempSerializeRet <> #STATUS_NO_ERROR THEN
+	      #error := TRUE;
+	      #status := #ERR_SERIALIZE_VARIABLE_A;
+	      #subFunctionStatus := #tempSerializeRet;
+	      // no error handling needed
+	      ENO := TRUE;
+	      RETURN; // Finish function if conversion fails
+	    END_IF;
+	  END_REGION
+	  
+	  REGION Serialize Input Variable A
+	    // convert variableB Values to serialised binary array of byte
+	    #tempSerializeRet := INT_TO_WORD(
+	                                     Serialize(SRC_VARIABLE := #variableB,
+	                                               DEST_ARRAY => #tempVariableBToBytes,
+	                                               POS := #tempVariableBSize)
+	    );
+	    
+	    // Check return value of SERIALIZE
+	    // if not zero - error happend, write error codes and end/leave function
+	    IF #tempSerializeRet <> #STATUS_NO_ERROR THEN
+	      #error := TRUE;
+	      #status := #ERR_SERIALIZE_VARIABLE_B;
+	      #subFunctionStatus := #tempSerializeRet;
+	      // no error handling needed
+	      ENO := TRUE;
+	      RETURN; // Finish function if conversion fails
+	    END_IF;
+	  END_REGION
+	  
+	  REGION Check if serialized sizes are equal
+	    // Compare size of both variables
+	    IF #tempVariableASize <> #tempVariableBSize THEN
+	      #error := TRUE;
+	      #status := #ERR_INPUT_TYPES_LENGTH_NOT_EQUAL;
+	      #subFunctionStatus := DINT_TO_WORD(#tempVariableASize - #tempVariableBSize);
+	      // no error handling needed
+	      ENO := TRUE;
+	      RETURN; // Finish function if conversion fails
+	    END_IF;
+	  END_REGION
+	  
+	  REGION Compare
+	    // Compare values of temp. array elements of bytes
+	    WHILE #tempindex < #tempVariableASize DO
+	      
+	      // Compare bytes till difference detected
+	      IF #tempVariableAToBytes[#tempindex] = #tempVariableBToBytes[#tempindex] THEN
+	        // if equal increment index
+	        #tempindex += 1; // Or end of array reached
+	      ELSE
+	        // if values diffrent (content missmatch) --> exit loop
+	        EXIT;
+	      END_IF;
+	    END_WHILE;
+	    
+	  END_REGION
+	END_REGION Processing
+	
+	REGION Output
+	  // Assign function result - if index is equal to size = TRUE
+	  #LGF_CompareVariant := (#tempindex = #tempVariableASize);
+	  
+	  // ENO is not used, forced to TRUE
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

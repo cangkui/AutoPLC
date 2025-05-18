@@ -1,0 +1,25 @@
+这是一个数据处理任务，具体来说是一个温度单位转换函数。以下是算法流程描述：
+
+1. 算法流程：
+   1.1 输入处理：
+   - 接收一个实数类型的输入参数value，表示以°Rankine为单位的温度值
+
+   1.2 转换计算：
+   - 使用预定义的常数TEMPERATURE_GAIN_NUMERATOR(5.0)和TEMPERATURE_GAIN_DENOMINATOR(9.0)
+   - 计算转换公式：(TEMPERATURE_GAIN_NUMERATOR / TEMPERATURE_GAIN_DENOMINATOR) * value
+   - 将计算结果存储在临时变量tempKelvinTemperature中
+
+   1.3 输出处理：
+   - 将计算结果tempKelvinTemperature赋值给函数返回值
+   - 设置ENO(使能输出)为TRUE表示成功执行
+
+2. 特点说明：
+   - 这是一个纯数学计算函数，不涉及状态转换
+   - 转换系数使用常数定义，提高代码可读性和可维护性
+   - 没有错误处理逻辑，直接返回计算结果
+   - 使用临时变量存储中间结果，保持代码清晰
+
+3. 注意事项：
+   - 输入值范围未做限制，调用者需确保输入有效
+   - 由于使用实数运算，可能存在浮点精度误差
+   - 转换系数5/9是Rankine到Kelvin的标准转换公式

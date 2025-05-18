@@ -1,0 +1,42 @@
+FUNCTION "LGF_SplitByteToBits" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SplitByteToBits
+	VAR_INPUT 
+		"byte" : Byte;
+	END_VAR
+
+	VAR_OUTPUT 
+		bit7 : Bool;
+		bit6 : Bool;
+		bit5 : Bool;
+		bit4 : Bool;
+		bit3 : Bool;
+		bit2 : Bool;
+		bit1 : Bool;
+		bit0 : Bool;
+	END_VAR
+
+	VAR CONSTANT 
+		MASK : Byte := 16#0001;
+	END_VAR	
+
+
+BEGIN
+	
+	REGION OUTPUT
+	  // get the bits by slice access
+	  #bit0 := #byte AND #MASK;
+	  #bit1 := SHR(IN := #byte, N := 1) AND #MASK;
+	  #bit2 := SHR(IN := #byte, N := 2) AND #MASK;
+	  #bit3 := SHR(IN := #byte, N := 3) AND #MASK;
+	  #bit4 := SHR(IN := #byte, N := 4) AND #MASK;
+	  #bit5 := SHR(IN := #byte, N := 5) AND #MASK;
+	  #bit6 := SHR(IN := #byte, N := 6) AND #MASK;
+	  #bit7 := SHR(IN := #byte, N := 7) AND #MASK;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

@@ -1,0 +1,90 @@
+
+
+以下是基于自然语言需求和代码实现的算法流程描述：
+
+1. **初始化阶段**
+- 每次扫描周期开始时重置所有输出信号（recipeAdded/Deleted/Modified置False）
+- 清除错误状态（error=False，status=0x0000）
+
+2. **请求处理优先级**
+```python
+采用严格顺序判断：添加 > 删除 > 修改 > 查询
+同一扫描周期只处理一个有效请求信号
+```
+
+3. **公共操作逻辑**
+```python
+定义临时变量：
+- index：数组遍历索引（1-10）
+- found：标识符存在性检查结果
+```
+
+4. **添加配方流程**
+```python
+if addRecipe触发：
+    遍历recipe数组：
+        查找第一个recipeID=0的空位（记录freeIndex）
+        检查是否存在recipeID重复（found=True）
+    
+    if 发现重复ID：
+        error=True, status=0x8002
+    elif 数组已满（freeIndex=0）：
+        error=True, status=0x8003
+    else：
+        将recipeIn写入freeIndex位置
+        recipeAdded置True
+```
+
+5. **删除配方流程**
+```python
+if deleteRecipe触发：
+    遍历数组查找目标recipeID：
+        if 找到：
+            置recipeID=0（保留其他字段）
+            recipeDeleted置True
+        else：
+            error=True, status=0x8004
+```
+
+6. **修改配方流程**
+```python
+if modifyRecipe触发：
+    遍历数组查找目标recipeID：
+        if 找到：
+            用recipeIn覆盖整个结构
+            recipeModified置True
+        else：
+            error=True, status=0x8005
+```
+
+7. **查询配方流程**
+```python
+if queryRecipe触发：
+    遍历数组查找目标recipeID：
+        if 找到：
+            复制完整结构到recipeQueryResult
+        else：
+            error=True, status=0x8001
+```
+
+8. **数据库管理特性**
+```python
+数组维护规则：
+    - 空位标记：recipeID=0
+    - 新增时优先使用最小索引空位
+    - 删除仅置空recipeID（非物理删除）
+    - 修改/查询时严格匹配非零recipeID
+```
+
+9. **错误处理机制**
+```python
+错误状态保持：
+    - 成功操作自动清除error状态
+    - 多个错误同时发生时，优先处理第一个触发请求的错误
+    - 错误代码遵循标准定义（16#8001~16#8005）
+```
+
+该流程与现有代码的主要差异点：
+1. 代码中未显式处理多个请求同时触发的情况，需补充请求优先级说明
+2. 需求文档要求recipe数据库用数组[1..10]，但代码实现使用0初始化空位
+3. 查询结果输出需要明确是否覆盖原有recipeQueryResult内容（代码中未处理失败时的清空）

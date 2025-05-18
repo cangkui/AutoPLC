@@ -1,0 +1,53 @@
+FUNCTION "LGF_IntToString" : String
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_IntToString
+   VAR_INPUT 
+      value : DInt;
+   END_VAR
+
+   VAR_TEMP 
+      tempString : String;
+   END_VAR
+
+   VAR CONSTANT 
+      CONVERT_SIZE : USInt := 0;
+      CONVERT_PRECISION : USInt := 0;
+      CONVERT_FORMAT_TO_STRING : Word := 16#0000;
+      CONVERT_START_POSITION : UInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_IntToString
+	  // Comment/Function: This function converts a variable of the system data type `DInt` into a variable of the data type `String`.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V14 SP1 Upd 5
+	  // Restrictions:     ENO disabled - no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION Block info header
+	
+	REGION CONVERSION
+	  VAL_STRG(IN     := #value,
+	           SIZE   := #CONVERT_SIZE,
+	           PREC   := #CONVERT_PRECISION,
+	           FORMAT := #CONVERT_FORMAT_TO_STRING,
+	           P      := #CONVERT_START_POSITION,
+	           OUT    => #tempString);
+	END_REGION
+	
+	REGION OUTPUT
+	  #LGF_IntToString := #tempString;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+END_FUNCTION

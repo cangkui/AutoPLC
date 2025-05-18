@@ -1,0 +1,107 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+- **功能名称**：`LGF_MatrixTranspose`
+- **功能描述**：实现矩阵转置，将输入的二维数组（矩阵）的行和列互换，结果存储在另一个二维数组中。
+- **数据类型**：输入和输出矩阵均为 `ARRAY[*, *] of LReal`（二维实数数组）。
+- **错误处理**：通过 `error` 和 `status` 输出参数返回错误状态。
+
+#### 2. **输入输出定义**
+- **输入/输出参数**：
+  - `matrix`：待转置的矩阵（输入）。
+  - `matrixTranspose`：转置后的矩阵（输出）。
+- **输出参数**：
+  - `error`：布尔值，表示是否发生错误。
+  - `status`：状态码，具体错误类型。
+
+#### 3. **错误状态码**
+- `STATUS_NO_ERROR` (16#0000)：无错误。
+- `ERR_MATR1_LOWBOUND_ROWS_RESMATR_LOWBOUND_COLUMNS` (16#8200)：输入矩阵的行下界与输出矩阵的列下界不匹配。
+- `ERR_MATR1_LOWBOUND_COLUMNS_RESMATR_LOWBOUND_ROWS` (16#8201)：输入矩阵的列下界与输出矩阵的行下界不匹配。
+- `ERR_MATR1_UPPBOUND_ROWS_RESMATR_UPPBOUND_COLUMNS` (16#8202)：输入矩阵的行上界与输出矩阵的列上界不匹配。
+- `ERR_MATR1_UPPBOUND_COLUMNS_RESMATR_UPPBOUND_ROWS` (16#8203)：输入矩阵的列上界与输出矩阵的行上界不匹配。
+
+#### 4. **算法流程**
+1. **获取矩阵边界**：
+   - 使用 `LOWER_BOUND` 和 `UPPER_BOUND` 函数获取输入矩阵和输出矩阵的行、列下界和上界。
+   - 存储这些边界值到临时变量中。
+
+2. **错误验证**：
+   - 检查输入矩阵的行下界是否等于输出矩阵的列下界。如果不相等，设置错误标志并返回。
+   - 检查输入矩阵的列下界是否等于输出矩阵的行下界。如果不相等，设置错误标志并返回。
+   - 检查输入矩阵的行上界是否等于输出矩阵的列上界。如果不相等，设置错误标志并返回。
+   - 检查输入矩阵的列上界是否等于输出矩阵的行上界。如果不相等，设置错误标志并返回。
+
+3. **矩阵转置计算**：
+   - 使用双重循环遍历输入矩阵的每个元素。
+   - 将输入矩阵的 `[row, column]` 元素赋值给输出矩阵的 `[column, row]` 位置。
+   - 循环结束后，设置 `error` 为 `FALSE`，`status` 为 `STATUS_NO_ERROR`，并置 `ENO` 为 `TRUE`。
+
+#### 5. **临时变量**
+- `tempMatrix1LowerBoundRows`：输入矩阵的行下界。
+- `tempMatrix1LowerBoundColumns`：输入矩阵的列下界。
+- `tempMatrix1UpperBoundRows`：输入矩阵的行上界。
+- `tempMatrix1UpperBoundColumns`：输入矩阵的列上界。
+- `tempResultMatrixLowerBoundRows`：输出矩阵的行下界。
+- `tempResultMatrixLowerBoundColumns`：输出矩阵的列下界。
+- `tempResultMatrixUpperBoundRows`：输出矩阵的行上界。
+- `tempResultMatrixUpperBoundColumns`：输出矩阵的列上界。
+- `tempCounterRow`：行循环计数器。
+- `tempCounterColumn`：列循环计数器。
+
+#### 6. **常量定义**
+- `ROWS`：维度1（行）。
+- `COLUMNS`：维度2（列）。
+- 错误状态码常量。
+
+#### 7. **代码结构**
+- **Block info header**：注释块，描述函数的基本信息。
+- **Determine the size of the matrices**：获取矩阵边界。
+- **Error validation**：验证矩阵边界是否匹配。
+- **Calculation of the transposed matrix**：执行矩阵转置计算。
+
+### 调整建议
+1. **边界检查优化**：
+   - 可以在获取边界后立即检查，避免不必要的计算。
+2. **循环优化**：
+   - 如果矩阵较大，可以考虑优化循环结构以提高性能。
+3. **错误处理扩展**：
+   - 可以增加更多错误状态码，例如矩阵维度不匹配或空矩阵等。
+4. **注释补充**：
+   - 在关键步骤增加注释，便于后续维护。
+
+### 示例调整后的伪代码
+```
+FUNCTION LGF_MatrixTranspose : Void
+VAR_IN_OUT
+    matrix, matrixTranspose : ARRAY[*, *] of LReal;
+END_VAR
+VAR_OUTPUT
+    error : Bool;
+    status : Word;
+END_VAR
+VAR_TEMP
+    // 临时变量定义
+END_VAR
+BEGIN
+    // 1. 获取矩阵边界
+    // 2. 验证边界是否匹配
+    IF 边界不匹配 THEN
+        error := TRUE;
+        status := 对应错误码;
+        RETURN;
+    END_IF
+    // 3. 执行转置
+    FOR 行循环 DO
+        FOR 列循环 DO
+            matrixTranspose[列, 行] := matrix[行, 列];
+        END_FOR
+    END_FOR
+    // 4. 设置成功状态
+    error := FALSE;
+    status := STATUS_NO_ERROR;
+    ENO := TRUE;
+END_FUNCTION
+```
+
+通过以上流程和调整，可以清晰地指导后续代码的实现和优化。

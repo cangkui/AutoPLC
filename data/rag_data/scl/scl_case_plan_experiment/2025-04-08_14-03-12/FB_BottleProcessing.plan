@@ -1,0 +1,43 @@
+
+
+生成的算法流程思维链描述如下，采用状态机模式实现：
+
+1. 初始状态（WAITING_FOR_BOTTLE）：
+   - 所有输出设备置为关闭状态
+   - 持续检测bottleSensor信号
+   - → 当检测到瓶子时跳转至清洗状态
+
+2. 清洗阶段（CLEANING）：
+   - 启动清洁泵（Pump_Motor = TRUE）
+   - 持续等待操作员按下cleaningConfirmButton
+   - → 确认后跳转至灌装状态
+
+3. 灌装阶段（FILLING）：
+   - 开启灌装阀门（Filling_Valve = TRUE）
+   - 持续等待操作员按下fillingConfirmButton
+   - → 确认后跳转至封盖状态
+
+4. 封盖阶段（CAPPING）：
+   - 启动封盖机（Capping_Machine = TRUE）
+   - 持续等待操作员按下cappingConfirmButton
+   - → 确认后跳转至包装状态
+
+5. 包装阶段（PACKING）：
+   - 启动包装机（Packing_Machine = TRUE）
+   - 持续等待操作员按下packingConfirmButton
+   - → 确认后点亮完成指示灯
+
+6. 完成状态（COMPLETED）：
+   - 保持完成指示灯亮（Completion_Light = TRUE）
+   - 持续检测finishedButton信号
+   - → 当确认取货后重置所有状态
+
+关键状态转移条件：
+- 每个生产阶段仅在前序确认操作完成后推进
+- 所有机械控制信号在状态切换时自动复位
+- 完成指示灯保持常亮直到系统复位
+
+与原始代码的差异处理：
+- 合并中间等待状态到主流程阶段，通过按钮信号直接触发状态转移
+- 移除非必要的状态常量定义（如WAITING_FOR_CLEANING_CONFIRMATION等）
+- 采用更直观的状态命名反映实际生产工序

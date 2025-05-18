@@ -1,0 +1,280 @@
+FUNCTION_BLOCK "LGF_ShiftRegister"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry_Support
+FAMILY : LGF
+NAME : LGF_ShiftRegister
+   VAR_INPUT 
+      shiftLeft : Bool;
+      shiftRight : Bool;
+      shiftRange { S7_PredefinedAssignment := '1'; S7_HiddenAssignment := 'HideIfNoParamAssigned'} : UInt := 1;
+      clear : Bool;
+      fill : Bool;
+      initialItem { S7_PredefinedAssignment := 'NULL'} : Variant;
+   END_VAR
+
+   VAR_OUTPUT 
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subFunctionStatus { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      bufferRegister : Variant;
+   END_VAR
+
+   VAR 
+      statEdgesMem { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Struct
+         shiftCommand { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         clear { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      END_STRUCT;
+   END_VAR
+
+   VAR_TEMP 
+      tempEdges : Struct
+         shiftLeft : Bool;
+         shiftRight : Bool;
+         clear : Bool;
+      END_STRUCT;
+      tempInternalError : Int;
+      tempBufferSize : UDInt;
+      tempCounter : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      NO_INTERNAL_ERROR : Int := 16#0000;
+      INDEX_BEGINNING : Int := 0;
+      ONE_ELEMENT : UDInt := 1;
+      BUFFER_SIZE_CORRECTION : UDInt := 1;
+      STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_NO_CURRENT_JOBS : Word := 16#7000;
+      ERR_NO_ARRAY : Word := 16#8200;
+      ERR_CLEARING_WITHOUT_INITIAL_ITEM : Word := 16#8201;
+      ERR_FILL_WITHOUT_INITIAL_ITEM : Word := 16#8202;
+      ERR_WRONG_TYPE_INITIAL_ITEM : Word := 16#8203;
+      ERR_MORE_THAN_ONE_COMMAND : Word := 16#8401;
+      ERR_IN_SHIFT_RANGE : Word := 16#8402;
+      ERR_CLEAR_BUFFER : Word := 16#8610;
+      ERR_SHIFT_BUFFER_LEFT : Word := 16#8611;
+      ERR_SHIFT_BUFFER_LEFT_FILL : Word := 16#8612;
+      ERR_SHIFT_BUFFER_RIGHT : Word := 16#8622;
+      ERR_SHIFT_BUFFER_RIGHT_FILL : Word := 16#8622;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_ShiftRegister
+	  // Comment/Function: The Function represnts a shift register for any kind of Datatype (using `variant`) - it can be used as a kind of a ring buffer.
+	  //                   It is possible to shift the register array left (index `array[n]:=array[n+1]`) or right (index a`array[n]:=array[n-1]`).
+	  //                   As this is a real shift operation, it may causes some runtime effects while using big array sizes to move.
+	  //                   It could be used for pusing the material traking UDT trouf the maschin, e.g. a rotary indexing table
+	  //                   Please consider that a FIFO  or LIFO storage, based on indexes, could be used as well for most applications.
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V16 Update 4
+	  // Restrictions:     ENO disabled - error handling done with error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Block execution control
+	  // Collect edges
+	  #tempEdges.shiftLeft := #shiftLeft AND NOT #statEdgesMem.shiftCommand;
+	  #tempEdges.shiftRight := #shiftRight AND NOT #statEdgesMem.shiftCommand;
+	  #tempEdges.clear := #clear AND NOT #statEdgesMem.clear;
+	  // Store values for edge detection
+	  #statEdgesMem.shiftCommand := #shiftLeft OR #shiftRight;
+	  #statEdgesMem.clear := #clear;
+	  
+	  // This program code section is only executed if no trigger input is active
+	  IF NOT (#shiftLeft OR #shiftRight OR #clear) THEN
+	    // If an error occurred during program execution,
+	    // the status "No Current Job" is used 16#7000 afterwarts when the triggers are reseted
+	    #error := FALSE;
+	    #status := #STATUS_NO_CURRENT_JOBS;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	    
+	  ELSIF ((BOOL_TO_USINT(#shiftLeft) + BOOL_TO_USINT(#shiftRight) + BOOL_TO_USINT(#clear)) > 1) THEN
+	    #error := TRUE;
+	    #status := #ERR_MORE_THAN_ONE_COMMAND;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	END_REGION Block execution control
+	
+	REGION Validation of inputs
+	  // Check whether the ring #buffer is an ARRAY.
+	  // IF so, the number OF the ARRAY elements is read out.
+	  // IF it is NOT an ARRAY, the program execution is terminated at this point
+	  IF IS_ARRAY(#bufferRegister) THEN
+	    #tempBufferSize := CountOfElements(#bufferRegister);
+	  ELSE
+	    #error := TRUE;
+	    #status := #ERR_NO_ARRAY;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // Check if number of movements is in a plausible and valid range
+	  // -> Has to be lees than the buffer size
+	  IF #shiftRange >= #tempBufferSize THEN
+	    #error := TRUE;
+	    #status := #ERR_IN_SHIFT_RANGE;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // If clearBuffer has rising edge, the buffer is initialized by initial values
+	  // Check whether the initial value OF the ring #buffer
+	  // matches the entry (tag #item). IF the data types DO NOT match,
+	  // the program execution is terminated at this point
+	  IF (#tempEdges.clear AND #initialItem = NULL) THEN
+	    #error := TRUE;
+	    #status := #ERR_CLEARING_WITHOUT_INITIAL_ITEM;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	    
+	    // If Fill is activatet, an inital item has to be presnt
+	  ELSIF (#fill AND #initialItem = NULL) THEN
+	    #error := TRUE;
+	    #status := #ERR_FILL_WITHOUT_INITIAL_ITEM;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	    
+	    // If clearing or filling is selected, the input types must match
+	  ELSIF ((#tempEdges.clear OR #fill) AND #initialItem <> NULL)
+	    AND (TypeOfElements(#bufferRegister) <> TypeOf(#initialItem))
+	  THEN
+	    #error := TRUE;
+	    #status := #ERR_WRONG_TYPE_INITIAL_ITEM;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	END_REGION Validation of inputs
+	
+	REGION Clear Buffer
+	  // If clearBuffer has rising edge, the buffer is initialized by initial values
+	  IF #tempEdges.clear THEN
+	    // Run through buffer and overwrite all elements with its initial item element
+	    FOR #tempCounter := #INDEX_BEGINNING TO UDINT_TO_INT(#tempBufferSize - #BUFFER_SIZE_CORRECTION) DO
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #initialItem,
+	                                             COUNT := #ONE_ELEMENT,
+	                                             SRC_INDEX := #INDEX_BEGINNING,
+	                                             DEST_INDEX := #tempCounter,
+	                                             DEST => #bufferRegister);
+	    END_FOR;
+	    
+	    // Check whether a local error has occurred.
+	    IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	      #error := TRUE;
+	      #status := #ERR_CLEAR_BUFFER;
+	      #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	      RETURN;
+	    END_IF;
+	  END_IF;
+	END_REGION Clear Buffer
+	
+	REGION Shift register algorithm
+	  REGION Shift left
+	    IF #tempEdges.shiftLeft THEN
+	      // Shift whole array elemnts from N --> N-1
+	      #tempInternalError :=
+	      MOVE_BLK_VARIANT(SRC := #bufferRegister,
+	                       COUNT := #tempBufferSize - #shiftRange,
+	                       SRC_INDEX := #shiftRange,
+	                       DEST_INDEX := 0,
+	                       DEST => #bufferRegister);
+	      
+	      // Check whether a local error has occurred
+	      IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	        #error := TRUE;
+	        #status := #ERR_SHIFT_BUFFER_LEFT;
+	        #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	        RETURN;
+	      END_IF;
+	      
+	      REGION Fill after shift left
+	        IF #fill THEN
+	          // Run through buffer and overwrite all elements with its initial item element
+	          FOR #tempCounter := UINT_TO_INT(#shiftRange) TO UDINT_TO_INT(#tempBufferSize - #BUFFER_SIZE_CORRECTION) DO
+	            // Overwrite the "old" values after shift
+	            #tempInternalError := MOVE_BLK_VARIANT(SRC := #initialItem,
+	                                                   COUNT := #ONE_ELEMENT,
+	                                                   SRC_INDEX := #INDEX_BEGINNING,
+	                                                   DEST_INDEX := #tempCounter,
+	                                                   DEST => #bufferRegister);
+	            
+	            // Check whether a local error has occurred
+	            IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	              #error := TRUE;
+	              #status := #ERR_SHIFT_BUFFER_LEFT_FILL;
+	              #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	              RETURN;
+	            END_IF;
+	          END_FOR;
+	        END_IF;
+	      END_REGION Fill after shift left
+	    END_IF;
+	  END_REGION Shift left
+	  
+	  REGION Shift right
+	    IF #tempEdges.shiftRight THEN
+	      // Shift whole array elemnsts from N --> N+1
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #bufferRegister,
+	                                             COUNT := #tempBufferSize - #shiftRange,
+	                                             SRC_INDEX := 0,
+	                                             DEST_INDEX := #shiftRange,
+	                                             DEST => #bufferRegister);
+	      
+	      // Check whether a local error has occurred
+	      IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	        #error := TRUE;
+	        #status := #ERR_SHIFT_BUFFER_RIGHT;
+	        #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	        RETURN;
+	      END_IF;
+	      
+	      REGION Fill after shift right
+	        IF #fill THEN
+	          // Run through buffer and overwrite all elements with its initial item element
+	          FOR #tempCounter := #INDEX_BEGINNING TO UDINT_TO_INT(#shiftRange - #BUFFER_SIZE_CORRECTION) DO
+	            // Overwrite the "old" values after shift
+	            #tempInternalError := MOVE_BLK_VARIANT(SRC := #initialItem,
+	                                                   COUNT := #ONE_ELEMENT,
+	                                                   SRC_INDEX := #INDEX_BEGINNING,
+	                                                   DEST_INDEX := #tempCounter,
+	                                                   DEST => #bufferRegister);
+	            
+	            // Check whether a local error has occurred
+	            IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	              #error := TRUE;
+	              #status := #ERR_SHIFT_BUFFER_LEFT_FILL;
+	              #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	              RETURN;
+	            END_IF;
+	          END_FOR;
+	        END_IF;
+	      END_REGION Fill after shift right
+	    END_IF;
+	  END_REGION Shift right
+	END_REGION Shift register algorithm
+	
+	REGION Writing to outputs
+	  #error := FALSE;
+	  #status := #STATUS_NO_ERROR;
+	  #subFunctionStatus := #STATUS_NO_ERROR;
+	  // No error handling by ENO needed
+	  ENO := TRUE;
+	END_REGION Writing to outputs
+	
+END_FUNCTION_BLOCK

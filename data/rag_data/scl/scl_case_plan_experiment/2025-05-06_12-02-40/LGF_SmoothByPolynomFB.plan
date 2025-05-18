@@ -1,0 +1,48 @@
+### 算法流程分析（数据处理任务）
+
+#### 1. 功能概述
+该功能块实现基于5个采样点的3次多项式平滑计算，主要用于数据滤波处理。当收集到5个有效数据点后，使用特定系数公式计算平滑值。
+
+#### 2. 核心处理逻辑
+1. **初始化阶段**：
+   - 检测enable信号的上升沿
+   - 复位内部计数器statCount为0
+   - 清空statValues数组（5个元素置零）
+   - 设置状态为STATUS_FIRST_CALL
+
+2. **数据采集阶段**：
+   - 检测insert信号的上升沿
+   - 执行数据移位操作（FIFO队列）：
+     - statValues[0] ← statValues[1]
+     - statValues[1] ← statValues[2]
+     - statValues[2] ← statValues[3]
+     - statValues[3] ← statValues[4]
+     - statValues[4] ← 新输入value
+   - 计数器statCount递增（最大不超过5）
+
+3. **平滑计算条件判断**：
+   - 当statCount ≤ 4时：
+     - 设置状态为STATUS_NOT_ENOUGH_VALUES
+   - 当statCount > 4时：
+     - 执行多项式平滑计算：
+       smoothedValue = 0.028571 * (-3*y₋₂ + 12*y₋₁ + 17*y₀ + 12*y₁ - 3*y₂)
+     - 设置状态为STATUS_SUBSEQUENT_CALL
+
+4. **非激活状态处理**：
+   - 当enable为false时：
+     - 设置状态为STATUS_NO_CALL
+     - 输出平滑值清零
+
+#### 3. 状态管理机制
+- 通过statEnableOld/statInsertOld保存前次信号状态实现边沿检测
+- 状态码通过status输出，同时error标志取状态码的最高位
+
+#### 4. 输出处理
+- 平滑值输出：直接传递内部计算结果statSmoothedValue
+- 错误标志：映射状态码的第15位
+- 强制ENO始终为TRUE（通过状态码机制替代传统ENO错误处理）
+
+#### 5. 数学处理要点
+- 使用固定系数多项式公式（Savitzky-Golay滤波器变体）
+- 系数归一化因子1/35≈0.028571
+- 需要严格保持5个数据点的时序关系

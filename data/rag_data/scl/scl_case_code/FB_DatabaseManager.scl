@@ -1,0 +1,96 @@
+
+FUNCTION_BLOCK "FB_DatabaseManager"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    dataInput : ARRAY[0..5] OF Byte; 
+    storeTrigger : Bool; 
+    resetTrigger : Bool; 
+END_VAR
+
+VAR_OUTPUT
+    usedSpace : Int; 
+    remainingSpace : Int; 
+    error : Bool; 
+    status : Word; 
+END_VAR
+
+VAR_IN_OUT
+    dataBase : ARRAY[1..20] OF Byte; 
+END_VAR
+
+VAR
+    statLastItemIndex : Int := 0; 
+END_VAR
+
+VAR CONSTANT
+    STATUS_OK : WORD := 16#0000;
+    STATUS_INVALID_DATA_LENGTH : WORD := 16#8001;
+    STATUS_INSUFFICIENT_SPACE : WORD := 16#8002;
+    DATABASE_SIZE : Int := 20; 
+END_VAR
+
+VAR_TEMP
+    dataIndex : Int; 
+    dataLength : Int; 
+    tempInternalError : Int; 
+END_VAR
+
+BEGIN
+    REGION Validation OF INPUT and OUTPUT 
+        
+    END_REGION
+
+    
+    REGION Database Management Logic
+        
+        #error := FALSE;
+        #status := #STATUS_OK;
+        #usedSpace := #statLastItemIndex;
+        #remainingSpace := #DATABASE_SIZE - #usedSpace;
+        
+        
+        IF #resetTrigger THEN
+            FOR #dataIndex := 1 TO #DATABASE_SIZE DO
+                #dataBase[#dataIndex] := 0;
+            END_FOR;
+            #statLastItemIndex := 0;
+            #usedSpace := 0;
+            #remainingSpace := #DATABASE_SIZE;
+            #error := FALSE;
+            #status := #STATUS_OK;
+        ELSIF #storeTrigger THEN
+            
+            #dataLength := #dataInput[0];
+            IF (#dataLength <= 0) OR (#dataLength > 5) THEN
+                #error := TRUE;
+                #status := #STATUS_INVALID_DATA_LENGTH;
+            ELSE
+                
+                IF #remainingSpace < #dataLength THEN
+                    #error := TRUE;
+                    #status := #STATUS_INSUFFICIENT_SPACE;
+                ELSE
+                    
+                    FOR #dataIndex := 1 TO #dataLength DO
+                        #statLastItemIndex += 1;
+                        #dataBase[#statLastItemIndex] := #dataInput[#dataIndex];
+                    END_FOR;
+                    #usedSpace := #statLastItemIndex;
+                    #remainingSpace := #DATABASE_SIZE - #usedSpace;
+                    #error := FALSE;
+                    #status := #STATUS_OK;
+                END_IF;
+            END_IF;
+        END_IF;
+    END_REGION
+
+    REGION Writting TO outputs
+        
+        #usedSpace := #usedSpace;
+        #remainingSpace := #remainingSpace;
+        #error := #error;
+        #status := #status;
+    END_REGION
+END_FUNCTION_BLOCK
+
+

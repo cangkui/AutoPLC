@@ -1,0 +1,73 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+- **目标**：实现一个浮点数比较函数，用于判断两个LReal（双精度浮点数）是否在给定的精度范围内近似相等。
+- **精度要求**：使用固定精度常量 `1.0E-12`（皮米级精度）作为比较的阈值。
+
+#### 2. **输入与输出**
+- **输入参数**：
+  - `valueA`：第一个待比较的LReal数值。
+  - `valueB`：第二个待比较的LReal数值。
+- **返回值**：
+  - `Bool` 类型：
+    - `TRUE`：两个数值在精度范围内近似相等。
+    - `FALSE`：两个数值不相等。
+
+#### 3. **核心逻辑**
+- **精度常量定义**：
+  - 定义一个常量 `PRECISION`，值为 `1.0E-12`，用于比较时的阈值。
+  
+- **比较逻辑**：
+  1. **直接相等**：
+     - 如果 `valueA` 和 `valueB` 完全相等（极少见），直接返回 `TRUE`。
+  2. **零值处理**：
+     - 如果 `valueA` 为 `0.0`，则检查 `valueB` 的绝对值是否小于等于 `PRECISION`。
+     - 如果 `valueB` 为 `0.0`，则检查 `valueA` 的绝对值是否小于等于 `PRECISION`。
+  3. **一般情况**：
+     - 计算 `valueA` 和 `valueB` 的绝对差值 `ABS(valueA - valueB)`。
+     - 检查该差值是否小于等于 `PRECISION * ABS(valueA)`（即相对误差是否在允许范围内）。
+  
+- **返回值**：
+  - 如果以上任一条件满足，返回 `TRUE`；否则返回 `FALSE`。
+
+#### 4. **特殊处理**
+- **零值处理**：
+  - 单独处理零值是为了避免除以零或无效的相对误差计算。
+- **ENO处理**：
+  - 函数不启用 `ENO`（使能输出），直接强制设置为 `TRUE`，表示函数始终执行成功。
+
+#### 5. **代码调整建议**
+- **优化逻辑**：
+  - 可以合并零值处理的逻辑，减少冗余判断。
+  - 例如：
+    ```scl
+    IF (valueA = 0.0 OR valueB = 0.0) THEN
+        #LGF_CompareLReal := (ABS(valueA - valueB) <= PRECISION);
+    ELSE
+        #LGF_CompareLReal := (ABS(valueA - valueB) <= (PRECISION * ABS(valueA)));
+    END_IF;
+    ```
+- **可扩展性**：
+  - 如果需要动态调整精度，可以将 `PRECISION` 改为输入参数而非常量。
+
+#### 6. **伪代码描述**
+```plaintext
+FUNCTION LGF_CompareLReal(valueA, valueB) -> Bool
+    CONSTANT PRECISION = 1.0E-12;
+    
+    IF valueA = valueB THEN
+        RETURN TRUE;
+    ELSE IF valueA = 0.0 THEN
+        RETURN ABS(valueB) <= PRECISION;
+    ELSE IF valueB = 0.0 THEN
+        RETURN ABS(valueA) <= PRECISION;
+    ELSE
+        RETURN ABS(valueA - valueB) <= (PRECISION * ABS(valueA));
+    END_IF;
+END_FUNCTION
+```
+
+#### 7. **注意事项**
+- 浮点数比较通常需要避免直接相等判断，但此函数通过精度阈值解决了这一问题。
+- 零值的单独处理是必要的，因为相对误差计算在零值附近会失效。
+- 该函数适用于高精度需求场景（如科学计算或精密控制），但不适用于需要动态调整精度的场景。

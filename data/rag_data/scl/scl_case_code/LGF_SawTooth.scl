@@ -1,0 +1,119 @@
+FUNCTION_BLOCK "LGF_SawTooth"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LFG
+NAME : LGF_SawTooth
+   VAR_INPUT 
+      startValue : Int;
+      timeRange : Time;
+      incrementRange : Int;
+      numberSteps : Int;
+      endlessSteps : Bool;
+      reset : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      value { ExternalWritable := 'False'} : Int;
+   END_VAR
+
+   VAR 
+      statStartValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statEndlessSteps { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statTimeRange { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Time;
+      statIncrementRange { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statNumberSteps { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statCurrentStep { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statFirstRun { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool := TRUE;
+      statStartTimer { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statTimerFinished { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      instTimer {InstructionName := 'TON_TIME'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : TON_TIME;
+      statActValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : Int;
+      INCREMENT_WITH_ONE : Int := 1;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Library:          LGF_SawTooth
+	  // Comment/Function: This function generates a sawtooth-shaped signal profile. Each sawtooth consists of a defined number of steps (increments).
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - no error handling, no failure possible.
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization
+	  // Initialization for the first call or reset complete function
+	  IF #statFirstRun OR #reset THEN
+	    // Copy all input parameter to static values
+	    #statStartValue := #startValue;
+	    #statTimeRange := #timeRange;
+	    #statIncrementRange := #incrementRange;
+	    #statNumberSteps := #numberSteps;
+	    #statEndlessSteps := #endlessSteps;
+	    
+	    // Reset static values
+	    #statActValue := #statStartValue;
+	    #statStartTimer := TRUE;
+	    #statCurrentStep := #ZERO;
+	    #statFirstRun := FALSE;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculation of settings and program execution
+	  // Calculation of a new values if the time base is up
+	  IF (#statTimerFinished AND NOT #reset) THEN
+	    
+	    #statActValue := #statActValue + #statIncrementRange;
+	    #statCurrentStep := #statCurrentStep + #INCREMENT_WITH_ONE;
+	    
+	    // If a defined number of steps must be performed 
+	    IF (#statEndlessSteps = FALSE) THEN
+	      // Restart with start value if number of steps is reached
+	      IF #statCurrentStep > #statNumberSteps THEN
+	        #statCurrentStep := #ZERO;
+	        #statActValue := #statStartValue;
+	      END_IF;
+	      // If endless is on the step counter is resetted  
+	    ELSE
+	      #statCurrentStep := #ZERO;
+	    END_IF;
+	    #statStartTimer := FALSE; // Reset the time base
+	  END_IF;
+	  
+	  // Call a times as basis of the step range
+	  #instTimer(IN := #statStartTimer,
+	             PT := #statTimeRange,
+	             Q  => #statTimerFinished);
+	  
+	  // Start the timer
+	  #statStartTimer := TRUE;
+	  
+	  // Write Output, if restart is active output value = 0
+	  IF (#reset = TRUE) THEN
+	    #statActValue := #startValue;
+	  END_IF;
+	END_REGION
+	
+	REGION Writing to output
+	  #value := #statActValue;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

@@ -1,0 +1,60 @@
+
+
+### 矩阵相加算法流程思维链
+
+#### 核心逻辑
+1. **维度校验**：确保三个矩阵的行列边界完全一致（包含上下界）
+2. **元素级加法**：仅在维度校验通过时执行矩阵元素相加
+
+---
+
+### 详细处理流程
+
+**1. 维度信息采集**
+- 获取每个矩阵的4个关键维度参数：
+  - 行起始索引（LOWER_BOUND ROWS）
+  - 行结束索引（UPPER_BOUND ROWS）
+  - 列起始索引（LOWER_BOUND COLUMNS）
+  - 列结束索引（UPPER_BOUND COLUMNS）
+
+**2. 边界校验（优先级顺序）**
+```text
+         |-- 行起始索引不等 → ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS (16#8200)
+         |
+         |-- 结果矩阵行起始不等 → ERR_MATR1_LOWBOUND_ROWS_RESMATR_LOWBOUND_ROWS (16#8201)
+         |
+行下界 → |
+         |-- 列起始索引不等 → ERR_MATR1_LOWBOUND_COLUMNS_MATR2_LOWBOUND_COLUMNS (16#8202)
+         |
+         |-- 结果矩阵列起始不等 → ERR_MATR1_LOWBOUND_COLUMNS_RESMATR_LOWBOUND_COLUMNS (16#8203)
+
+         |-- 行结束索引不等 → ERR_MATR1_UPPBOUND_ROWS_MATR2_UPPBOUND_ROWS (16#8204)
+         |
+         |-- 结果矩阵行结束不等 → ERR_MATR1_UPPBOUND_ROWS_RESMATR_UPPBOUND_ROWS (16#8205)
+行上界 → |
+         |-- 列结束索引不等 → ERR_MATR1_UPPBOUND_COLUMNS_MATR2_UPPBOUND_COLUMNS (16#8206)
+         |
+         |-- 结果矩阵列结束不等 → ERR_MATR1_UPPBOUND_COLUMNS_RESMATR_UPPBOUND_COLUMNS (16#8207)
+```
+
+**3. 矩阵运算**
+- 嵌套循环结构：
+  ```text
+  for 行索引 in [矩阵1行起始..矩阵1行结束]
+    for 列索引 in [矩阵1列起始..矩阵1列结束]
+      结果矩阵[当前行列] = 矩阵1值 + 矩阵2值
+  ```
+  
+**4. 状态反馈**
+- 成功时：
+  - error = FALSE
+  - status = STATUS_NO_ERROR (16#0000)
+  - ENO = TRUE
+
+---
+
+### 关键设计特征
+1. **严格维度校验**：8种边界组合检查确保矩阵结构完全兼容
+2. **索引复用机制**：使用矩阵1的索引范围作为循环基准（校验后确保三者一致）
+3. **即时错误中断**：任一校验失败立即终止流程并返回错误码
+4. **状态码分级**：错误码按行/列、上下界、比较对象分类编码（16#8200~16#8207）

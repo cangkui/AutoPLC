@@ -1,0 +1,138 @@
+{
+    "title": "Recipe Management System",
+    "description": "A factory's production line needs to produce a variety of products based on different recipes. The control center of the production line requires a recipe management system that allows operators to add, delete, modify, and query recipe data.\nControl requirements:\nRecipe data should include recipe number, raw material type, raw material ratio, and production temperature.\nThe system should allow input of new recipe data and store it in the recipe database.\nThe system should allow deletion or modification of existing recipe data by recipe number.\nThe system should allow querying recipe details by recipe number and output the recipe.\nNotes:\n1. Recipes are constructed using the Struct data type, which includes recipe number (recipeID), raw material type (ingredientType), raw material ratio (ingredientRatio), and production temperature (productionTemperature). The recipe database can store up to 10 recipes, constructed with Array[1..10] of Struct, where recipe numbers must not be duplicated, and a recipe number of 0 indicates an empty slot.\n2. When a query recipe request signal (queryRecipe) is triggered, the system first compares the recipe number (recipeID) from the input recipe (recipeIn with all recipes in the recipe database recipe. If the number does not exist, an error status (error=true) and error code (status=16#8001) are output. If the number exists, the recipe is output to the recipe query result (recipeQueryResult).\n3. When an add recipe request signal (addRecipe) is triggered, the system first compares the recipe number (recipeID) from the input recipe (recipeIn) with all recipes in the recipe database (recipe). If a duplicate number exists, an error status (error=true) and error code (status=16#8002) are output. If there is no empty slot in the recipe database (recipe), an error status (error=true) and error code (status=16#8003) are output. If there are no errors, the input recipe (recipeIn) is stored in the recipe database (recipe), prioritizing the empty slot with the smallest array index.\n4. When a delete recipe request signal (deleteRecipe) is triggered, the system first compares the recipe number (recipeID) from the input recipe (recipeIn) with all recipes in the recipe database (recipe). If the number does not exist, an error status (error=true) and error code (status=16#8004) are output. If the number exists, the recipe is deleted, i.e., the recipe number (recipeID) in the recipe database (recipe) is set to 0.\n5. When a modify recipe request signal (modifyRecipe) is triggered, the system first compares the recipe number (recipeID) from the input recipe (recipeIn) with all recipes in the recipe database (recipe). If the number does not exist, an error status (error=true) and error code (status=16#8005) are output. If the number exists, the recipe is replaced with the input recipe (recipeIn).",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_RecipeManager",
+    "input": [
+        {
+            "name": "addRecipe",
+            "type": "Bool",
+            "description": "Add Recipe Request Signal"
+        },
+        {
+            "name": "deleteRecipe",
+            "type": "Bool",
+            "description": "Delete Recipe Request Signal"
+        },
+        {
+            "name": "modifyRecipe",
+            "type": "Bool",
+            "description": "Modify Recipe Request Signal"
+        },
+        {
+            "name": "queryRecipe",
+            "type": "Bool",
+            "description": "Query Recipe Request Signal"
+        },
+        {
+            "name": "recipeIn",
+            "type": "Struct",
+            "description": "Input Recipe",
+            "fields": [
+                {
+                    "name": "recipeID",
+                    "type": "Int",
+                    "description": "Recipe Number"
+                },
+                {
+                    "name": "ingredientType",
+                    "type": "Int",
+                    "description": "Raw Material Type"
+                },
+                {
+                    "name": "ingredientRatio",
+                    "type": "Real",
+                    "description": "Raw Material Ratio"
+                },
+                {
+                    "name": "productionTemperature",
+                    "type": "Real",
+                    "description": "Production Temperature"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "recipeAdded",
+            "type": "Bool",
+            "description": "Recipe Added Success Indicator"
+        },
+        {
+            "name": "recipeDeleted",
+            "type": "Bool",
+            "description": "Recipe Deleted Success Indicator"
+        },
+        {
+            "name": "recipeModified",
+            "type": "Bool",
+            "description": "Recipe Modified Success Indicator"
+        },
+        {
+            "name": "recipeQueryResult",
+            "type": "Struct",
+            "description": "Recipe Query Result Output",
+            "fields": [
+                {
+                    "name": "recipeID",
+                    "type": "Int",
+                    "description": "Recipe Number"
+                },
+                {
+                    "name": "ingredientType",
+                    "type": "Int",
+                    "description": "Raw Material Type"
+                },
+                {
+                    "name": "ingredientRatio",
+                    "type": "Real",
+                    "description": "Raw Material Ratio"
+                },
+                {
+                    "name": "productionTemperature",
+                    "type": "Real",
+                    "description": "Production Temperature"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "Error Status Indicator\nFALSE: No Error Occurred\nTRUE: Execution Error"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "Status Code"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "recipe",
+            "type": "Array[1..10] of Struct",
+            "description": "Recipe Database",
+            "fields": [
+                {
+                    "name": "recipeID",
+                    "type": "Int",
+                    "description": "Recipe Number"
+                },
+                {
+                    "name": "ingredientType",
+                    "type": "Int",
+                    "description": "Raw Material Type"
+                },
+                {
+                    "name": "ingredientRatio",
+                    "type": "Real",
+                    "description": "Raw Material Ratio"
+                },
+                {
+                    "name": "productionTemperature",
+                    "type": "Real",
+                    "description": "Production Temperature"
+                }
+            ]
+        }
+    ]
+ }

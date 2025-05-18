@@ -1,0 +1,242 @@
+FUNCTION_BLOCK "LGF_Histogram_UDInt"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_Histogram_UDInt
+   VAR_INPUT 
+      execute : Bool;
+      numberOfClasses : UInt;
+   END_VAR
+
+   VAR_OUTPUT 
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word := #STATUS_NO_CALL;
+      subfunctionStatus { ExternalWritable := 'False'} : Word := 16#0;
+      histValues { ExternalWritable := 'False'} : Array[0..1, 0..#CLASSES_COUNTER_UP_LIMIT] of LReal;
+      axis { ExternalWritable := 'False'} : Array[0..3] of LReal;
+      classWidth { ExternalWritable := 'False'} : LReal;
+   END_VAR
+
+   VAR_IN_OUT 
+      values : Array[*] of UDInt;
+   END_VAR
+
+   VAR 
+      statArray { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[0..#MAX_ARRAY_ELEMENTS] of UDInt;
+      statStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statSubfuncStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statExecuteOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      instShellSort { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : "LGF_ShellSort_UDInt";
+      statMin { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statMax { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statCounter { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;
+      statWidth { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statFrequencyValues { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statIndex { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;
+      statIndexOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt := 0;
+      statBound { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statMaxFrequency { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statHistFrequencyAbs { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[0..#CLASSES_COUNTER_UP_LIMIT] of Int;
+      statHistFrequencyRel { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[0..#CLASSES_COUNTER_UP_LIMIT] of LReal;
+      statHistMiddleOfClass { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[0..#CLASSES_COUNTER_UP_LIMIT] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempNumberOfElements : DInt;
+      tempLowerBound : DInt;
+      tempUpperBound : DInt;
+      tempValueUDInt : UDInt;
+      tempMinUDInt : UDInt;
+      tempMaxUDInt : UDInt;
+      tempLoopIndex : DInt;
+      tempArrayOffset : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO_INT : Int := 0;
+      ZERO_LREAL : LReal := 0.0;
+      DIMENSION_ONE : UInt := 1;
+      ARRAY_START_INDEX : DInt := 0;
+      ELEMENTS_COUNT_CORRECTION : DInt := 1;
+      INCREMENT : DInt := 1;
+      COUNTER_CORRECTION : DInt := 1;
+      MIN_CLASSES_NUMBER : DInt := 1;
+      MAX_CLASSES_NUMBER : DInt := 15;
+      CLASSES_COUNTER_LOW_LIMIT : DInt := 0;
+      CLASSES_COUNTER_UP_LIMIT : DInt := 14;
+      RATIO : Int := 2;
+      PERCENT_CORRECTION : Int := 100;
+      MAX_ARRAY_ELEMENTS : DInt := 999;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_EXECUTION_FINISHED : Word := 16#0000;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_FIRST_CALL : Word := 16#7001;
+      ERR_SHELL_SORT : Word := 16#8600;
+      ERR_WRONG_NO_CLASSES : Word := 16#9101;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_Histogram_UDInt
+	  // Comment/Function: This function block calculates from measurement list all UDInt
+	  //                   values for creating a histogram with WinCC
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V15.1 Update 2
+	  // Restrictions:     ENO disabled, forced to true - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Detect execution bit
+	  //Positive edge
+	  IF #execute AND NOT #statExecuteOld THEN
+	    //Get array boundaries
+	    #tempLowerBound := LOWER_BOUND(ARR := #values, DIM := #DIMENSION_ONE);
+	    #tempUpperBound := UPPER_BOUND(ARR := #values, DIM := #DIMENSION_ONE);
+	    
+	    //Reset and initialize tags
+	    FOR #statCounter := #CLASSES_COUNTER_LOW_LIMIT TO #CLASSES_COUNTER_UP_LIMIT DO
+	      #statHistFrequencyAbs[#statCounter] := #ZERO_INT;
+	      #statHistFrequencyRel[#statCounter] := #ZERO_LREAL;
+	      #statHistMiddleOfClass[#statCounter] := #ZERO_LREAL;
+	    END_FOR;
+	    
+	    #statStatus := #STATUS_FIRST_CALL;
+	    #statSubfuncStatus := #SUB_STATUS_NO_ERROR;
+	    #statFrequencyValues := #ZERO_INT;
+	    #statMaxFrequency := #ZERO_INT;
+	    #statIndex := #ZERO_INT;
+	    #statIndexOld := #ZERO_INT;
+	    
+	    //FB is currently inactive
+	  ELSIF NOT #execute  THEN
+	    #statStatus := #STATUS_NO_CALL;
+	    #statSubfuncStatus := #SUB_STATUS_NO_ERROR;
+	  END_IF;
+	  #statExecuteOld := #execute;
+	END_REGION
+	
+	REGION Validation
+	  IF #statStatus = #STATUS_FIRST_CALL THEN
+	    //check number of classes
+	    IF ((#numberOfClasses > #MAX_CLASSES_NUMBER) OR (#numberOfClasses < #MIN_CLASSES_NUMBER)) THEN
+	      #statStatus := #ERR_WRONG_NO_CLASSES;
+	    END_IF;
+	  END_IF;
+	END_REGION
+	
+	REGION Histogram calculation 
+	  IF #statStatus = #STATUS_FIRST_CALL THEN
+	    // Array elements calculation
+	    // (for example: 6 - 2 = 4; but real number of elements is 5)
+	    #tempNumberOfElements := #tempUpperBound - #tempLowerBound + #ELEMENTS_COUNT_CORRECTION;
+	    
+	    // Shift array index to range 0..n
+	    #tempArrayOffset := - #tempLowerBound;
+	    
+	    //Sort array
+	    #instShellSort(array := #values);
+	    
+	    IF #instShellSort.error THEN
+	      #statStatus := #ERR_SHELL_SORT;
+	      #statSubfuncStatus := #instShellSort.status;
+	    ELSE
+	      //Identify max and min value
+	      #tempMinUDInt := #values[#tempLowerBound];
+	      #tempMaxUDInt := #values[#tempUpperBound];
+	      
+	      #statMin := UDINT_TO_REAL(#tempMinUDInt);
+	      #statMax := UDINT_TO_REAL(#tempMaxUDInt);
+	      
+	      //calculate classwidth
+	      #statWidth := (#statMax - #statMin) / #numberOfClasses;
+	      #statBound := (#statMin + #statWidth);
+	      
+	      // Fill temporary array
+	      FOR #tempLoopIndex := #tempLowerBound TO #tempUpperBound DO
+	        #statArray[#tempLoopIndex + #tempArrayOffset] := #values[#tempLoopIndex];
+	      END_FOR;
+	      
+	      //search for all values
+	      FOR #statCounter := #ZERO_INT TO UINT_TO_INT(#numberOfClasses) - #COUNTER_CORRECTION DO
+	        
+	        //Count Values for Class 
+	        #tempValueUDInt := #statArray[#ARRAY_START_INDEX];
+	        
+	        WHILE (#tempValueUDInt < LREAL_TO_UDINT(#statBound)) AND #statIndex < (#tempNumberOfElements - #COUNTER_CORRECTION) DO
+	          
+	          IF #statIndex = #tempNumberOfElements THEN
+	            EXIT;
+	          END_IF;
+	          #statIndex := #statIndex + #INCREMENT;
+	          #tempValueUDInt := #statArray[#statIndex];
+	        END_WHILE;
+	        
+	        //the last value is not counted, because of rounding errors
+	        IF #statIndex = #tempNumberOfElements - #COUNTER_CORRECTION THEN
+	          #statIndex := #statIndex + #INCREMENT;
+	        END_IF;
+	        
+	        // Evaluate frequency values
+	        #statFrequencyValues := DINT_TO_INT(#statIndex - #statIndexOld);
+	        
+	        #statHistFrequencyAbs[#statCounter] := #statFrequencyValues;
+	        #statHistFrequencyRel[#statCounter] := INT_TO_REAL(#statFrequencyValues) / DINT_TO_REAL(#tempNumberOfElements) * #PERCENT_CORRECTION;
+	        
+	        //Max values in one class for y-axis 
+	        IF #statMaxFrequency < #statFrequencyValues THEN
+	          #statMaxFrequency := #statFrequencyValues;
+	        END_IF;
+	        
+	        #statBound := #statBound + #statWidth;
+	        #statIndexOld := #statIndex;
+	      END_FOR;
+	    END_IF;
+	    
+	    //find the middle of each class
+	    FOR #statCounter := #ZERO_INT TO UINT_TO_INT(#numberOfClasses) - #COUNTER_CORRECTION DO
+	      #statHistMiddleOfClass[#statCounter] := #statMin + (DINT_TO_REAL(#statCounter) * #statWidth) + #statWidth / #RATIO;
+	    END_FOR;
+	    
+	    //Keeping those outputs in this IF statement and not in the out region
+	    //because filling of the array is needed only once on first call
+	    //copy values to output array
+	    FOR #statCounter := #CLASSES_COUNTER_LOW_LIMIT TO #CLASSES_COUNTER_UP_LIMIT DO
+	      #histValues[0, #statCounter] := #statHistFrequencyRel[#statCounter];
+	      #histValues[1, #statCounter] := #statHistMiddleOfClass[#statCounter];
+	    END_FOR;
+	    #statStatus := #STATUS_EXECUTION_FINISHED;
+	  END_IF;
+	END_REGION
+	
+	REGION Write outputs 
+	  // Aassign Axis values
+	  #axis[0] := #statMin;
+	  #axis[1] := #statMax;
+	  #axis[2] := #ZERO_LREAL;
+	  #axis[3] := INT_TO_LREAL(#statMaxFrequency);
+	  
+	  // Write class width
+	  #classWidth := #statWidth;
+	  
+	  #error := #statStatus.%X15;
+	  #status := #statStatus;
+	  #subfunctionStatus := #statSubfuncStatus;
+	  
+	  // ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+	
+END_FUNCTION_BLOCK

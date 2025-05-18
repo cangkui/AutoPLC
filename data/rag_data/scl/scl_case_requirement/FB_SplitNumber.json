@@ -1,0 +1,50 @@
+{
+    "title": "Digital Digit Separation Display",
+    "description": "In some automated systems, it may be necessary to separate the digits of an integer for display or further processing. For example, in some counter or production counting applications, it is necessary to separate the current count value into units, tens, hundreds, and thousands.\nControl Requirements:\nThe system needs to receive an integer input of up to four digits.\nBased on the input integer, calculate and output its units, tens, hundreds, and thousands values.\nIf the input integer has fewer than four digits, display 0 on the missing higher places.\nThe output results should be four separate integers, each representing the units, tens, hundreds, and thousands digits, respectively.\nNotes:\n1. The input integer InputNumber must be greater than or equal to 0 and less than 10000, otherwise output an error state with error=true and error code status=16#8001.\n2. After calculating the values of the units, tens, hundreds, and thousands digits, compare the non-0 values among these four digits and output the minimum value to Min; if InputNumber=0, then output Min=0.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_SplitNumber",
+    "input": [
+        {
+            "name": "InputNumber",
+            "type": "Int",
+            "description": "Four-digit integer input"
+        }
+    ],
+    "output": [
+        {
+            "name": "Thousands",
+            "type": "Byte",
+            "description": "Thousands digit output"
+        },
+        {
+            "name": "Hundreds",
+            "type": "Byte",
+            "description": "Hundreds digit output"
+        },
+        {
+            "name": "Tens",
+            "type": "Byte",
+            "description": "Tens digit output"
+        },
+        {
+            "name": "Ones",
+            "type": "Byte",
+            "description": "Units digit output"
+        },
+        {
+            "name": "Min",
+            "type": "Byte",
+            "description": "The minimum non-0 value among the four digits"
+        },
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "Error status indicator\nFALSE: No error occurred\nTRUE: An error occurred during execution"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "Status code"
+        }
+    ]
+ }

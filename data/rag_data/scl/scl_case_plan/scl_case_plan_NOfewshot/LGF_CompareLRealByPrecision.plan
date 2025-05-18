@@ -1,0 +1,68 @@
+
+
+### 算法流程思维链
+
+1. **初始化标志位**  
+   - 设置默认返回值为 FALSE（表示不相等）
+
+2. **处理零值边界条件**  
+   - 当 valueA 为零时：检查 valueB 的绝对值是否 ≤ 给定精度
+   - 当 valueB 为零时：检查 valueA 的绝对值是否 ≤ 给定精度
+
+3. **通用差值比较逻辑**  
+   - 当两个值均非零时：计算两数的差值绝对值
+   - 比较差值是否 ≤ (精度值 × valueA的绝对值)
+
+4. **逻辑或综合判断**  
+   - 上述任意条件满足则返回 TRUE（近似相等）
+   - 否则保持默认的 FALSE（不相等）
+
+### 关键逻辑特性
+1. **优化零值处理**  
+   - 单独处理零值情况避免浮点运算误差  
+   - 例如当 valueA=0 时直接检查 |valueB| ≤ precision
+
+2. **相对误差计算方式**  
+   - 非零情况下采用与 valueA 相关的相对误差阈值  
+   - 阈值计算：precision × |valueA|  
+   （注：代码实现中未取 max(|valueA|, |valueB|)，需注意该设计特性）
+
+3. **短路逻辑优势**  
+   - 使用 OR 逻辑连接条件判断  
+   - 只要任一条件满足即返回 TRUE，提高执行效率
+
+### 代码生成建议
+1. **避免重复计算**  
+   - 使用临时变量存储 ABS(#valueA) 和 ABS(#valueB)  
+   （注：示例代码未采用，但实际工程建议优化）
+
+2. **防御性处理**  
+   - 显式限制 precision ≥ 0  
+   （注：当前代码未做参数校验，需根据需求决定是否添加）
+
+3. **工程可扩展性**  
+   - 可参数化选择相对误差基准值（当前固定使用 valueA）  
+   - 例如增加模式选择：min/max/average 三种计算方式
+
+### 示意图表示
+```mermaid
+graph TD
+    Start([开始]) --> Init[设置结果=FALSE]
+    Init --> CheckZeroA{valueA=0?}
+    
+    CheckZeroA --是--> CompareB[|valueB| ≤ precision?]
+    CompareB --> ResultA[条件满足则结果为TRUE]
+    
+    CheckZeroA --否--> CheckZeroB{valueB=0?}
+    CheckZeroB --是--> CompareA[|valueA| ≤ precision?]
+    CompareA --> ResultB[条件满足则结果为TRUE]
+    
+    CheckZeroB --否--> CalcDiff[计算|valueA - valueB|]
+    CalcDiff --> CompareDiff[差值 ≤ precision*|valueA|?]
+    CompareDiff --> ResultC[条件满足则结果为TRUE]
+    
+    ResultA --> Combine{OR综合判断}
+    ResultB --> Combine
+    ResultC --> Combine
+    Combine --> Output[返回最终结果]
+```

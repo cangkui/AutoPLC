@@ -1,0 +1,107 @@
+FUNCTION "LGF_SmoothByPolynomFC" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SmoothByPolynomFC
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      values : Array[*] of LReal;
+      smoothedValues : Array[*] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempCount : Int;
+      tempNumberOfElements : Int;
+      tempNumberOfElementsOut : Int;
+      tempLowerBound : Int;
+      tempUpperBound : Int;
+      tempLowerBoundOut : Int;
+      tempUpperBoundOut : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      NUMBER_OF_ELEMENTS_CORRECTION : Int := 1;
+      DIMENSION_ONE : UDInt := 1;
+      MINIMUM_ARRAY_ELEMENTS : UDInt := 5;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_ARRAYS_DIFFERENT : Word := 16#8400;
+      ERR_NOT_ENOUGH_VALUES : Word := 16#8401;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_SmoothByPolynomFC
+	  // Comment/Function: This function calculates the smoothed values by polynom
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Checking number of lower and upper bound
+	  #tempLowerBound := DINT_TO_INT(LOWER_BOUND(ARR := #values, DIM := #DIMENSION_ONE)); 
+	  #tempUpperBound := DINT_TO_INT(UPPER_BOUND(ARR := #values, DIM := #DIMENSION_ONE));
+	  
+	  #tempNumberOfElements := #tempUpperBound - #tempLowerBound + #NUMBER_OF_ELEMENTS_CORRECTION;
+	  
+	  #tempLowerBoundOut := DINT_TO_INT(LOWER_BOUND(ARR := #smoothedValues, DIM := #DIMENSION_ONE));
+	  #tempUpperBoundOut := DINT_TO_INT(UPPER_BOUND(ARR := #smoothedValues, DIM := #DIMENSION_ONE));
+	  
+	  #tempNumberOfElementsOut := #tempUpperBoundOut - #tempLowerBoundOut + #NUMBER_OF_ELEMENTS_CORRECTION;
+	  
+	  //check if size of arrays is ok
+	  IF #tempNumberOfElementsOut <> #tempNumberOfElements THEN
+	    #error := true;
+	    #status := #ERR_ARRAYS_DIFFERENT;
+	    RETURN;
+	  ELSIF #tempNumberOfElements <= #MINIMUM_ARRAY_ELEMENTS THEN
+	    #error := true;
+	    #status := #ERR_NOT_ENOUGH_VALUES;
+	    RETURN;
+	  END_IF;
+	  
+	  FOR #tempCount := #tempLowerBound + 2 TO #tempUpperBound - 2 DO
+	    // calculate new smoothed value
+	    // keep the "Magic Numbers" as they are part of the Math equation and would extent the formular in a unreadable way
+	    // y(n)=1/35*(-3*y(n-2)+12*y(n-1)+17*y(n)+12*y(n+1)-3*y(n+2))
+	    // 1/35 = 0.028571
+	    #smoothedValues[#tempCount] := 0.028571 * (-3 * #values[#tempCount - 2] + 12 * #values[#tempCount - 1] + 17 * #values[#tempCount] + 12 * #values[#tempCount + 1] - 3 * #values[#tempCount + 2]);
+	  END_FOR;
+	  
+	  // calculate Replacementvalues for 0,1 and n-1,n
+	  // y(0) =1/70*(69*y(0)+4*y(1)-6*y(2)+4*y(3)-y(4))
+	  // 1/70 = 0.014286
+	  #smoothedValues[#tempLowerBound] := 0.014286 * (69 * #values[#tempLowerBound] + 4 * #values[#tempLowerBound + 1] - 6 * #values[#tempLowerBound + 2] + 4 * #values[#tempLowerBound + 3] - #values[#tempLowerBound + 4]);
+	  // y(1) =2/70*(2*y(0)+27*y(1)+12*y(2)-8*y(3)+2*y(4))
+	  // 2/70 = 0.028571
+	  #smoothedValues[#tempLowerBound + 1] := 0.028571 * (2 * #values[#tempLowerBound] + 27 * #values[#tempLowerBound + 1] + 12 * #values[#tempLowerBound + 2] - 8 * #values[#tempLowerBound + 3] + 2 * #values[#tempLowerBound + 4]);
+	  // y(n-1) =2/70*(2*y(n-4)-8*y(n-3)+12*y(n-2)+27*y(n-1)+2*y(n))
+	  // 2/70 = 0.028571
+	  #smoothedValues[#tempUpperBound - 1] := 0.028571 * (2 * #values[#tempUpperBound - 4] - 8 * #values[#tempUpperBound - 3] + 12 * #values[#tempUpperBound - 2] + 27 * #values[#tempUpperBound - 1] + 2 * #values[#tempUpperBound]);
+	  // y(n) =1/70*(-y(n-4)+4*y(n-3)-6*y(n-2)+4*y(n-1)+69*y(n))
+	  // 1/70 = 0.014286
+	  #smoothedValues[#tempUpperBound] := 0.014286 * (- #values[#tempUpperBound - 4] + 4 * #values[#tempUpperBound - 3] - 6 * #values[#tempUpperBound - 2] + 4 * #values[#tempUpperBound - 1] + 69 * #values[#tempUpperBound]);
+	  
+	  #error := false;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  // ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

@@ -1,0 +1,106 @@
+FUNCTION_BLOCK "LGF_Frequency"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_Frequency
+   VAR_INPUT 
+      frequency : Real := 0.0;
+      pulsePauseRatio : Real := 1.0;
+   END_VAR
+
+   VAR_OUTPUT 
+      clock { ExternalWritable := 'False'} : Bool;
+      countdown { ExternalWritable := 'False'} : Time;
+   END_VAR
+
+   VAR 
+      instTofTimePulse {InstructionName := 'TOF_TIME'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : TOF_TIME;
+      instTofTimePause {InstructionName := 'TOF_TIME'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : TOF_TIME;
+      statFrequencyOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real;
+      statPulsePauseRatioOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real;
+      statTimePulse { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Time;
+      statTimePause { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Time;
+   END_VAR
+
+   VAR_TEMP 
+      tempPulseRate : Real;
+      tempPauseRate : Real;
+      tempCountdown : Time;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : Real := 0.0;
+      ZERO_TIME : Time := T#0ms;
+      SECOND_IN_MS : Real := 1000.0;
+      ONE : Real := 1.0;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_Frequency
+	  // Comment/Function: This function generates a signal that changes between the values `FALSE` and `TRUE` depending on a defined frequency and a pulse pause ratio.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Calculation of settings and program execution
+	  // If input <= 0.0 the block is disabled
+	  IF (#frequency <= #ZERO) OR (#pulsePauseRatio <= #ZERO) THEN
+	    #clock := FALSE;
+	    #tempCountdown := #ZERO_TIME;
+	  ELSE
+	    
+	    //Calculating function frequency and pulse pause ratio only when an input is changed
+	    IF #statFrequencyOld <> #frequency OR #statPulsePauseRatioOld <> #pulsePauseRatio THEN
+	      RESET_TIMER(TIMER := #instTofTimePause);
+	      RESET_TIMER(TIMER := #instTofTimePulse);
+	      
+	      #tempPulseRate := #pulsePauseRatio / (#pulsePauseRatio + #ONE); // Calculate pulse rate   
+	      #tempPauseRate := #ONE - #tempPulseRate;                      // Calculate pause rate   
+	      #statTimePulse := UDINT_TO_TIME(REAL_TO_UDINT((#SECOND_IN_MS * #tempPulseRate / #frequency))); // Calculate pulse time   
+	      #statTimePause := UDINT_TO_TIME(REAL_TO_UDINT((#SECOND_IN_MS * #tempPauseRate / #frequency))); // Calculate pause time
+	      #statFrequencyOld := #frequency;
+	      #statPulsePauseRatioOld := #pulsePauseRatio;
+	    END_IF;
+	    
+	    //Two time off-delay timers that are resetting each other on expiration
+	    #instTofTimePulse(IN := NOT #instTofTimePause.Q,
+	                      PT := #statTimePulse);
+	    
+	    //If timer for pulse is running, remaining time of the PULSE is calculated
+	    #tempCountdown := #statTimePulse - #instTofTimePulse.ET;
+	    
+	    #instTofTimePause(IN := #instTofTimePulse.Q,
+	                      PT := #statTimePause);
+	    
+	    //If timer for pulse is NOT running, remaining time of the PAUSE is calculated
+	    IF #tempCountdown = #ZERO_TIME THEN
+	      #tempCountdown := #statTimePause - #instTofTimePause.ET;
+	    END_IF;
+	    
+	  END_IF;
+	END_REGION
+	
+	REGION Writing to outputs
+	  // Assigning value of the pulse timer to the clock output
+	  #clock := #instTofTimePulse.Q;
+	  #countdown := #tempCountdown;
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

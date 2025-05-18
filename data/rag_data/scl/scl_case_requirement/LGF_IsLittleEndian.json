@@ -1,0 +1,1 @@
+{"title": "Endianness Detection Function for Little Endian", "name": "LGF_IsLittleEndian", "description": "Detects the endianness of the executing system.", "type": "FUNCTION", "input": [], "output": [], "in/out": [], "return_value": [{"type": "Bool", "description": "TRUE if little endianness is detected"}], "status_codes": {}, "user_defined_types": []}

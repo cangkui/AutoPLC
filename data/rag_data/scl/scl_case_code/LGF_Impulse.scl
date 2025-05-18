@@ -1,0 +1,88 @@
+FUNCTION_BLOCK "LGF_Impulse"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_Impulse
+   VAR_INPUT 
+      frequency : Real;
+   END_VAR
+
+   VAR_OUTPUT 
+      impulse { ExternalWritable := 'False'} : Bool;
+      countdown { ExternalWritable := 'False'} : Time;
+   END_VAR
+
+   VAR 
+      instTofTimePulse {InstructionName := 'TOF_TIME'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : TOF_TIME;
+      statFrequencyOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real;
+      statTimePulse { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Time;
+   END_VAR
+
+   VAR_TEMP 
+      tempImpulse : Bool;
+      tempCountdown : Time;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : Real := 0.0;
+      ZERO_TIME : Time := T#0ms;
+      THOUSAND : Real := 1000.0;
+      THOUSAND_SECONDS : Time := t#1000s;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_Impulse
+	  // Comment/Function: This function generates pulses at a given frequency. The pulse is always present for one (control) cycle.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Calculation of settings and program execution
+	  // If input <= 0.0 the block is disabled
+	  IF #frequency <= #ZERO THEN
+	    #tempImpulse := FALSE;
+	    #tempCountdown := #ZERO_TIME;
+	  ELSE
+	    ////Calculating function frequency parameters - only when the input is changed
+	    IF #frequency <> #statFrequencyOld THEN
+	      // Assign frequency - convert frequency to period
+	      #statTimePulse := #THOUSAND_SECONDS / TRUNC(#frequency * #THOUSAND);
+	      #statFrequencyOld := #frequency;
+	    END_IF;
+	    
+	    // Assign impulse
+	    #tempImpulse := NOT #instTofTimePulse.Q;
+	    
+	    //Self-restarting timer, with time calculated from the frequency input
+	    #instTofTimePulse(IN := NOT #instTofTimePulse.Q,
+	                      PT := #statTimePulse);
+	    
+	    // Assign countdown
+	    #tempCountdown := #statTimePulse - #instTofTimePulse.ET;
+	  END_IF;
+	END_REGION
+	
+	REGION Writing to outputs
+	  // Assigning value of the pulse to the output
+	  #impulse := #tempImpulse;
+	  #countdown := #tempCountdown;
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

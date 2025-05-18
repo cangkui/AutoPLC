@@ -1,0 +1,150 @@
+FUNCTION "LGF_EncodeUtf8" : Word
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Online Support'
+FAMILY : LGF
+NAME : LGF_EncodeUtf8
+   VAR_INPUT 
+      sourceString : WString;
+      startPos : DInt;
+   END_VAR
+
+   VAR_OUTPUT 
+      bytesUsed : UInt;
+   END_VAR
+
+   VAR_IN_OUT 
+      encodedByteStream : Array[*] of Byte;
+   END_VAR
+
+   VAR_TEMP 
+      tempStatus : Word;
+      tempConvertedUtf8 : DWord;
+      tempBytesUsed : UInt;
+      tempCharacter : WChar;
+      tempIndex : DInt;
+      tempArrayIndex : DInt;
+      tempUpperBound : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      USINT_NULL : USInt := 0;
+      DWORD_NULL : DWord := 16#0000_0000;
+      EMPTY_WCHAR : WChar := WCHAR#' ';
+      BELOW_7F : Word := 16#007F;
+      BELOW_7FF : Word := 16#07FF;
+      BELOW_MAX_FFFF : Word := 16#FFFF;
+      BYTE_3F : Byte := 16#3F;
+      BYTE_80 : Byte := 16#80;
+      BYTE_C0 : Byte := 16#C0;
+      BYTE_E0 : Byte := 16#E0;
+      USINT_ONE : USInt := 1;
+      USINT_TWO : USInt := 2;
+      USINT_THREE : USInt := 3;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_START_POS_OUTSIDE : Word := 16#8201;
+      ERR_COUNT_EXCEEDS_BOUNDS : Word := 16#8202;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright 2021
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_EncodeUtf8
+	  // Function:         Encodes a WString into an UTF-8 encoded byte stream.
+	  // Library:          LGF
+	  // Author:           Siemens Industry Online Support
+	  // Tested with:      CPU 1516-3 PN/DP
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     --
+	  // Requirements:     S7-1200/1500
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION INITIALISATION  
+	  // Initialize functionality: reset of variables, diagnostics, etc.
+	  #tempConvertedUtf8 := #DWORD_NULL;
+	  #tempBytesUsed := #USINT_NULL;
+	  #tempStatus := #STATUS_NO_ERROR;
+	  #tempArrayIndex := LOWER_BOUND(ARR := #encodedByteStream, DIM := 1) + #startPos;
+	  #tempUpperBound := UPPER_BOUND(ARR := #encodedByteStream, DIM := 1);
+	  
+	  // Check parameters
+	  IF #tempArrayIndex < #tempArrayIndex OR #startPos > #tempUpperBound THEN
+	    #tempStatus := #ERR_START_POS_OUTSIDE;
+	  END_IF;
+	END_REGION
+	
+	REGION PROGRAM LOGIC
+	  FOR #tempIndex := 1 TO LEN(#sourceString) DO
+	    // Assign temp value from input
+	    #tempCharacter := #sourceString[#tempIndex];
+	    
+	    // Use this region for application specific code
+	    IF FALSE
+	      OR (#tempCharacter = #EMPTY_WCHAR)
+	      OR (WCHAR_TO_WORD(#tempCharacter) <= (#BELOW_7F))
+	    THEN
+	      IF #tempArrayIndex > #tempUpperBound THEN
+	        #tempStatus := #ERR_COUNT_EXCEEDS_BOUNDS;
+	        EXIT;
+	      ELSE
+	        //will be only 1 byte occupied
+	        #tempConvertedUtf8 := WCHAR_TO_DWORD(#tempCharacter);
+	        #encodedByteStream[#tempArrayIndex] := #tempConvertedUtf8.%B0;
+	        #tempArrayIndex += #USINT_ONE;
+	        #tempBytesUsed += #USINT_ONE;
+	      END_IF;
+	      
+	    ELSIF (WCHAR_TO_WORD(#tempCharacter) <= (#BELOW_7FF)) THEN
+	      IF #tempArrayIndex + #USINT_ONE > #tempUpperBound THEN
+	        #tempStatus := #ERR_COUNT_EXCEEDS_BOUNDS;
+	        EXIT;
+	      ELSE
+	        //will be 2 byte occupied
+	        #tempConvertedUtf8.%B1 := (WCHAR_TO_BYTE(#tempCharacter) AND #BYTE_3F) OR #BYTE_80;
+	        #tempConvertedUtf8.%B0 := WORD_TO_BYTE(SHR(IN := WCHAR_TO_WORD(#tempCharacter), N := 6)) OR #BYTE_C0;
+	        #encodedByteStream[#tempArrayIndex] := #tempConvertedUtf8.%B0;
+	        #tempArrayIndex += #USINT_ONE;
+	        #encodedByteStream[#tempArrayIndex] := #tempConvertedUtf8.%B1;
+	        #tempArrayIndex += #USINT_ONE;
+	        #tempBytesUsed += #USINT_TWO;
+	      END_IF;
+	      
+	    ELSIF (WCHAR_TO_WORD(#tempCharacter) <= (#BELOW_MAX_FFFF)) THEN
+	      IF #tempArrayIndex + #USINT_ONE > #tempUpperBound THEN
+	        #tempStatus := #ERR_COUNT_EXCEEDS_BOUNDS;
+	        EXIT;
+	      ELSE
+	        //will be 3 byte occupied
+	        #tempConvertedUtf8.%B2 := (WCHAR_TO_BYTE(#tempCharacter) AND #BYTE_3F) OR #BYTE_80;
+	        #tempConvertedUtf8.%B1 := (WORD_TO_BYTE(SHR(IN := WCHAR_TO_WORD(#tempCharacter), N := 6)) AND #BYTE_3F) OR #BYTE_80;
+	        #tempConvertedUtf8.%B0 := WORD_TO_BYTE(SHR(IN := WCHAR_TO_WORD(#tempCharacter), N := 12)) OR #BYTE_E0;
+	        #encodedByteStream[#tempArrayIndex] := #tempConvertedUtf8.%B0;
+	        #tempArrayIndex += #USINT_ONE;
+	        #encodedByteStream[#tempArrayIndex] := #tempConvertedUtf8.%B1;
+	        #tempArrayIndex += #USINT_ONE;
+	        #encodedByteStream[#tempArrayIndex] := #tempConvertedUtf8.%B2;
+	        #tempArrayIndex += #USINT_ONE;
+	        #tempBytesUsed += #USINT_THREE;
+	      END_IF;
+	    END_IF;
+	  END_FOR;
+	END_REGION
+	
+	REGION OUTPUTS
+	  // Write application specific temp values to outputs
+	  IF #tempStatus.%X15 = TRUE THEN // An error occured
+	    #bytesUsed := 0;
+	  ELSE
+	    #bytesUsed := #tempBytesUsed;
+	  END_IF;
+	  
+	  // Write status
+	  ENO := #tempStatus.%X15;
+	  #LGF_EncodeUtf8 := #tempStatus;
+	END_REGION
+	
+END_FUNCTION

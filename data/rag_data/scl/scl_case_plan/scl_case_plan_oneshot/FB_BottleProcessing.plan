@@ -1,0 +1,77 @@
+### 算法流程描述（基于需求分析和代码实现）
+
+#### 1. **状态机设计**
+这个自动化灌装线控制逻辑采用**状态机（State Machine）**模式实现，共定义9个状态：
+```plaintext
+0 - 等待瓶子 (STATE_WAITING_FOR_BOTTLE)
+1 - 清洗中 (STATE_CLEANING)
+2 - 等待清洗确认 (STATE_WAITING_FOR_CLEANING_CONFIRMATION) 
+3 - 灌装中 (STATE_FILLING)
+4 - 等待灌装确认 (STATE_WAITING_FOR_FILLING_CONFIRMATION)
+5 - 封盖中 (STATE_CAPPING)
+6 - 等待封盖确认 (STATE_WAITING_FOR_CAPPING_CONFIRMATION)
+7 - 包装中 (STATE_PACKING)
+8 - 等待包装确认 (STATE_WAITING_FOR_PACKING_CONFIRMATION)
+9 - 完成 (STATE_COMPLETED)
+```
+
+#### 2. **状态转移逻辑**
+通过`REPEAT-UNTIL`循环实现状态机运行，每个状态包含：
+- **输出控制**：设置当前阶段设备的启停状态
+- **转移条件**：检测操作员按钮信号触发状态跳转
+
+```mermaid
+stateDiagram-v2
+    [*] --> STATE_WAITING_FOR_BOTTLE
+    STATE_WAITING_FOR_BOTTLE --> STATE_CLEANING: bottleSensor触发
+    STATE_CLEANING --> STATE_FILLING: cleaningConfirmButton按下
+    STATE_FILLING --> STATE_CAPPING: fillingConfirmButton按下
+    STATE_CAPPING --> STATE_PACKING: cappingConfirmButton按下
+    STATE_PACKING --> STATE_COMPLETED: packingConfirmButton按下
+    STATE_COMPLETED --> STATE_WAITING_FOR_BOTTLE: finishedButton按下
+```
+
+#### 3. **关键实现细节**
+1. **边缘检测优化**  
+   - 代码中直接使用按钮信号（如`cleaningConfirmButton`）而非上升沿检测，实际应用可能需要增加`lastButtonState`变量实现精准触发
+
+2. **设备互锁保护**  
+   - 每个状态都会显式关闭其他设备（如清洗时强制关闭灌装阀）
+   - 示例：`STATE_CLEANING`状态下设置：
+     ```scl
+     #Pump_Motor := TRUE;  // 开启清洗泵
+     #Filling_Valve := FALSE; // 确保灌装阀关闭
+     ```
+
+3. **完成指示循环**  
+   - `STATE_COMPLETED`状态点亮完成指示灯，直到操作员按下`finishedButton`复位系统
+
+#### 4. **潜在改进建议**
+1. **超时保护机制**  
+   可增加`TON`定时器防止某个阶段卡死（如清洗超过30秒自动跳转）
+
+2. **故障状态处理**  
+   添加`STATE_ERROR`状态处理传感器异常或设备故障
+
+3. **并行流程支持**  
+   当前为严格串行流程，若需支持并行操作（如清洗和灌装同时进行）需重构状态机结构
+
+#### 5. **代码生成指导要点**
+1. **必须包含的变量**  
+   - 状态变量（`currentState`）
+   - 设备输出变量（`Pump_Motor`等）
+   - 输入信号变量（`bottleSensor`等）
+
+2. **推荐代码结构**  
+   ```scl
+   CASE currentState OF
+      STATE_X:
+          // 1. 设置输出
+          // 2. 检测转移条件
+          IF transition_condition THEN
+              currentState := NEXT_STATE;
+          END_IF;
+   END_CASE;
+   ```
+
+该设计实现了完整的瓶子处理生命周期控制，通过状态机确保各工序严格按序执行，适合需要明确流程控制的工业场景。

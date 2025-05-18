@@ -1,0 +1,35 @@
+{
+    "title": "取出第i位上的数字",
+    "description": "在一些自动化系统中，可能需要将一个整数的各个位分离出来，以便于显示或进一步处理。例如，在一些计数器或生产计数应用中，需要提取当前的计数值的第5位。\n控制要求：\n系统需要接收一个整数InputNumber和一个位数IthDigit作为输入。\n取出整数的从低到高的第IthDigit位数，如果输入的整数不足IthDigit位，则输出0。\n输出结果应该是一个Byte类型的整数。\n说明：\n1. 要求输入的整数大于等于0且要求的位数大于0,否则输出错误状态error=true和错误代码status=16#8001。",
+    "type": "FUNCTION_BLOCK",
+    "name": "LGF_SplitNumber_DInt",
+    "input": [
+        {
+            "name": "InputNumber",
+            "type": "DInt",
+            "description": "整数输入"
+        },
+        {
+            "name": "IthDigit",
+            "type": "Int",
+            "description": "要求取出的位数"
+        }
+    ],
+    "output": [
+        {
+            "name": "Number_i",
+            "type": "Byte",
+            "description": "第i位数值输出"
+        },
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "错误状态指示\nFALSE: 没有发生错误\nTRUE: 执行出错"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "状态代码"
+        }
+    ]
+}

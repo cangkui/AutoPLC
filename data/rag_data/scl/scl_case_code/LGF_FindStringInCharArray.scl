@@ -1,0 +1,102 @@
+FUNCTION "LGF_FindStringInCharArray" : DInt
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Online Support'
+FAMILY : LGF
+NAME : LGF_FindStringInCharArray
+   VAR_INPUT 
+      searchFor : String;
+      startPos { S7_PredefinedAssignment := '0'} : DInt;
+   END_VAR
+
+   VAR_OUTPUT 
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      searchIn : Variant;
+   END_VAR
+
+   VAR_TEMP 
+      tempNumElements : UDInt;
+      tempLenSearchFor : Int;
+      tempPosInArray : DInt;
+      tempPosInString : Int;
+      tempString : String;
+   END_VAR
+
+   VAR CONSTANT 
+      LEN_STRING : UInt := 254;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_NO_ARRAY : Word := 16#8200;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright 2021
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_FindStringInCharArray
+	  // Function:         The function searches for a specified String within an array of characters.
+	  //                   Returning the position of the String in the Array,
+	  //                   if the string is not found the return value is `-1`.
+	  // Library:          LGF
+	  // Author:           Siemens Industry Online Support
+	  // Tested with:      CPU 1516-3 PN/DP
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     --
+	  // Requirements:     S7-1200/1500
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION Initialization
+	  #tempPosInString := 0;
+	  #tempPosInArray := #startPos;
+	  #tempLenSearchFor := LEN(#searchFor);
+	  #status := #STATUS_NO_ERROR;
+	  #LGF_FindStringInCharArray := -1;
+	  
+	  REGION Validation of inputs
+	    // check whether the input is an ARRAY and TYPE of elements is CHAR or BYTE
+	    // IF so, the number OF the ARRAY elements is read out.
+	    // IF it is NOT an ARRAY, the program execution is terminated at this point
+	    IF TRUE
+	      AND IS_ARRAY(#searchIn)
+	      AND ((TypeOfElements(#searchIn) = Char) OR (TypeOfElements(#searchIn) = Byte) )
+	    THEN
+	      // Get number of elements
+	      #tempNumElements := CountOfElements(#searchIn);
+	    ELSE
+	      #status := #ERR_NO_ARRAY;
+	      RETURN;
+	    END_IF;
+	  END_REGION Validation of inputs
+	END_REGION Initialization
+	
+	REGION Process
+	  REPEAT // Search for beginning of text until something was found
+	    // Convert Chars to String
+	    Chars_TO_Strg(Chars  := #searchIn,
+	                  pChars := #tempPosInArray,
+	                  Cnt    := UDINT_TO_UINT(MIN(IN1 := #LEN_STRING, IN2 := #tempNumElements)),
+	                  Strg   => #tempString);
+	    
+	    // Search for text at beginning
+	    #tempPosInString := FIND(IN1 := #tempString, IN2 := #searchFor);
+	    
+	    // Keyword was found
+	    IF #tempPosInString > 0 THEN
+	      // Output position of string
+	      #LGF_FindStringInCharArray :=  #tempPosInArray + #tempPosInString - 1;
+	      EXIT;
+	    ELSE
+	      // Otherwise continue search in next string minus length of text at beginning to ensure
+	      // keywords are not broken up at the end of a string and thus missed
+	      #tempPosInArray += UINT_TO_INT(#LEN_STRING) - #tempLenSearchFor;
+	    END_IF;
+	    
+	  UNTIL (#tempPosInString > 0) OR (#tempPosInArray > #tempNumElements) END_REPEAT;
+	END_REGION Process
+	
+END_FUNCTION

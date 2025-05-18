@@ -1,0 +1,48 @@
+
+
+### 算法流程描述
+1. **初始化阶段**
+   - 将初始值`initValue`赋予临时CRC变量`tempCRC`
+   - 计算输入数组`array`的原始边界：`lowerLimit = LOWER_BOUND(array)`, `upperLimit = UPPER_BOUND(array)`
+
+2. **输入参数校验**
+   - 当`noOfElements > 0`时：
+   - 检查`noOfElements`是否超过数组实际长度：`IF noOfElements > (upperLimit - lowerLimit + 1)`
+   - 若超限则：
+     - 设置错误标志`error = TRUE`
+     - 返回状态码`status = ERR_NO_OF_ELEMENTS (16#8400)`
+     - 直接返回初始值`tempCRC`作为CRC结果
+   - 未超限则重新计算有效上界：`upperLimit = lowerLimit + noOfElements - 1`
+
+3. **CRC核心计算流程**（双重循环结构）
+   - **外层循环**：遍历数据流中的每个字节
+     - 索引范围：`indexArray = lowerLimit TO upperLimit`
+     - 将当前字节左移8位后与CRC值进行异或：`tempCRC = tempCRC XOR (array[indexArray] << 8)`
+   - **内层循环**：处理每个字节的8个比特位
+     - 索引范围：`indexBit = 0 TO 7`
+     - 检查CRC最高位：`IF tempCRC.bit15 == 1`
+       - **执行多项式除法**：左移1位后与mask异或`tempCRC = (tempCRC << 1) XOR mask`
+       - **仅移位操作**：`tempCRC = tempCRC << 1`
+
+4. **结果输出阶段**
+   - 将最终计算的`tempCRC`赋值给函数返回值
+   - 设置正常状态：`status = STATUS_NO_ERROR (16#0000)`
+   - 清除错误标志：`error = FALSE`
+
+### 关键调整点
+1. **位处理顺序优化**：
+   - 采用`SHIFT_ONE_BYTE`（8位）立即将字节提升到CRC高位，避免逐位处理时的多次移位
+   - 生成多项式应用时使用`%X15`直接访问最高位，替代传统的位掩码检查
+
+2. **循环边界处理**：
+   - 使用`CRC_LOOP_LOWER_LIMIT = 0`和`CRC_LOOP_UPPER_LIMIT = 7`明确限定位处理次数
+   - 通过预定义常量增强代码可读性，避免硬编码数字
+
+3. **错误处理机制**：
+   - 在参数校验失败时立即终止计算
+   - 通过`ENO := FALSE`标记执行异常（与SCL标准实践一致）
+   - 保持原始CRC值不修改以支持错误恢复
+
+4. **内存访问优化**：
+   - 使用`BYTE_TO_WORD`显式转换确保移位操作的数据完整性
+   - 通过预计算数组边界减少运行时计算量

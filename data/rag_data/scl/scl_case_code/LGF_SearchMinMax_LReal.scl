@@ -1,0 +1,101 @@
+FUNCTION "LGF_SearchMinMax_LReal" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_SearchMinMax_LReal
+   VAR_OUTPUT 
+      minValue : LReal;
+      minValueIndex : DInt;
+      maxValue : LReal;
+      maxValueIndex : DInt;
+   END_VAR
+
+   VAR_IN_OUT 
+      values : Array[*] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempArrayLowerBound : DInt;
+      tempArrayUpperBound : DInt;
+      tempCounter : DInt;
+      tempArrayIndexMax : DInt;
+      tempArrayIndexMin : DInt;
+      tempActValue : LReal;
+      tempMinValue : LReal;
+      tempMaxValue : LReal;
+   END_VAR
+
+   VAR CONSTANT 
+      START_FROM_SECOND_ELEMENT : Int := 1;
+      DIMENSION_ONE : UInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // Siemens AG / (c)Copyright 2019
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_SearchMinMax_LReal
+	  // Comment/Function: Searches an array for the minimum and maximum number and
+	  //                   outputs the position and values of those numbers for
+	  //                   array of long real
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - Error handling not needed, using whole array
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Validation of inputs and outputs 
+	  // Lower bound
+	  #tempArrayLowerBound := LOWER_BOUND(ARR := #values, DIM := #DIMENSION_ONE);
+	  // Upper bound 
+	  #tempArrayUpperBound := UPPER_BOUND(ARR := #values, DIM := #DIMENSION_ONE);
+	END_REGION
+	
+	REGION Searching the array 
+	  //Assign first value as min / max
+	  #tempMaxValue := #values[#tempArrayLowerBound];
+	  #tempMinValue := #tempMaxValue;
+	  
+	  //Search the Array for min/max values
+	  FOR #tempCounter := (#tempArrayLowerBound + #START_FROM_SECOND_ELEMENT) TO #tempArrayUpperBound DO
+	    
+	    #tempActValue := #values[#tempCounter];
+	    
+	    // check for min
+	    IF #tempActValue < #tempMinValue THEN
+	      #tempMinValue := #tempActValue;
+	      #tempArrayIndexMin := #tempCounter;
+	      // check for max
+	    ELSIF #tempActValue > #tempMaxValue THEN
+	      #tempMaxValue := #tempActValue;
+	      #tempArrayIndexMax := #tempCounter;
+	    END_IF;
+	  END_FOR;
+	END_REGION
+	
+	REGION Writting to outputs
+	  //Copy found values to outputs
+	  //Copy Minimum value
+	  #minValue := #values[#tempArrayIndexMin];
+	  //Copy Maximum value
+	  #maxValue := #values[#tempArrayIndexMax];
+	  
+	  //Write found indexes to outputs
+	  #minValueIndex := #tempArrayIndexMin;
+	  #maxValueIndex := #tempArrayIndexMax;
+	  
+	  //ENO mechanism is not used, no error possible
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

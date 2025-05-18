@@ -1,0 +1,47 @@
+﻿{
+    "title": "Special Stack",
+    "description": "Write a function block FB that implements a special stack feature that removes the minimum value from the stack during the pop operation.\n1. Push operation: When a new element is pushed, first check if the stack is full. If the stack is full, do nothing. Otherwise, add it to the top of the stack array and update the top position.\n2. Pop operation: When performing a pop operation, first check if the stack is empty. If the stack is empty, do nothing. Otherwise, remove the minimum value from the stack and return the value of that element, while updating the top position. Status codes:\n16#0000: Execution of FB without error\n16#8A04: The stack is full\n16#8A05: The stack is empty",
+    "type": "FUNCTION_BLOCK",
+    "name": "StackMin",
+    "input": [
+        {
+            "name": "push",
+            "type": "Bool",
+            "description": "Push operation, add an element to the stack if it is not full"
+        },
+        {
+            "name": "pop",
+            "type": "Bool",
+            "description": "Pop operation, remove the minimum value element from the stack and return its value if the stack is not empty"
+        },
+        {
+            "name": "reset",
+            "type": "Bool",
+            "description": "Reset operation, the top position of the stack will be reset"
+        }
+    ],
+    "output": [
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "FALSE: No error occurred; TRUE: An error occurred during the execution of FB"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "Status code"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "item",
+            "type": "Int",
+            "description": "The value used to push into the stack or to return from the stack"
+        },
+        {
+            "name": "stack",
+            "type": "Array[0..3] of Int",
+            "description": "The array used as the stack"
+        }
+    ]
+}

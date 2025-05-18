@@ -1,0 +1,102 @@
+FUNCTION "LGF_RandomRange_UDInt" : UDInt
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_RandomRange_UDInt
+   VAR_INPUT 
+      minValue : UDInt;
+      maxValue : UDInt;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+      subfunctionStatus : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempTime {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempNanoSecondInDWord : DWord;
+      tempTimeStatus : Word;
+      tempRandomValue : DWord;
+      tempNormReal : Real;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : UDInt := 0;
+      MAX_UDINT : UDInt := 4294967295 ;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_MAX_LESS_MIN : Word := 16#8200;
+      ERR_RD_SYS_T : Word := 16#8600;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_RandomRange_UDInt
+	  // Comment/Function: This function generates random numbers in defined limits (Datatype UDInt)
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Validation
+	  // Check if the maximal Value is less than the minimal value
+	  IF (#minValue > #maxValue) THEN
+	    #error := true;
+	    #status := #ERR_MAX_LESS_MIN;
+	    #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	    #LGF_RandomRange_UDInt := #ZERO;
+	    RETURN;
+	  END_IF;
+	  
+	  // Read system time
+	  #tempTimeStatus := INT_TO_WORD(RD_SYS_T(#tempTime));
+	  
+	  // Check return variable for error
+	  IF (#tempTimeStatus <> #SUB_STATUS_NO_ERROR) THEN
+	    #error := true;
+	    #status := #ERR_RD_SYS_T;
+	    #subfunctionStatus := #tempTimeStatus;
+	    #LGF_RandomRange_UDInt := #ZERO;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculating random number
+	  // Converting to double word so individual bytes can be addressed
+	  #tempNanoSecondInDWord := UDINT_TO_DWORD(#tempTime.NANOSECOND);
+	  
+	  // Calculate a random-start-value depending on the time
+	  #tempRandomValue.%B3 := #tempNanoSecondInDWord.%B0;
+	  #tempRandomValue.%B2 := #tempNanoSecondInDWord.%B1;
+	  #tempRandomValue.%B1 := #tempNanoSecondInDWord.%B2;
+	  #tempRandomValue.%B0 := #tempNanoSecondInDWord.%B3;
+	  
+	  // Norm the calculated random number: 0.0 <= #tempNormReal <= 1.0
+	  #tempNormReal := UDINT_TO_REAL(DWORD_TO_UDINT(#tempRandomValue)) / UDINT_TO_REAL(#MAX_UDINT);
+	  
+	  // Scale the tempNormReal to be in the range of maxValue and minValue
+	  #LGF_RandomRange_UDInt := REAL_TO_UDINT((#tempNormReal * UDINT_TO_REAL(#maxValue - #minValue) + UDINT_TO_REAL(#minValue)));
+	  
+	  #error := false;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

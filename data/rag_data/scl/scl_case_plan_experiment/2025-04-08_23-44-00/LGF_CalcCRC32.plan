@@ -1,0 +1,62 @@
+### **CRC-32 计算函数的算法流程描述**  
+
+#### **1. 功能概述**  
+该函数 `LGF_CalcCRC32` 用于计算给定数据流的 **CRC-32 校验值**，采用 **32 位生成多项式（mask）** 进行计算。  
+
+#### **2. 输入/输出定义**  
+- **输入参数**：  
+  - `initValue`（DWord）：CRC 计算的初始值（默认 `0`）。  
+  - `mask`（DWord）：生成多项式（默认 `0`）。  
+  - `noOfElements`（UInt）：参与计算的数据元素个数（默认 `0`，表示整个数组）。  
+  - `array`（`Array[*] of Byte`）：待计算的数据流（输入/输出参数）。  
+
+- **输出参数**：  
+  - `error`（Bool）：错误标志（`TRUE` 表示计算失败）。  
+  - `status`（Word）：状态码（`16#0000` 表示成功，`16#8400` 表示 `noOfElements` 超出数组范围）。  
+  - **返回值**（DWord）：计算得到的 CRC-32 值。  
+
+#### **3. 算法流程**  
+
+##### **(1) 初始化阶段**  
+1. **设置初始 CRC 值**：  
+   - `tempCRC := initValue`（初始值）。  
+2. **计算数组边界**：  
+   - 获取数组的上下限 `tempLowerLimit` 和 `tempUpperLimit`。  
+3. **检查 `noOfElements` 是否合法**：  
+   - 如果 `noOfElements > 0`，检查是否超出数组范围：  
+     - 若超出，返回错误 `ERR_NO_OF_ELEMENTS`，并终止计算。  
+     - 否则，调整 `tempUpperLimit` 以匹配 `noOfElements`。  
+
+##### **(2) CRC 计算阶段**  
+1. **遍历数组元素**（`FOR tempIndexArray := tempLowerLimit TO tempUpperLimit`）：  
+   - **数据预处理**：  
+     - 将当前字节 `array[tempIndexArray]` 左移 24 位（`SHIFT_THREE_BYTES`），并与 `tempCRC` 进行 **XOR** 运算。  
+   - **8 次 CRC 位运算**（`FOR tempIndexCRC := 0 TO 7`）：  
+     - **检查最高位（MSB）是否为 1**：  
+       - **是**：左移 1 位，并与 `mask` 进行 **XOR** 运算。  
+       - **否**：仅左移 1 位。  
+
+##### **(3) 结果输出阶段**  
+1. **返回 CRC 计算结果**：  
+   - `LGF_CalcCRC32 := tempCRC`（最终 CRC 值）。  
+2. **设置状态标志**：  
+   - `status := STATUS_NO_ERROR`（成功）。  
+   - `error := FALSE`（无错误）。  
+
+#### **4. 关键逻辑说明**  
+- **CRC 计算核心**：  
+  - 采用 **逐位异或（XOR）** 和 **左移（SHL）** 运算，结合生成多项式 `mask` 进行 CRC 计算。  
+  - 每次处理 1 字节数据，并执行 8 次位运算（1 字节 = 8 位）。  
+- **错误处理**：  
+  - 若 `noOfElements` 超出数组范围，立即返回错误状态，避免无效计算。  
+
+#### **5. 适用场景**  
+- **数据校验**（如通信协议、文件完整性检查）。  
+- **适用于 S7-1200 / S7-1500 PLC**（TIA Portal 环境）。  
+
+#### **6. 优化建议**  
+- 可扩展为 **CRC-16 / CRC-8** 计算，只需调整 `mask` 和位运算逻辑。  
+- 若数据量较大，可考虑 **分段计算** 以提高效率。  
+
+---  
+该算法流程可作为 **CRC-32 计算函数** 的标准实现参考，适用于类似的数据校验需求。

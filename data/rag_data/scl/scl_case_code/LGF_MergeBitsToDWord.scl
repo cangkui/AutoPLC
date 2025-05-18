@@ -1,0 +1,90 @@
+FUNCTION "LGF_MergeBitsToDWord" : DWord
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_MergeBitsToDWord
+   VAR_INPUT 
+      bit31 : Bool;
+      bit30 : Bool;
+      bit29 : Bool;
+      bit28 : Bool;
+      bit27 : Bool;
+      bit26 : Bool;
+      bit25 : Bool;
+      bit24 : Bool;
+      bit23 : Bool;
+      bit22 : Bool;
+      bit21 : Bool;
+      bit20 : Bool;
+      bit19 : Bool;
+      bit18 : Bool;
+      bit17 : Bool;
+      bit16 : Bool;
+      bit15 : Bool;
+      bit14 : Bool;
+      bit13 : Bool;
+      bit12 : Bool;
+      bit11 : Bool;
+      bit10 : Bool;
+      bit9 : Bool;
+      bit8 : Bool;
+      bit7 : Bool;
+      bit6 : Bool;
+      bit5 : Bool;
+      bit4 : Bool;
+      bit3 : Bool;
+      bit2 : Bool;
+      bit1 : Bool;
+      bit0 : Bool;
+   END_VAR
+
+   VAR_TEMP 
+      tempDWord : DWord;
+   END_VAR
+
+
+BEGIN
+	
+	REGION MERGE
+	  // set the bits by slice access
+	  #tempDWord.%X31 := #bit31;
+	  #tempDWord.%X30 := #bit30;
+	  #tempDWord.%X29 := #bit29;
+	  #tempDWord.%X28 := #bit28;
+	  #tempDWord.%X27 := #bit27;
+	  #tempDWord.%X26 := #bit26;
+	  #tempDWord.%X25 := #bit25;
+	  #tempDWord.%X24 := #bit24;
+	  #tempDWord.%X23 := #bit23;
+	  #tempDWord.%X22 := #bit22;
+	  #tempDWord.%X21 := #bit21;
+	  #tempDWord.%X20 := #bit20;
+	  #tempDWord.%X19 := #bit19;
+	  #tempDWord.%X18 := #bit18;
+	  #tempDWord.%X17 := #bit17;
+	  #tempDWord.%X16 := #bit16;
+	  #tempDWord.%X15 := #bit15;
+	  #tempDWord.%X14 := #bit14;
+	  #tempDWord.%X13 := #bit13;
+	  #tempDWord.%X12 := #bit12;
+	  #tempDWord.%X11 := #bit11;
+	  #tempDWord.%X10 := #bit10;
+	  #tempDWord.%X9 := #bit9;
+	  #tempDWord.%X8 := #bit8;
+	  #tempDWord.%X7 := #bit7;
+	  #tempDWord.%X6 := #bit6;
+	  #tempDWord.%X5 := #bit5;
+	  #tempDWord.%X4 := #bit4;
+	  #tempDWord.%X3 := #bit3;
+	  #tempDWord.%X2 := #bit2;
+	  #tempDWord.%X1 := #bit1;
+	  #tempDWord.%X0 := #bit0;
+	END_REGION
+	
+	REGION OUTPUT
+	  #LGF_MergeBitsToDWord := #tempDWord;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

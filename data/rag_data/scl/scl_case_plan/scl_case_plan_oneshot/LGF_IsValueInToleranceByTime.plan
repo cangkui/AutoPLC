@@ -1,0 +1,80 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个功能块 `LGF_IsValueInToleranceByTime` 用于检查一个给定值是否在设定点的指定容差范围内。它支持以下功能：
+- 检查输入值是否超出上限或下限。
+- 支持绝对值和百分比两种容差模式。
+- 提供超限监控时间功能，允许短暂超限而不触发报警。
+- 检测设定点变化，并支持设定点变化的监控时间。
+
+#### 2. **输入参数**
+- `value`：需要检查的值。
+- `setpoint`：设定点。
+- `lowerMinimum`：下限容差（绝对值或百分比）。
+- `upperMaximum`：上限容差（绝对值或百分比）。
+- `reset`：复位功能块。
+- `configuration`：配置参数，包括：
+  - `disableLimits`：禁用监控时间。
+  - `limitsAsAbsoluteValues`：容差是否为绝对值。
+  - `toleranceAsAbsoluteValues`：容差是否为绝对值（与 `limitsAsAbsoluteValues` 类似）。
+  - `upperLimitMonitoringTime`：上限监控时间。
+  - `lowerLimitMonitoringTime`：下限监控时间。
+  - `setpointChangeMonitoringTime`：设定点变化监控时间。
+
+#### 3. **输出参数**
+- `overHighLimit`：值超过上限时为 `TRUE`。
+- `belowLowLimit`：值低于下限时为 `TRUE`。
+- `inLimits`：值在容差范围内时为 `TRUE`。
+- `setpointChange`：检测到设定点变化时为 `TRUE`。
+- `error`：发生错误时为 `TRUE`。
+- `status`：功能块的状态码。
+
+#### 4. **内部变量**
+- `instMonitorUpper`：上限监控定时器。
+- `instMonitorLower`：下限监控定时器。
+- `instMonitorChange`：设定点变化监控定时器。
+- `statSetpointPrevious`：上一次的设定点值。
+- `statResetPrev`：上一次的复位状态。
+- `statSetpointChange`：设定点变化标志。
+- `statWasWithinTolerance`：值是否曾经在容差范围内。
+
+#### 5. **算法流程**
+1. **初始化与容差计算**
+   - 根据 `configuration` 参数计算上限和下限：
+     - 如果 `limitsAsAbsoluteValues` 为 `TRUE`，则直接比较 `value` 与 `upperMaximum` 和 `lowerMinimum`。
+     - 如果 `toleranceAsAbsoluteValues` 为 `TRUE`，则计算 `setpoint ± upperMaximum/lowerMinimum`。
+     - 否则，计算 `setpoint * (1 ± upperMaximum/lowerMinimum / 100)`。
+   - 检测设定点变化：
+     - 如果 `setpoint` 变化，则重置 `statWasWithinTolerance` 和 `statSetpointChange`。
+   - 处理复位信号：
+     - 如果 `reset` 为 `TRUE`，则重置 `statWasWithinTolerance` 和 `statSetpointChange`。
+
+2. **错误检查**
+   - 如果计算过程中发生错误（如 `ENO = false`），则设置 `error` 和 `status`。
+   - 如果 `setpoint` 超出上限或下限，则设置相应的错误码。
+
+3. **监控定时器**
+   - 上限监控：
+     - 如果 `value` 超过上限且曾经在容差范围内（或设定点变化监控定时器已触发），则启动上限监控定时器。
+   - 下限监控：
+     - 如果 `value` 低于下限且曾经在容差范围内（或设定点变化监控定时器已触发），则启动下限监控定时器。
+   - 设定点变化监控：
+     - 如果检测到设定点变化且值未曾在容差范围内，则启动设定点变化监控定时器。
+
+4. **输出设置**
+   - `inLimits`：
+     - 如果未触发上限或下限监控定时器，且设定点变化已处理，且值曾经在容差范围内，则为 `TRUE`。
+   - `overHighLimit`：上限监控定时器已触发时为 `TRUE`。
+   - `belowLowLimit`：下限监控定时器已触发时为 `TRUE`。
+   - `setpointChange`：设定点变化且值未曾在容差范围内时为 `TRUE`。
+   - `error` 和 `status`：根据错误状态设置。
+
+#### 6. **注意事项**
+- 定时器的触发条件需要确保值曾经在容差范围内（或设定点变化监控定时器已触发），以避免误报。
+- 设定点变化监控时间用于隐藏短暂的设定点变化，避免频繁触发报警。
+- 复位信号会重置功能块的状态。
+
+### 代码调整建议
+- 确保所有定时器的 `PT` 参数正确设置为 `configuration` 中的时间值。
+- 检查 `limitsAsAbsoluteValues` 和 `toleranceAsAbsoluteValues` 的逻辑是否冲突。
+- 确保 `statWasWithinTolerance` 和 `statSetpointChange` 的更新逻辑正确。

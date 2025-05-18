@@ -1,0 +1,61 @@
+### 算法流程描述（DWord 拆分为 2 个 Word）
+
+#### 1. **功能概述**
+- 该函数 `LGF_SplitDWordToWords` 用于将一个 32 位的 DWord 变量拆分为两个 16 位的 Word 变量：
+  - `word1`（高 16 位，MSW - Most Significant Word）
+  - `word0`（低 16 位，LSW - Least Significant Word）
+
+#### 2. **输入/输出定义**
+- **输入**：
+  - `doubleWord`（DWord 类型）：待拆分的 32 位数据。
+- **输出**：
+  - `word1`（Word 类型）：高 16 位数据。
+  - `word0`（Word 类型）：低 16 位数据。
+
+#### 3. **核心逻辑**
+- **步骤 1：提取低 16 位（LSW）**
+  - 使用位掩码 `MASK`（`16#FFFF`，即二进制 `1111111111111111`）与 `doubleWord` 进行按位与操作：
+    ```plaintext
+    word0 = doubleWord AND MASK
+    ```
+  - 这样可以直接保留 `doubleWord` 的低 16 位，高 16 位被清零。
+
+- **步骤 2：提取高 16 位（MSW）**
+  - 将 `doubleWord` 右移 16 位，使高 16 位移动到低 16 位的位置：
+    ```plaintext
+    shifted = SHR(doubleWord, 16)
+    ```
+  - 然后再次使用 `MASK` 进行按位与操作，确保只保留低 16 位（即原始的高 16 位）：
+    ```plaintext
+    word1 = shifted AND MASK
+    ```
+
+#### 4. **代码优化与调整**
+- **常量定义**：
+  - `MASK` 定义为 `16#FFFF`，用于位掩码操作。
+- **错误处理**：
+  - 该函数无需复杂错误处理，直接设置 `ENO := TRUE` 表示执行成功。
+
+#### 5. **伪代码流程**
+```plaintext
+FUNCTION LGF_SplitDWordToWords
+  INPUT: doubleWord (DWord)
+  OUTPUT: word1 (Word), word0 (Word)
+  CONSTANT: MASK = 16#FFFF
+
+  BEGIN
+    // 提取低 16 位
+    word0 := doubleWord AND MASK;
+
+    // 提取高 16 位
+    shifted := SHR(doubleWord, 16);
+    word1 := shifted AND MASK;
+
+    // 无错误，设置 ENO
+    ENO := TRUE;
+  END
+```
+
+#### 6. **调整说明**
+- 如果未来需要支持其他位宽拆分（如 DWord 拆分为 4 个 Byte），可以扩展函数逻辑，但当前需求仅需拆分为 2 个 Word。
+- 如果输入数据可能为非法值（如非 DWord 类型），可增加输入验证逻辑，但当前需求未提及此类情况。

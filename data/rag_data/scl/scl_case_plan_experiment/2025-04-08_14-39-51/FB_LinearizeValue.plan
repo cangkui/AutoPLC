@@ -1,0 +1,71 @@
+
+
+### 算法流程描述（基于代码调整）
+
+1. **初始化阶段**
+   - 每次循环执行前复位错误标志位和状态码：
+     ```pseudocode
+     Error ← FALSE
+     Status ← 16#0000
+     ```
+
+2. **边界错误检测**
+   - 若输入值 `< 1200` 或 `> 7000`：
+     ```pseudocode
+     IF InputValue < MIN_VALUE_1 OR InputValue > MAX_VALUE_3 THEN
+       Error ← TRUE
+       Status ← 16#8001
+       LinearizedValue ← (InputValue < 1200) ? 150.0 : 720.0
+     ```
+
+3. **区间线性化计算** _(层级式条件判断)_
+   - **第一区间** `[1200, 3600]`：
+     ```pseudocode
+     ELSIF InputValue BETWEEN 1200 AND 3600
+       LinearizedValue = 150 + (InputValue-1200)/2400 * 90
+     ```
+   - **第二区间** `(3600, 4800]`：
+     ```pseudocode
+     ELSIF InputValue BETWEEN 3600 AND 4800
+       LinearizedValue = 240 + (InputValue-3600)/1200 * 320
+     ```
+   - **第三区间** `(4800, 7000]`：
+     ```pseudocode
+     ELSIF InputValue BETWEEN 4800 AND 7000
+       LinearizedValue = 560 + (InputValue-4800)/2200 * 160
+     ```
+
+### 代码逻辑关键点说明
+
+1. **区间边界处理**  
+   代码通过严格的`>`和`<=`组合确保区间无重叠：
+   - 3600点归属第一区间（`≤ 3600`）
+   - 4800点归属第二区间（`≤ 4800`）
+
+2. **线性化公式优化**  
+   使用归一化比例计算避免重复计算差值：
+   ```scala
+   (当前值 - 输入下限) / 输入区间长度 * 输出区间跨度 + 输出下限
+   ```
+
+3. **错误状态优先级**  
+   错误检测置于所有正常逻辑之前，确保超限值立即触发错误不进入后续计算。
+
+### 潜在改进方向
+
+1. **常量命名增强可读性**  
+   ```scala
+   // 原常量名
+   MIN_VALUE_1 → INPUT_RANGE1_MIN
+   MAX_LINEAR_3 → OUTPUT_RANGE3_MAX
+   ```
+
+2. **防御性除法**  
+   添加对零除数的保护（当前场景因固定区间无需处理）：
+   ```pseudocode
+   denominator = max_value - min_value
+   IF denominator != 0 THEN
+     ratio = (input - min_value) / denominator
+   ELSE
+     ratio = 0  // 处理单点输入的特殊情况
+   ```

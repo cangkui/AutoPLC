@@ -1,0 +1,47 @@
+# 格雷码转二进制码算法流程描述
+
+## 需求理解
+该函数需要将输入的格雷码(Gray Code)转换为标准的二进制码(Binary Code)。格雷码的特点是相邻两个数之间只有一位二进制数不同，常用于避免数字信号传输中的竞争冒险现象。
+
+## 算法设计思路
+格雷码转二进制码的标准算法是：
+1. 二进制码的最高位等于格雷码的最高位
+2. 二进制码的次高位等于格雷码的次高位与二进制码最高位异或
+3. 以此类推，二进制码的每一位等于格雷码的当前位与二进制码的前一位异或
+
+## 代码实现逻辑
+1. **初始化阶段**：
+   - 将输入的格雷码值直接赋给临时变量`tempBinaryBits`
+
+2. **转换逻辑**：
+   - 采用分治法，通过多次移位和异或操作完成转换
+   - 依次进行16位、8位、4位、2位和1位的右移并与原值异或
+   - 这种分层异或的方法等同于逐位异或但效率更高
+
+3. **输出阶段**：
+   - 将最终结果赋给函数返回值
+   - 设置ENO为TRUE表示无错误
+
+## 代码优化点
+- 使用常量定义移位位数，提高代码可读性
+- 采用分治法优化了逐位异或的传统方法
+- 无错误处理逻辑，简化了代码结构
+
+## 算法流程
+```
+开始
+│
+├─ 初始化: tempBinaryBits = 输入格雷码
+│
+├─ 转换过程:
+│   ├─ tempBinaryBits = tempBinaryBits XOR (tempBinaryBits >> 16)
+│   ├─ tempBinaryBits = tempBinaryBits XOR (tempBinaryBits >> 8)
+│   ├─ tempBinaryBits = tempBinaryBits XOR (tempBinaryBits >> 4)
+│   ├─ tempBinaryBits = tempBinaryBits XOR (tempBinaryBits >> 2)
+│   └─ tempBinaryBits = tempBinaryBits XOR (tempBinaryBits >> 1)
+│
+└─ 输出结果: 返回tempBinaryBits
+结束
+```
+
+该实现高效地完成了格雷码到二进制码的转换，适用于西门子S7系列PLC平台。

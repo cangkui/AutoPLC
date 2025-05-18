@@ -1,0 +1,123 @@
+### 算法流程描述（Shell Sort for DInt Arrays）
+
+#### **1. 功能概述**
+该功能块（`LGF_ShellSort_DInt`）用于对输入的 `DInt` 类型数组进行排序，支持升序或降序排列。排序算法采用 **Shell Sort（希尔排序）**，这是一种改进的插入排序算法，通过动态调整间隔（gap）来提高排序效率。
+
+#### **2. 输入/输出定义**
+- **输入参数**：
+  - `sortDirection`（`Bool`）：  
+    - `FALSE`：升序排序  
+    - `TRUE`：降序排序  
+- **输出参数**：
+  - `error`（`Bool`）：指示是否发生错误  
+  - `status`（`Word`）：错误状态码（如 `16#0000` 表示无错误）  
+- **输入/输出参数**：
+  - `array`（`Array[*] of DInt`）：待排序的数组（支持动态大小，但最大元素数限制为 1000）
+
+#### **3. 算法流程**
+1. **初始化与输入验证**  
+   - 计算数组的上下界（`LOWER_BOUND` 和 `UPPER_BOUND`）和元素数量。  
+   - 检查数组是否为空或元素数量超过最大值（1000），若超出则报错并返回。  
+   - 计算数组索引偏移量（`tempArrayOffset`），用于将输入数组映射到临时数组（`tempArray`）。
+
+2. **数据复制到临时数组**  
+   - 将输入数组的所有元素复制到临时数组 `tempArray` 中，确保后续排序操作不影响原始数组。
+
+3. **Shell Sort 核心逻辑**  
+   - **动态计算初始间隔（gap）**：  
+     - 通过 `GAP_RATIO`（默认 3）逐步扩大 `gap`，直到 `gap` 超过数组长度。  
+   - **排序循环**：  
+     - 逐步缩小 `gap`（每次除以 `GAP_RATIO`）。  
+     - 对每个 `gap`，执行插入排序逻辑：  
+       - **升序排序**：比较并交换较小的元素向前移动。  
+       - **降序排序**：比较并交换较大的元素向前移动。  
+     - 重复直到 `gap` 缩小到 1（`GAP_THRESHOLD`）。
+
+4. **结果写回与状态更新**  
+   - 将排序后的 `tempArray` 数据复制回原始数组 `array`。  
+   - 设置 `error := FALSE` 和 `status := STATUS_NO_ERROR`，表示排序成功。
+
+#### **4. 关键优化点**
+- **动态间隔计算**：通过 `GAP_RATIO` 动态调整间隔，提高排序效率。  
+- **边界检查**：严格限制数组大小（≤1000），避免内存溢出。  
+- **临时数组映射**：通过索引偏移（`tempArrayOffset`）支持任意下界的输入数组。  
+
+#### **5. 错误处理**
+- `ERR_NO_ARRAY`（`16#8200`）：输入数组为空或仅含一个元素。  
+- `ERR_TOO_MANY_ELEMENTS`（`16#8201`）：数组元素超过 1000。  
+
+#### **6. 代码调整建议**
+- **常量命名**：建议将 `GAP_RATIO` 等常量改为更具描述性的名称（如 `SHELL_SORT_GAP_RATIO`）。  
+- **注释补充**：在 Shell Sort 循环部分增加注释，说明算法的时间复杂度（平均 O(n log n)）。  
+- **输入验证扩展**：可增加对数组是否为 `NULL` 的检查（尽管 SCL 通常不直接支持）。  
+
+#### **7. 伪代码描述**
+```plaintext
+FUNCTION LGF_ShellSort_DInt
+    INPUT:
+        sortDirection: Bool
+        array: Array[*] of DInt (IN_OUT)
+    OUTPUT:
+        error: Bool
+        status: Word
+
+    // 1. 初始化与输入验证
+    lowerBound = LOWER_BOUND(array)
+    upperBound = UPPER_BOUND(array)
+    elementCount = upperBound - lowerBound + 1
+
+    IF elementCount > MAX_ARRAY_ELEMENTS THEN
+        error = TRUE
+        status = ERR_TOO_MANY_ELEMENTS
+        RETURN
+    ELSE IF elementCount <= 1 THEN
+        error = TRUE
+        status = ERR_NO_ARRAY
+        RETURN
+    END_IF
+
+    // 2. 数据复制到临时数组
+    FOR i FROM lowerBound TO upperBound DO
+        tempArray[i + offset] = array[i]
+    END_FOR
+
+    // 3. Shell Sort
+    gap = 1
+    WHILE gap <= elementCount DO
+        gap = gap * 3 + 1  // 动态计算初始 gap
+    END_WHILE
+
+    WHILE gap >= 1 DO
+        gap = gap / 3
+        FOR i FROM gap + 1 TO elementCount DO
+            temp = tempArray[i]
+            j = i
+            IF sortDirection THEN
+                // 降序排序逻辑
+                WHILE j > gap AND tempArray[j - gap] < temp DO
+                    tempArray[j] = tempArray[j - gap]
+                    j = j - gap
+                END_WHILE
+            ELSE
+                // 升序排序逻辑
+                WHILE j > gap AND tempArray[j - gap] > temp DO
+                    tempArray[j] = tempArray[j - gap]
+                    j = j - gap
+                END_WHILE
+            END_IF
+            tempArray[j] = temp
+        END_FOR
+    END_WHILE
+
+    // 4. 结果写回
+    FOR i FROM lowerBound TO upperBound DO
+        array[i] = tempArray[i + offset]
+    END_FOR
+
+    error = FALSE
+    status = STATUS_NO_ERROR
+END_FUNCTION
+```
+
+#### **8. 总结**
+该算法通过 Shell Sort 实现了高效排序，支持动态数组大小和升序/降序切换，适合在 PLC 环境中处理中等规模的数据排序任务。

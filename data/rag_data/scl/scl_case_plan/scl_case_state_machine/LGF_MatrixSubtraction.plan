@@ -1,0 +1,38 @@
+这是一个数据处理任务，算法流程如下：
+
+1. 矩阵维度检查阶段：
+   1.1 获取三个矩阵的行列边界信息：
+       - 获取matrix1的行列上下界
+       - 获取matrix2的行列上下界
+       - 获取matrixResult的行列上下界
+   1.2 进行矩阵维度一致性检查：
+       - 检查matrix1和matrix2的行列下界是否一致
+       - 检查matrix1和matrixResult的行列下界是否一致
+       - 检查matrix1和matrix2的行列上界是否一致
+       - 检查matrix1和matrixResult的行列上界是否一致
+   1.3 如果任何一项检查失败：
+       - 设置error标志为TRUE
+       - 设置对应的status错误码
+       - 立即返回
+
+2. 矩阵减法计算阶段：
+   2.1 初始化行计数器
+   2.2 对每一行：
+       - 初始化列计数器
+       - 对每一列：
+           * 计算matrix1和matrix2对应元素的差值
+           * 将结果存入matrixResult对应位置
+   2.3 循环结束后：
+       - 设置error标志为FALSE
+       - 设置status为STATUS_NO_ERROR
+       - 设置ENO为TRUE
+
+3. 输出结果：
+   - 通过in/out参数matrixResult输出计算结果
+   - 通过output参数error和status输出执行状态
+
+注意事项：
+- 该算法严格遵循矩阵运算的维度匹配原则
+- 错误处理采用提前返回机制，遇到第一个错误立即终止
+- 使用嵌套循环实现矩阵元素的逐个计算
+- 结果直接写入输出矩阵，不创建中间存储

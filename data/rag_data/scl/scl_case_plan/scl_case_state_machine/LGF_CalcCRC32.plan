@@ -1,0 +1,42 @@
+# CRC-32 Calculator 算法流程分析
+
+这是一个数据处理任务，实现CRC-32校验计算功能。
+
+## 算法流程
+
+1. **初始化阶段**:
+   - 将输入参数initValue赋值给临时CRC变量tempCRC
+   - 计算输入数组array的下限(tempLowerLimit)和上限(tempUpperLimit)
+
+2. **输入参数验证**:
+   - 检查noOfElements参数:
+     - 如果大于0，验证是否超出数组边界
+     - 如果超出边界，设置错误状态(ERR_NO_OF_ELEMENTS)并返回
+     - 如果有效，调整tempUpperLimit为noOfElements指定的范围
+
+3. **CRC计算主循环**:
+   - 遍历数组中的每个元素(tempIndexArray从tempLowerLimit到tempUpperLimit):
+     - 将当前字节左移24位后与tempCRC进行异或操作
+     - 对每个字节执行8次位处理循环(tempIndexCRC从0到7):
+       - 检查tempCRC的最高位(第31位):
+         - 如果为1: 左移1位后与mask多项式进行异或
+         - 如果为0: 仅执行左移1位操作
+
+4. **结果输出**:
+   - 将最终计算得到的tempCRC值作为函数返回值
+   - 设置状态为STATUS_NO_ERROR
+   - 清除错误标志(error=FALSE)
+
+## 关键处理逻辑
+
+- 使用32位多项式(mask)进行CRC计算
+- 支持自定义初始值(initValue)
+- 支持处理数组的部分元素(通过noOfElements参数)
+- 包含输入参数有效性检查
+- 采用标准的CRC-32位处理算法(逐位处理)
+
+## 性能考虑
+
+- 使用嵌套循环结构(外层处理字节，内层处理位)
+- 采用位操作和异或运算实现高效计算
+- 避免不必要的内存分配和复制操作

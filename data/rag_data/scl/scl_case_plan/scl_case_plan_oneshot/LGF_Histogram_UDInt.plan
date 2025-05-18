@@ -1,0 +1,108 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个功能块 `LGF_Histogram_UDInt` 用于计算无符号整数（UDInt）数据集的直方图。直方图是一种统计图表，用于展示数据的频率分布。功能块的主要任务包括：
+- 对输入数组进行排序。
+- 计算每个类别的频率（绝对频率和相对频率）。
+- 计算每个类别的中心值。
+- 输出直方图的相关参数（如轴范围、类别宽度等）。
+
+#### 2. **输入参数**
+- `execute`：布尔类型，用于触发计算（上升沿触发）。
+- `numberOfClasses`：无符号整数，指定直方图的类别数量。
+- `values`：输入/输出参数，是一个无符号整数数组，包含待分析的数据集。
+
+#### 3. **输出参数**
+- `error`：布尔类型，指示是否发生错误。
+- `status`：字类型，表示功能块的状态或错误代码。
+- `subfunctionStatus`：字类型，表示子功能块的状态或错误代码。
+- `histValues`：二维数组，存储每个类别的相对频率和类别中心值。
+- `axis`：数组，存储直方图的轴范围（最小值、最大值、频率最小值、频率最大值）。
+- `classWidth`：实数类型，表示每个类别的宽度。
+
+#### 4. **内部变量**
+- `statArray`：临时数组，用于存储排序后的数据。
+- `statStatus`：功能块的状态码。
+- `statSubfuncStatus`：子功能块的状态码。
+- `statExecuteOld`：用于检测 `execute` 的上升沿。
+- `instShellSort`：用于调用排序功能块的实例。
+- `statMin` 和 `statMax`：数据集的最小值和最大值。
+- `statWidth`：类别宽度。
+- `statFrequencyValues`：当前类别的频率值。
+- `statIndex` 和 `statIndexOld`：用于遍历数组的索引。
+- `statBound`：当前类别的边界值。
+- `statMaxFrequency`：最大频率值。
+- `statHistFrequencyAbs` 和 `statHistFrequencyRel`：存储绝对频率和相对频率的数组。
+- `statHistMiddleOfClass`：存储类别中心值的数组。
+
+#### 5. **常量定义**
+- `ZERO_INT` 和 `ZERO_LREAL`：零值常量。
+- `DIMENSION_ONE`：数组维度常量。
+- `MIN_CLASSES_NUMBER` 和 `MAX_CLASSES_NUMBER`：类别数量的最小和最大值。
+- `CLASSES_COUNTER_LOW_LIMIT` 和 `CLASSES_COUNTER_UP_LIMIT`：类别索引的范围。
+- 状态码常量（如 `STATUS_EXECUTION_FINISHED`、`ERR_SHELL_SORT` 等）。
+
+#### 6. **算法流程**
+1. **检测执行信号**：
+   - 检测 `execute` 的上升沿，触发计算。
+   - 获取输入数组的边界（`LOWER_BOUND` 和 `UPPER_BOUND`）。
+   - 初始化内部变量（如频率数组、状态码等）。
+
+2. **验证输入**：
+   - 检查类别数量是否在有效范围内（`MIN_CLASSES_NUMBER` 到 `MAX_CLASSES_NUMBER`）。
+   - 如果无效，设置错误状态码 `ERR_WRONG_NO_CLASSES`。
+
+3. **排序数据**：
+   - 调用 `LGF_ShellSort_UDInt` 功能块对输入数组进行排序。
+   - 如果排序失败，设置错误状态码 `ERR_SHELL_SORT`。
+
+4. **计算直方图参数**：
+   - 计算数据集的最小值（`statMin`）和最大值（`statMax`）。
+   - 计算类别宽度（`statWidth = (statMax - statMin) / numberOfClasses`）。
+   - 遍历排序后的数组，统计每个类别的频率：
+     - 使用 `statBound` 标记当前类别的边界。
+     - 统计落在当前类别内的数据点数量（`statFrequencyValues`）。
+     - 计算相对频率（`statFrequencyValues / totalElements * 100`）。
+     - 更新最大频率（`statMaxFrequency`）。
+   - 计算每个类别的中心值（`statMin + (counter * statWidth) + statWidth / 2`）。
+
+5. **输出结果**：
+   - 将频率和类别中心值写入 `histValues`。
+   - 设置轴范围（`axis[0] = statMin`, `axis[1] = statMax`, `axis[3] = statMaxFrequency`）。
+   - 输出类别宽度（`classWidth = statWidth`）。
+   - 设置状态码和错误标志。
+
+#### 7. **错误处理**
+- 如果类别数量无效，设置 `error = TRUE` 和 `status = ERR_WRONG_NO_CLASSES`。
+- 如果排序失败，设置 `error = TRUE` 和 `status = ERR_SHELL_SORT`。
+- 其他情况下，`error = FALSE` 且 `status = STATUS_EXECUTION_FINISHED`。
+
+#### 8. **状态机**
+- `STATUS_NO_CALL`：功能块未被调用。
+- `STATUS_FIRST_CALL`：首次调用功能块。
+- `STATUS_EXECUTION_FINISHED`：计算完成。
+- 错误状态码（如 `ERR_SHELL_SORT`、`ERR_WRONG_NO_CLASSES`）。
+
+### 代码流程调整建议
+1. **优化排序逻辑**：
+   - 确保排序功能块 `LGF_ShellSort_UDInt` 的输入和输出正确传递。
+   - 如果排序失败，立即终止计算并设置错误状态。
+
+2. **类别边界处理**：
+   - 在计算类别边界时，避免浮点数精度问题（如使用 `LREAL_TO_UDINT` 转换时）。
+   - 确保最后一个类别的数据点被正确统计。
+
+3. **性能优化**：
+   - 如果输入数组很大，可以考虑分块处理或优化排序算法。
+   - 减少不必要的数组拷贝（如 `statArray` 的填充）。
+
+4. **代码可读性**：
+   - 添加注释说明关键步骤（如类别中心值的计算）。
+   - 使用命名常量代替魔术数字（如 `RATIO = 2` 用于计算中心值）。
+
+5. **测试用例**：
+   - 测试边界情况（如 `numberOfClasses = 1` 或 `numberOfClasses = MAX_CLASSES_NUMBER`）。
+   - 测试空数组或单元素数组的行为。
+
+### 总结
+该功能块的核心是通过排序和分类统计实现直方图计算。算法流程清晰，但需要注意输入验证、错误处理和性能优化。代码结构合理，符合模块化设计原则。

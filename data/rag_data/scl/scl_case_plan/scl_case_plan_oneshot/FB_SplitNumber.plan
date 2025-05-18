@@ -1,0 +1,79 @@
+### 算法流程描述
+
+#### 1. 输入验证
+- **条件检查**：首先检查输入值 `InputNumber` 是否在有效范围内（0 ≤ `InputNumber` < 10000）。
+  - 如果 `InputNumber` 无效：
+    - 设置 `error = TRUE`
+    - 设置 `status = 16#8001`（错误状态码）
+    - 直接返回，不执行后续逻辑
+  - 如果 `InputNumber` 有效：
+    - 设置 `error = FALSE`
+    - 设置 `status = 16#0000`（正常状态码）
+
+#### 2. 数字分离
+- **千位数字**：`Thousands = InputNumber / 1000`
+- **百位数字**：`Hundreds = (InputNumber MOD 1000) / 100`
+- **十位数字**：`Tens = (InputNumber MOD 100) / 10`
+- **个位数字**：`Ones = InputNumber MOD 10`
+
+#### 3. 查找最小非零数字
+- **初始化**：设置 `tempMin = 255`（初始最大值，确保任何非零数字都会更小）
+- **比较逻辑**：
+  - 如果 `Thousands` 非零且小于 `tempMin`，更新 `tempMin = Thousands`
+  - 如果 `Hundreds` 非零且小于 `tempMin`，更新 `tempMin = Hundreds`
+  - 如果 `Tens` 非零且小于 `tempMin`，更新 `tempMin = Tens`
+  - 如果 `Ones` 非零且小于 `tempMin`，更新 `tempMin = Ones`
+- **特殊情况处理**：
+  - 如果 `InputNumber = 0`，直接设置 `tempMin = 0`
+
+#### 4. 输出结果
+- **最终赋值**：将 `tempMin` 的值赋给 `Min` 输出变量。
+
+---
+
+### 代码流程调整建议
+
+1. **输入验证优化**：
+   - 可以增加对 `InputNumber` 是否为整数的检查（虽然 SCL 的 `Int` 类型已经保证是整数，但如果是其他语言可能需要）。
+   - 错误处理可以更详细，例如区分“负数”和“超过 9999”的情况。
+
+2. **数字分离优化**：
+   - 使用 `DIV` 和 `MOD` 运算时，可以显式注释说明运算的含义，提高可读性。
+   - 例如：
+     ```scl
+     #Thousands := #InputNumber / 1000;  // 整除获取千位
+     #Hundreds := (#InputNumber MOD 1000) / 100;  // 取余后整除获取百位
+     ```
+
+3. **最小非零数字查找优化**：
+   - 可以使用循环或数组简化代码（虽然 SCL 对数组支持有限，但可以尝试）。
+   - 例如：
+     ```scl
+     #tempMin := 255;
+     FOR #i := 1 TO 4 DO
+         CASE #i OF
+             1: #digit := #Thousands;
+             2: #digit := #Hundreds;
+             3: #digit := #Tens;
+             4: #digit := #Ones;
+         END_CASE;
+         IF #digit <> 0 AND #digit < #tempMin THEN
+             #tempMin := #digit;
+         END_IF;
+     END_FOR;
+     ```
+
+4. **输出优化**：
+   - 如果后续有其他输出逻辑，可以在 `Writting TO outputs` 区域统一处理。
+   - 例如：
+     ```scl
+     #Min := #tempMin;
+     // 其他输出赋值...
+     ```
+
+---
+
+### 总结
+- 核心逻辑是 **输入验证 → 数字分离 → 最小非零数字查找 → 输出结果**。
+- 代码清晰，但可以通过注释或结构化编程（如函数或循环）进一步提高可读性。
+- 错误处理完备，符合需求要求。

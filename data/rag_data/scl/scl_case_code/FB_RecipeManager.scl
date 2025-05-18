@@ -1,0 +1,140 @@
+
+FUNCTION_BLOCK "FB_RecipeManager"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    addRecipe : Bool; 
+    deleteRecipe : Bool; 
+    modifyRecipe : Bool; 
+    queryRecipe : Bool; 
+    recipeIn : Struct 
+        recipeID : Int; 
+        ingredientType : Int; 
+        ingredientRatio : Real; 
+        productionTemperature : Real; 
+    END_STRUCT;
+END_VAR
+
+VAR_OUTPUT
+    recipeAdded : Bool; 
+    recipeDeleted : Bool; 
+    recipeModified : Bool; 
+    recipeQueryResult : Struct 
+        recipeID : Int; 
+        ingredientType : Int; 
+        ingredientRatio : Real; 
+        productionTemperature : Real; 
+    END_STRUCT;
+    error : Bool; 
+    status : Word; 
+END_VAR
+
+VAR_IN_OUT
+    recipe : ARRAY[1..10] OF Struct 
+        recipeID : Int; 
+        ingredientType : Int; 
+        ingredientRatio : Real; 
+        productionTemperature : Real; 
+    END_STRUCT;
+END_VAR
+
+VAR
+    freeIndex : Int := 0; 
+    foundIndex : Int := 0; 
+END_VAR
+
+VAR CONSTANT
+    STATUS_OK : Word := 16#0000;
+    STATUS_DUPLICATE_ID : Word := 16#8002;
+    STATUS_NO_SPACE : Word := 16#8003;
+    STATUS_NOT_FOUND : Word := 16#8001;
+    STATUS_DELETE_NOT_FOUND : Word := 16#8004;
+    STATUS_MODIFY_NOT_FOUND : Word := 16#8005;
+END_VAR
+
+VAR_TEMP
+    index : Int;
+    found : Bool;
+END_VAR
+
+BEGIN
+    REGION Initialization
+        #error := FALSE;
+        #status := #STATUS_OK;
+        #recipeAdded := FALSE;
+        #recipeDeleted := FALSE;
+        #recipeModified := FALSE;
+    END_REGION
+
+    REGION Main Logic
+        IF #addRecipe THEN
+            #freeIndex := 0;
+            #found := FALSE;
+            FOR #index := 1 TO 10 BY 1 DO
+                IF #recipe[#index].recipeID = 0 THEN
+                    #freeIndex := #index;
+                    EXIT;
+                ELSIF #recipe[#index].recipeID = #recipeIn.recipeID THEN
+                    #found := TRUE;
+                    EXIT;
+                END_IF;
+            END_FOR;
+            IF #found THEN
+                #error := TRUE;
+                #status := #STATUS_DUPLICATE_ID;
+            ELSIF #freeIndex = 0 THEN
+                #error := TRUE;
+                #status := #STATUS_NO_SPACE;
+            ELSE
+                #recipe[#freeIndex] := #recipeIn;
+                #recipeAdded := TRUE;
+            END_IF;
+        ELSIF #deleteRecipe THEN
+            #found := FALSE;
+            FOR #index := 1 TO 10 BY 1 DO
+                IF #recipe[#index].recipeID = #recipeIn.recipeID THEN
+                    #recipe[#index].recipeID := 0;
+                    #recipeDeleted := TRUE;
+                    #found := TRUE;
+                    EXIT;
+                END_IF;
+            END_FOR;
+            IF NOT #found THEN
+                #error := TRUE;
+                #status := #STATUS_DELETE_NOT_FOUND;
+            END_IF;
+        ELSIF #modifyRecipe THEN
+            #found := FALSE;
+            FOR #index := 1 TO 10 BY 1 DO
+                IF #recipe[#index].recipeID = #recipeIn.recipeID THEN
+                    #recipe[#index] := #recipeIn;
+                    #recipeModified := TRUE;
+                    #found := TRUE;
+                    EXIT;
+                END_IF;
+            END_FOR;
+            IF NOT #found THEN
+                #error := TRUE;
+                #status := #STATUS_MODIFY_NOT_FOUND;
+            END_IF;
+        ELSIF #queryRecipe THEN
+            #found := FALSE;
+            FOR #index := 1 TO 10 BY 1 DO
+                IF #recipe[#index].recipeID = #recipeIn.recipeID THEN
+                    #recipeQueryResult := #recipe[#index];
+                    #found := TRUE;
+                    EXIT;
+                END_IF;
+            END_FOR;
+            IF NOT #found THEN
+                #error := TRUE;
+                #status := #STATUS_NOT_FOUND;
+            END_IF;
+        END_IF;
+    END_REGION
+
+    REGION Writting TO outputs
+        
+    END_REGION
+END_FUNCTION_BLOCK
+
+

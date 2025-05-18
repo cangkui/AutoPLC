@@ -1,0 +1,61 @@
+### 算法流程描述（Kelvin 转 Celsius 温度转换）
+
+#### 1. **功能概述**
+- 该函数 `LGF_KelvinToCelsius` 用于将开尔文温度（°K）转换为摄氏温度（°C）。
+- 转换公式：  
+  \[
+  \text{Celsius} = \text{Kelvin} - 273.15
+  \]
+
+#### 2. **输入/输出定义**
+- **输入参数**：
+  - `value`（`Real` 类型）：待转换的开尔文温度值。
+- **返回值**：
+  - `Real` 类型：转换后的摄氏温度值。
+
+#### 3. **变量定义**
+- **临时变量**：
+  - `tempCelsiusTemperature`（`Real` 类型）：存储中间计算结果。
+- **常量**：
+  - `TEMPERATURE_OFFSET`（`Real` 类型，值为 `273.15`）：开尔文到摄氏度的转换偏移量。
+
+#### 4. **算法逻辑**
+1. **初始化**：
+   - 检查输入 `value` 是否有效（如果输入为负数，可能需要进行错误处理，但本函数未实现）。
+2. **转换计算**：
+   - 使用公式 `tempCelsiusTemperature = value - TEMPERATURE_OFFSET` 进行转换。
+3. **输出结果**：
+   - 将计算结果 `tempCelsiusTemperature` 赋值给函数返回值 `LGF_KelvinToCelsius`。
+4. **错误处理（可选）**：
+   - 本函数未实现错误处理，但可以扩展（例如，检查输入是否为绝对零度以下）。
+
+#### 5. **代码流程**
+- **REGION BLOCK INFO HEADER**：
+  - 包含函数的基本信息（如作者、用途、测试环境等）。
+- **REGION CONVERT**：
+  - 执行核心转换逻辑：`tempCelsiusTemperature := value - TEMPERATURE_OFFSET`。
+- **REGION OUTPUTS**：
+  - 将结果赋值给函数返回值 `LGF_KelvinToCelsius`。
+  - 设置 `ENO`（Enable Output）为 `TRUE`，表示函数执行成功（无错误处理）。
+
+#### 6. **优化与调整**
+- **常量定义**：
+  - 使用 `VAR CONSTANT` 存储 `273.15`，提高代码可读性和可维护性。
+- **临时变量**：
+  - 使用 `tempCelsiusTemperature` 存储中间结果，避免直接修改输入参数。
+- **错误处理（扩展建议）**：
+  - 如果输入 `value < 0`（绝对零度以下），可以返回错误代码或默认值（如 `-273.15`）。
+
+#### 7. **示例调用**
+```scl
+VAR
+  kelvinTemp : Real := 300.0;
+  celsiusTemp : Real;
+END_VAR
+
+celsiusTemp := LGF_KelvinToCelsius(kelvinTemp);
+// 结果：celsiusTemp = 26.85
+```
+
+### 总结
+该函数是一个简单的温度单位转换工具，核心逻辑清晰，适合在 PLC 程序中复用。如果需要更严格的输入验证或错误处理，可以进一步扩展。

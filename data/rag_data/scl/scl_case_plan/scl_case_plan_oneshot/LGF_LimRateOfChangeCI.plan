@@ -1,0 +1,81 @@
+### **算法流程描述（Rate of Change Limiter）**  
+
+#### **1. 功能概述**  
+该功能块（`LGF_LimRateOfChangeCI`）用于限制输入信号的变化速率，使其从阶跃变化（Jump Function）转换为斜坡变化（Ramp Function）。主要应用场景包括：  
+- 防止机械系统因输入突变而产生冲击  
+- 平滑控制信号，避免执行机构剧烈动作  
+- 在自动化系统中提供更稳定的过渡  
+
+#### **2. 输入参数**  
+| 参数名 | 类型 | 说明 |
+|--------|------|------|
+| `value` | `LReal` | 待处理的输入信号 |
+| `setChangeRate` | `LReal` | 允许的最大变化速率（单位：单位/秒） |
+| `defaultOutValue` | `LReal` | 默认输出值（用于初始化） |
+| `enDefaultOutValue` | `Bool` | 是否启用默认输出值 |
+| `callOB` | `OB_CYCLIC` | 调用该功能块的循环中断组织块 |
+
+#### **3. 输出参数**  
+| 参数名 | 类型 | 说明 |
+|--------|------|------|
+| `delayedValue` | `LReal` | 经过速率限制后的输出信号 |
+| `error` | `Bool` | 是否发生错误 |
+| `status` | `Word` | 功能块执行状态 |
+| `subfunctionStatus` | `Word` | 子功能块（如 `QRY_CINT`）的状态 |
+
+#### **4. 内部变量**  
+| 变量名 | 类型 | 说明 |
+|--------|------|------|
+| `statPrevOut` | `LReal` | 存储上一次的输出值 |
+| `tempCycleTime` | `UDInt` | 循环中断周期时间（微秒） |
+| `tempCycleTimeReal` | `LReal` | 循环中断周期时间（秒） |
+| `tempOut` | `LReal` | 临时计算值 |
+
+#### **5. 算法流程**  
+1. **读取循环中断周期时间**  
+   - 使用 `QRY_CINT` 查询 `callOB` 的周期时间（`tempCycleTime`）。  
+   - 转换为秒单位（`tempCycleTimeReal = tempCycleTime / 1,000,000`）。  
+
+2. **输入验证**  
+   - **检查 `QRY_CINT` 是否成功执行**（`tempReadTimeStatus != 0`）→ 报错 `ERR_QRY_CINT`。  
+   - **检查 `callOB` 是否可用**（`tempCycleStatus == 0`）→ 报错 `ERR_OB_UNAVAILABLE`。  
+   - **检查 `setChangeRate` 是否为负值**（`setChangeRate < 0`）→ 报错 `ERR_NEG_RATE_LIM`。  
+
+3. **默认输出值处理**  
+   - 如果 `enDefaultOutValue = TRUE`，则直接输出 `defaultOutValue` 并返回。  
+
+4. **斜坡计算**  
+   - **如果 `value < statPrevOut`（输入下降）**：  
+     - 计算 `tempOut = statPrevOut - (setChangeRate * tempCycleTimeReal)`  
+     - 确保 `tempOut` 不低于 `value`（`MAX(tempOut, value)`）  
+   - **如果 `value > statPrevOut`（输入上升）**：  
+     - 计算 `tempOut = statPrevOut + (setChangeRate * tempCycleTimeReal)`  
+     - 确保 `tempOut` 不超过 `value`（`MIN(tempOut, value)`）  
+   - **如果 `value == statPrevOut`（无变化）**：  
+     - 直接输出当前值  
+
+5. **输出结果**  
+   - 更新 `delayedValue = tempOut`  
+   - 设置 `error = FALSE`，状态码 `STATUS_FINISHED_NO_ERROR`  
+
+#### **6. 状态码（Status Codes）**  
+| 状态码 | 说明 |
+|--------|------|
+| `16#0000` | 无错误 |
+| `16#8200` | 负变化速率错误 |
+| `16#8600` | `QRY_CINT` 查询错误 |
+| `16#8601` | `OB` 不可用 |
+
+#### **7. 代码优化建议**  
+- 可以增加 `setChangeRate = 0` 时的处理（直接输出 `value`）。  
+- 可增加 `tempCycleTimeReal` 的最小值检查，避免除零错误。  
+- 可增加 `value` 超出范围时的报警机制。  
+
+### **总结**  
+该功能块的核心逻辑是：  
+1. **检测输入变化方向**（上升/下降）。  
+2. **按 `setChangeRate` 计算斜坡输出**，确保不超过允许的变化速率。  
+3. **处理异常情况**（如无效输入、OB 不可用等）。  
+4. **输出平滑后的信号**，并返回执行状态。  
+
+适用于需要平滑过渡的控制系统，如电机调速、阀门控制等场景。

@@ -1,0 +1,71 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_AverageAndDeviation` 用于计算输入数组的算术平均值和标准差。输入是一个实数数组，输出是两个实数：算术平均值和标准差。
+
+#### 2. **变量定义**
+- **输入变量**：
+  - `variableArray`：一个实数数组，包含需要计算的数据序列。
+- **输出变量**：
+  - `arithmeticAverage`：计算得到的算术平均值。
+  - `standardDeviation`：计算得到的标准差。
+- **临时变量**：
+  - `tempLowerBound` 和 `tempUpperBound`：用于存储数组的下界和上界。
+  - `tempNumberOfElements`：数组的元素数量。
+  - `tempSizeCounter`：循环计数器。
+  - `tempArithmeticAverage` 和 `tempStandardDeviation`：用于临时存储计算结果。
+- **常量**：
+  - `NUMBER_OF_ELEMENTS_CORRECTION`：用于修正元素数量的计算（通常为1）。
+  - `DIMENSION_ONE`：用于数组维度操作（固定为1）。
+  - `ZERO`：初始值（0.0）。
+
+#### 3. **算法流程**
+1. **确定数组边界和元素数量**：
+   - 使用 `LOWER_BOUND` 和 `UPPER_BOUND` 函数获取数组的下界和上界。
+   - 计算元素数量：`tempNumberOfElements = tempUpperBound - tempLowerBound + NUMBER_OF_ELEMENTS_CORRECTION`。
+
+2. **计算算术平均值**：
+   - 初始化 `tempArithmeticAverage` 为 0。
+   - 遍历数组，累加所有元素的值。
+   - 将累加结果除以元素数量，得到算术平均值。
+
+3. **计算标准差**：
+   - 初始化 `tempStandardDeviation` 为 0。
+   - 遍历数组，计算每个元素与算术平均值的差的平方，并累加这些平方值。
+   - 将累加结果除以元素数量，然后取平方根，得到标准差。
+
+4. **输出结果**：
+   - 将临时变量中的计算结果赋值给输出变量 `arithmeticAverage` 和 `standardDeviation`。
+   - 强制 `ENO` 为 `TRUE`（表示函数执行成功）。
+
+#### 4. **代码调整建议**
+- **错误处理**：当前代码没有处理空数组或无效输入的情况。可以添加检查逻辑，例如：
+  ```pascal
+  IF #tempNumberOfElements <= 0 THEN
+      #arithmeticAverage := 0.0;
+      #standardDeviation := 0.0;
+      RETURN;
+  END_IF;
+  ```
+- **性能优化**：如果数组非常大，可以考虑分段计算或使用更高效的算法。
+- **常量命名**：`NUMBER_OF_ELEMENTS_CORRECTION` 可以改为更直观的名称，如 `ELEMENT_COUNT_OFFSET`。
+
+#### 5. **流程图**
+1. 开始
+2. 获取数组边界
+3. 计算元素数量
+4. 计算算术平均值
+   - 初始化累加器
+   - 遍历数组并累加
+   - 计算平均值
+5. 计算标准差
+   - 初始化累加器
+   - 遍历数组并累加平方差
+   - 计算标准差
+6. 输出结果
+7. 结束
+
+#### 6. **注意事项**
+- 数组的索引从 `tempLowerBound` 到 `tempUpperBound`，确保遍历时不会越界。
+- 使用 `DINT_TO_REAL` 和 `DINT_TO_INT` 进行类型转换，确保计算精度。
+- `ENO` 被强制设置为 `TRUE`，因此调用方无法通过 `ENO` 判断函数是否执行成功。如果需要错误处理，可以扩展状态码或输出参数。

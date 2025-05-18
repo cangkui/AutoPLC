@@ -1,0 +1,195 @@
+FUNCTION_BLOCK "LGF_IsValueInToleranceByTime"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_IsValueInToleranceByTime
+   VAR_INPUT 
+      value : Real;
+      setpoint : Real;
+      lowerMinimum : Real;
+      upperMaximum : Real;
+      reset : Bool;
+      configuration { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : "LGF_typeIsValueInToleranceByTimeConfiguration";
+   END_VAR
+
+   VAR_OUTPUT 
+      overHighLimit { ExternalWritable := 'False'} : Bool;
+      belowLowLimit { ExternalWritable := 'False'} : Bool;
+      inLimits { ExternalWritable := 'False'} : Bool;
+      setpointChange { ExternalWritable := 'False'} : Bool;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR 
+      instMonitorUpper {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : IEC_TIMER;
+      instMonitorLower {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : IEC_TIMER;
+      instMonitorChange {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : IEC_TIMER;
+      statSetpointPrevious { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real;
+      statResetPrev { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statSetpointChange { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statWasWithinTolerance { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR_TEMP 
+      tempValueOverHighLimit : Bool;
+      tempValueUnderLowLimit : Bool;
+   END_VAR
+
+   VAR CONSTANT 
+      ONE : Real := 1.0;
+      ONEHUNDRED_PERCENT : Real := 100.0;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_RANGE_LIMIT_VALUE_CALC : Word := 16#8401;
+      ERR_SETPOINT_ABOVE_HIGH_LIMIT : Word := 16#8402;
+      ERR_SETPOINT_BELOW_LOW_LIMIT : Word := 16#8403;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_IsValueInTolerance
+	  // Comment/Function: Checks if a given value is within a specified tolerance in percent of a given set point.
+	  //                   The block has a configurable timing FOR set point change hiding,
+	  //                   lower limit AND as well FOR upper limit violation hiding.
+	  // Library/Family:   LGF(Library of general Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V5.0
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization and limits check
+	  // Calculation of limits
+	  IF #configuration.limitsAsAbsolutValues THEN
+	    #tempValueOverHighLimit := #value > #upperMaximum;
+	    #tempValueUnderLowLimit := #value < #lowerMinimum;
+	  ELSE
+	    IF #configuration.toleranzAsAbsoluteValues THEN
+	      #tempValueOverHighLimit := #value > #setpoint + #upperMaximum;
+	      #tempValueUnderLowLimit := #value < #setpoint - #lowerMinimum;
+	    ELSE
+	      #tempValueOverHighLimit := #value > (#setpoint * (#ONE + (ABS(#upperMaximum) / #ONEHUNDRED_PERCENT)));
+	      #tempValueUnderLowLimit := #value < (#setpoint * (#ONE - (ABS(#lowerMinimum) / #ONEHUNDRED_PERCENT)));
+	    END_IF;
+	  END_IF;
+	  
+	  
+	  // Detecting a change in the setpoint, thus resetting the was in tolerance flag
+	  IF (#statSetpointPrevious <> #setpoint) THEN
+	    #statWasWithinTolerance := FALSE;
+	    #statSetpointChange := TRUE;
+	  END_IF;
+	  #statSetpointPrevious := #setpoint;
+	  
+	  IF FALSE
+	    OR #configuration.disableLimits
+	    OR (#reset AND NOT #statResetPrev)
+	  THEN
+	    #statWasWithinTolerance := FALSE;
+	    #statSetpointChange := FALSE;
+	  END_IF;
+	  #statResetPrev := #reset;
+	  
+	  IF TRUE
+	    AND NOT (#tempValueUnderLowLimit OR #tempValueOverHighLimit)
+	    AND NOT #statWasWithinTolerance
+	  THEN
+	    #statWasWithinTolerance := TRUE;
+	  END_IF;
+	  
+	  //Outside of data tolerance
+	  IF ENO = false THEN
+	    #error := true;
+	    #status := #ERR_RANGE_LIMIT_VALUE_CALC;
+	    #overHighLimit := false;
+	    #belowLowLimit := false;
+	    #inLimits := false;
+	    RETURN;
+	  ELSIF TRUE
+	    AND #configuration.limitsAsAbsolutValues
+	    AND #setpoint > #upperMaximum
+	  THEN
+	    #error := true;
+	    #status := #ERR_SETPOINT_ABOVE_HIGH_LIMIT;
+	    #overHighLimit := false;
+	    #belowLowLimit := false;
+	    #inLimits := false;
+	    RETURN;
+	  ELSIF TRUE
+	    AND #configuration.limitsAsAbsolutValues
+	    AND #setpoint < #lowerMinimum
+	  THEN
+	    #error := true;
+	    #status := #ERR_SETPOINT_BELOW_LOW_LIMIT;
+	    #overHighLimit := false;
+	    #belowLowLimit := false;
+	    #inLimits := false;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Limits evaluation
+	  // Check if the value is above the high limit
+	  // In here the upper limit monitor timer will be started once the upper limit is exceeded.
+	  // The signal is triggered once the timer expired and the process value is still not within the limit.
+	  // This requires that the process value was at least once within the limits
+	  #instMonitorUpper.TON(IN := TRUE
+	                        AND #tempValueOverHighLimit
+	                        AND (#statWasWithinTolerance OR #instMonitorChange.Q)
+	                        AND NOT #configuration.disableLimits
+	                        ,
+	                        PT := #configuration.upperLimitMonitoringTime);
+	  
+	  // Check if the value is below the low limit
+	  // As above the signal is triggered, when the lower limit is not reached within a certain time
+	  #instMonitorLower.TON(IN := TRUE
+	                        AND #tempValueUnderLowLimit
+	                        AND (#statWasWithinTolerance OR #instMonitorChange.Q)
+	                        AND NOT #configuration.disableLimits
+	                        ,
+	                        PT := #configuration.lowerLimitMonitoringTime);
+	  
+	  #instMonitorChange.TON(IN := TRUE
+	                         AND #statSetpointChange
+	                         AND NOT #statWasWithinTolerance
+	                         AND NOT #configuration.disableLimits
+	                         ,
+	                         PT := #configuration.setpointChangeMonitingTime);
+	  
+	  IF TRUE
+	    //AND #instMonitorChange.Q
+	    AND #statSetpointChange
+	    AND #statWasWithinTolerance
+	  THEN
+	    #statSetpointChange := FALSE;
+	  END_IF;
+	END_REGION
+	
+	REGION Writing to outputs
+	  // Check if the value is in range and write outputs
+	  #inLimits := TRUE
+	  AND NOT (#instMonitorLower.Q OR #instMonitorUpper.Q)
+	  AND NOT (#statSetpointChange AND NOT #instMonitorChange.Q)
+	  AND #statWasWithinTolerance;
+	  
+	  #overHighLimit := #instMonitorUpper.Q;
+	  #belowLowLimit := #instMonitorLower.Q;
+	  #setpointChange := #statSetpointChange AND NOT #statWasWithinTolerance;
+	  #error := FALSE;
+	  #status := #STATUS_NO_ERROR;
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

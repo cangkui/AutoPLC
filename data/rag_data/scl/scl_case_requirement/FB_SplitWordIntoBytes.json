@@ -1,0 +1,40 @@
+{
+    "title": "Decompose a 16-bit binary number into four 4-bit binary numbers",
+    "description": "In some data processing and communication applications, it is necessary to decompose a 16-bit binary number into four independent 4-bit binary numbers. For example, such decomposition operations may be required during data encoding, decoding, or data exchange with external systems.\nControl requirements:\nThe system needs to receive a 16-bit binary number InputWord as input.\nDecompose the input 16-bit binary number into four 4-bit binary numbers, corresponding to the lowest to the highest bits of the input number.\nOutput these four 4-bit binary numbers to independent variables Byte0~Byte3.\nAt the same time, calculate the average of the non-zero variables among these four variables Byte0~Byte3 and output it to average.\nFor example, if InputWord=16#1203, then Byte0=3, Byte1=0, Byte2=2, Byte3=1, and the average value average=(1+2+3)/3",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_SplitWordIntoBytes",
+    "input": [
+        {
+            "name": "InputWord",
+            "type": "Word",
+            "description": "16-bit binary number input"
+        }
+    ],
+    "output": [
+        {
+            "name": "Byte0",
+            "type": "Byte",
+            "description": "The lowest 4-bit binary number output"
+        },
+        {
+            "name": "Byte1",
+            "type": "Byte",
+            "description": "The second lowest 4-bit binary number output"
+        },
+        {
+            "name": "Byte2",
+            "type": "Byte",
+            "description": "The second highest 4-bit binary number output"
+        },
+        {
+            "name": "Byte3",
+            "type": "Byte",
+            "description": "The highest 4-bit binary number output"
+        },
+        {
+            "name": "average",
+            "type": "Real",
+            "description": "The average of non-zero bytes among the four bytes"
+        }
+    ]
+ }

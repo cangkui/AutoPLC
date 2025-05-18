@@ -1,0 +1,70 @@
+FUNCTION "LGF_CalcCRC8For1Byte" : Byte
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_CRC8For1Byte
+   VAR_INPUT 
+      initValue { S7_PredefinedAssignment := '16#00'} : Byte;
+      mask { S7_PredefinedAssignment := '16#00'} : Byte;
+      value : Byte;
+   END_VAR
+
+   VAR_TEMP 
+      tempCRC : Byte;
+      tempIndexCRC : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      SHIFT_ONE_BIT : UInt := 1;
+      CRC_LOOP_LOWER_LIMIT : DInt := 0;
+      CRC_LOOP_UPPER_LIMIT : DInt := 7;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_CRC8For1Byte
+	  // Comment/Function: This function makes a CRC calculation according
+	  //                   to the CRC-8 algorithm for 1 byte
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V15.1 Update 2
+	  // Restrictions:     ENO disabled - no error handling, no failure possible
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization and input data processing
+	  // Defining initial value for algorithm
+	  #tempCRC := #initValue XOR #value;
+	END_REGION
+	
+	REGION CRC calculation
+	  FOR #tempIndexCRC := #CRC_LOOP_LOWER_LIMIT TO #CRC_LOOP_UPPER_LIMIT DO
+	    // Check if MSB is set
+	    IF #tempCRC.%X7 THEN
+	      // Shift left and perform division by mask polynomial using XOR function
+	      #tempCRC := SHL(IN := #tempCRC, N := #SHIFT_ONE_BIT) XOR #mask;
+	    ELSE
+	      // Shift left without division
+	      #tempCRC := SHL(IN := #tempCRC, N := #SHIFT_ONE_BIT);
+	    END_IF;
+	  END_FOR;
+	END_REGION
+	
+	REGION Outputs assignment
+	  #LGF_CalcCRC8For1Byte := #tempCRC;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

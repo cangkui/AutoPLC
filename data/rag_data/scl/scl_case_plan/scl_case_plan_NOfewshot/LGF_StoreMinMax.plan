@@ -1,0 +1,21 @@
+
+
+以下是针对该功能块的算法流程描述：
+
+1. **复位处理（优先执行）**  
+   - 若`reset`为TRUE：  
+     - 将内部存储的`statStoreMinValue`重置为`LREAL_MAX`（极大值）  
+     - 将内部存储的`statStoreMaxValue`重置为`LREAL_MIN`（极小值）  
+
+2. **极值更新逻辑**  
+   - 比较输入`value`与当前存储的最小值：  
+     - 若`value < statStoreMinValue` ➔ 更新`statStoreMinValue`为当前`value`  
+   - 比较输入`value`与当前存储的最大值：  
+     - 若`value > statStoreMaxValue` ➔ 更新`statStoreMaxValue`为当前`value`  
+
+3. **输出赋值**  
+   - 将`statStoreMinValue`和`statStoreMaxValue`分别写入输出变量`minValue`和`maxValue`  
+
+**关键调整点**：  
+- 原代码中复位逻辑位于比较操作之后，会导致复位后当前周期的输入值被忽略。调整后的流程优先处理复位，确保同一周期内的输入值能参与极值比较。  
+- 其余逻辑与原代码一致，但通过调整执行顺序保证了复位功能的正确性。

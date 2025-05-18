@@ -1,0 +1,131 @@
+FUNCTION "LGF_ExtractStringFromCharArray" : Word
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Online Support'
+FAMILY : LGF
+NAME : LGF_ExtractStringFromCharArray
+   VAR_INPUT 
+      textBefore : String;
+      textAfter : String;
+   END_VAR
+
+   VAR_OUTPUT 
+      extractedString : String;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      searchIn : Variant;
+   END_VAR
+
+   VAR_TEMP 
+      tempNumElements : UDInt;
+      tempPosInArray : DInt;
+      tempLenTextBefore : Int;
+      tempPosTextBefore : DInt;
+      tempLenTextAfter : Int;
+      tempPosTextAfter : Int;
+      tempString : String;
+   END_VAR
+
+   VAR CONSTANT 
+      LEN_STRING : UInt := 254;
+      STATUS_TEXT_FOUND : Word := 16#0000;
+      WARNING_ONLY_START : Word := 16#9001;
+      WARNING_NOTHING_FOUND : Word := 16#9002;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_NO_ARRAY : Word := 16#8200;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright 2021
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_ExtractStringFromCharArray
+	  // Function:         The function extracts a String specified by a text before and after
+	  //                   from an array of characters.
+	  // Library:          LGF
+	  // Author:           Siemens Industry Online Support
+	  // Tested with:      CPU 1516-3 PN/DP
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     --
+	  // Requirements:     S7-1200/1500
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION Initialization
+	  #tempPosTextBefore := 0;
+	  #tempPosTextAfter := 0;
+	  #tempPosInArray := 0;
+	  #tempLenTextBefore := LEN(#textBefore);
+	  #tempLenTextAfter := LEN(#textAfter);
+	  #extractedString := '';
+	  #status := #STATUS_NO_ERROR;
+	  #LGF_ExtractStringFromCharArray := #WARNING_NOTHING_FOUND;
+	  
+	  REGION Validation of inputs
+	    // check whether the input is an ARRAY and TYPE of elements is CHAR or BYTE
+	    // IF so, the number OF the ARRAY elements is read out.
+	    // IF it is NOT an ARRAY, the program execution is terminated at this point
+	    IF TRUE
+	      AND IS_ARRAY(#searchIn)
+	      AND ((TypeOfElements(#searchIn) = Char) OR (TypeOfElements(#searchIn) = Byte))
+	    THEN
+	      // Get number of elements
+	      #tempNumElements := CountOfElements(#searchIn);
+	    ELSE
+	      #status := #ERR_NO_ARRAY;
+	      RETURN;
+	    END_IF;
+	  END_REGION Validation of inputs
+	END_REGION Initialization
+	
+	REGION Process
+	  REPEAT // Search for text before until something was found
+	    // Convert Chars to String
+	    Chars_TO_Strg(Chars  := #searchIn,
+	                  pChars := #tempPosInArray, // Subtract offset since pChars is zero based
+	                  Cnt    := UDINT_TO_UINT(MIN(IN1 := #LEN_STRING, IN2 := #tempNumElements)),
+	                  Strg   => #tempString);
+	    
+	    // Search for text before
+	    #tempPosTextBefore := FIND(IN1 := #tempString, IN2 := #textBefore);
+	    
+	    // Text before was found
+	    IF #tempPosTextBefore > 0 THEN
+	      // Set position in array to end of text before
+	      #tempPosInArray += #tempPosTextBefore + #tempLenTextBefore - 1;
+	      
+	      // Create new string from end of text before
+	      Chars_TO_Strg(Chars  := #searchIn,
+	                    pChars := #tempPosInArray, // Subtract offset since pChars is zero based
+	                    Cnt    := UDINT_TO_UINT(MIN(IN1 := #LEN_STRING, IN2 := #tempNumElements)),
+	                    Strg   => #tempString);
+	      
+	      // Find end of string to be extracted
+	      #tempPosTextAfter := FIND(IN1 := #tempString, IN2 := #textAfter);
+	      
+	      IF #tempPosTextAfter > 0 THEN // Shorten string if text after was found
+	        #extractedString := LEFT(IN := #tempString, L := #tempPosTextAfter - 1);
+	        #LGF_ExtractStringFromCharArray := #STATUS_TEXT_FOUND;
+	        EXIT;
+	        
+	      ELSE // Output whole string if text after was not found
+	        #extractedString := #tempString;
+	        #LGF_ExtractStringFromCharArray := #WARNING_ONLY_START;
+	        EXIT;
+	      END_IF;
+	      
+	    ELSE
+	      // Otherwise continue search in next string minus length of text before to ensure
+	      // keywords are not broken up at the end of a string and thus missed
+	      #tempPosInArray += UINT_TO_INT(#LEN_STRING) - #tempLenTextBefore;
+	    END_IF;
+	    
+	    // Repeat until end of array is reached
+	  UNTIL (#tempPosInArray > #tempNumElements) END_REPEAT;
+	END_REGION Process
+	
+END_FUNCTION

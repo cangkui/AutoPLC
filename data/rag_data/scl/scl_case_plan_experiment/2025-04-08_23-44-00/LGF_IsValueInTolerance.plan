@@ -1,0 +1,48 @@
+### 算法流程描述
+
+#### 1. 功能概述
+该函数用于检查一个给定值是否在设定值的允许容差范围内（以百分比形式给出）。函数会返回多个状态信息，包括是否超过上限、是否低于下限、错误标志和状态码。
+
+#### 2. 输入参数
+- `value`：待检查的值（LReal类型）
+- `setpoint`：设定值（LReal类型）
+- `tolerance`：容差百分比（LReal类型）
+
+#### 3. 输出参数
+- `overHighLimit`：布尔值，表示是否超过上限
+- `belowLowLimit`：布尔值，表示是否低于下限
+- `error`：布尔值，表示是否发生错误
+- `status`：状态码（Word类型）
+- 返回值：布尔值，表示是否在容差范围内
+
+#### 4. 算法流程
+1. **初始化与容差计算**
+   - 检查`setpoint`是否为正数：
+     - 如果是正数：
+       - 计算上限：`tempHighLimit = setpoint * (1 + |tolerance| / 100)`
+       - 计算下限：`tempLowLimit = setpoint * (1 - |tolerance| / 100)`
+     - 如果是负数或零：
+       - 计算上限：`tempHighLimit = setpoint * (1 - |tolerance| / 100)`
+       - 计算下限：`tempLowLimit = setpoint * (1 + |tolerance| / 100)`
+   - 如果计算过程中发生错误（如ENO为false），设置错误标志和状态码，并直接返回。
+
+2. **范围检查**
+   - 检查`value`是否超过上限：`tempValueOverHighLimit = value > tempHighLimit`
+   - 检查`value`是否低于下限：`tempValueUnderLowLimit = value < tempLowLimit`
+
+3. **结果输出**
+   - 返回值：`NOT (tempValueOverHighLimit OR tempValueUnderLowLimit)`
+   - 设置`overHighLimit`和`belowLowLimit`为对应的检查结果。
+   - 清除错误标志，设置状态码为无错误（`STATUS_NO_ERROR`）。
+
+#### 5. 错误处理
+- 如果容差计算过程中发生错误（如无效输入），设置`error`为`TRUE`，`status`为`ERR_RANGE_LIMIT_VALUES`，并返回`FALSE`。
+
+#### 6. 状态码
+- `16#0000`：无错误（`STATUS_NO_ERROR`）
+- `16#8401`：范围限制值错误（`ERR_RANGE_LIMIT_VALUES`）
+
+#### 7. 注意事项
+- 使用绝对值`ABS(tolerance)`确保容差百分比始终为正数。
+- 对于`setpoint`为负数或零的情况，容差计算需要调整符号以保证逻辑正确。
+- 不依赖ENO机制，错误处理通过`error`和`status`实现。

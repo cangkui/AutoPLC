@@ -1,0 +1,5919 @@
+{
+    "BUFFER_COMP": [
+        "EXIT",
+        "WHILE",
+        "RETURN",
+        "FOR",
+        "IF"
+    ],
+    "ACOSH": [
+        "LN",
+        "COS",
+        "SQR",
+        "SQRT",
+        "ACOS"
+    ],
+    "BUFFER_SEARCH": [
+        "TO_UPPER",
+        "EXIT",
+        "LEN",
+        "RETURN",
+        "FOR",
+        "MIN",
+        "ADR",
+        "IF"
+    ],
+    "BUFFER_TO_STRING": [
+        "LEN",
+        "INT_TO_UINT",
+        "UINT_TO_INT",
+        "RETURN",
+        "FOR",
+        "MIN",
+        "ADR",
+        "IF"
+    ],
+    "ACOTH": [
+        "LN"
+    ],
+    "BYTE_OF_BIT": [
+        "SHL",
+        "BOOL_TO_BYTE"
+    ],
+    "AGDF": [
+        "LN",
+        "SIN",
+        "COS"
+    ],
+    "BYTE_OF_DWORD": [
+        "SHR",
+        "SHL",
+        "DWORD_TO_BYTE"
+    ],
+    "AIN": [
+        "TAN",
+        "SHR",
+        "IF",
+        "DWORD_TO_REAL"
+    ],
+    "BYTE_TO_BITS": [
+        "TP"
+    ],
+    "AIN1": [
+        "DWORD_TO_REAL",
+        "RETURN",
+        "SHR",
+        "TP",
+        "SHL",
+        "IF"
+    ],
+    "BYTE_TO_GRAY": [
+        "SHR"
+    ],
+    "ALARM_2": [
+        "TP",
+        "IF"
+    ],
+    "BYTE_TO_RANGE": [],
+    "AOUT": [
+        "LIMIT",
+        "ABS",
+        "DWORD_TO_REAL",
+        "TAN",
+        "SHL",
+        "IF",
+        "REAL_TO_DWORD"
+    ],
+    "BYTE_TO_STRB": [
+        "SHR",
+        "FOR",
+        "STRING",
+        "CONCAT",
+        "ADR",
+        "SHL",
+        "IF",
+        "BOOL_TO_BYTE"
+    ],
+    "AOUT1": [
+        "LIMIT",
+        "SIGN_R",
+        "ABS",
+        "DWORD_TO_REAL",
+        "TAN",
+        "SHL",
+        "IF",
+        "REAL_TO_DWORD"
+    ],
+    "BIN_TO_BYTE": [
+        "LEN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "SHL",
+        "IF"
+    ],
+    "ARRAY_AVG": [
+        "SHR",
+        "FOR",
+        "UINT_TO_REAL"
+    ],
+    "BYTE_TO_STRH": [
+        "SHR",
+        "CHR",
+        "FOR",
+        "STRING",
+        "CONCAT",
+        "ADR",
+        "IF"
+    ],
+    "ARRAY_GAV": [
+        "UINT_TO_INT",
+        "RETURN",
+        "FOR",
+        "SHR",
+        "SQR",
+        "IF",
+        "SQRT",
+        "SQRTN"
+    ],
+    "BIT_LOAD_B2": [
+        "SHR",
+        "SHL",
+        "IF",
+        "ROR",
+        "ROL"
+    ],
+    "ARRAY_HAV": [
+        "RETURN",
+        "SHR",
+        "FOR",
+        "IF",
+        "UINT_TO_REAL"
+    ],
+    "B_TRIG": [
+        "TP"
+    ],
+    "ARRAY_MAX": [
+        "SIZEOF",
+        "FOR",
+        "IF",
+        "MAX"
+    ],
+    "BIT_LOAD_DW": [
+        "TAN",
+        "SHL",
+        "IF"
+    ],
+    "ARRAY_MIN": [
+        "SIZEOF",
+        "FOR",
+        "IF",
+        "MIN"
+    ],
+    "CABS": [
+        "HYPOT",
+        "ABS"
+    ],
+    "ARRAY_SDV": [
+        "SQR",
+        "SQRT"
+    ],
+    "BIT_LOAD_DW2": [
+        "SHR",
+        "SHL",
+        "IF",
+        "ROR",
+        "ROL"
+    ],
+    "ARRAY_SPR": [
+        "SIZEOF",
+        "FOR",
+        "IF"
+    ],
+    "CACOS": [
+        "CACOSH",
+        "ACOS",
+        "COS"
+    ],
+    "ARRAY_SUM": [
+        "SIZEOF",
+        "FOR"
+    ],
+    "BIT_LOAD_W": [
+        "TAN",
+        "SHL",
+        "IF"
+    ],
+    "ARRAY_TREND": [
+        "UINT_TO_INT",
+        "FOR",
+        "SHR",
+        "EVEN",
+        "IF",
+        "UINT_TO_REAL"
+    ],
+    "BIT_LOAD_W2": [
+        "SHR",
+        "SHL",
+        "IF",
+        "ROR",
+        "ROL"
+    ],
+    "ARRAY_VAR": [
+        "SHR",
+        "FOR",
+        "UINT_TO_REAL"
+    ],
+    "CACOSH": [
+        "CLOG",
+        "COS",
+        "SQR",
+        "SQRT",
+        "ACOS",
+        "CSQRT"
+    ],
+    "ASINH": [
+        "LN",
+        "SIN",
+        "ASIN",
+        "SQR",
+        "SQRT"
+    ],
+    "CADD": [],
+    "ASTRO": [
+        "TP"
+    ],
+    "CALENDAR_CALC": [
+        "SEL",
+        "LEN",
+        "DT_TO_DATE",
+        "DST",
+        "DT_TO_TOD",
+        "DAY_OF_WEEK",
+        "MONTH_OF_DATE",
+        "DAY_OF_DATE",
+        "TOD_TO_DINT",
+        "UTC_TO_LTIME",
+        "YEAR_OF_DATE",
+        "HOUR",
+        "DAY_OF_MONTH",
+        "DINT_TO_TOD",
+        "IF",
+        "MID",
+        "HOLY",
+        "WORK_WEEK"
+    ],
+    "ATAN2": [
+        "TAN",
+        "ATAN",
+        "IF",
+        "ATH"
+    ],
+    "CALIBRATE": [
+        "TP",
+        "SCALE",
+        "IF"
+    ],
+    "ATANH": [
+        "LN",
+        "TAN",
+        "ATAN"
+    ],
+    "CAPITALIZE": [
+        "TO_UPPER",
+        "LEN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "A_TRIG": [
+        "TP",
+        "ABS",
+        "IF"
+    ],
+    "CARG": [
+        "TAN",
+        "ATAN2",
+        "ATAN"
+    ],
+    "BAND_B": [
+        "IF"
+    ],
+    "CASIN": [
+        "SIN",
+        "ASIN",
+        "CASINH"
+    ],
+    "BAR_GRAPH": [
+        "TP",
+        "LN",
+        "IF",
+        "EXP"
+    ],
+    "BIT_OF_DWORD": [
+        "SHR"
+    ],
+    "BCDC_TO_INT": [
+        "SHR"
+    ],
+    "CASINH": [
+        "SIN",
+        "CLOG",
+        "ASIN",
+        "SQR",
+        "SQRT",
+        "CSQRT"
+    ],
+    "BETA": [
+        "GAMMA"
+    ],
+    "BIT_TOGGLE_B": [
+        "SHL"
+    ],
+    "BFT_TO_MS": [
+        "EXPT",
+        "EXP"
+    ],
+    "CATAN": [
+        "LN",
+        "TAN",
+        "ATAN"
+    ],
+    "BINOM": [
+        "RETURN",
+        "FOR",
+        "IF"
+    ],
+    "BIN_TO_DWORD": [
+        "LEN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "SHL",
+        "IF"
+    ],
+    "BIT_TOGGLE_DW": [
+        "SHL"
+    ],
+    "CATANH": [
+        "LN",
+        "TAN",
+        "ATAN"
+    ],
+    "BIT_COUNT": [
+        "WHILE",
+        "SHR",
+        "IF"
+    ],
+    "BIT_TOGGLE_W": [
+        "SHL"
+    ],
+    "BIT_LOAD_B": [
+        "TAN",
+        "SHL",
+        "IF"
+    ],
+    "CAUCHY": [],
+    "CAUCHYCD": [
+        "TAN",
+        "ATAN"
+    ],
+    "CSINH": [
+        "SIN",
+        "COS"
+    ],
+    "CCON": [],
+    "CSQRT": [
+        "SQR",
+        "HYPOT",
+        "SQRT"
+    ],
+    "CCOS": [
+        "CCOSH",
+        "CSET",
+        "COS"
+    ],
+    "CSUB": [],
+    "CCOSH": [
+        "SIN",
+        "COS"
+    ],
+    "CTAN": [
+        "SIN",
+        "COSH",
+        "TAN",
+        "COS",
+        "SINH"
+    ],
+    "CDIV": [],
+    "CTANH": [
+        "SIN",
+        "COSH",
+        "TAN",
+        "COS",
+        "SINH"
+    ],
+    "CEIL": [
+        "REAL_TO_INT",
+        "CEIL",
+        "IF"
+    ],
+    "CTRL_IN": [
+        "CTU",
+        "IF",
+        "DEAD_ZONE"
+    ],
+    "CEIL2": [
+        "DINT_TO_REAL",
+        "REAL_TO_DINT",
+        "CEIL",
+        "IF"
+    ],
+    "CTRL_OUT": [
+        "LIMIT",
+        "TP",
+        "SEL",
+        "IF"
+    ],
+    "CEXP": [
+        "SIN",
+        "COS",
+        "EXP"
+    ],
+    "COUNT_BR": [
+        "LIMIT",
+        "INC",
+        "TP",
+        "IF",
+        "INT_TO_BYTE"
+    ],
+    "CTRL_PI": [
+        "TP",
+        "CTRL_IN",
+        "IF"
+    ],
+    "CHARCODE": [
+        "LEN",
+        "WHILE",
+        "FIND",
+        "CONCAT",
+        "IF",
+        "MID",
+        "CODE"
+    ],
+    "CHARNAME": [
+        "WHILE",
+        "FIND",
+        "CONCAT",
+        "CHR_TO_STRING",
+        "LEFT",
+        "IF",
+        "MID"
+    ],
+    "COUNT_CHAR": [
+        "LEN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "CHECK_PARITY": [
+        "WHILE",
+        "SHR",
+        "IF"
+    ],
+    "CTRL_PID": [
+        "LIMIT",
+        "TP",
+        "CTRL_IN",
+        "IF"
+    ],
+    "CHK_REAL": [
+        "ADR",
+        "IF",
+        "ROL"
+    ],
+    "COUNT_DR": [
+        "LIMIT",
+        "TP",
+        "IF"
+    ],
+    "CHR_TO_STRING": [
+        "ADR",
+        "STRING"
+    ],
+    "CTRL_PWM": [
+        "TP",
+        "PW",
+        "SEL"
+    ],
+    "CINV": [],
+    "COUNT_SUBSTRING": [
+        "REPEAT",
+        "LEN",
+        "FIND",
+        "T_SUB",
+        "REPLACE",
+        "IF"
+    ],
+    "CIRCLE_A": [],
+    "CYCLE_4": [
+        "DWORD_TO_TIME",
+        "LIMIT",
+        "CASE",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "CIRCLE_C": [],
+    "CPOL": [
+        "SIN",
+        "COS"
+    ],
+    "CIRCLE_SEG": [
+        "LIMIT",
+        "SIN",
+        "COS",
+        "IF",
+        "SEG",
+        "ACOS"
+    ],
+    "CYCLE_TIME": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "CLEAN": [
+        "LEN",
+        "WHILE",
+        "FIND",
+        "DELETE",
+        "IF",
+        "MID"
+    ],
+    "CPOW": [
+        "CMUL",
+        "CEXP",
+        "CLOG",
+        "EXP"
+    ],
+    "CLICK_CNT": [
+        "TP",
+        "IF"
+    ],
+    "C_TO_F": [],
+    "CLICK_DEC": [
+        "TP",
+        "IF",
+        "CASE"
+    ],
+    "C_TO_K": [],
+    "CLK_DIV": [
+        "TP",
+        "IF"
+    ],
+    "DATE_ADD": [
+        "DATE_TO_UDINT",
+        "WHILE",
+        "UDINT_TO_DATE",
+        "MONTH_OF_DATE",
+        "YEAR_OF_DATE",
+        "DAY_OF_MONTH",
+        "INT_TO_UDINT",
+        "SET_DATE"
+    ],
+    "CLK_N": [
+        "TP",
+        "SHR",
+        "T_PLC_MS"
+    ],
+    "DAYS_DELTA": [
+        "DATE_TO_DWORD",
+        "IF",
+        "DWORD_TO_DINT"
+    ],
+    "CLK_PRG": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "CRC_GEN": [
+        "REF",
+        "WHILE",
+        "SHR",
+        "FOR",
+        "REFLECT",
+        "BOOL_TO_DWORD",
+        "SHL",
+        "IF",
+        "REVERSE"
+    ],
+    "CLK_PULSE": [
+        "TP",
+        "T_PLC_S",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS"
+    ],
+    "DAYS_IN_MONTH": [
+        "LEAP_OF_DATE",
+        "IF",
+        "CASE",
+        "DAY_OF_YEAR"
+    ],
+    "CLOG": [
+        "LN",
+        "ATAN2",
+        "TAN",
+        "HYPOT",
+        "ATAN"
+    ],
+    "DAYS_IN_YEAR": [
+        "LEAP_OF_DATE",
+        "IF"
+    ],
+    "CMP": [
+        "ABS",
+        "EXP",
+        "INT_TO_REAL",
+        "EXP10",
+        "FLOOR",
+        "IF",
+        "LOG"
+    ],
+    "DAY_OF_DATE": [
+        "DATE_TO_DWORD",
+        "DWORD_TO_DINT"
+    ],
+    "CMUL": [],
+    "DAY_OF_MONTH": [
+        "LEAP_OF_DATE",
+        "BOOL_TO_INT",
+        "IF",
+        "DAY_OF_YEAR"
+    ],
+    "CODE": [
+        "LEN",
+        "RETURN",
+        "STRING",
+        "INT_TO_DWORD",
+        "ADR",
+        "IF"
+    ],
+    "DAY_OF_WEEK": [
+        "DATE_TO_DWORD",
+        "DWORD_TO_INT"
+    ],
+    "CONE_V": [],
+    "CSET": [],
+    "CONTROL_SET1": [
+        "TP",
+        "IF",
+        "ROL"
+    ],
+    "CONTROL_SET2": [
+        "TP",
+        "IF",
+        "ROL"
+    ],
+    "DAY_OF_YEAR": [
+        "DATE_TO_UDINT",
+        "UDINT_TO_INT",
+        "YEAR_OF_DATE",
+        "DATE_TO_DWORD",
+        "IF",
+        "YEAR_BEGIN",
+        "DWORD_TO_INT"
+    ],
+    "COSH": [
+        "COS",
+        "EXP"
+    ],
+    "DAY_TO_TIME": [
+        "DWORD_TO_TIME",
+        "REAL_TO_DWORD"
+    ],
+    "COTH": [
+        "IF",
+        "EXP"
+    ],
+    "CSIN": [
+        "SIN",
+        "COS"
+    ],
+    "DCF77": [
+        "DWORD_TO_TIME",
+        "ABS",
+        "T_PLC_MS",
+        "DT_TO_DATE",
+        "DST",
+        "DAY_OF_WEEK",
+        "FOR",
+        "MIN",
+        "EVEN",
+        "INT_TO_DWORD",
+        "TP",
+        "IF",
+        "SET_DT",
+        "DT_TO_DWORD",
+        "TIME_TO_INT",
+        "DWORD_TO_DT"
+    ],
+    "DEAD_BAND": [
+        "IF"
+    ],
+    "DEAD_BAND_A": [
+        "ABS",
+        "MIN",
+        "TP",
+        "MULTIME",
+        "IF"
+    ],
+    "DEAD_ZONE": [
+        "ABS",
+        "IF"
+    ],
+    "DEAD_ZONE2": [
+        "TP",
+        "ABS",
+        "IF"
+    ],
+    "DEC1": [
+        "IF"
+    ],
+    "DEC_2": [
+        "TP"
+    ],
+    "DEC_4": [
+        "TP"
+    ],
+    "DEC_8": [
+        "TP",
+        "CASE"
+    ],
+    "DEC_TO_BYTE": [
+        "LEN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "DEC_TO_DWORD": [
+        "FOR",
+        "ADR",
+        "IF",
+        "LEN"
+    ],
+    "DEC_TO_INT": [
+        "FOR",
+        "ADR",
+        "IF",
+        "LEN"
+    ],
+    "DEG": [
+        "MODR"
+    ],
+    "DEG_TO_DIR": [
+        "SHR",
+        "MIN",
+        "IF",
+        "SHL",
+        "MAX"
+    ],
+    "DELAY": [
+        "LIMIT",
+        "FOR",
+        "TP",
+        "IF",
+        "INC1"
+    ],
+    "DELAY_4": [
+        "TP"
+    ],
+    "DEL_CHARS": [
+        "LEN",
+        "WHILE",
+        "FIND",
+        "DELETE",
+        "IF",
+        "MID"
+    ],
+    "DIFFER": [
+        "ABS",
+        "IF"
+    ],
+    "DIR_TO_DEG": [
+        "EXIT",
+        "SHR",
+        "FOR",
+        "MIN",
+        "IF",
+        "MAX"
+    ],
+    "DRIVER_1": [
+        "TP",
+        "IF",
+        "TON"
+    ],
+    "DRIVER_4": [
+        "D1",
+        "D3",
+        "D2",
+        "TP",
+        "D0"
+    ],
+    "DRIVER_4C": [
+        "TP",
+        "IF",
+        "TON"
+    ],
+    "DST": [
+        "DT_TO_DATE",
+        "SHR",
+        "INT_TO_DWORD",
+        "YEAR_OF_DATE",
+        "SET_DT",
+        "DT_TO_DWORD"
+    ],
+    "DT2_TO_SDT": [
+        "TOD_TO_DWORD",
+        "DAY_OF_WEEK",
+        "MONTH_OF_DATE",
+        "MIN",
+        "YEAR_OF_DATE",
+        "DAY_OF_MONTH",
+        "DWORD_TO_INT"
+    ],
+    "DT_SIMU": [
+        "DWORD_TO_TIME",
+        "T_PLC_MS",
+        "DWORD_TO_REAL",
+        "TP",
+        "IF",
+        "DT_TO_DWORD",
+        "REAL_TO_DWORD",
+        "DWORD_TO_DT"
+    ],
+    "DT_TO_SDT": [
+        "DT_TO_DATE",
+        "DAY_OF_WEEK",
+        "MONTH_OF_DATE",
+        "MIN",
+        "YEAR_OF_DATE",
+        "DATE_TO_DWORD",
+        "DAY_OF_MONTH",
+        "DT_TO_DWORD",
+        "DWORD_TO_INT"
+    ],
+    "DT_TO_STRF": [
+        "CASE",
+        "DT_TO_DATE",
+        "DT_TO_TOD",
+        "DAY_OF_WEEK",
+        "TAN",
+        "YEAR_OF_DATE",
+        "CONCAT",
+        "REAL_TO_INT",
+        "IF",
+        "RIGHT",
+        "MONTH_TO_STRING",
+        "MINUTE",
+        "LEN",
+        "FILL",
+        "MONTH_OF_DATE",
+        "SECOND",
+        "CODE",
+        "WHILE",
+        "FIND",
+        "INT_TO_STRING",
+        "REPLACE",
+        "MIN",
+        "WEEKDAY_TO_STRING",
+        "HOUR",
+        "DAY_OF_MONTH",
+        "MAX"
+    ],
+    "DWORD_OF_BYTE": [
+        "BYTE_TO_DWORD",
+        "SHL"
+    ],
+    "DWORD_OF_WORD": [
+        "WORD_TO_DWORD",
+        "SHL"
+    ],
+    "DWORD_TO_STRB": [
+        "FOR",
+        "STRING",
+        "ADR",
+        "SHL",
+        "BOOL_TO_BYTE"
+    ],
+    "DWORD_TO_STRF": [
+        "LIMIT",
+        "FIX",
+        "STRING",
+        "DWORD_TO_STRING"
+    ],
+    "DWORD_TO_STRH": [
+        "SHR",
+        "CHR",
+        "FOR",
+        "STRING",
+        "DWORD_TO_BYTE",
+        "CONCAT",
+        "ADR",
+        "IF"
+    ],
+    "DW_TO_REAL": [
+        "ADR"
+    ],
+    "D_TRIG": [
+        "TP"
+    ],
+    "D_TRUNC": [
+        "DINT_TO_REAL",
+        "REAL_TO_DINT",
+        "IF",
+        "TRUNC"
+    ],
+    "EASTER": [
+        "SET_DATE",
+        "SHR",
+        "IF"
+    ],
+    "ELLIPSE_A": [],
+    "ELLIPSE_C": [
+        "SQR",
+        "SQRT"
+    ],
+    "ENERGY": [
+        "TP"
+    ],
+    "ERF": [
+        "SQR",
+        "SQRT",
+        "EXP",
+        "SGN"
+    ],
+    "ERFC": [
+        "ERF"
+    ],
+    "ESR_COLLECT": [
+        "TAN",
+        "FOR",
+        "TP",
+        "IF",
+        "INC1"
+    ],
+    "ESR_MON_B8": [
+        "DWORD_TO_TIME",
+        "TP",
+        "IF",
+        "BOOL_TO_BYTE",
+        "T_PLC_MS"
+    ],
+    "ESR_MON_R4": [
+        "DWORD_TO_TIME",
+        "STRING",
+        "TP",
+        "ADR",
+        "IF",
+        "T_PLC_MS",
+        "DIFFER"
+    ],
+    "ESR_MON_X8": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "EVEN": [],
+    "EVENTS": [
+        "EXIT",
+        "FOR",
+        "STRING",
+        "DAY_OF_DATE",
+        "TP",
+        "YEAR_OF_DATE",
+        "IF",
+        "SET_DATE"
+    ],
+    "EXEC": [
+        "CASE",
+        "EXP",
+        "TAN",
+        "CONCAT",
+        "IF",
+        "SQRT",
+        "RIGHT",
+        "STRING_TO_REAL",
+        "FINDB_NONUM",
+        "SIN",
+        "COS",
+        "STRING",
+        "SQR",
+        "EXPT",
+        "LEN",
+        "RETURN",
+        "TRIM",
+        "LEFT",
+        "UPPERCASE",
+        "REAL_TO_STRING",
+        "FIND",
+        "FINDB_NUM"
+    ],
+    "EXP10": [
+        "EXP"
+    ],
+    "EXPN": [
+        "ABS",
+        "EXP",
+        "WHILE",
+        "SHR",
+        "IF"
+    ],
+    "FACT": [
+        "FOR",
+        "IF"
+    ],
+    "FADE": [
+        "TP",
+        "WORD_TO_REAL",
+        "IF"
+    ],
+    "FF_D2E": [
+        "TP",
+        "IF"
+    ],
+    "FF_D4E": [
+        "TP",
+        "IF"
+    ],
+    "FF_DRE": [
+        "TP",
+        "IF"
+    ],
+    "FF_JKE": [
+        "TP",
+        "IF"
+    ],
+    "FF_RSE": [
+        "TP",
+        "IF"
+    ],
+    "FIB": [
+        "WHILE",
+        "RETURN",
+        "IF"
+    ],
+    "FIFO_16": [
+        "TP",
+        "TAN",
+        "IF",
+        "INC1"
+    ],
+    "FIFO_32": [
+        "TP",
+        "TAN",
+        "IF",
+        "INC1"
+    ],
+    "FILL": [
+        "LIMIT",
+        "LEN",
+        "FILL",
+        "FOR",
+        "CONCAT",
+        "CHR_TO_STRING",
+        "SHL",
+        "IF"
+    ],
+    "FILTER_DW": [
+        "DWORD_TO_REAL",
+        "TP",
+        "REAL_TO_DWORD",
+        "IF",
+        "TIME_TO_REAL",
+        "T_PLC_MS"
+    ],
+    "FILTER_I": [
+        "INT_TO_DINT",
+        "TP",
+        "DINT_TO_INT",
+        "IF",
+        "T_PLC_MS",
+        "TIME_TO_DINT",
+        "DWORD_TO_DINT"
+    ],
+    "FILTER_MAV_DW": [
+        "UINT_TO_INT",
+        "FOR",
+        "MIN",
+        "TP",
+        "IF",
+        "INC1"
+    ],
+    "FILTER_MAV_W": [
+        "DWORD_TO_WORD",
+        "UINT_TO_INT",
+        "FOR",
+        "MIN",
+        "TP",
+        "IF",
+        "INC1"
+    ],
+    "FILTER_W": [
+        "DINT_TO_WORD",
+        "WORD_TO_DINT",
+        "TP",
+        "IF",
+        "TIME_TO_DWORD",
+        "WORD_TO_DWORD",
+        "T_PLC_MS",
+        "DWORD_TO_DINT"
+    ],
+    "FILTER_WAV": [
+        "DEC1",
+        "FOR",
+        "TP",
+        "IF",
+        "INC1"
+    ],
+    "FINDB": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "IF",
+        "MID"
+    ],
+    "FINDB_NONUM": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "FINDB_NUM": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "FINDP": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "IF",
+        "MID",
+        "MAX"
+    ],
+    "FIND_CHAR": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "ADR",
+        "IF",
+        "MAX"
+    ],
+    "FIND_CTRL": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "ADR",
+        "IF",
+        "MAX"
+    ],
+    "FIND_NONUM": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "ADR",
+        "IF",
+        "MAX"
+    ],
+    "FIND_NUM": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "FIND",
+        "STRING",
+        "ADR",
+        "IF",
+        "MAX"
+    ],
+    "FIX": [
+        "LIMIT",
+        "LEN",
+        "FILL",
+        "SHR",
+        "CONCAT",
+        "LEFT",
+        "IF",
+        "RIGHT"
+    ],
+    "FLOAT_TO_REAL": [
+        "EXIT",
+        "LEN",
+        "EXP",
+        "DEC_TO_INT",
+        "FOR",
+        "ADR",
+        "EXPN",
+        "IF",
+        "RIGHT",
+        "DINT_TO_REAL"
+    ],
+    "FLOOR": [
+        "REAL_TO_INT",
+        "FLOOR",
+        "IF"
+    ],
+    "FLOOR2": [
+        "DINT_TO_REAL",
+        "REAL_TO_DINT",
+        "FLOOR",
+        "IF"
+    ],
+    "FLOW_CONTROL": [
+        "TP",
+        "IF",
+        "ROL"
+    ],
+    "FLOW_METER": [
+        "DWORD_TO_TIME",
+        "UDINT_TO_REAL",
+        "INT_TO_REAL",
+        "TP",
+        "FLOOR",
+        "IF",
+        "INT_TO_UDINT",
+        "TIME_TO_REAL",
+        "T_PLC_MS"
+    ],
+    "FRACT": [
+        "ABS",
+        "TRUNC",
+        "D_TRUNC",
+        "IF",
+        "DINT_TO_REAL",
+        "FRAC"
+    ],
+    "FRMP_B": [
+        "SEL",
+        "MIN",
+        "DWORD_TO_BYTE",
+        "SHL",
+        "IF",
+        "TIME_TO_DWORD"
+    ],
+    "FSTRING_TO_BYTE": [
+        "LEN",
+        "OCT_TO_BYTE",
+        "HEX_TO_BYTE",
+        "DEC_TO_BYTE",
+        "LEFT",
+        "IF",
+        "CLEAN",
+        "RIGHT",
+        "BIN_TO_BYTE"
+    ],
+    "FSTRING_TO_DT": [
+        "FSTRING_TO_MONTH",
+        "WHILE",
+        "TAN",
+        "FIND",
+        "RETURN",
+        "LEFT",
+        "DELETE",
+        "STRING_TO_INT",
+        "SET_DT",
+        "MID",
+        "IF"
+    ],
+    "F_TO_C": [],
+    "FSTRING_TO_DWORD": [
+        "LEN",
+        "HEX_TO_DWORD",
+        "BIN_TO_DWORD",
+        "LEFT",
+        "OCT_TO_DWORD",
+        "IF",
+        "CLEAN",
+        "RIGHT",
+        "DEC_TO_DWORD"
+    ],
+    "FSTRING_TO_MONTH": [
+        "LOWERCASE",
+        "CASE",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "MIN",
+        "TRIM",
+        "IF",
+        "CAPITALIZE",
+        "STRING_TO_INT",
+        "MAX"
+    ],
+    "F_TO_OM": [],
+    "FSTRING_TO_WEEK": [
+        "LEN",
+        "WHILE",
+        "FIND",
+        "SHR",
+        "FSTRING_TO_WEEKDAY",
+        "MID",
+        "RIGHT"
+    ],
+    "F_POWER": [
+        "EXPT",
+        "EXP"
+    ],
+    "RMP_B": [
+        "TP",
+        "IF"
+    ],
+    "FSTRING_TO_WEEKDAY": [
+        "LOWERCASE",
+        "CASE",
+        "RETURN",
+        "FOR",
+        "MIN",
+        "TRIM",
+        "IF",
+        "CAPITALIZE",
+        "STRING_TO_INT",
+        "MAX"
+    ],
+    "GAUSS": [
+        "EXP"
+    ],
+    "FT_AVG": [
+        "LIMIT",
+        "FOR",
+        "INT_TO_REAL",
+        "TP",
+        "IF"
+    ],
+    "GAUSSCD": [
+        "ERF"
+    ],
+    "FT_DERIV": [
+        "TP",
+        "T_PLC_US",
+        "IF",
+        "DWORD_TO_REAL"
+    ],
+    "GCD": [
+        "NOT",
+        "ABS",
+        "WHILE",
+        "SHR",
+        "DINT_TO_INT",
+        "SHL",
+        "IF"
+    ],
+    "FT_IMP": [
+        "TP",
+        "T1"
+    ],
+    "GDF": [
+        "TAN",
+        "ATAN",
+        "IF",
+        "EXP"
+    ],
+    "FT_INT": [
+        "TP",
+        "IF",
+        "MIN",
+        "MAX"
+    ],
+    "GEN_BIT": [
+        "TP",
+        "SHR",
+        "IF"
+    ],
+    "FT_INT2": [
+        "LIMIT",
+        "MIN",
+        "R2_ADD",
+        "TP",
+        "IF",
+        "R2_SET",
+        "MAX"
+    ],
+    "F_TO_PT": [
+        "DWORD_TO_TIME",
+        "REAL_TO_DWORD"
+    ],
+    "FT_MIN_MAX": [
+        "TP",
+        "IF",
+        "MIN",
+        "MAX"
+    ],
+    "GEN_PULSE": [
+        "DWORD_TO_TIME",
+        "SEL",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "FT_PD": [
+        "TP"
+    ],
+    "GEN_PW2": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "FT_PDT1": [
+        "TP",
+        "REAL_TO_TIME"
+    ],
+    "GEN_RDM": [
+        "DWORD_TO_TIME",
+        "T_PLC_MS",
+        "TP",
+        "IF",
+        "RDM"
+    ],
+    "FT_PI": [
+        "MIN",
+        "MAX"
+    ],
+    "GEN_RDT": [
+        "TOF",
+        "TP",
+        "TON",
+        "IF",
+        "DINT_TO_REAL",
+        "TIME_TO_DINT"
+    ],
+    "FT_PID": [
+        "TP",
+        "IF",
+        "MIN",
+        "MAX"
+    ],
+    "GEN_RMP": [
+        "DWORD_TO_TIME",
+        "FRACT",
+        "TP",
+        "MULTIME",
+        "IF",
+        "TIME_TO_REAL",
+        "T_PLC_MS",
+        "MODR",
+        "FRAC"
+    ],
+    "FT_PIDW": [
+        "LIMIT",
+        "TP",
+        "IF"
+    ],
+    "REVERSE": [
+        "ROR",
+        "SHR",
+        "SHL",
+        "ROL"
+    ],
+    "FT_PIDWL": [
+        "TP",
+        "IF"
+    ],
+    "GEN_SIN": [
+        "DWORD_TO_TIME",
+        "SIN",
+        "SIGN_R",
+        "DWORD_TO_REAL",
+        "TP",
+        "MULTIME",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS",
+        "MODR"
+    ],
+    "FT_PIW": [
+        "TP",
+        "IF"
+    ],
+    "GEN_SQ": [
+        "SHR",
+        "TP",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS"
+    ],
+    "FT_PIWL": [
+        "TP",
+        "T_PLC_US",
+        "IF",
+        "DWORD_TO_REAL"
+    ],
+    "GEN_SQR": [
+        "DWORD_TO_TIME",
+        "RETURN",
+        "TP",
+        "SQR",
+        "MULTIME",
+        "IF",
+        "T_PLC_MS",
+        "MODR"
+    ],
+    "FT_PT1": [
+        "T_PLC_US",
+        "ABS",
+        "DWORD_TO_REAL",
+        "TP",
+        "IF",
+        "TIME_TO_REAL"
+    ],
+    "GEO_TO_DEG": [
+        "INT_TO_REAL"
+    ],
+    "FT_PT2": [
+        "TP",
+        "TIME_TO_REAL",
+        "IF"
+    ],
+    "GAMMA": [
+        "EXP",
+        "SQR",
+        "EXPT",
+        "IF",
+        "SQRT"
+    ],
+    "FT_Profile": [
+        "DWORD_TO_TIME",
+        "CASE",
+        "TP",
+        "IF",
+        "TIME_TO_REAL",
+        "T_PLC_MS"
+    ],
+    "GOLD": [
+        "SQR",
+        "SQRT"
+    ],
+    "FT_RMP": [
+        "DWORD_TO_TIME",
+        "MIN",
+        "TP",
+        "IF",
+        "TIME_TO_REAL",
+        "T_PLC_MS",
+        "MAX"
+    ],
+    "GRAY_TO_BYTE": [
+        "SHR"
+    ],
+    "FT_TN16": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "HEX_TO_BYTE": [
+        "LEN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "SHL",
+        "IF"
+    ],
+    "FT_TN64": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "HEX_TO_DWORD": [
+        "LEN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "SHL",
+        "IF"
+    ],
+    "FT_TN8": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "HOLIDAY": [
+        "EASTER",
+        "ABS",
+        "DATE_ADD",
+        "DAY_OF_WEEK",
+        "TAN",
+        "FOR",
+        "RETURN",
+        "MIN",
+        "YEAR_OF_DATE",
+        "TP",
+        "IF",
+        "SET_DATE",
+        "MAX"
+    ],
+    "F_LIN": [],
+    "HOUR": [
+        "TOD_TO_DWORD",
+        "DWORD_TO_INT"
+    ],
+    "F_LIN2": [],
+    "HOUR_OF_DT": [
+        "DT_TO_DWORD",
+        "DWORD_TO_INT"
+    ],
+    "F_POLY": [],
+    "HOUR_TO_TIME": [
+        "DWORD_TO_TIME",
+        "REAL_TO_DWORD"
+    ],
+    "F_QUAD": [],
+    "SUN_POS": [
+        "REF",
+        "SIN",
+        "DWORD_TO_REAL",
+        "TOD_TO_DWORD",
+        "DT_TO_TOD",
+        "TAN",
+        "COS",
+        "ASIN",
+        "DEG",
+        "TP",
+        "REFRACTION",
+        "ATAN",
+        "IF",
+        "DT_TO_DWORD",
+        "FRAC",
+        "MODR",
+        "RAD"
+    ],
+    "HOUR_TO_TOD": [
+        "REAL_TO_DWORD",
+        "DWORD_TO_TOD"
+    ],
+    "LIST_ADD": [
+        "LEN",
+        "STRING",
+        "CONCAT",
+        "CHR_TO_STRING",
+        "IF",
+        "T_ADD"
+    ],
+    "HYPOT": [
+        "SQR",
+        "SQRT"
+    ],
+    "LIST_CLEAN": [
+        "EXIT",
+        "LEN",
+        "FOR",
+        "ADR",
+        "IF"
+    ],
+    "HYST": [
+        "TP",
+        "IF"
+    ],
+    "LIST_GET": [
+        "EXIT",
+        "REPEAT",
+        "LEN",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "HYST_1": [
+        "TP",
+        "IF"
+    ],
+    "LIST_INSERT": [
+        "LEN",
+        "WHILE",
+        "RETURN",
+        "STRING",
+        "CONCAT",
+        "CHR_TO_STRING",
+        "ADR",
+        "INSERT",
+        "IF"
+    ],
+    "HYST_2": [
+        "TP",
+        "IF"
+    ],
+    "LIST_LEN": [
+        "REPEAT",
+        "LEN",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "HYST_3": [
+        "TP",
+        "IF"
+    ],
+    "LIST_NEXT": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "TP",
+        "ADR",
+        "IF"
+    ],
+    "INC": [],
+    "LIST_RETRIEVE": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "INC1": [
+        "IF"
+    ],
+    "RAD": [
+        "MODR"
+    ],
+    "INC2": [],
+    "RANGE_TO_BYTE": [
+        "LIMIT",
+        "DINT_TO_INT",
+        "INT_TO_BYTE",
+        "TRUNC"
+    ],
+    "INC_DEC": [
+        "TP",
+        "IF"
+    ],
+    "K_TO_C": [],
+    "RANGE_TO_WORD": [
+        "DINT_TO_WORD",
+        "LIMIT",
+        "TRUNC"
+    ],
+    "INTEGRATE": [
+        "T_PLC_MS",
+        "IF",
+        "DWORD_TO_REAL"
+    ],
+    "LAMBERT_W": [
+        "LN",
+        "EXIT",
+        "EXP",
+        "RETURN",
+        "FOR",
+        "REAL_TO_DW",
+        "IF"
+    ],
+    "INTERLOCK": [
+        "T2",
+        "TOF",
+        "TP",
+        "T1",
+        "TON"
+    ],
+    "LANGEVIN": [
+        "COTH",
+        "IF"
+    ],
+    "INTERLOCK_4": [
+        "TP",
+        "IF",
+        "CASE"
+    ],
+    "LEAP_DAY": [
+        "DATE_TO_UDINT"
+    ],
+    "INT_TO_BCDC": [
+        "INT_TO_BYTE",
+        "SHL"
+    ],
+    "RDM": [
+        "LIMIT",
+        "DWORD_TO_REAL",
+        "FRACT",
+        "BIT_COUNT",
+        "FRAC",
+        "INT_TO_DWORD",
+        "ADR",
+        "T_PLC_MS",
+        "ROL"
+    ],
+    "INV": [
+        "IF"
+    ],
+    "RDM2": [
+        "FRACT",
+        "TRUNC",
+        "DINT_TO_INT",
+        "RDM",
+        "FRAC"
+    ],
+    "ISC_ALPHA": [
+        "IF"
+    ],
+    "LEAP_OF_DATE": [
+        "DATE_TO_DWORD",
+        "SHL"
+    ],
+    "ISC_CTRL": [],
+    "RDMDW": [
+        "FRACT",
+        "BIT_COUNT",
+        "SHL",
+        "RDM",
+        "REAL_TO_DWORD",
+        "FRAC"
+    ],
+    "ISC_HEX": [],
+    "REAL_TO_DW": [
+        "ADR"
+    ],
+    "ISC_LOWER": [
+        "IF"
+    ],
+    "REAL_TO_FRAC": [
+        "EXIT",
+        "REPEAT",
+        "REAL_TO_DINT",
+        "ABS",
+        "MIN",
+        "DINT_TO_INT",
+        "IF",
+        "DINT_TO_REAL",
+        "FRAC"
+    ],
+    "ISC_NUM": [],
+    "LEAP_YEAR": [
+        "SHL",
+        "IF"
+    ],
+    "ISC_UPPER": [
+        "IF"
+    ],
+    "REAL_TO_STRF": [
+        "LIMIT",
+        "REAL_TO_DINT",
+        "ABS",
+        "LEN",
+        "EXP",
+        "FOR",
+        "STRING",
+        "EXP10",
+        "CONCAT",
+        "INSERT",
+        "IF",
+        "DINT_TO_STRING"
+    ],
+    "IS_ALNUM": [
+        "LN",
+        "LEN",
+        "ISC_NUM",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ISC_ALPHA",
+        "ADR",
+        "IF"
+    ],
+    "LENGTH": [
+        "TP",
+        "LEN"
+    ],
+    "IS_ALPHA": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ISC_ALPHA",
+        "ADR",
+        "IF"
+    ],
+    "REFLECT": [
+        "REF",
+        "SHR",
+        "FOR",
+        "BOOL_TO_DWORD",
+        "SHL"
+    ],
+    "IS_CC": [
+        "LEN",
+        "RETURN",
+        "FIND",
+        "FOR",
+        "STRING",
+        "IF",
+        "MID"
+    ],
+    "REFRACTION": [
+        "LIMIT",
+        "TAN",
+        "FRAC",
+        "REF"
+    ],
+    "IS_CTRL": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ISC_CTRL",
+        "ADR",
+        "IF"
+    ],
+    "REPLACE_ALL": [
+        "LEN",
+        "WHILE",
+        "FIND",
+        "REPLACE",
+        "STRING",
+        "FINDP"
+    ],
+    "IS_HEX": [
+        "LEN",
+        "ISC_HEX",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "REPLACE_CHARS": [
+        "LEN",
+        "FIND",
+        "REPLACE",
+        "FOR",
+        "STRING",
+        "LEFT",
+        "IF",
+        "MID"
+    ],
+    "IS_LOWER": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "IF",
+        "ISC_LOWER"
+    ],
+    "REPLACE_UML": [
+        "LEN",
+        "TO_UML",
+        "WHILE",
+        "REPLACE",
+        "STRING",
+        "INT_TO_DWORD",
+        "ADR",
+        "IF"
+    ],
+    "IS_NCC": [
+        "LEN",
+        "RETURN",
+        "FIND",
+        "FOR",
+        "STRING",
+        "IF",
+        "MID"
+    ],
+    "RES_NI": [
+        "TAN"
+    ],
+    "IS_NUM": [
+        "LEN",
+        "ISC_NUM",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ADR",
+        "IF"
+    ],
+    "LINEAR_INT": [
+        "WHILE",
+        "MIN"
+    ],
+    "IS_SORTED": [
+        "UINT_TO_INT",
+        "RETURN",
+        "FOR",
+        "SHR",
+        "IF"
+    ],
+    "RES_NTC": [
+        "EXP"
+    ],
+    "IS_UPPER": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ISC_UPPER",
+        "ADR",
+        "IF"
+    ],
+    "RES_PT": [
+        "TAN",
+        "IF"
+    ],
+    "JD2000": [
+        "DT_TO_DWORD",
+        "DWORD_TO_REAL"
+    ],
+    "R2_SET": [],
+    "KMH_TO_MS": [],
+    "RES_SI": [
+        "TAN"
+    ],
+    "SUN_MIDDAY": [
+        "HOUR_TO_TOD",
+        "SIN",
+        "INT_TO_REAL",
+        "DAY_OF_YEAR",
+        "MID"
+    ],
+    "MUL_ADD": [],
+    "LIST_RETRIEVE_LAST": [
+        "EXIT",
+        "LEN",
+        "FOR",
+        "ADR",
+        "IF",
+        "MID"
+    ],
+    "LOWERCASE": [
+        "LEN",
+        "CASE",
+        "FOR",
+        "STRING",
+        "ADR",
+        "TO_LOWER"
+    ],
+    "ONTIME": [
+        "T_PLC_MS",
+        "IF",
+        "BOOL_TO_UINT"
+    ],
+    "LTCH": [
+        "TP",
+        "IF"
+    ],
+    "OSCAT_VERSION": [
+        "DATE_TO_DWORD",
+        "IF"
+    ],
+    "LTCH_4": [
+        "TP",
+        "IF"
+    ],
+    "MUX_2": [
+        "MUX",
+        "SEL"
+    ],
+    "LTIME_TO_UTC": [
+        "DT_TO_UDINT",
+        "IF",
+        "UDINT_TO_DT",
+        "INT_TO_UDINT"
+    ],
+    "OVERRIDE": [
+        "ABS",
+        "IF"
+    ],
+    "MANUAL": [],
+    "MUX_4": [
+        "MUX",
+        "SEL",
+        "IF"
+    ],
+    "PARITY": [
+        "WHILE",
+        "SHR",
+        "IF"
+    ],
+    "MANUAL_1": [
+        "TP",
+        "IF"
+    ],
+    "MANUAL_2": [
+        "TP",
+        "IF"
+    ],
+    "MUX_R2": [
+        "MUX",
+        "SEL"
+    ],
+    "PARSET": [
+        "DWORD_TO_REAL",
+        "TP",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS"
+    ],
+    "MANUAL_4": [
+        "CASE",
+        "INC",
+        "TP",
+        "STP",
+        "IF"
+    ],
+    "PARSET2": [
+        "TP",
+        "ABS",
+        "IF"
+    ],
+    "MATRIX": [
+        "EXIT",
+        "FOR",
+        "TP",
+        "SHL",
+        "IF"
+    ],
+    "PERIOD": [
+        "LEAP_OF_DATE",
+        "IF",
+        "DAY_OF_YEAR"
+    ],
+    "MAX3": [
+        "MAX"
+    ],
+    "MUX_R4": [
+        "MUX",
+        "SEL",
+        "IF"
+    ],
+    "MESSAGE_4R": [
+        "LEN",
+        "CASE",
+        "STRING",
+        "TP",
+        "TON",
+        "IF",
+        "INC1"
+    ],
+    "MESSAGE_8": [
+        "TP",
+        "LEN",
+        "IF",
+        "STRING"
+    ],
+    "PERIOD2": [],
+    "METER": [
+        "SEL",
+        "DWORD_TO_REAL",
+        "RETURN",
+        "R2_ADD",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "M_D": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "METER_STAT": [
+        "DAY_OF_WEEK",
+        "MONTH_OF_DATE",
+        "YEAR_OF_DATE",
+        "IF",
+        "DAY_OF_YEAR"
+    ],
+    "PIN_CODE": [
+        "TP",
+        "CODE",
+        "IF",
+        "LEN"
+    ],
+    "MID3": [
+        "MID",
+        "SEL",
+        "IF"
+    ],
+    "POLYNOM_INT": [
+        "FOR",
+        "MIN"
+    ],
+    "MIN3": [
+        "MIN"
+    ],
+    "PRESSURE": [
+        "TP"
+    ],
+    "MINUTE": [
+        "MIN",
+        "TOD_TO_DWORD",
+        "DWORD_TO_INT"
+    ],
+    "M_T": [
+        "DWORD_TO_TIME",
+        "TP",
+        "IF",
+        "T_PLC_MS",
+        "MAX"
+    ],
+    "MINUTE_OF_DT": [
+        "DT_TO_DWORD",
+        "MIN",
+        "DWORD_TO_INT"
+    ],
+    "M_TX": [
+        "DWORD_TO_TIME",
+        "FOR",
+        "TP",
+        "IF",
+        "TIME_TO_REAL",
+        "T_PLC_MS"
+    ],
+    "MINUTE_TO_TIME": [
+        "DWORD_TO_TIME",
+        "REAL_TO_DWORD",
+        "MIN"
+    ],
+    "PT_TO_F": [
+        "DWORD_TO_REAL",
+        "TIME_TO_DWORD"
+    ],
+    "MIRROR": [
+        "FOR",
+        "ADR",
+        "STRING",
+        "LEN"
+    ],
+    "PWM_DC": [
+        "TP",
+        "CLK",
+        "REAL_TO_TIME",
+        "IF"
+    ],
+    "MIX": [],
+    "PWM_PW": [
+        "TP",
+        "CLK",
+        "REAL_TO_TIME",
+        "IF"
+    ],
+    "MODR": [
+        "FLOOR2",
+        "TRUNC",
+        "FLOOR",
+        "IF",
+        "DINT_TO_REAL"
+    ],
+    "NEGX": [],
+    "MONTH_BEGIN": [
+        "DATE_TO_DWORD",
+        "DAY_OF_MONTH",
+        "DWORD_TO_DATE",
+        "INT_TO_DWORD"
+    ],
+    "OCT_TO_BYTE": [
+        "LEN",
+        "FOR",
+        "ADR",
+        "SHL",
+        "IF"
+    ],
+    "R2_ABS": [
+        "ABS",
+        "IF"
+    ],
+    "MONTH_END": [
+        "MONTH_OF_DATE",
+        "YEAR_OF_DATE",
+        "DATE_TO_DWORD",
+        "SET_DATE",
+        "DWORD_TO_DATE"
+    ],
+    "OCT_TO_DWORD": [
+        "LEN",
+        "FOR",
+        "ADR",
+        "SHL",
+        "IF"
+    ],
+    "MONTH_OF_DATE": [
+        "LEAP_OF_DATE",
+        "IF",
+        "CASE",
+        "DAY_OF_YEAR"
+    ],
+    "OFFSET": [
+        "IF"
+    ],
+    "MONTH_TO_STRING": [
+        "RETURN",
+        "IF",
+        "MIN",
+        "MAX"
+    ],
+    "MS_TO_BFT": [
+        "REAL_TO_INT",
+        "EXPT",
+        "EXP"
+    ],
+    "OFFSET2": [
+        "IF"
+    ],
+    "R2_ADD": [],
+    "MS_TO_KMH": [],
+    "R2_ADD2": [],
+    "MULTIME": [
+        "DWORD_TO_TIME",
+        "REAL_TO_DWORD",
+        "DWORD_TO_REAL",
+        "TIME_TO_DWORD"
+    ],
+    "MULTI_IN": [
+        "SEL",
+        "CASE",
+        "INT_TO_REAL",
+        "MIN",
+        "MID3",
+        "IF",
+        "MID"
+    ],
+    "R2_MUL": [],
+    "OM_TO_F": [],
+    "SIGNAL": [
+        "TAN",
+        "SHR",
+        "DWORD_TO_BYTE",
+        "TP",
+        "SHL",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS"
+    ],
+    "RMP_SOFT": [
+        "SEL",
+        "MIN",
+        "TP",
+        "IF",
+        "MAX"
+    ],
+    "SIGNAL_4": [
+        "TP",
+        "IF"
+    ],
+    "RMP_W": [
+        "TP",
+        "IF"
+    ],
+    "SIGN_I": [],
+    "RND": [
+        "REAL_TO_DINT",
+        "ABS",
+        "EXP",
+        "EXPN",
+        "IF",
+        "DINT_TO_REAL",
+        "CEIL",
+        "LOG"
+    ],
+    "SIGN_R": [],
+    "ROUND": [
+        "LIMIT",
+        "DINT_TO_REAL",
+        "REAL_TO_DINT",
+        "ROUND"
+    ],
+    "SINC": [
+        "SIN",
+        "IF"
+    ],
+    "RTC_2": [
+        "RT",
+        "DST",
+        "BOOL_TO_INT",
+        "INT_TO_DWORD",
+        "TP",
+        "DT_TO_DWORD",
+        "DWORD_TO_DT"
+    ],
+    "SINH": [
+        "SIN",
+        "ABS",
+        "IF",
+        "EXP"
+    ],
+    "RTC_MS": [
+        "TP",
+        "T_PLC_MS",
+        "IF",
+        "DWORD_TO_INT"
+    ],
+    "SPEED": [
+        "TP"
+    ],
+    "SCALE": [
+        "LIMIT",
+        "SCALE"
+    ],
+    "SPHERE_V": [],
+    "SCALE_B": [
+        "LIMIT",
+        "SCALE",
+        "IF",
+        "BYTE_TO_REAL"
+    ],
+    "SCALE_B2": [
+        "SCALE"
+    ],
+    "SET_DATE": [
+        "SHR",
+        "INT_TO_DWORD",
+        "IF",
+        "SHL",
+        "DWORD_TO_DATE"
+    ],
+    "SQRTN": [
+        "LN",
+        "EXP",
+        "INT_TO_REAL",
+        "SQR",
+        "IF",
+        "SQRT"
+    ],
+    "SCALE_B4": [
+        "SCALE"
+    ],
+    "SET_DT": [
+        "MIN",
+        "INT_TO_DWORD",
+        "DATE_TO_DWORD",
+        "SET_DATE",
+        "DWORD_TO_DT"
+    ],
+    "SCALE_B8": [
+        "SCALE"
+    ],
+    "SRAMP": [
+        "LIMIT",
+        "MIN",
+        "TP",
+        "SQR",
+        "IF",
+        "SQRT",
+        "MAX"
+    ],
+    "SCALE_D": [
+        "LIMIT",
+        "SCALE",
+        "IF",
+        "DWORD_TO_REAL"
+    ],
+    "STACK_16": [
+        "TP",
+        "TAN",
+        "IF"
+    ],
+    "SCALE_R": [
+        "LIMIT",
+        "SCALE",
+        "IF"
+    ],
+    "STACK_32": [
+        "TP",
+        "TAN",
+        "IF"
+    ],
+    "SCALE_X2": [
+        "SEL",
+        "SCALE",
+        "MIN",
+        "SCALE_X",
+        "MAX"
+    ],
+    "SET_TOD": [
+        "REAL_TO_DWORD",
+        "MIN",
+        "DWORD_TO_TOD",
+        "INT_TO_DWORD"
+    ],
+    "SCALE_X4": [
+        "SEL",
+        "SCALE",
+        "MIN",
+        "SCALE_X",
+        "MAX"
+    ],
+    "STAIR": [
+        "DINT_TO_REAL",
+        "REAL_TO_DINT",
+        "IF"
+    ],
+    "SCALE_X8": [
+        "SEL",
+        "SCALE",
+        "MIN",
+        "SCALE_X",
+        "MAX"
+    ],
+    "SGN": [
+        "IF"
+    ],
+    "SCHEDULER": [
+        "DWORD_TO_TIME",
+        "CASE",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "SH": [
+        "TP",
+        "IF"
+    ],
+    "SCHEDULER_2": [
+        "TP"
+    ],
+    "SHL1": [
+        "TAN",
+        "SHR",
+        "SHL"
+    ],
+    "SDT_TO_DATE": [
+        "SET_DATE"
+    ],
+    "STAIR2": [
+        "TP",
+        "FLOOR",
+        "IF"
+    ],
+    "SDT_TO_DT": [
+        "MIN",
+        "SET_DT"
+    ],
+    "SHR1": [
+        "TAN",
+        "SHR",
+        "SHL"
+    ],
+    "SDT_TO_TOD": [
+        "MIN",
+        "DWORD_TO_TOD",
+        "INT_TO_DWORD"
+    ],
+    "STATUS_TO_ESR": [
+        "IF"
+    ],
+    "SECOND": [
+        "DWORD_TO_REAL",
+        "TOD_TO_DWORD"
+    ],
+    "SHR_4E": [
+        "TP",
+        "SHR",
+        "IF",
+        "R_TRIG"
+    ],
+    "SECOND_OF_DT": [
+        "DT_TO_DWORD",
+        "DWORD_TO_INT"
+    ],
+    "SHR_4UDE": [
+        "TP",
+        "SHR",
+        "IF",
+        "R_TRIG"
+    ],
+    "SECOND_TO_TIME": [
+        "DWORD_TO_TIME",
+        "REAL_TO_DWORD"
+    ],
+    "SHR_8PLE": [
+        "TP",
+        "SHR",
+        "SHL",
+        "IF"
+    ],
+    "SEL2_OF_3": [
+        "TP",
+        "ABS",
+        "IF",
+        "SEL"
+    ],
+    "SHR_8UDE": [
+        "TP",
+        "SHR",
+        "IF",
+        "R_TRIG"
+    ],
+    "SEL2_OF_3B": [
+        "TP",
+        "TDEL",
+        "SEL",
+        "TON"
+    ],
+    "STORE_8": [
+        "TP",
+        "IF"
+    ],
+    "SELECT_8": [
+        "TP",
+        "SEL",
+        "IF",
+        "CASE"
+    ],
+    "SH_1": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "SENSOR_INT": [
+        "IF"
+    ],
+    "SH_2": [
+        "DWORD_TO_TIME",
+        "LIMIT",
+        "SHR",
+        "FOR",
+        "INT_TO_REAL",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "SEQUENCE_4": [
+        "DWORD_TO_TIME",
+        "RETURN",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "SH_T": [
+        "TP",
+        "IF"
+    ],
+    "SEQUENCE_64": [
+        "DWORD_TO_TIME",
+        "INC2",
+        "TP",
+        "IF",
+        "T_PLC_MS",
+        "MAX"
+    ],
+    "SIGMOID": [
+        "IF",
+        "EXP"
+    ],
+    "SEQUENCE_8": [
+        "DWORD_TO_TIME",
+        "RETURN",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "SUN_TIME": [
+        "SIN",
+        "COS",
+        "INT_TO_REAL",
+        "DEG",
+        "TP",
+        "IF",
+        "SUN_MIDDAY",
+        "DAY_OF_YEAR",
+        "MID",
+        "ACOS",
+        "HOUR_TO_TIME",
+        "RAD"
+    ],
+    "V3_ANG": [
+        "LIMIT",
+        "V3_ABS",
+        "ABS",
+        "COS",
+        "V3_DPRO",
+        "IF",
+        "ACOS"
+    ],
+    "SWAP_BYTE": [
+        "SWAP",
+        "ROL"
+    ],
+    "T_PLC_MS": [
+        "TAN",
+        "SHL",
+        "IF",
+        "TIME_TO_DWORD",
+        "TIME"
+    ],
+    "SWAP_BYTE2": [
+        "ROR",
+        "SWAP",
+        "ROL"
+    ],
+    "V3_DPRO": [],
+    "TANC": [
+        "TAN",
+        "IF"
+    ],
+    "V3_NORM": [
+        "V3_ABS",
+        "ABS",
+        "IF",
+        "V3_SMUL"
+    ],
+    "TANH": [
+        "TAN",
+        "IF",
+        "EXP"
+    ],
+    "V3_NUL": [],
+    "TC_MS": [
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "V3_PAR": [
+        "ABS",
+        "V3_ABS",
+        "V3_XPRO"
+    ],
+    "TC_S": [
+        "TP",
+        "T_PLC_US",
+        "IF",
+        "DWORD_TO_REAL"
+    ],
+    "V3_REV": [],
+    "TC_US": [
+        "TP",
+        "T_PLC_US",
+        "IF"
+    ],
+    "T_PLC_US": [
+        "TAN",
+        "SHL",
+        "IF",
+        "TIME_TO_DWORD",
+        "TIME"
+    ],
+    "TEMPERATURE": [
+        "TP"
+    ],
+    "V3_SMUL": [],
+    "TEMP_NI": [
+        "SQR",
+        "SQRT"
+    ],
+    "UPPERCASE": [
+        "TO_UPPER",
+        "LEN",
+        "CASE",
+        "FOR",
+        "STRING",
+        "ADR"
+    ],
+    "TEMP_NTC": [
+        "LN",
+        "IF"
+    ],
+    "V3_SUB": [],
+    "TEMP_PT": [
+        "WHILE",
+        "TAN",
+        "SQR",
+        "ADR",
+        "IF",
+        "SQRT",
+        "RES_PT"
+    ],
+    "V3_XANG": [
+        "V3_ABS",
+        "ABS",
+        "COS",
+        "IF",
+        "ACOS"
+    ],
+    "TEMP_SI": [
+        "SQR",
+        "SQRT"
+    ],
+    "V3_XPRO": [],
+    "TICKER": [
+        "LEN",
+        "STRING",
+        "TP",
+        "IF",
+        "MID"
+    ],
+    "V3_YANG": [
+        "V3_ABS",
+        "ABS",
+        "COS",
+        "IF",
+        "ACOS"
+    ],
+    "TIMECHECK": [
+        "IF"
+    ],
+    "V3_ZANG": [
+        "V3_ABS",
+        "ABS",
+        "COS",
+        "IF",
+        "ACOS"
+    ],
+    "TMAX": [
+        "DWORD_TO_TIME",
+        "TP",
+        "IF",
+        "T_PLC_MS",
+        "MAX"
+    ],
+    "WEEKDAY_TO_STRING": [
+        "RETURN",
+        "IF",
+        "MIN",
+        "MAX"
+    ],
+    "TMIN": [
+        "TP",
+        "MIN"
+    ],
+    "WINDOW": [],
+    "TOF_1": [
+        "DWORD_TO_TIME",
+        "TOF",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "WINDOW2": [],
+    "TOGGLE": [
+        "TP",
+        "IF"
+    ],
+    "WORD_OF_BYTE": [
+        "SHL",
+        "BYTE_TO_WORD"
+    ],
+    "TONOF": [
+        "SEL",
+        "X",
+        "TP",
+        "TON",
+        "IF"
+    ],
+    "UTC_TO_LTIME": [
+        "ABS",
+        "DST",
+        "BOOL_TO_INT",
+        "INT_TO_DWORD",
+        "IF",
+        "DT_TO_DWORD",
+        "DWORD_TO_DT"
+    ],
+    "WORD_OF_DWORD": [
+        "SHR",
+        "SHL",
+        "DWORD_TO_WORD"
+    ],
+    "TO_LOWER": [
+        "IF"
+    ],
+    "WORD_TO_RANGE": [
+        "WORD_TO_REAL"
+    ],
+    "TO_UML": [
+        "CHR_TO_STRING",
+        "CASE"
+    ],
+    "TO_UPPER": [
+        "IF"
+    ],
+    "WORK_WEEK": [
+        "LEAP_YEAR",
+        "DAY_OF_WEEK",
+        "BOOL_TO_INT",
+        "INT_TO_DWORD",
+        "YEAR_OF_DATE",
+        "DATE_TO_DWORD",
+        "IF",
+        "YEAR_BEGIN",
+        "DWORD_TO_INT"
+    ],
+    "TP_1": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "YEAR_BEGIN": [
+        "SHR",
+        "DWORD_TO_DATE",
+        "INT_TO_DWORD"
+    ],
+    "TP_1D": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "YEAR_END": [
+        "SHR",
+        "DWORD_TO_DATE",
+        "INT_TO_DWORD"
+    ],
+    "TP_X": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "YEAR_OF_DATE": [
+        "DATE_TO_DWORD",
+        "DWORD_TO_INT"
+    ],
+    "TREND": [
+        "TP"
+    ],
+    "V3_ABS": [
+        "SQR",
+        "ABS",
+        "SQRT"
+    ],
+    "_ARRAY_ABS": [
+        "SHR",
+        "ABS",
+        "FOR"
+    ],
+    "TREND_DW": [
+        "TP",
+        "IF"
+    ],
+    "V3_ADD": [],
+    "TRIANGLE_A": [
+        "SIN",
+        "SQR",
+        "IF",
+        "SQRT",
+        "RAD"
+    ],
+    "_ARRAY_ADD": [
+        "SHR",
+        "FOR"
+    ],
+    "TRIM": [
+        "REPEAT",
+        "LEN",
+        "FIND",
+        "REPLACE",
+        "STRING",
+        "IF"
+    ],
+    "_ARRAY_INIT": [
+        "SHR",
+        "FOR"
+    ],
+    "TRIM1": [
+        "REPEAT",
+        "LEN",
+        "FIND",
+        "REPLACE",
+        "STRING",
+        "LEFT",
+        "DELETE",
+        "IF",
+        "RIGHT"
+    ],
+    "_ARRAY_MEDIAN": [
+        "UINT_TO_INT",
+        "SIZEOF",
+        "SHR",
+        "FOR",
+        "EVEN",
+        "TRUNC",
+        "IF",
+        "_ARRAY_SORT"
+    ],
+    "TRIME": [
+        "LEN",
+        "WHILE",
+        "LEFT",
+        "DELETE",
+        "RIGHT"
+    ],
+    "_ARRAY_MUL": [
+        "SHR",
+        "FOR"
+    ],
+    "TUNE": [
+        "LIMIT",
+        "DWORD_TO_REAL",
+        "TP",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS"
+    ],
+    "_ARRAY_SHUFFLE": [
+        "FOR",
+        "RDM2",
+        "SHR",
+        "UINT_TO_INT"
+    ],
+    "TUNE2": [
+        "LIMIT",
+        "DWORD_TO_REAL",
+        "CASE",
+        "TP",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS"
+    ],
+    "HTTP_GET": [
+        "ATH",
+        "CASE",
+        "IP_FIFO",
+        "READ_HTTP",
+        "ENCO",
+        "UINT_TO_STRING",
+        "CONCAT",
+        "ADR",
+        "IF",
+        "RIGHT",
+        "_STRING_TO_BUFFER",
+        "BYTE_TO_STRING",
+        "STRING_TO_INT",
+        "LOG_MSG",
+        "LEN",
+        "BASE64_ENCODE_STR",
+        "UINT_TO_INT",
+        "SIZEOF",
+        "TP",
+        "MID",
+        "DWORD_TO_STRING",
+        "SEL",
+        "INT_TO_UINT",
+        "FIND",
+        "INT_TO_STRING",
+        "IS_NUM",
+        "BUFFER_SEARCH"
+    ],
+    "DNS_DYN": [
+        "BASE64_ENCODE_STR",
+        "ATH",
+        "CASE",
+        "IP4_TO_STRING",
+        "DNS_CLIENT",
+        "SIZEOF",
+        "FIND",
+        "HTTP_GET",
+        "ENCO",
+        "BUFFER_TO_STRING",
+        "TP",
+        "CONCAT",
+        "STRING_TO_URL",
+        "ADR",
+        "TON",
+        "IF"
+    ],
+    "_ARRAY_SORT": [
+        "REPEAT",
+        "UINT_TO_INT",
+        "SIZEOF",
+        "WHILE",
+        "SHR",
+        "FOR",
+        "IF",
+        "MAX"
+    ],
+    "DNS_REV_CLIENT": [
+        "EXIT",
+        "CASE",
+        "IP_FIFO",
+        "CONCAT",
+        "ADR",
+        "IF",
+        "BYTE_TO_UINT",
+        "BYTE_TO_STRING",
+        "STRING",
+        "ROR",
+        "INT_TO_BYTE",
+        "LEN",
+        "SIZEOF",
+        "DWORD_TO_BYTE",
+        "BUFFER_TO_STRING",
+        "TP",
+        "CODE",
+        "UINT_TO_BYTE",
+        "BYTE_TO_DWORD",
+        "INT_TO_UINT",
+        "WHILE",
+        "FOR"
+    ],
+    "DNS_REV_DEMO": [
+        "ROL"
+    ],
+    "_BUFFER_CLEAR": [
+        "UINT_TO_DWORD",
+        "WHILE"
+    ],
+    "DNS_SNTP_SYSLOG_DEMO": [
+        "TP",
+        "ROL",
+        "TON"
+    ],
+    "ELEMENT_COUNT": [
+        "FOR",
+        "ADR",
+        "IF",
+        "LEN"
+    ],
+    "_BUFFER_INIT": [
+        "UINT_TO_DWORD",
+        "BYTE_TO_DWORD",
+        "SHL",
+        "WHILE"
+    ],
+    "ELEMENT_GET": [
+        "WHILE",
+        "ADR",
+        "IF",
+        "LEN"
+    ],
+    "FILE_BLOCK_DEMO": [],
+    "_BUFFER_INSERT": [
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "UINT_TO_INT",
+        "FOR",
+        "INSERT"
+    ],
+    "DLOG_STRING": [
+        "SIN",
+        "UCB",
+        "CASE",
+        "STRING",
+        "MAX"
+    ],
+    "FILE_BLOCK": [
+        "LEN",
+        "CASE",
+        "BYTE_TO_STRING",
+        "UDINT_TO_INT",
+        "UDINT_TO_STRING",
+        "TP",
+        "CHR_TO_STRING",
+        "IF",
+        "LOG_MSG",
+        "UINT_TO_UDINT"
+    ],
+    "_BUFFER_UPPERCASE": [
+        "TO_UPPER",
+        "WHILE",
+        "CASE"
+    ],
+    "FTP_CLIENT_DEMO": [
+        "TP"
+    ],
+    "FTP_CLIENT": [
+        "EXIT",
+        "REPEAT",
+        "TON_WAIT",
+        "WORD_OF_BYTE",
+        "ATH",
+        "CASE",
+        "STRING_TO_UDINT",
+        "CONCAT",
+        "ADR",
+        "SHL",
+        "IF",
+        "ELEMENT_GET",
+        "ROL",
+        "STRING_TO_BYTE",
+        "FILE_PATH_SPLIT",
+        "SPLIT",
+        "_STRING_TO_BUFFER",
+        "BYTE_TO_STRING",
+        "DWORD_OF_BYTE",
+        "IPC1",
+        "STRING",
+        "STRING_TO_URL",
+        "STRING_TO_INT",
+        "LOG_MSG",
+        "ROR",
+        "LEN",
+        "UINT_TO_INT",
+        "SIZEOF",
+        "MAX",
+        "DWORD_TO_BYTE",
+        "BUFFER_TO_STRING",
+        "TP",
+        "LEFT",
+        "DELETE",
+        "MID",
+        "WORD_TO_DWORD",
+        "IPC2",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "INT_TO_UINT",
+        "DNS_CLIENT",
+        "FIND",
+        "FOR",
+        "INT_TO_DWORD",
+        "TON",
+        "IS_NUM",
+        "WAIT",
+        "FS"
+    ],
+    "_RMP_B": [
+        "DWORD_TO_TIME",
+        "SEL",
+        "IF",
+        "FRMP_B",
+        "T_PLC_MS"
+    ],
+    "FILE_PATH_SPLIT": [
+        "LEN",
+        "SPLIT",
+        "ATH",
+        "RETURN",
+        "FOR",
+        "LEFT",
+        "IF",
+        "MID",
+        "RIGHT",
+        "MAX"
+    ],
+    "GET_WAN_IP_DEMO": [
+        "ROL"
+    ],
+    "_RMP_NEXT": [
+        "TP",
+        "SEL",
+        "IF"
+    ],
+    "GET_WAN_IP": [
+        "EXIT",
+        "ATH",
+        "CASE",
+        "UINT_TO_INT",
+        "DNS_CLIENT",
+        "HTTP_GET",
+        "FOR",
+        "TP",
+        "CONCAT",
+        "CHR_TO_STRING",
+        "STRING_TO_URL",
+        "IF",
+        "DECO",
+        "IP4_DECODE"
+    ],
+    "HTML_DECODE": [
+        "LEN",
+        "WHILE",
+        "FIND",
+        "HEX_TO_DWORD",
+        "REPLACE",
+        "STRING",
+        "DWORD_TO_BYTE",
+        "CHARCODE",
+        "CHR_TO_STRING",
+        "LEFT",
+        "FINDP",
+        "STRING_TO_INT",
+        "IF",
+        "MID",
+        "INT_TO_BYTE",
+        "DECO"
+    ],
+    "_RMP_W": [
+        "LIMIT",
+        "DINT_TO_WORD",
+        "WORD_TO_DINT",
+        "SHL",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS",
+        "DWORD_TO_DINT"
+    ],
+    "DNS_CLIENT": [
+        "EXIT",
+        "CASE",
+        "IP_FIFO",
+        "IF",
+        "BYTE_TO_UINT",
+        "DWORD_OF_BYTE",
+        "LOG_MSG",
+        "INT_TO_BYTE",
+        "LEN",
+        "TP",
+        "CODE",
+        "DECO",
+        "UINT_TO_BYTE",
+        "DWORD_TO_STRING",
+        "BYTE_TO_DWORD",
+        "INT_TO_UINT",
+        "WHILE",
+        "FOR",
+        "IP4_DECODE"
+    ],
+    "FILE_SERVER_RUNTIME": [
+        "CASE",
+        "MIN",
+        "RUNTIME",
+        "BYTE_TO_INT",
+        "IF",
+        "DELETE",
+        "T_PLC_MS",
+        "MAX"
+    ],
+    "_STRING_TO_BUFFER": [
+        "LEN",
+        "UINT_TO_INT",
+        "FOR",
+        "MIN",
+        "ADR",
+        "IF"
+    ],
+    "HTML_ENCODE": [
+        "EXIT",
+        "LEN",
+        "CASE",
+        "FOR",
+        "STRING",
+        "ENCO",
+        "CHARNAME",
+        "ADR",
+        "BYTE_TO_INT",
+        "IF",
+        "CODE"
+    ],
+    "HTTP_DEMO": [
+        "TP",
+        "F_TRIG",
+        "ROL",
+        "TON"
+    ],
+    "FILE_SERVER": [
+        "LIMIT",
+        "SEL",
+        "LEN",
+        "FSR",
+        "CASE",
+        "BYTE_TO_STRING",
+        "SIZEOF",
+        "INT_TO_STRING",
+        "UDINT_TO_UINT",
+        "BOOL_TO_INT",
+        "RUNTIME",
+        "UDINT_TO_STRING",
+        "FB_LOG_MESSAGE",
+        "ADR",
+        "IF",
+        "UINT_TO_UDINT",
+        "DINT_TO_STRING",
+        "DWORD_TO_STRING"
+    ],
+    "ACTUATOR_2P": [
+        "SEL",
+        "BAND_B",
+        "FOR",
+        "TP",
+        "CTU",
+        "IF"
+    ],
+    "ACTUATOR_3P": [
+        "DWORD_TO_TIME",
+        "NOT",
+        "ABS",
+        "SEL",
+        "DINT_TO_TIME",
+        "CASE",
+        "CTU",
+        "TP",
+        "IF",
+        "T_PLC_MS",
+        "TIME_TO_DINT"
+    ],
+    "ACTUATOR_A": [
+        "SEL",
+        "CASE",
+        "MIN",
+        "RUNTIME",
+        "CTU",
+        "TP",
+        "IF",
+        "MAX"
+    ],
+    "ACTUATOR_COIL": [
+        "TP",
+        "CTU",
+        "IF",
+        "TIME_TO_DWORD",
+        "T_PLC_MS"
+    ],
+    "ACTUATOR_PUMP": [
+        "DWORD_TO_TIME",
+        "MIN",
+        "RUNTIME",
+        "CTU",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "ACTUATOR_UD": [
+        "DWORD_TO_TIME",
+        "RETURN",
+        "FOR",
+        "MIN",
+        "TOF",
+        "TP",
+        "CTU",
+        "TON",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "AIR_DENSITY": [
+        "TAN",
+        "SDD"
+    ],
+    "AIR_ENTHALPY": [
+        "TAN",
+        "DEW_CON"
+    ],
+    "AUTORUN": [
+        "TOF",
+        "TP",
+        "SEL",
+        "IF"
+    ],
+    "BLIND_ACTUATOR": [
+        "TP",
+        "CTU",
+        "IF"
+    ],
+    "BLIND_CONTROL_S": [
+        "DWORD_TO_TIME",
+        "NOT",
+        "CASE",
+        "TP",
+        "IF",
+        "T_PLC_MS",
+        "ROL"
+    ],
+    "BLIND_CONTROL": [
+        "TP",
+        "CTU",
+        "BYTE_TO_INT",
+        "IF",
+        "ROL"
+    ],
+    "BLIND_INPUT": [
+        "DWORD_TO_TIME",
+        "SIN",
+        "CASE",
+        "RUNTIME",
+        "TOF",
+        "TP",
+        "IF",
+        "T_PLC_MS",
+        "MAX"
+    ],
+    "BLIND_NIGHT": [
+        "DT_TO_TOD",
+        "TP",
+        "IF",
+        "DT_TO_DATE"
+    ],
+    "BLIND_SCENE": [
+        "TP",
+        "IF"
+    ],
+    "BLIND_SECURITY": [
+        "TP",
+        "IF"
+    ],
+    "BLIND_SET": [
+        "DWORD_TO_TIME",
+        "SEL",
+        "CASE",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "BLIND_SHADE_S": [
+        "DT_TO_TOD",
+        "MIN",
+        "TOF",
+        "TP",
+        "IF"
+    ],
+    "BLIND_SHADE": [
+        "LIMIT",
+        "LEN",
+        "DT_TO_TOD",
+        "ACOS",
+        "TAN",
+        "COS",
+        "DEG",
+        "TRUNC",
+        "TOF",
+        "TP",
+        "DINT_TO_INT",
+        "ATAN",
+        "IF",
+        "INT_TO_BYTE",
+        "RAD"
+    ],
+    "BOILER": [
+        "TP",
+        "IF"
+    ],
+    "BUILDING_VERSION": [
+        "DATE_TO_DWORD",
+        "IF"
+    ],
+    "BURNER": [
+        "DWORD_TO_TIME",
+        "CASE",
+        "RETURN",
+        "UDINT_TO_REAL",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "CLICK_MODE": [
+        "TP",
+        "SIN",
+        "IF",
+        "CASE"
+    ],
+    "CLICK": [
+        "DWORD_TO_TIME",
+        "CASE",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "DEBOUNCE": [
+        "TOF",
+        "TP",
+        "IF"
+    ],
+    "DEW_CON": [
+        "TD",
+        "EXP",
+        "DD",
+        "AF",
+        "EXPT",
+        "IF",
+        "SDD",
+        "LOG"
+    ],
+    "DEW_RH": [
+        "LIMIT",
+        "DEW_CON",
+        "IF"
+    ],
+    "DEW_TEMP": [
+        "TD",
+        "EXP",
+        "DD",
+        "TAN",
+        "AF",
+        "EXP10",
+        "EXPT",
+        "IF",
+        "SDD",
+        "LOG"
+    ],
+    "DIMM_2": [
+        "LIMIT",
+        "SIN",
+        "SEL",
+        "MIN",
+        "TOF",
+        "TP",
+        "TON",
+        "IF",
+        "MAX"
+    ],
+    "DIMM_I": [
+        "LIMIT",
+        "SIN",
+        "MIN",
+        "TP",
+        "TON",
+        "IF",
+        "MAX"
+    ],
+    "F_LAMP": [
+        "TP",
+        "IF"
+    ],
+    "HEAT_INDEX": [
+        "C_TO_F",
+        "F_TO_C",
+        "IF"
+    ],
+    "HEAT_METER": [
+        "SEL",
+        "DWORD_TO_REAL",
+        "WATER_ENTHALPY",
+        "TP",
+        "IF",
+        "TIME_TO_DWORD",
+        "WATER_DENSITY",
+        "T_PLC_MS"
+    ],
+    "HEAT_TEMP": [
+        "LIMIT",
+        "EXP",
+        "MIN",
+        "TP",
+        "EXPT",
+        "IF",
+        "T_DIFF",
+        "MAX"
+    ],
+    "LEGIONELLA": [
+        "X3",
+        "X1",
+        "SHR",
+        "TP",
+        "IF",
+        "X2"
+    ],
+    "PULSE_LENGTH": [
+        "DWORD_TO_TIME",
+        "LEN",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "PULSE_T": [
+        "DWORD_TO_TIME",
+        "TP",
+        "T_PLC_MS",
+        "IF"
+    ],
+    "SDD_NH3": [
+        "IF",
+        "EXP"
+    ],
+    "SDD": [
+        "IF",
+        "EXP"
+    ],
+    "SDT_NH3": [
+        "IF",
+        "LOG"
+    ],
+    "SW_RECONFIG": [
+        "TP",
+        "IF",
+        "T2",
+        "TON"
+    ],
+    "SWITCH_I": [
+        "DWORD_TO_TIME",
+        "FOR",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "SWITCH_X": [
+        "T2",
+        "T5",
+        "T6",
+        "T3",
+        "TOF",
+        "TP",
+        "T1",
+        "IF",
+        "T4"
+    ],
+    "T_AVG24": [
+        "INT_TO_DINT",
+        "SCALE",
+        "FOR",
+        "INT_TO_REAL",
+        "MIN",
+        "TP",
+        "REAL_TO_INT",
+        "IF",
+        "INC1",
+        "DT_TO_DWORD",
+        "DINT_TO_REAL",
+        "MAX"
+    ],
+    "TANK_LEVEL": [
+        "TAN",
+        "RETURN",
+        "CTU",
+        "TP",
+        "TON",
+        "IF",
+        "MAX"
+    ],
+    "TANK_VOL1": [
+        "TAN",
+        "SEG",
+        "CIRCLE_SEG"
+    ],
+    "TANK_VOL2": [
+        "TAN"
+    ],
+    "TEMP_EXT": [
+        "DWORD_TO_TIME",
+        "DT_TO_DATE",
+        "DT_TO_TOD",
+        "RETURN",
+        "MULTI_IN",
+        "MONTH_OF_DATE",
+        "TP",
+        "DAY_OF_MONTH",
+        "IF",
+        "SET_DATE",
+        "T_PLC_MS"
+    ],
+    "TIMER_1": [
+        "DT_TO_DATE",
+        "DT_TO_TOD",
+        "DAY_OF_WEEK",
+        "SHR",
+        "TP",
+        "IF",
+        "TOD_TO_TIME",
+        "TIME_TO_TOD",
+        "TIMECHECK"
+    ],
+    "TIMER_2": [
+        "DWORD_TO_TIME",
+        "CASE",
+        "DT_TO_DATE",
+        "DAY_OF_WEEK",
+        "DT_TO_TOD",
+        "RETURN",
+        "MONTH_OF_DATE",
+        "TP",
+        "DATE_TO_DWORD",
+        "BYTE_TO_INT",
+        "DAY_OF_MONTH",
+        "IF",
+        "DAY_OF_YEAR",
+        "T_PLC_MS"
+    ],
+    "TIMER_EVENT_DECODE": [
+        "STRING_TO_TOD",
+        "LEN",
+        "CASE",
+        "FSTRING_TO_WEEK",
+        "IS_CC",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "RIGHT",
+        "FSTRING_TO_BYTE",
+        "ADR",
+        "LEFT",
+        "FSTRING_TO_WEEKDAY",
+        "IF",
+        "MID",
+        "STRING_TO_TIME",
+        "INT_TO_BYTE",
+        "DECO"
+    ],
+    "TIMER_EXT": [
+        "DWORD_TO_TIME",
+        "DWORD_TO_TOD",
+        "TOD_TO_DWORD",
+        "DAY_OF_WEEK",
+        "DT_TO_TOD",
+        "DT_TO_DATE",
+        "RETURN",
+        "TP",
+        "IF",
+        "T_PLC_MS"
+    ],
+    "TIMER_P4": [
+        "CASE",
+        "DT_TO_DATE",
+        "DAY_OF_WEEK",
+        "TAN",
+        "YEAR_OF_DATE",
+        "IF",
+        "SHR",
+        "BYTE_TO_INT",
+        "LEAP_DAY",
+        "REF",
+        "TP",
+        "DATE_TO_DT",
+        "MONTH_END",
+        "TOD_TO_TIME",
+        "FOR",
+        "DAY_OF_MONTH",
+        "DAY_OF_YEAR",
+        "YEAR_END",
+        "MAX"
+    ],
+    "WATER_CP": [
+        "LINEAR_INT"
+    ],
+    "WATER_DENSITY": [
+        "TAN",
+        "IF"
+    ],
+    "WATER_ENTHALPY": [
+        "LINEAR_INT"
+    ],
+    "WCT": [
+        "LN",
+        "IF",
+        "EXP"
+    ],
+    "BASE64_DECODE_STR": [
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "CASE",
+        "SIZEOF",
+        "STRING",
+        "MIN",
+        "BASE64_DECODE_STREAM",
+        "BUFFER_TO_STRING",
+        "TP",
+        "CONCAT",
+        "ADR",
+        "IF",
+        "MID",
+        "DECO"
+    ],
+    "BASE64_DECODE_STREAM": [
+        "EXIT",
+        "RETURN",
+        "SHR",
+        "FOR",
+        "WORD_TO_BYTE",
+        "TP",
+        "SHL",
+        "IF",
+        "INT_TO_BYTE",
+        "DECO"
+    ],
+    "BASE64_DEMO": [
+        "DECO",
+        "STRING",
+        "ENCO"
+    ],
+    "BASE64_ENCODE_STR": [
+        "BASE64_ENCODE_STREAM",
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "CASE",
+        "SIZEOF",
+        "MIN",
+        "STRING",
+        "BUFFER_TO_STRING",
+        "ENCO",
+        "TP",
+        "CONCAT",
+        "ADR",
+        "IF",
+        "MID"
+    ],
+    "BASE64_ENCODE_STREAM": [
+        "INT_TO_WORD",
+        "WHILE",
+        "SHR",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "ENCO",
+        "TP",
+        "SHL",
+        "IF",
+        "WORD_TO_INT",
+        "CODE"
+    ],
+    "CSV_PARSER_BUF_DEMO": [
+        "LEN",
+        "CASE",
+        "BYTE_TO_STRING",
+        "TAN",
+        "STRING",
+        "UDINT_TO_STRING",
+        "FLOAT_TO_REAL",
+        "IF",
+        "CPB",
+        "LOG_MSG",
+        "FS"
+    ],
+    "CSV_PARSER_BUF": [
+        "EXIT",
+        "LEN",
+        "CASE",
+        "UINT_TO_INT",
+        "BYTE_TO_STRING",
+        "WHILE",
+        "INT_TO_STRING",
+        "STRING",
+        "UDINT_TO_INT",
+        "INT_TO_DWORD",
+        "UDINT_TO_STRING",
+        "TP",
+        "TON",
+        "ADR",
+        "IF",
+        "LOG_MSG"
+    ],
+    "CSV_PARSER_FILE_DEMO": [
+        "LEN",
+        "CASE",
+        "BYTE_TO_STRING",
+        "TAN",
+        "UDINT_TO_STRING",
+        "FLOAT_TO_REAL",
+        "IF",
+        "LOG_MSG",
+        "CPF",
+        "FS"
+    ],
+    "CSV_PARSER_FILE": [
+        "EXIT",
+        "FB",
+        "LEN",
+        "CASE",
+        "BYTE_TO_STRING",
+        "WHILE",
+        "INT_TO_STRING",
+        "BOOL_TO_STRING",
+        "UDINT_TO_STRING",
+        "INT_TO_DWORD",
+        "TP",
+        "TON",
+        "ADR",
+        "CHR_TO_STRING",
+        "IF",
+        "LOG_MSG"
+    ],
+    "DLOG_BOOL": [
+        "SIN",
+        "UCB",
+        "SEL",
+        "CASE",
+        "IF",
+        "MAX"
+    ],
+    "DLOG_CRON_TAB": [
+        "MINUTE_OF_DT",
+        "DT_TO_DATE",
+        "DAY_OF_WEEK",
+        "CONCAT",
+        "IF",
+        "ELEMENT_GET",
+        "LEN",
+        "ELEMENT_COUNT",
+        "MONTH_OF_DATE",
+        "TP",
+        "SEL",
+        "DEC_TO_INT",
+        "WHILE",
+        "FIND",
+        "FOR",
+        "MIN",
+        "SECOND_OF_DT",
+        "DAY_OF_MONTH",
+        "HOUR_OF_DT",
+        "MAX"
+    ],
+    "DLOG_DINT": [
+        "SIN",
+        "UCB",
+        "CASE",
+        "IF",
+        "DINT_TO_STRING",
+        "MAX"
+    ],
+    "DLOG_DT": [
+        "SIN",
+        "UCB",
+        "CASE",
+        "STRING",
+        "IF",
+        "DT_TO_UDINT",
+        "DT_TO_STRF",
+        "MAX"
+    ],
+    "DLOG_FILE_CSV_DEMO": [
+        "SIN"
+    ],
+    "DLOG_FILE_CSV_FTP_DEMO": [
+        "TP",
+        "SIN"
+    ],
+    "DLOG_FILE_CSV_SMTP_DEMO": [
+        "TP",
+        "SIN",
+        "LEN"
+    ],
+    "DLOG_FILE_HTML_DEMO": [
+        "SIN"
+    ],
+    "DLOG_FILE_TO_FTP": [
+        "SIN",
+        "UCB",
+        "LEN",
+        "CASE",
+        "INT_TO_STRING",
+        "FTP_CLIENT",
+        "TP",
+        "TON",
+        "IF",
+        "DELETE",
+        "WT_1",
+        "LOG_MSG",
+        "MAX"
+    ],
+    "DLOG_FILE_TO_SMTP": [
+        "SIN",
+        "UCB",
+        "LEN",
+        "CASE",
+        "INT_TO_STRING",
+        "TP",
+        "CONCAT",
+        "TON",
+        "IF",
+        "DELETE",
+        "WT_1",
+        "LOG_MSG",
+        "SMTP_CLIENT",
+        "MAX"
+    ],
+    "DLOG_FILE_XML_DEMO": [
+        "SIN"
+    ],
+    "DLOG_MYSQL_DEMO": [
+        "SIN",
+        "LEN"
+    ],
+    "DLOG_REAL_ARRAY": [
+        "SIN",
+        "UCB",
+        "REAL_TO_STRF",
+        "LEN",
+        "CASE",
+        "FOR",
+        "CONCAT",
+        "IF",
+        "USINT_TO_STRING",
+        "MAX"
+    ],
+    "DLOG_REAL": [
+        "SIN",
+        "UCB",
+        "REAL_TO_STRF",
+        "CASE",
+        "IF",
+        "MAX"
+    ],
+    "DLOG_RRD_DEMO": [
+        "SIN",
+        "LEN",
+        "STRING"
+    ],
+    "DLOG_STORE_FILE_CSV": [
+        "DT_TO_STRING",
+        "CASE",
+        "UINT_TO_STRING",
+        "ADR",
+        "SHL",
+        "IF",
+        "DT_TO_STRF",
+        "SIN",
+        "_STRING_TO_BUFFER",
+        "BYTE_TO_STRING",
+        "SHR",
+        "LOG_MSG",
+        "DT_TO_UDINT",
+        "LEN",
+        "SIZEOF",
+        "MAX",
+        "WORD_TO_BYTE",
+        "TP",
+        "INT_TO_UDINT",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "UCB",
+        "INT_TO_UINT",
+        "TIME_TO_UDINT",
+        "WHILE",
+        "INT_TO_STRING",
+        "TON",
+        "FS"
+    ],
+    "DLOG_STORE_FILE_HTML": [
+        "DT_TO_STRING",
+        "CASE",
+        "UINT_TO_STRING",
+        "CONCAT",
+        "ADR",
+        "SHL",
+        "IF",
+        "DT_TO_STRF",
+        "SIN",
+        "_STRING_TO_BUFFER",
+        "BYTE_TO_STRING",
+        "SHR",
+        "LOG_MSG",
+        "DT_TO_UDINT",
+        "LEN",
+        "SIZEOF",
+        "MAX",
+        "WORD_TO_BYTE",
+        "TP",
+        "INT_TO_UDINT",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "UCB",
+        "INT_TO_UINT",
+        "TIME_TO_UDINT",
+        "WHILE",
+        "INT_TO_STRING",
+        "TON",
+        "FS"
+    ],
+    "DLOG_STORE_FILE_XML": [
+        "DT_TO_STRING",
+        "CASE",
+        "UINT_TO_STRING",
+        "ADR",
+        "SHL",
+        "IF",
+        "DT_TO_STRF",
+        "SIN",
+        "_STRING_TO_BUFFER",
+        "BYTE_TO_STRING",
+        "SHR",
+        "LOG_MSG",
+        "DT_TO_UDINT",
+        "LEN",
+        "SIZEOF",
+        "MAX",
+        "WORD_TO_BYTE",
+        "TP",
+        "INT_TO_UDINT",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "UCB",
+        "INT_TO_UINT",
+        "TIME_TO_UDINT",
+        "WHILE",
+        "INT_TO_STRING",
+        "TON",
+        "FS"
+    ],
+    "DLOG_STORE_MYSQL": [
+        "TIMESTAMPDIFF",
+        "VARCHAR",
+        "DT_TO_STRING",
+        "CASE",
+        "MYSQL_CONTROL",
+        "UDINT_TO_STRING",
+        "CONCAT",
+        "ADR",
+        "IF",
+        "ROL",
+        "SIN",
+        "_STRING_TO_BUFFER",
+        "SHR",
+        "STRING",
+        "WORD_TO_INT",
+        "LOG_MSG",
+        "DT_TO_UDINT",
+        "LEN",
+        "UINT_TO_INT",
+        "SIZEOF",
+        "TP",
+        "DELETE",
+        "USINT_TO_INT",
+        "UCB",
+        "INT_TO_UINT",
+        "TIME_TO_UDINT",
+        "WHILE",
+        "FOR",
+        "INSERT",
+        "NOW",
+        "MAX"
+    ],
+    "DLOG_STORE_RRD": [
+        "ATH",
+        "DT_TO_STRING",
+        "CASE",
+        "CONCAT",
+        "IF",
+        "ROL",
+        "SIN",
+        "STRING_TO_URL",
+        "CHR_TO_STRING",
+        "LOG_MSG",
+        "DT_TO_UDINT",
+        "LEN",
+        "UINT_TO_INT",
+        "HTTP_GET",
+        "TP",
+        "USINT_TO_INT",
+        "IPC",
+        "UCB",
+        "SEL",
+        "TIME_TO_UDINT",
+        "DNS_CLIENT",
+        "WHILE",
+        "MAX"
+    ],
+    "DNS_DYN_DEMO": [
+        "TON",
+        "ROL"
+    ],
+    "INI_PARSER_BUF_DEMO": [
+        "LEN",
+        "CASE",
+        "IPB",
+        "BYTE_TO_STRING",
+        "STRING",
+        "UDINT_TO_STRING",
+        "TP",
+        "IF",
+        "LOG_MSG",
+        "FS"
+    ],
+    "INI_PARSER_BUF": [
+        "EXIT",
+        "LEN",
+        "CASE",
+        "UINT_TO_INT",
+        "BYTE_TO_STRING",
+        "WHILE",
+        "INT_TO_STRING",
+        "UDINT_TO_INT",
+        "STRING",
+        "INT_TO_DWORD",
+        "UDINT_TO_STRING",
+        "TP",
+        "TON",
+        "ADR",
+        "IF",
+        "LOG_MSG"
+    ],
+    "INI_PARSER_FILE_DEMO": [
+        "LEN",
+        "CASE",
+        "BYTE_TO_STRING",
+        "STRING",
+        "UDINT_TO_STRING",
+        "TP",
+        "IPF",
+        "IF",
+        "LOG_MSG",
+        "FS"
+    ],
+    "INI_PARSER_FILE": [
+        "EXIT",
+        "FB",
+        "LEN",
+        "CASE",
+        "BYTE_TO_STRING",
+        "WHILE",
+        "INT_TO_STRING",
+        "BOOL_TO_STRING",
+        "STRING",
+        "UDINT_TO_STRING",
+        "INT_TO_DWORD",
+        "TP",
+        "TON",
+        "ADR",
+        "CHR_TO_STRING",
+        "IF",
+        "LOG_MSG"
+    ],
+    "IP_CONTROL": [
+        "LIMIT",
+        "CASE",
+        "DINT_TO_UINT",
+        "TAN",
+        "UINT_TO_STRING",
+        "ADR",
+        "IF",
+        "T_PLC_MS",
+        "ROL",
+        "IP4_TO_STRING",
+        "BYTE_TO_STRING",
+        "DWORD_OF_BYTE",
+        "BYTE_TO_INT",
+        "LOG_MSG",
+        "UINT_TO_INT",
+        "WORD_TO_STRING",
+        "SIZEOF",
+        "DINT_TO_INT",
+        "DWORD_TO_STRING",
+        "SEL",
+        "INT_TO_UINT",
+        "INT_TO_STRING",
+        "S_CU",
+        "WAIT",
+        "TIME_TO_DWORD",
+        "DINT_TO_STRING",
+        "MAX"
+    ],
+    "IP_CONTROL2": [
+        "LIMIT",
+        "CASE",
+        "DINT_TO_UINT",
+        "TAN",
+        "UINT_TO_STRING",
+        "ADR",
+        "IF",
+        "T_PLC_MS",
+        "ROL",
+        "IP4_TO_STRING",
+        "BYTE_TO_STRING",
+        "DWORD_OF_BYTE",
+        "BYTE_TO_INT",
+        "LOG_MSG",
+        "UINT_TO_INT",
+        "WORD_TO_STRING",
+        "SIZEOF",
+        "DINT_TO_INT",
+        "DWORD_TO_STRING",
+        "SEL",
+        "INT_TO_UINT",
+        "INT_TO_STRING",
+        "S_CU",
+        "WAIT",
+        "TIME_TO_DWORD",
+        "DINT_TO_STRING",
+        "MAX"
+    ],
+    "IP_FIFO": [
+        "SIN",
+        "USINT_TO_BYTE",
+        "BYTE_TO_STRING",
+        "RETURN",
+        "BYTE_TO_INT",
+        "IF",
+        "LOG_MSG",
+        "INT_TO_BYTE",
+        "BYTE_TO_USINT",
+        "MAX"
+    ],
+    "IP2GEO_DEMO": [
+        "ROL"
+    ],
+    "IP2GEO": [
+        "EXIT",
+        "ATH",
+        "CASE",
+        "CONCAT",
+        "REAL_TO_INT",
+        "IF",
+        "ROL",
+        "IP4_TO_STRING",
+        "STRING_TO_URL",
+        "LEN",
+        "UINT_TO_INT",
+        "HTTP_GET",
+        "FLOAT_TO_REAL",
+        "TP",
+        "CHK_REAL",
+        "XML_READER",
+        "DECO",
+        "DNS_CLIENT",
+        "IP4_DECODE"
+    ],
+    "IP4_CHECK": [],
+    "IP4_DECODE": [
+        "DECO",
+        "WHILE",
+        "FIND",
+        "STRING",
+        "SHL",
+        "LEFT",
+        "DELETE",
+        "STRING_TO_DWORD"
+    ],
+    "IP4_TO_STRING": [
+        "BYTE_TO_STRING",
+        "SHR",
+        "DWORD_TO_BYTE",
+        "CONCAT",
+        "INSERT"
+    ],
+    "IRTRANS_DECODE": [
+        "EXIT",
+        "LEN",
+        "WHILE",
+        "RETURN",
+        "TP",
+        "ADR",
+        "IF",
+        "DECO"
+    ],
+    "IRTRANS_DEMO": [
+        "DECO",
+        "ROL"
+    ],
+    "IRTRANS_RCV_1": [
+        "TP"
+    ],
+    "IRTRANS_RCV_4": [
+        "TP"
+    ],
+    "IRTRANS_RCV_8": [
+        "TP"
+    ],
+    "IRTRANS_SERVER": [
+        "TP",
+        "SEL",
+        "IF",
+        "TON"
+    ],
+    "IRTRANS_SND_1": [
+        "REPEAT",
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "RETURN",
+        "TP",
+        "CONCAT",
+        "ADR",
+        "TON",
+        "IF"
+    ],
+    "IRTRANS_SND_4": [
+        "REPEAT",
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "RETURN",
+        "TP",
+        "CONCAT",
+        "ADR",
+        "TON",
+        "IF"
+    ],
+    "IRTRANS_SND_8": [
+        "REPEAT",
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "RETURN",
+        "TP",
+        "CONCAT",
+        "ADR",
+        "TON",
+        "IF"
+    ],
+    "IS_IP4": [
+        "COUNT_CHAR"
+    ],
+    "IS_URLCHR": [],
+    "LOG_MSG": [
+        "LEN",
+        "RETURN",
+        "FB_PRINT_SF",
+        "DWORD_TO_BYTE",
+        "SHL",
+        "IF"
+    ],
+    "LOG_VIEWPORT": [
+        "LIMIT",
+        "CASE",
+        "FOR",
+        "IF",
+        "ROL"
+    ],
+    "MB_CLIENT_DEMO": [
+        "TP",
+        "ROL"
+    ],
+    "MB_CLIENT": [
+        "EXIT",
+        "WORD_OF_BYTE",
+        "CASE",
+        "IP_FIFO",
+        "SHL",
+        "IF",
+        "BOOL_TO_BYTE",
+        "ROL",
+        "BIT_LOAD_W",
+        "SHR",
+        "WORD_TO_INT",
+        "INT_TO_BYTE",
+        "UINT_TO_WORD",
+        "INT_TO_WORD",
+        "WORD_TO_BYTE",
+        "TP",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "INT_TO_UINT",
+        "TON_1",
+        "FOR",
+        "TON"
+    ],
+    "MB_SERVER_1": [
+        "WORD_OF_BYTE",
+        "CASE",
+        "IP_FIFO",
+        "SHL",
+        "IF",
+        "T_PLC_MS",
+        "ROL",
+        "DWORD_TO_TIME",
+        "BIT_LOAD_W",
+        "SHR",
+        "BYTE_TO_INT",
+        "WORD_TO_INT",
+        "INT_TO_BYTE",
+        "MB_VMAP",
+        "WORD_TO_BYTE",
+        "DWORD_TO_BYTE",
+        "TP",
+        "WORD_TO_UINT",
+        "UINT_TO_BYTE",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "INT_TO_UINT",
+        "FOR",
+        "TON"
+    ],
+    "MB_SERVER_DEMO": [
+        "ROL"
+    ],
+    "MB_SERVER": [
+        "WORD_OF_BYTE",
+        "CASE",
+        "IP_FIFO",
+        "SHL",
+        "IF",
+        "T_PLC_MS",
+        "ROL",
+        "DWORD_TO_TIME",
+        "BIT_LOAD_W",
+        "SHR",
+        "BYTE_TO_INT",
+        "WORD_TO_INT",
+        "INT_TO_BYTE",
+        "MB_VMAP",
+        "WORD_TO_BYTE",
+        "DWORD_TO_BYTE",
+        "TP",
+        "WORD_TO_UINT",
+        "UINT_TO_BYTE",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "INT_TO_UINT",
+        "FOR",
+        "TON"
+    ],
+    "MB_VMAP": [
+        "EXIT",
+        "INT_TO_WORD",
+        "RETURN",
+        "SHR",
+        "FOR",
+        "TP",
+        "SHL",
+        "IF",
+        "WORD_TO_INT"
+    ],
+    "MD5_AUX": [
+        "NOT",
+        "CASE",
+        "ROL"
+    ],
+    "MD5_CRAM_AUTH_DEMO": [
+        "LEN"
+    ],
+    "MD5_CRAM_AUTH": [
+        "MD5_STREAM",
+        "LEN",
+        "BASE64_ENCODE_STR",
+        "CASE",
+        "FOR",
+        "ENCO",
+        "CONCAT",
+        "ADR",
+        "MD5_TO_STRH",
+        "IF",
+        "DECO",
+        "BASE64_DECODE_STR"
+    ],
+    "MD5_STR": [
+        "MD5_STREAM",
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "CASE",
+        "SIZEOF",
+        "UDINT_TO_INT",
+        "STRING",
+        "TP",
+        "ADR",
+        "IF",
+        "MID"
+    ],
+    "MD5_STREAM": [
+        "UDINT_TO_BYTE",
+        "CASE",
+        "DWORD_OF_BYTE",
+        "SHR",
+        "MD5_AUX",
+        "FOR",
+        "UDINT_TO_INT",
+        "MIN",
+        "BOOL_TO_UDINT",
+        "DWORD_TO_BYTE",
+        "TP",
+        "SHL",
+        "IF",
+        "ROR",
+        "UDINT_TO_DWORD"
+    ],
+    "MD5_TO_STRH": [
+        "SHR",
+        "ADR",
+        "FOR",
+        "SEL"
+    ],
+    "MOON_PHASE": [
+        "UDINT_TO_BYTE",
+        "SCALE",
+        "TP",
+        "IF",
+        "DT_TO_UDINT"
+    ],
+    "MYSQL_AUTH": [
+        "LEN",
+        "CASE",
+        "RETURN",
+        "FOR",
+        "STRING",
+        "UDINT_TO_INT",
+        "IF",
+        "INT_TO_UDINT",
+        "SHA1_STREAM",
+        "CODE"
+    ],
+    "MYSQL_CONTROL": [
+        "EXIT",
+        "TON_WAIT",
+        "WORD_OF_BYTE",
+        "ATH",
+        "CASE",
+        "DWORD_TO_STRH",
+        "UINT_TO_STRING",
+        "ADR",
+        "IF",
+        "ROL",
+        "DWORD_TO_UINT",
+        "BYTE_TO_STRING",
+        "DWORD_OF_BYTE",
+        "STRING_TO_URL",
+        "LOG_MSG",
+        "LEN",
+        "MYSQL_AUTH",
+        "UINT_TO_INT",
+        "BYTE_OF_DWORD",
+        "BUFFER_TO_STRING",
+        "CODE",
+        "IPC",
+        "INT_TO_UINT",
+        "SEL",
+        "DNS_CLIENT",
+        "FOR",
+        "INT_TO_DWORD",
+        "UINT_TO_DWORD",
+        "TON",
+        "WAIT",
+        "MAX"
+    ],
+    "NET_VAR_BOOL8": [
+        "SIN",
+        "INT_TO_UINT",
+        "USINT_TO_BYTE",
+        "TP",
+        "IF",
+        "BYTE_TO_BITS",
+        "BYTE_OF_BIT",
+        "MAX"
+    ],
+    "NET_VAR_BUFFER": [
+        "SIN",
+        "INT_TO_UINT",
+        "USINT_TO_BYTE",
+        "SIZEOF",
+        "FOR",
+        "TP",
+        "BYTE_TO_INT",
+        "IF",
+        "INT_TO_BYTE",
+        "MAX"
+    ],
+    "NET_VAR_CONTROL": [
+        "BYTE_TO_DWORD",
+        "UDINT_TO_BYTE",
+        "INT_TO_UINT",
+        "CASE",
+        "SIZEOF",
+        "TP",
+        "TON",
+        "IF",
+        "ROL",
+        "IPC"
+    ],
+    "NET_VAR_DWORD8": [
+        "BYTE_TO_DWORD",
+        "SIN",
+        "INT_TO_UINT",
+        "USINT_TO_BYTE",
+        "FOR",
+        "DWORD_TO_BYTE",
+        "TP",
+        "IF",
+        "ROR",
+        "MAX"
+    ],
+    "NET_VAR_MASTER_DEMO": [
+        "LEN",
+        "STRING",
+        "ROL"
+    ],
+    "NET_VAR_REAL8": [
+        "BYTE_TO_DWORD",
+        "SIN",
+        "INT_TO_UINT",
+        "DW_TO_REAL",
+        "USINT_TO_BYTE",
+        "FOR",
+        "DWORD_TO_BYTE",
+        "REAL_TO_DW",
+        "TP",
+        "IF",
+        "ROR",
+        "MAX"
+    ],
+    "NET_VAR_SLAVE_DEMO": [
+        "LEN",
+        "ROL"
+    ],
+    "NET_VAR_STRING": [
+        "SIN",
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "USINT_TO_BYTE",
+        "INT_TO_UINT",
+        "STRING",
+        "BUFFER_TO_STRING",
+        "TP",
+        "ADR",
+        "BYTE_TO_INT",
+        "IF",
+        "INT_TO_BYTE",
+        "MAX"
+    ],
+    "NET_VAR_X8": [
+        "BYTE_TO_DWORD",
+        "SIN",
+        "INT_TO_UINT",
+        "DW_TO_REAL",
+        "USINT_TO_BYTE",
+        "FOR",
+        "REAL_TO_DW",
+        "DWORD_TO_BYTE",
+        "TP",
+        "DINT_TO_DWORD",
+        "DWORD_TO_UDINT",
+        "IF",
+        "ROR",
+        "UDINT_TO_DWORD",
+        "DWORD_TO_DINT",
+        "MAX"
+    ],
+    "NETWORK_VERSION": [
+        "DATE_TO_DWORD",
+        "IF"
+    ],
+    "PRINT_SF": [
+        "LEN",
+        "ISC_NUM",
+        "WHILE",
+        "FIND",
+        "REPLACE",
+        "STRING",
+        "IF",
+        "INT_TO_BYTE",
+        "CODE"
+    ],
+    "RC4_CRYPT_DEMO": [],
+    "RC4_CRYPT_STREAM": [
+        "SIN",
+        "LEN",
+        "CASE",
+        "RETURN",
+        "FOR",
+        "MIN",
+        "UDINT_TO_INT",
+        "TP",
+        "IF",
+        "INT_TO_BYTE",
+        "CODE"
+    ],
+    "READ_HTTP": [
+        "EXIT",
+        "LEN",
+        "UINT_TO_INT",
+        "WHILE",
+        "BUFFER_TO_STRING",
+        "TP",
+        "CONCAT",
+        "ADR",
+        "IF",
+        "BUFFER_SEARCH"
+    ],
+    "SHA1_MD5_DEMO": [
+        "LEN",
+        "STRING"
+    ],
+    "SHA1_STR": [
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "CASE",
+        "SIZEOF",
+        "STRING",
+        "UDINT_TO_INT",
+        "TP",
+        "ADR",
+        "IF",
+        "SHA1_STREAM",
+        "MID"
+    ],
+    "SHA1_STREAM": [
+        "UDINT_TO_BYTE",
+        "NOT",
+        "CASE",
+        "DWORD_OF_BYTE",
+        "SHR",
+        "FOR",
+        "UDINT_TO_INT",
+        "MIN",
+        "BOOL_TO_UDINT",
+        "DWORD_TO_BYTE",
+        "TP",
+        "SHL",
+        "IF",
+        "UDINT_TO_DWORD",
+        "ROL"
+    ],
+    "SHA1_TO_STRH": [
+        "SHR",
+        "ADR",
+        "FOR",
+        "SEL"
+    ],
+    "SMTP_CLIENT_DEMO": [
+        "TP",
+        "LEN"
+    ],
+    "SMTP_CLIENT": [
+        "BASE64_ENCODE_STREAM",
+        "EXIT",
+        "REPEAT",
+        "TON_WAIT",
+        "ATH",
+        "DT_TO_DATE",
+        "CASE",
+        "DAY_OF_WEEK",
+        "UDINT_TO_DT",
+        "ENCO",
+        "UDINT_TO_STRING",
+        "CONCAT",
+        "ADR",
+        "SHL",
+        "IF",
+        "ELEMENT_GET",
+        "RIGHT",
+        "DT_TO_STRF",
+        "ROL",
+        "FILE_PATH_SPLIT",
+        "SPLIT",
+        "_STRING_TO_BUFFER",
+        "BYTE_TO_STRING",
+        "BOOL_TO_STRING",
+        "STRING_TO_URL",
+        "STRING_TO_INT",
+        "LOG_MSG",
+        "DT_TO_UDINT",
+        "LEN",
+        "BASE64_ENCODE_STR",
+        "ELEMENT_COUNT",
+        "UINT_TO_INT",
+        "SIZEOF",
+        "MAX",
+        "BUFFER_TO_STRING",
+        "TP",
+        "LEFT",
+        "DELETE",
+        "INT_TO_UDINT",
+        "CODE",
+        "BIT_LOAD_B",
+        "IPC",
+        "BYTE_TO_DWORD",
+        "SEL",
+        "INT_TO_UINT",
+        "MD5_CRAM_AUTH",
+        "DNS_CLIENT",
+        "FIND",
+        "REPLACE",
+        "INT_TO_STRING",
+        "MIN",
+        "FOR",
+        "INT_TO_DWORD",
+        "TON",
+        "INSERT",
+        "IS_NUM",
+        "WAIT",
+        "FS"
+    ],
+    "SNTP_CLIENT": [
+        "SIN",
+        "WORD_OF_BYTE",
+        "CASE",
+        "DWORD_OF_BYTE",
+        "IP_FIFO",
+        "SHR",
+        "FOR",
+        "WORD_TO_DINT",
+        "TP",
+        "DINT_TO_DWORD",
+        "DWORD_TO_DT",
+        "IF",
+        "LOG_MSG",
+        "DT_TO_DWORD",
+        "T_PLC_MS",
+        "DWORD_TO_STRING",
+        "DWORD_TO_INT"
+    ],
+    "SNTP_SERVER": [
+        "INT_TO_UINT",
+        "CASE",
+        "IP_FIFO",
+        "FOR",
+        "BYTE_OF_DWORD",
+        "INT_TO_DWORD",
+        "UINT_TO_STRING",
+        "TP",
+        "TON",
+        "DINT_TO_DWORD",
+        "SHL",
+        "IF",
+        "LOG_MSG",
+        "DT_TO_DWORD",
+        "T_PLC_MS",
+        "DWORD_TO_DINT",
+        "SNTP"
+    ],
+    "SPIDER_ACCESS": [
+        "LEN",
+        "INT_TO_UINT",
+        "ATH",
+        "UINT_TO_INT",
+        "CASE",
+        "HTTP_GET",
+        "FIND",
+        "BOOL_TO_UINT",
+        "BUFFER_TO_STRING",
+        "TP",
+        "CONCAT",
+        "STRING_TO_URL",
+        "BOOL_TO_DWORD",
+        "ADR",
+        "IF"
+    ],
+    "SPIDER_DEMO": [
+        "ROL"
+    ],
+    "STRING_TO_URL": [
+        "LEN",
+        "ATH",
+        "STRING_TO_WORD",
+        "RETURN",
+        "FIND",
+        "STRING",
+        "LEFT",
+        "IF",
+        "FINDB",
+        "MID",
+        "RIGHT"
+    ],
+    "SYS_LOG": [
+        "LEN",
+        "_STRING_TO_BUFFER",
+        "INT_TO_UINT",
+        "CASE",
+        "IP_FIFO",
+        "BYTE_TO_STRING",
+        "REPLACE",
+        "TP",
+        "CONCAT",
+        "ADR",
+        "SHL",
+        "IF",
+        "DT_TO_STRF",
+        "LOG_MSG",
+        "DWORD_TO_STRING"
+    ],
+    "TELNET_LOG_DEMO": [
+        "LN",
+        "ROL",
+        "TON"
+    ],
+    "TELNET_LOG": [
+        "LN",
+        "TELNET_PRINT",
+        "REPEAT",
+        "DWORD_TO_BYTE",
+        "TP",
+        "WATCHDOG",
+        "TON",
+        "SHL",
+        "IF",
+        "ROL"
+    ],
+    "TELNET_PRINT_DEMO": [
+        "LN",
+        "SIN",
+        "ROL",
+        "TON"
+    ],
+    "TELNET_PRINT": [
+        "LN",
+        "SEL",
+        "_STRING_TO_BUFFER",
+        "LEN",
+        "INT_TO_UINT",
+        "IP_FIFO",
+        "SIZEOF",
+        "CASE",
+        "SHR",
+        "STRING",
+        "TP",
+        "ADR",
+        "BYTE_TO_INT",
+        "IF",
+        "INT_TO_BCDC"
+    ],
+    "TN_FRAMEWORK": [
+        "FB_TN_INPUT_MENU_BAR",
+        "SEL",
+        "FB_TN_RECEIVE",
+        "SIZEOF",
+        "FB_IP_CONTROL",
+        "FB_TN_INPUT_CONTROL",
+        "FB_TN_SEND_ROWS",
+        "TON",
+        "IF",
+        "ROL"
+    ],
+    "TN_INPUT_CONTROL": [
+        "LIMIT",
+        "SEL",
+        "LEN",
+        "CASE",
+        "FB_TN_INPUT_SELECT_POPUP",
+        "RETURN",
+        "FOR",
+        "IF",
+        "FB_TN_SC_WRITE_C",
+        "FB_TN_INPUT_SELECT_TEXT",
+        "FB_TN_INPUT_EDIT_LINE",
+        "ROL"
+    ],
+    "TN_INPUT_EDIT_LINE": [
+        "LEN",
+        "CASE",
+        "FB_TN_SC_WRITE",
+        "WHILE",
+        "FOR",
+        "REPLACE",
+        "TRIME",
+        "CONCAT",
+        "CHR_TO_STRING",
+        "BYTE_TO_INT",
+        "IF",
+        "MID",
+        "ROL"
+    ],
+    "TN_INPUT_MENU_BAR": [
+        "LEN",
+        "ELEMENT_COUNT",
+        "FOR",
+        "INC2",
+        "FB_TN_INPUT_MENU_POPUP",
+        "IF",
+        "FB_TN_SC_WRITE_C",
+        "ELEMENT_GET"
+    ],
+    "TN_INPUT_MENU_POPUP": [
+        "FB_TN_SC_LINE",
+        "FB_TN_SC_ADD_SHADOW",
+        "FB_TN_SC_AREA_RESTORE",
+        "LEN",
+        "EXIT",
+        "ELEMENT_COUNT",
+        "CASE",
+        "FILL",
+        "FB_TN_SC_BOX",
+        "FOR",
+        "INC2",
+        "FB_TN_SC_AREA_SAVE",
+        "BYTE_TO_INT",
+        "FB_TN_SC_WRITE_C",
+        "IF",
+        "ELEMENT_GET",
+        "MAX"
+    ],
+    "TN_INPUT_SELECT_POPUP": [
+        "LIMIT",
+        "LEN",
+        "SEL",
+        "ELEMENT_COUNT",
+        "FB_TN_SC_WRITE",
+        "FIX",
+        "FB_TN_INPUT_MENU_POPUP",
+        "IF",
+        "ELEMENT_GET",
+        "ROL"
+    ],
+    "TN_INPUT_SELECT_TEXT": [
+        "LEN",
+        "SEL",
+        "ELEMENT_COUNT",
+        "FB_TN_SC_WRITE",
+        "FIX",
+        "IF",
+        "ELEMENT_GET",
+        "ROL"
+    ],
+    "TN_RECEIVE": [
+        "IF",
+        "ISC_NUM"
+    ],
+    "TN_SC_ADD_SHADOW": [
+        "RETURN",
+        "FOR",
+        "IF",
+        "TN_SC_XY2_ERROR",
+        "TN_SC_SHADOW_ATTR"
+    ],
+    "TN_SC_AREA_RESTORE": [
+        "RETURN",
+        "FOR",
+        "BYTE_TO_INT",
+        "IF",
+        "TN_SC_XY2_ERROR"
+    ],
+    "TN_SC_AREA_SAVE": [
+        "RETURN",
+        "FOR",
+        "IF",
+        "TN_SC_XY2_ERROR",
+        "INT_TO_BYTE"
+    ],
+    "TN_SC_BOX": [
+        "CASE",
+        "FILL",
+        "FB_TN_SC_FILL",
+        "RETURN",
+        "FOR",
+        "IF",
+        "TN_SC_XY2_ERROR"
+    ],
+    "TN_SC_FILL": [
+        "FILL",
+        "RETURN",
+        "FOR",
+        "IF",
+        "TN_SC_XY2_ERROR"
+    ],
+    "TN_SC_LINE": [
+        "TN_SC_XY2_ERROR",
+        "RETURN",
+        "FOR",
+        "IF"
+    ],
+    "TN_SC_READ_ATTR": [
+        "RETURN",
+        "IF",
+        "TN_SC_XY_ERROR"
+    ],
+    "TN_SC_READ_CHAR": [
+        "RETURN",
+        "IF",
+        "TN_SC_XY_ERROR"
+    ],
+    "TN_SC_SHADOW_ATTR": [],
+    "TN_SC_VIEWPORT": [
+        "FB_TON",
+        "CASE",
+        "FB_TN_SC_WRITE",
+        "FOR",
+        "BYTE_OF_DWORD",
+        "FIX",
+        "TON",
+        "IF",
+        "INT_TO_BYTE",
+        "ROL",
+        "DWORD_TO_INT"
+    ],
+    "TN_SC_WRITE_ATTR": [
+        "RETURN",
+        "IF",
+        "TN_SC_XY_ERROR"
+    ],
+    "TN_SC_WRITE_C": [
+        "LEN",
+        "FIX",
+        "FB_TN_SC_WRITE"
+    ],
+    "TN_SC_WRITE_CHAR": [
+        "RETURN",
+        "IF",
+        "TN_SC_XY_ERROR"
+    ],
+    "TN_SC_WRITE_EOS": [
+        "TN_SC_WRITE"
+    ],
+    "TN_SC_WRITE": [
+        "LEN",
+        "RETURN",
+        "FOR",
+        "IF",
+        "TN_SC_XY_ERROR",
+        "CODE"
+    ],
+    "TN_SC_XY_ERROR": [],
+    "TN_SC_XY2_ERROR": [],
+    "TN_SEND_ROWS": [
+        "EXIT",
+        "INT_TO_UINT",
+        "UINT_TO_INT",
+        "RETURN",
+        "SHR",
+        "FOR",
+        "IF",
+        "INT_TO_BCDC"
+    ],
+    "TN_VISION_DEMO_1": [
+        "CASE",
+        "CONCAT",
+        "IF",
+        "ROL",
+        "FB_TN_SC_LINE",
+        "FB_TN_SC_ADD_SHADOW",
+        "LOWERCASE",
+        "FB_TN_SC_WRITE",
+        "FB_TN_SC_BOX",
+        "FB_LOG_MESSAGE",
+        "BYTE_TO_INT",
+        "FB_TN_FRAMEWORK",
+        "LN",
+        "LEN",
+        "FILL",
+        "FB_LOG_VIEWPORT",
+        "RETURN",
+        "FB_TN_SC_WRITE_C",
+        "FB_TN_SC_VIEWPORT",
+        "SEL",
+        "FB_TN_SC_FILL",
+        "INT_TO_STRING",
+        "FOR"
+    ],
+    "TN_VISION_DEMO_2": [
+        "FB_TN_FRAMEWORK",
+        "LOWERCASE",
+        "LEN",
+        "FB_TN_SC_FILL",
+        "CASE",
+        "FB_TN_SC_WRITE",
+        "FILL",
+        "IF",
+        "FB_TN_SC_WRITE_C",
+        "ROL"
+    ],
+    "UNI_CIRCULAR_BUFFER": [
+        "REPEAT",
+        "CASE",
+        "TAN",
+        "DWORD_TO_STRH",
+        "UINT_TO_STRING",
+        "ADR",
+        "SHL",
+        "IF",
+        "ROL",
+        "DWORD_TO_UINT",
+        "SIN",
+        "DWORD_TO_WORD",
+        "SHR",
+        "LOG_MSG",
+        "LEN",
+        "SIZEOF",
+        "RETURN",
+        "WORD_TO_BYTE",
+        "DWORD_TO_BYTE",
+        "WORD_TO_DWORD",
+        "UINT_TO_USINT",
+        "BYTE_TO_DWORD",
+        "REAL_TO_STRING",
+        "FOR",
+        "MIN",
+        "UINT_TO_DWORD",
+        "MAX"
+    ],
+    "URL_DECODE": [
+        "LEN",
+        "WHILE",
+        "FIND",
+        "HEX_TO_DWORD",
+        "REPLACE",
+        "STRING",
+        "DWORD_TO_BYTE",
+        "CHR_TO_STRING",
+        "MID",
+        "DECO"
+    ],
+    "URL_ENCODE": [
+        "EXIT",
+        "LEN",
+        "SHR",
+        "FOR",
+        "STRING",
+        "IS_URLCHR",
+        "ENCO",
+        "ADR",
+        "IF"
+    ],
+    "URL_TO_STRING": [
+        "CONCAT",
+        "ATH",
+        "IF",
+        "WORD_TO_STRING"
+    ],
+    "WORLD_WEATHER_DEMO": [
+        "ATH",
+        "ROL"
+    ],
+    "WORLD_WEATHER_DESC_GE": [
+        "ATH",
+        "CASE",
+        "FOR",
+        "STRING",
+        "IF"
+    ],
+    "WORLD_WEATHER_ICON_OSCAT": [
+        "LIMIT",
+        "FOR",
+        "ATH",
+        "IF"
+    ],
+    "WORLD_WEATHER": [
+        "ATH",
+        "CASE",
+        "CONCAT",
+        "REAL_TO_INT",
+        "IF",
+        "CPB",
+        "STRING_TO_URL",
+        "LEN",
+        "HTTP_GET",
+        "FLOAT_TO_REAL",
+        "TP",
+        "LEFT",
+        "CHK_REAL",
+        "MID",
+        "REAL_TO_STRF",
+        "DNS_CLIENT",
+        "DEC_TO_INT",
+        "FIND",
+        "MIN",
+        "MAX"
+    ],
+    "XML_READER": [
+        "EXIT",
+        "ATH",
+        "CASE",
+        "TAN",
+        "UINT_TO_STRING",
+        "CONCAT",
+        "ADR",
+        "IF",
+        "RIGHT",
+        "ROL",
+        "SIN",
+        "STRING",
+        "WATCHDOG",
+        "LOG_MSG",
+        "LEN",
+        "UINT_TO_INT",
+        "RETURN",
+        "BUFFER_TO_STRING",
+        "LEFT",
+        "FINDB",
+        "WORD_TO_DWORD",
+        "INT_TO_UINT",
+        "BIT_OF_DWORD",
+        "WHILE",
+        "INT_TO_STRING",
+        "FIND",
+        "TON",
+        "BUFFER_SEARCH"
+    ],
+    "YAHOO_WEATHER_DEMO": [
+        "ATH",
+        "ROL"
+    ],
+    "YAHOO_WEATHER_DESC_GE": [
+        "FOR",
+        "ATH",
+        "IF",
+        "CASE"
+    ],
+    "YAHOO_WEATHER_ICON_OSCAT": [
+        "FOR",
+        "IF",
+        "ATH",
+        "MIN"
+    ],
+    "YAHOO_WEATHER": [
+        "EXIT",
+        "REPEAT",
+        "ATH",
+        "CASE",
+        "UINT_TO_STRING",
+        "CONCAT",
+        "REAL_TO_INT",
+        "IF",
+        "T_PLC_MS",
+        "ROL",
+        "SIN",
+        "LOG_MSG",
+        "USINT_TO_DWORD",
+        "LEN",
+        "UINT_TO_INT",
+        "HTTP_GET",
+        "FLOAT_TO_REAL",
+        "TP",
+        "CHK_REAL",
+        "USINT_TO_STRING",
+        "XML_READER",
+        "DNS_CLIENT",
+        "INT_TO_STRING",
+        "FOR",
+        "WAIT"
+    ],
+    "all_used_functions": [
+        "TON_WAIT",
+        "STRING_TO_WORD",
+        "REAL_TO_DW",
+        "UINT_TO_STRING",
+        "DWORD_TO_UDINT",
+        "WORK_WEEK",
+        "FB_TN_SC_BOX",
+        "IPC1",
+        "MD5_AUX",
+        "UTC_TO_LTIME",
+        "F_TO_C",
+        "BYTE_OF_BIT",
+        "DT_TO_UDINT",
+        "X2",
+        "IPB",
+        "SIZEOF",
+        "D2",
+        "WORD_TO_BYTE",
+        "CTU",
+        "SECOND",
+        "DATE_TO_DT",
+        "DELETE",
+        "TN_SC_XY_ERROR",
+        "REAL_TO_STRING",
+        "REPLACE",
+        "UDINT_TO_UINT",
+        "F_TRIG",
+        "UINT_TO_DWORD",
+        "ISC_UPPER",
+        "S_CU",
+        "FLOOR",
+        "IPF",
+        "TIME_TO_DWORD",
+        "TO_LOWER",
+        "SINH",
+        "HOUR_OF_DT",
+        "V3_ABS",
+        "TAN",
+        "REFRACTION",
+        "SQRTN",
+        "INT_TO_DINT",
+        "FILE_PATH_SPLIT",
+        "FB_TN_INPUT_MENU_BAR",
+        "DINT_TO_WORD",
+        "FRACT",
+        "FB_LOG_MESSAGE",
+        "BYTE_TO_BITS",
+        "CSQRT",
+        "INT_TO_BCDC",
+        "COTH",
+        "BASE64_ENCODE_STR",
+        "MONTH_OF_DATE",
+        "ISC_ALPHA",
+        "DWORD_TO_BYTE",
+        "FLOAT_TO_REAL",
+        "CACOSH",
+        "CHARNAME",
+        "BOOL_TO_DWORD",
+        "CHK_REAL",
+        "TN_SC_XY2_ERROR",
+        "CMUL",
+        "UDINT_TO_BYTE",
+        "REAL_TO_STRF",
+        "DEC_TO_INT",
+        "DAY_OF_MONTH",
+        "SET_DATE",
+        "NOW",
+        "ENCO",
+        "INC1",
+        "STRING_TO_TIME",
+        "STRING_TO_REAL",
+        "SHR",
+        "IS_CC",
+        "FINDP",
+        "WORD_TO_INT",
+        "LN",
+        "CSET",
+        "FB_TN_RECEIVE",
+        "CTRL_IN",
+        "INC",
+        "BOOL_TO_INT",
+        "TRIME",
+        "V3_XPRO",
+        "DWORD_TO_DINT",
+        "D1",
+        "TON_1",
+        "LEAP_OF_DATE",
+        "SDD",
+        "HOLY",
+        "ATH",
+        "FSTRING_TO_WEEK",
+        "RUNTIME",
+        "T_PLC_US",
+        "SUN_MIDDAY",
+        "BIN_TO_BYTE",
+        "FB_TN_FRAMEWORK",
+        "GAMMA",
+        "FB_TN_SEND_ROWS",
+        "DINT_TO_INT",
+        "EXPN",
+        "MONTH_END",
+        "CODE",
+        "STRING_TO_DWORD",
+        "UINT_TO_BYTE",
+        "DW_TO_REAL",
+        "R_TRIG",
+        "HEX_TO_BYTE",
+        "INT_TO_DWORD",
+        "TOF",
+        "HOUR",
+        "MAX",
+        "EXIT",
+        "RDM2",
+        "TD",
+        "MINUTE_OF_DT",
+        "DT_TO_DATE",
+        "TOD_TO_DWORD",
+        "IP_FIFO",
+        "COUNT_CHAR",
+        "FSTRING_TO_BYTE",
+        "TN_SC_WRITE",
+        "UINT_TO_UDINT",
+        "BYTE_TO_UINT",
+        "TO_UPPER",
+        "EASTER",
+        "DWORD_TO_REAL",
+        "BYTE_TO_STRING",
+        "USINT_TO_DWORD",
+        "REVERSE",
+        "MINUTE",
+        "STRING_TO_TOD",
+        "FB_TN_SC_WRITE_C",
+        "SHA1_STREAM",
+        "FRMP_B",
+        "T_ADD",
+        "XML_READER",
+        "TELNET_PRINT",
+        "DINT_TO_TIME",
+        "WHILE",
+        "BOOL_TO_UDINT",
+        "INSERT",
+        "DAY_OF_YEAR",
+        "RDM",
+        "ISC_LOWER",
+        "FSR",
+        "DST",
+        "BASE64_DECODE_STREAM",
+        "MYSQL_CONTROL",
+        "CPF",
+        "BIT_LOAD_W",
+        "ATAN",
+        "EXPT",
+        "SCALE_X",
+        "HOUR_TO_TOD",
+        "INT_TO_UDINT",
+        "DECO",
+        "SEL",
+        "MD5_CRAM_AUTH",
+        "CHARCODE",
+        "MULTIME",
+        "DINT_TO_STRING",
+        "SIGN_R",
+        "DWORD_TO_STRH",
+        "REAL_TO_INT",
+        "DT_TO_DWORD",
+        "FB_TN_SC_AREA_RESTORE",
+        "ISC_NUM",
+        "UDINT_TO_DATE",
+        "SQR",
+        "DATE_TO_DWORD",
+        "T_PLC_S",
+        "UINT_TO_WORD",
+        "FILL",
+        "TRIM",
+        "AF",
+        "R2_ADD",
+        "UDINT_TO_DWORD",
+        "BIT_LOAD_B",
+        "HOUR_TO_TIME",
+        "UINT_TO_REAL",
+        "OCT_TO_BYTE",
+        "DNS_CLIENT",
+        "WEEKDAY_TO_STRING",
+        "T1",
+        "WAIT",
+        "BUFFER_SEARCH",
+        "CEIL",
+        "TIMESTAMPDIFF",
+        "DT_TO_TOD",
+        "T_PLC_MS",
+        "LOWERCASE",
+        "DWORD_TO_WORD",
+        "FB_TN_INPUT_CONTROL",
+        "WORD_TO_DINT",
+        "LEAP_DAY",
+        "MUX",
+        "LEN",
+        "FSTRING_TO_MONTH",
+        "LEAP_YEAR",
+        "MYSQL_AUTH",
+        "BYTE_TO_WORD",
+        "BIT_COUNT",
+        "INT_TO_REAL",
+        "IP4_DECODE",
+        "LOG",
+        "LIMIT",
+        "REPEAT",
+        "ATAN2",
+        "CASE",
+        "DATE_TO_UDINT",
+        "SCALE",
+        "READ_HTTP",
+        "BIN_TO_DWORD",
+        "CONCAT",
+        "CPB",
+        "SQRT",
+        "ROL",
+        "DT_TO_STRF",
+        "SPLIT",
+        "MONTH_TO_STRING",
+        "CASINH",
+        "ROR",
+        "REF",
+        "DWORD_TO_STRING",
+        "DWORD_TO_INT",
+        "FB_TN_SC_FILL",
+        "BIT_OF_DWORD",
+        "T_SUB",
+        "DEAD_ZONE",
+        "TON",
+        "IS_NUM",
+        "FB_TN_SC_AREA_SAVE",
+        "FINDB_NUM",
+        "ABS",
+        "TOD_TO_DINT",
+        "SGN",
+        "DWORD_TO_UINT",
+        "MD5_STREAM",
+        "BAND_B",
+        "DWORD_OF_BYTE",
+        "IS_URLCHR",
+        "WATER_ENTHALPY",
+        "FB_TN_INPUT_MENU_POPUP",
+        "BYTE_TO_INT",
+        "INT_TO_BYTE",
+        "DIFFER",
+        "MULTI_IN",
+        "HYPOT",
+        "LEFT",
+        "USINT_TO_INT",
+        "WORD_TO_DWORD",
+        "ACOS",
+        "SMTP_CLIENT",
+        "LINEAR_INT",
+        "DEW_CON",
+        "CIRCLE_SEG",
+        "INT_TO_STRING",
+        "FIX",
+        "D_TRUNC",
+        "SECOND_OF_DT",
+        "YEAR_END",
+        "VARCHAR",
+        "RT",
+        "DINT_TO_UINT",
+        "EVEN",
+        "YEAR_OF_DATE",
+        "DINT_TO_TOD",
+        "_STRING_TO_BUFFER",
+        "X1",
+        "STRING_TO_URL",
+        "REAL_TO_DINT",
+        "ELEMENT_COUNT",
+        "FB_TN_INPUT_SELECT_POPUP",
+        "UDINT_TO_REAL",
+        "SET_DT",
+        "DINT_TO_REAL",
+        "TN_SC_SHADOW_ATTR",
+        "BYTE_TO_REAL",
+        "DEC_TO_BYTE",
+        "FIND",
+        "MID3",
+        "DEC1",
+        "ADR",
+        "REAL_TO_DWORD",
+        "DWORD_TO_TIME",
+        "REAL_TO_TIME",
+        "FLOOR2",
+        "IP4_TO_STRING",
+        "FB_TN_SC_WRITE",
+        "DD",
+        "SWAP",
+        "MD5_TO_STRH",
+        "DINT_TO_DWORD",
+        "STRING_TO_INT",
+        "WT_1",
+        "BASE64_DECODE_STR",
+        "WORD_TO_STRING",
+        "FB_LOG_VIEWPORT",
+        "DEG",
+        "BOOL_TO_UINT",
+        "OCT_TO_DWORD",
+        "WORD_TO_UINT",
+        "WORD_TO_REAL",
+        "DWORD_TO_DATE",
+        "UPPERCASE",
+        "V3_SMUL",
+        "IPC",
+        "FB",
+        "T5",
+        "FTP_CLIENT",
+        "EXP10",
+        "CAPITALIZE",
+        "T_DIFF",
+        "RAD",
+        "FB_IP_CONTROL",
+        "ERF",
+        "IF",
+        "TIMECHECK",
+        "RIGHT",
+        "FB_TN_SC_ADD_SHADOW",
+        "USINT_TO_BYTE",
+        "ASIN",
+        "HEX_TO_DWORD",
+        "BOOL_TO_STRING",
+        "CHR_TO_STRING",
+        "D0",
+        "R2_SET",
+        "LOG_MSG",
+        "RES_PT",
+        "SNTP",
+        "INT_TO_WORD",
+        "CHR",
+        "MB_VMAP",
+        "BUFFER_TO_STRING",
+        "TP",
+        "FSTRING_TO_WEEKDAY",
+        "MID",
+        "TIME",
+        "_ARRAY_SORT",
+        "UCB",
+        "UDINT_TO_INT",
+        "DAY_OF_DATE",
+        "ISC_CTRL",
+        "CCOSH",
+        "FB_TN_INPUT_SELECT_TEXT",
+        "FS",
+        "ISC_HEX",
+        "EXP",
+        "DWORD_TO_TOD",
+        "STRING_TO_UDINT",
+        "UDINT_TO_STRING",
+        "CEXP",
+        "ELEMENT_GET",
+        "BYTE_TO_USINT",
+        "STRING_TO_BYTE",
+        "TDEL",
+        "X3",
+        "COS",
+        "REFLECT",
+        "C_TO_F",
+        "TIME_TO_DINT",
+        "T2",
+        "FB_PRINT_SF",
+        "CLK",
+        "TOD_TO_TIME",
+        "CLEAN",
+        "WATER_DENSITY",
+        "FRAC",
+        "UINT_TO_USINT",
+        "INT_TO_UINT",
+        "TO_UML",
+        "CLOG",
+        "COSH",
+        "FOR",
+        "X",
+        "PW",
+        "TIME_TO_REAL",
+        "BASE64_ENCODE_STREAM",
+        "NOT",
+        "WORD_OF_BYTE",
+        "DATE_ADD",
+        "DAY_OF_WEEK",
+        "BOOL_TO_BYTE",
+        "MODR",
+        "DWORD_TO_DT",
+        "FB_TN_SC_LINE",
+        "FB_TON",
+        "STRING",
+        "UINT_TO_INT",
+        "T6",
+        "BYTE_OF_DWORD",
+        "FINDB",
+        "USINT_TO_STRING",
+        "IPC2",
+        "FB_TN_SC_VIEWPORT",
+        "BYTE_TO_DWORD",
+        "D3",
+        "MIN",
+        "DT_TO_STRING",
+        "UDINT_TO_DT",
+        "T3",
+        "SHL",
+        "T4",
+        "DEC_TO_DWORD",
+        "FINDB_NONUM",
+        "SIN",
+        "INC2",
+        "WATCHDOG",
+        "TIME_TO_TOD",
+        "FB_TN_INPUT_EDIT_LINE",
+        "TIME_TO_INT",
+        "ROUND",
+        "RETURN",
+        "HTTP_GET",
+        "TRUNC",
+        "STP",
+        "TIME_TO_UDINT",
+        "V3_DPRO",
+        "SEG",
+        "YEAR_BEGIN"
+    ]
+}

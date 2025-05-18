@@ -1,0 +1,23 @@
+{
+    "title": "Binary to Gray Code Converter",
+    "name": "LGF_BinaryToGray",
+    "description": "This function converts a binary coded value into a Gray-coded value.",
+    "type": "FUNCTION",
+    "input": [
+        {
+            "name": "variableBinary",
+            "type": "DWord",
+            "description": "Binary coded value to convert to Gray code"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": [
+        {
+            "type": "DWord",
+            "description": "Gray-coded value"
+        }
+    ],
+    "status_codes": {},
+    "user_defined_types": []
+}

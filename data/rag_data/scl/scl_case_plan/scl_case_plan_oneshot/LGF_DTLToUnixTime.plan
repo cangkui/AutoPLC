@@ -1,0 +1,78 @@
+### 算法流程描述：DTL 转 UNIX 时间戳（UTC）
+
+#### **1. 功能概述**
+该函数 `LGF_DTLToUnixTime` 将 `DTL`（日期时间）格式转换为 `DInt` 类型的 UNIX 时间戳（UTC 时间）。UNIX 时间戳表示自 1970-01-01 00:00:00 UTC 以来的秒数。  
+**限制条件：**
+- 仅支持 1990-01-01 00:00:00 及之后的日期时间。
+- 输入 `DTL` 必须有效（如月份 ≤12，日期 ≤31 等）。
+
+---
+
+#### **2. 变量定义**
+| 类型 | 变量名 | 用途 |
+|------|--------|------|
+| **输入** | `timeDTL` | 待转换的 DTL 格式时间 |
+| **输出** | `error` | 错误标志（TRUE 表示出错） |
+| **输出** | `status` | 错误状态码（16#0000=成功，16#8000=时间早于1990，16#8001=DTL无效） |
+| **临时变量** | `tempTimeDtl` | 存储校验后的 DTL 值 |
+| **临时变量** | `tempUnixTime` | 存储计算的 UNIX 时间戳 |
+| **常量** | `DELTA_1970_1990` | 1970-01-01 到 1990-01-01 的秒差（631,152,000 秒） |
+| **常量** | `SEC_PER_DAY` | 每天的秒数（86,400 秒） |
+
+---
+
+#### **3. 算法流程**
+1. **初始化**  
+   - 清空临时变量 `tempUnixTime`。
+
+2. **输入有效性校验**  
+   - **强制更新 DTL 值**：通过 `#timeDTL + t#0d` 触发 PLC 对 DTL 的实时校验，若格式非法（如月份=13），`ENO` 会被置为 FALSE。  
+   - **错误处理**：  
+     - 若 `ENO=FALSE` → 返回错误码 `ERR_DTL_INPUT_VALUE_INVALID`。  
+     - 若时间早于 `1990-01-01` → 返回错误码 `ERR_TIME_BEFORE_1990`。
+
+3. **时间转换计算**  
+   - **步骤 1**：提取 DTL 中的日期部分（`DTL_TO_DATE`），转换为自 1990-01-01 的天数（`DATE_TO_DINT`）。  
+   - **步骤 2**：提取 DTL 中的时间部分（`DTL_TO_TOD`），转换为当天的毫秒数（`TOD_TO_DINT`），再除以 1000 转为秒数。  
+   - **步骤 3**：合并结果并加上 1970-1990 的固定偏移量：  
+     \[
+     \text{UNIX时间} = (\text{天数} \times 86400) + (\text{当天秒数}) + 631152000
+     \]
+
+4. **输出结果**  
+   - 返回计算的 `tempUnixTime`，并置 `error=FALSE` 和成功状态码。
+
+---
+
+#### **4. 关键逻辑调整建议**
+- **边缘情况处理**：  
+  - 显式校验 DTL 的合法性（如闰年、月份天数），避免依赖 `ENO` 的隐式校验。  
+- **性能优化**：  
+  - 常量计算（如 `DELTA_1970_1990`）可预定义为全局常量，减少重复计算。  
+- **时区扩展**：  
+  - 若需支持本地时间转换，可增加时区偏移参数（如 `UTC+8`）。
+
+---
+
+#### **5. 伪代码示例**
+```plaintext
+FUNCTION LGF_DTLToUnixTime(timeDTL: DTL) -> (unixTime: DInt, error: Bool, status: Word)
+    // 初始化
+    tempUnixTime := 0
+    
+    // 校验DTL有效性
+    tempTimeDtl := timeDTL + t#0d
+    IF NOT ENO THEN
+        RETURN (0, TRUE, ERR_DTL_INVALID)
+    IF tempTimeDtl < DTL#1990-01-01-00:00:00 THEN
+        RETURN (0, TRUE, ERR_TIME_BEFORE_1990)
+    
+    // 计算UNIX时间
+    daysSince1990 := DATE_TO_DINT(DTL_TO_DATE(tempTimeDtl))
+    secondsInDay := TOD_TO_DINT(DTL_TO_TOD(tempTimeDtl)) / 1000
+    unixTime := (daysSince1990 * SEC_PER_DAY) + secondsInDay + DELTA_1970_1990
+    
+    // 返回结果
+    RETURN (unixTime, FALSE, STATUS_SUCCESS)
+END_FUNCTION
+```

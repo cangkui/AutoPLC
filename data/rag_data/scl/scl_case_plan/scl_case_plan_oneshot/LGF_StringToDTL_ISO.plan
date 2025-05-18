@@ -1,0 +1,115 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_StringToDTL_ISO` 用于将符合国际标准格式（ISO 8601）的日期时间字符串转换为 `DTL` 数据类型。输入字符串的格式示例为 `"22-01-2019 14:07:57.696417000"`，输出为 `DTL` 类型的日期时间值，同时提供错误状态和状态码。
+
+#### 2. **输入输出定义**
+- **输入**：
+  - `date`：字符串类型，表示日期时间，格式为 `DD-MM-YYYY HH:MM:SS.NNNNNNNNN`。
+- **输出**：
+  - `error`：布尔类型，表示是否发生错误。
+  - `status`：字类型（Word），表示具体的错误状态码。
+- **返回值**：
+  - `DTL` 类型，转换后的日期时间值。
+
+#### 3. **错误状态码**
+- `16#0000`：无错误，转换成功。
+- `16#7000`：无输入数据（空字符串）。
+- `16#8201` - `16#8207`：分别表示年、月、日、小时、分钟、秒、纳秒的格式错误。
+
+#### 4. **算法流程**
+1. **输入验证**：
+   - 检查输入字符串 `date` 是否为空。如果为空，设置 `error = TRUE` 和 `status = STATUS_NO_JOB`，返回初始值 `DTL#1970-01-01-00:00:00.0`。
+
+2. **字符串解析**：
+   - 使用 `MID` 函数从输入字符串中提取年、月、日、小时、分钟、秒和纳秒部分。
+   - 使用 `STRG_VAL` 函数将提取的字符串部分转换为对应的数值（如 `YEAR`、`MONTH` 等）。
+
+3. **格式检查**：
+   - 对每个解析出的数值进行范围检查：
+     - 年：1970 - 2262
+     - 月：1 - 12
+     - 日：1 - 31
+     - 小时：0 - 23
+     - 分钟和秒：0 - 59
+     - 纳秒：0 - 999,999,999
+   - 如果任何部分超出范围，设置 `error = TRUE` 和对应的 `status` 错误码，返回初始值。
+
+4. **纳秒处理**：
+   - 检查纳秒部分的字符串，将空格替换为 `'0'`，确保长度为 9 位。
+   - 转换为数值后检查范围。
+
+5. **结果输出**：
+   - 如果所有部分均有效，将解析后的值赋给 `tempDateAndTime`（临时 `DTL` 变量）。
+   - 调用 `tempDateAndTime + t#0ms` 修正星期几（`WEEKDAY`）字段。
+   - 返回 `tempDateAndTime`，设置 `error = FALSE` 和 `status = STATUS_FINISHED_NO_ERROR`。
+
+#### 5. **代码调整建议**
+- **输入验证**：
+  - 可以增加对输入字符串长度的检查，确保至少包含完整的日期时间部分（如长度 ≥ 29）。
+- **错误处理**：
+  - 在 `STRG_VAL` 转换失败时（如非数字字符），可以增加额外的错误状态码。
+- **性能优化**：
+  - 如果输入字符串格式固定，可以避免多次调用 `MID` 和 `STRG_VAL`，改为一次性解析。
+- **常量定义**：
+  - 将字符串分隔符（如 `'-'`、`':'`、`'.'`）定义为常量，提高可读性。
+
+#### 6. **伪代码描述**
+```plaintext
+FUNCTION LGF_StringToDTL_ISO : DTL
+    INPUT:
+        date: String
+    OUTPUT:
+        error: Bool
+        status: Word
+    VAR_TEMP:
+        tempDateAndTime: DTL
+        tempDateString: String
+    CONSTANTS:
+        (定义各字段的起始位置、长度、范围等)
+    
+    BEGIN
+        IF date = "" THEN
+            error := TRUE
+            status := STATUS_NO_JOB
+            RETURN DTL#1970-01-01-00:00:00.0
+        END_IF
+
+        // 解析年
+        tempDateString := MID(date, 1, 4)
+        tempDateAndTime.YEAR := STRG_VAL(tempDateString)
+        IF YEAR 超出范围 THEN
+            error := TRUE
+            status := ERR_FORMAT_YEAR
+            RETURN 初始值
+        END_IF
+
+        // 解析月、日、小时、分钟、秒（类似逻辑）
+        ...
+
+        // 解析纳秒
+        tempDateString := MID(date, 21, 9)
+        替换空格为 '0'
+        tempDateAndTime.NANOSECOND := STRG_VAL(tempDateString)
+        IF NANOSECOND 超出范围 THEN
+            error := TRUE
+            status := ERR_FORMAT_NANOSECOND
+            RETURN 初始值
+        END_IF
+
+        // 修正星期几
+        tempDateAndTime := tempDateAndTime + t#0ms
+
+        // 返回结果
+        error := FALSE
+        status := STATUS_FINISHED_NO_ERROR
+        RETURN tempDateAndTime
+    END_FUNCTION
+```
+
+#### 7. **关键点**
+- **字符串解析**：严格按照 ISO 8601 格式解析，字段位置和长度固定。
+- **错误处理**：对每个字段单独检查，确保数据有效性。
+- **返回值**：无效时返回默认值，有效时返回解析后的 `DTL`。
+
+此流程可直接用于生成代码或指导其他语言的实现。

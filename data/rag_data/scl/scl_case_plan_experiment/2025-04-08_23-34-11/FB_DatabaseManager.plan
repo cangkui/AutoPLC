@@ -1,0 +1,60 @@
+### 算法流程描述
+
+#### 1. **变量定义**
+- **输入变量**:
+  - `dataInput`: 字节数组，用于接收待存储的数据，其中第一个字节表示数据长度
+  - `storeTrigger`: 存储触发信号，用于触发数据存储操作
+  - `resetTrigger`: 重置触发信号，用于清空数据库和重置错误状态
+- **输出变量**:
+  - `usedSpace`: 当前数据库已使用的空间
+  - `remainingSpace`: 当前数据库剩余的空间
+  - `error`: 错误状态标志
+  - `status`: 状态码，用于指示具体的错误类型
+- **输入/输出变量**:
+  - `dataBase`: 字节数组，模拟数据库存储空间
+- **内部变量**:
+  - `statLastItemIndex`: 记录数据库中最后一个有效数据的索引
+  - 常量定义（如错误码、数据库大小等）
+
+#### 2. **主逻辑流程**
+1. **初始化与状态更新**:
+   - 每次执行时，首先更新`usedSpace`和`remainingSpace`的值。
+   - 默认情况下，`error`为`FALSE`，`status`为`STATUS_OK`。
+
+2. **重置操作**:
+   - 如果`resetTrigger`为`TRUE`，则清空数据库（将所有字节置为0），并重置`statLastItemIndex`、`usedSpace`、`remainingSpace`、`error`和`status`。
+
+3. **数据存储操作**:
+   - 如果`storeTrigger`为`TRUE`，则执行以下步骤：
+     - 从`dataInput[0]`中提取数据长度`dataLength`。
+     - **数据长度校验**:
+       - 如果`dataLength` ≤ 0 或 > 5，则设置`error`为`TRUE`，`status`为`STATUS_INVALID_DATA_LENGTH`。
+     - **剩余空间校验**:
+       - 如果剩余空间不足（`remainingSpace` < `dataLength`），则设置`error`为`TRUE`，`status`为`STATUS_INSUFFICIENT_SPACE`。
+     - **数据存储**:
+       - 如果校验通过，则将`dataInput`中从第二个字节开始的数据依次存入`dataBase`，并更新`statLastItemIndex`、`usedSpace`和`remainingSpace`。
+
+#### 3. **输出更新**
+- 将`usedSpace`、`remainingSpace`、`error`和`status`的值输出。
+
+### 调整建议
+1. **边缘检测**:
+   - 当前代码中`storeTrigger`和`resetTrigger`是直接触发的，没有边缘检测。如果需求中要求脉冲触发，可以添加边缘检测逻辑（如记录上一次的触发状态）。
+
+2. **错误处理优化**:
+   - 可以增加更多的错误状态码，以区分不同的错误场景（如数据库溢出、无效数据格式等）。
+
+3. **数据库管理**:
+   - 如果数据库需要支持动态扩展或更复杂的管理功能（如数据索引、查询等），可以进一步扩展内部逻辑。
+
+4. **性能优化**:
+   - 对于大数据量的存储，可以考虑批量操作或异步存储机制，以减少PLC的循环时间占用。
+
+### 总结
+该算法流程的核心是：
+1. 通过触发信号（`storeTrigger`和`resetTrigger`）控制数据库的存储和重置。
+2. 在存储数据时，校验数据长度和剩余空间，确保操作的合法性。
+3. 实时更新数据库的使用状态和错误信息。
+4. 输出当前数据库的空间使用情况和错误状态。
+
+这种设计适用于需要简单数据存储和管理的PLC应用，如传感器数据记录、生产计数等场景。

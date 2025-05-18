@@ -1,0 +1,64 @@
+### LIFO Buffer Management 算法流程描述
+
+#### 1. 功能概述
+该功能块实现了一个后进先出（LIFO）的缓冲区管理，支持以下操作：
+- **Push**：将数据压入缓冲区
+- **Pop**：从缓冲区弹出最新数据
+- **Peek**：查看最新数据但不修改缓冲区
+- **Reset**：重置缓冲区索引和计数器
+- **Clear**：清空缓冲区并用初始值填充
+
+#### 2. 主要变量
+- **输入变量**：
+  - `push`、`pop`、`peek`、`reset`、`clear`：操作触发信号
+  - `initialItem`：缓冲区初始化值
+- **输出变量**：
+  - `error`、`status`、`subFunctionStatus`：错误和状态信息
+  - `elementCount`、`isEmpty`：缓冲区状态信息
+- **输入/输出变量**：
+  - `item`：要压入或弹出的数据
+  - `buffer`：缓冲区数组
+
+#### 3. 核心逻辑流程
+
+##### 3.1 边缘检测与执行控制
+- 检测`push`、`pop`、`peek`、`clear`的上升沿
+- 如果没有触发任何操作，设置状态为`STATUS_NO_CURRENT_JOBS`并返回
+
+##### 3.2 输入验证
+- **缓冲区验证**：
+  - 检查`buffer`是否为数组，否则报错`ERR_NO_ARRAY`
+  - 检查`item`和`buffer`元素类型是否匹配，否则报错`ERR_WRONG_TYPE_ITEM`
+  - 检查`item`和`initialItem`类型是否匹配，否则报错`ERR_WRONG_TYPE_INITIAL_ITEM`
+- **重置操作**：
+  - 如果`reset`为真，重置索引和计数器
+- **清空操作**：
+  - 如果`clear`有上升沿，用`initialItem`填充整个缓冲区并重置状态
+
+##### 3.3 LIFO算法实现
+- **Pop/Peek操作**：
+  1. 检查缓冲区是否为空（`statLastItemIndex <= BUFFER_IS_EMPTY`），如果是则报错`ERR_BUFFER_EMPTY`
+  2. 将最新数据复制到`item`
+  3. 如果是Pop操作：
+     - 用`initialItem`替换被弹出的数据
+     - 递减索引`statLastItemIndex`
+- **Push操作**：
+  1. 检查缓冲区是否已满（`statLastItemIndex + 1 >= bufferSize`），如果是则报错`ERR_BUFFER_FULL`
+  2. 递增索引`statLastItemIndex`
+  3. 将`item`写入缓冲区的新位置
+
+##### 3.4 输出更新
+- 更新`elementCount`（当前元素数量）和`isEmpty`（是否为空）
+- 设置状态为`STATUS_NO_ERROR`
+
+#### 4. 错误处理
+- 每种操作都有对应的错误码
+- 发生错误时设置`error`为真并通过`status`和`subFunctionStatus`返回具体错误信息
+
+#### 5. 设计要点
+1. **边缘检测**：所有操作都基于上升沿触发，确保每次触发只执行一次操作
+2. **类型安全**：严格检查数据类型匹配，避免运行时错误
+3. **状态管理**：通过`statLastItemIndex`跟踪缓冲区状态，简化逻辑
+4. **原子操作**：每个操作都是自包含的，执行后立即更新状态
+
+这个设计提供了健壮的LIFO缓冲区管理，适用于需要临时存储和检索数据的工业控制场景。

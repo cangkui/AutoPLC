@@ -1,0 +1,38 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块用于记录输入值的历史最大值和最小值，并在每次调用时更新这些极值。同时支持通过复位信号重置历史记录。
+
+#### 2. **变量定义**
+- **输入变量**：
+  - `value`（LReal）：待比较的输入值。
+  - `reset`（Bool）：复位信号，为`TRUE`时重置历史极值。
+- **输出变量**：
+  - `minValue`（LReal）：记录的最小值。
+  - `maxValue`（LReal）：记录的最大值。
+- **内部变量**：
+  - `statStoreMinValue`（LReal）：存储当前最小值，初始值为`LREAL_MAX`（最大浮点数）。
+  - `statStoreMaxValue`（LReal）：存储当前最大值，初始值为`LREAL_MIN`（最小浮点数）。
+- **常量**：
+  - `LREAL_MAX`：浮点数最大值。
+  - `LREAL_MIN`：浮点数最小值。
+
+#### 3. **主逻辑流程**
+1. **复位检测**：
+   - 如果`reset`为`TRUE`，则将`statStoreMinValue`和`statStoreMaxValue`分别重置为`LREAL_MAX`和`LREAL_MIN`。
+2. **极值更新**：
+   - 比较输入值`value`与当前最小值`statStoreMinValue`：
+     - 如果`value < statStoreMinValue`，则更新`statStoreMinValue`为`value`。
+   - 比较输入值`value`与当前最大值`statStoreMaxValue`：
+     - 如果`value > statStoreMaxValue`，则更新`statStoreMaxValue`为`value`。
+3. **输出更新**：
+   - 将`statStoreMinValue`和`statStoreMaxValue`分别赋值给输出变量`minValue`和`maxValue`。
+
+#### 4. **注意事项**
+- 初始状态下，`statStoreMinValue`和`statStoreMaxValue`分别设置为浮点数的理论极值，确保首次输入值能正确更新极值。
+- 复位信号`reset`的优先级高于极值更新逻辑，即复位操作会立即生效，并在下一次调用时重新开始记录极值。
+- 输出变量`minValue`和`maxValue`仅用于外部读取，不可直接写入。
+
+#### 5. **扩展性考虑**
+- 如果需要记录极值的时间戳或其他附加信息，可以扩展内部变量和逻辑。
+- 可以添加错误处理逻辑（如输入值超出合理范围时标记错误状态）。

@@ -1,0 +1,105 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_SinusCI` 用于生成正弦波信号，其周期和幅值可调，并支持相位偏移和直流偏移。信号生成基于调用该功能块的循环中断 OB（组织块）的时间间隔。
+
+#### 2. **输入参数**
+- **amplitude**：正弦波的幅值（默认值：1.0）。
+- **offset**：正弦波的直流偏移量（默认值：0.0）。
+- **periode**：正弦波的周期（单位：毫秒，默认值：1000）。
+- **phaseShift**：正弦波的相位偏移量（单位：弧度，默认值：0.0）。
+- **callOB**：调用该功能块的循环中断 OB 的编号。
+- **reset**：复位信号，用于重置内部计数器和输出值。
+
+#### 3. **输出参数**
+- **value**：当前正弦波的值。
+- **error**：错误标志（FALSE：无错误）。
+- **status**：功能块的状态或错误标识。
+- **subFunctionStatus**：子功能块或系统块的状态或返回值。
+
+#### 4. **内部变量**
+- **statRad**：当前弧度值（用于计算正弦值）。
+- **statPhaseShift**：相位偏移的弧度值。
+- **statCounter**：内部计数器，用于跟踪时间。
+
+#### 5. **临时变量**
+- **tempCycleTime**：循环中断 OB 的周期时间。
+- **tempCyclePhase**：循环中断 OB 的相位时间。
+- **tempCycleStatus**：循环中断 OB 的状态。
+- **tempReadTimeStatus**：读取循环中断时间的状态。
+
+#### 6. **常量**
+- **SECOND_IN_MS**：1秒的毫秒数（1000）。
+- **ZERO**：零值（0）。
+- **SLOPE**：斜率值（2）。
+- **TWO_PI**：2π（6.283185）。
+- **SUB_STATUS_NO_ERROR**：子功能块无错误状态（16#0000）。
+- **STATUS_FINISHED_NO_ERROR**：功能块完成无错误状态（16#0000）。
+- **QRY_CINT_OB_UNAVAILABLE**：循环中断 OB 不可用状态（16#0000）。
+- **ERR_OB_UNAVAILABLE**：循环中断 OB 不可用错误（16#8600）。
+- **ERR_QRY_CINT**：读取循环中断时间错误（16#8601）。
+
+#### 7. **算法流程**
+1. **获取采样时间**：
+   - 使用 `QRY_CINT` 系统函数读取循环中断 OB 的周期时间、相位时间和状态。
+   - 检查 `QRY_CINT` 的返回状态：
+     - 如果返回状态不为零，设置错误标志和状态，并返回零值。
+     - 如果循环中断 OB 不可用，设置错误标志和状态，并返回零值。
+
+2. **复位处理**：
+   - 如果 `reset` 为 TRUE，重置内部计数器 `statCounter` 和输出值 `value` 为零。
+
+3. **计数器更新**：
+   - 如果 `reset` 为 FALSE，更新内部计数器 `statCounter`：
+     - 将循环中断 OB 的周期时间转换为秒，并累加到计数器。
+     - 使用模运算 (`MOD`) 确保计数器不超过设定的周期 `periode`。
+
+4. **弧度计算**：
+   - 将计数器值转换为弧度值 `statRad`：
+     \[
+     \text{statRad} = \frac{\text{statCounter} \times 2\pi}{\text{periode}}
+     \]
+   - 计算相位偏移的弧度值 `statPhaseShift`：
+     \[
+     \text{statPhaseShift} = \frac{\text{phaseShift} \times 2\pi}{\text{periode}}
+     \]
+
+5. **正弦波计算**：
+   - 计算正弦波输出值 `value`：
+     \[
+     \text{value} = \sin(\text{statRad} + \text{statPhaseShift}) \times \text{amplitude} + \text{offset}
+     \]
+
+6. **状态更新**：
+   - 设置错误标志 `error` 为 FALSE。
+   - 设置状态 `status` 为无错误状态 `STATUS_FINISHED_NO_ERROR`。
+   - 设置子功能状态 `subFunctionStatus` 为无错误状态 `SUB_STATUS_NO_ERROR`。
+
+#### 8. **错误处理**
+- 如果 `QRY_CINT` 返回错误或循环中断 OB 不可用，立即设置错误标志和状态，并返回零值。
+
+#### 9. **输出**
+- 正弦波值 `value` 根据当前时间、周期、幅值、偏移和相位偏移计算得出。
+- 错误和状态信息通过 `error`、`status` 和 `subFunctionStatus` 输出。
+
+### 代码流程调整建议
+1. **初始化**：
+   - 在功能块开始时，可以添加对输入参数的验证（例如，确保 `amplitude` 和 `periode` 不为零）。
+
+2. **相位偏移处理**：
+   - 当前代码中相位偏移 `phaseShift` 的单位是弧度，但计算时又乘以 `2π` 并除以 `periode`。可以明确说明相位偏移的单位和计算方式。
+
+3. **计数器溢出处理**：
+   - 当前使用模运算 (`MOD`) 处理计数器溢出，确保计数器值不超过周期。可以添加注释说明这一点。
+
+4. **常量定义**：
+   - 常量 `SLOPE` 在代码中未使用，可以移除。
+
+5. **状态码**：
+   - 可以添加更多状态码以覆盖其他可能的错误情况。
+
+6. **性能优化**：
+   - 如果 `periode` 是固定的，可以预计算 `2π / periode` 以提高性能。
+
+### 总结
+该功能块通过循环中断 OB 的时间间隔生成正弦波信号，支持幅值、偏移、周期和相位偏移的调整。算法流程清晰，错误处理完善，适合在 PLC 中实现周期性信号生成。

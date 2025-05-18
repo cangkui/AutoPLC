@@ -1,0 +1,75 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_MatrixSubtraction` 用于计算两个矩阵的差（`matrix1 - matrix2`），并将结果存储在 `matrixResult` 中。矩阵的数据类型为 `ARRAY[*,*] of LReal`（二维浮点数数组）。函数会检查输入矩阵和结果矩阵的维度是否匹配，如果不匹配则返回错误状态码。
+
+#### 2. **输入/输出定义**
+- **输入/输出参数（VAR_IN_OUT）**：
+  - `matrix1`：被减数矩阵（minuend）。
+  - `matrix2`：减数矩阵（subtrahend）。
+  - `matrixResult`：存储结果的矩阵。
+- **输出参数（VAR_OUTPUT）**：
+  - `error`：布尔值，表示是否发生错误。
+  - `status`：状态码，用于指示具体的错误类型或成功状态。
+
+#### 3. **临时变量（VAR_TEMP）**
+- 用于存储矩阵的行/列上下界：
+  - `tempMatrix1LowerBoundRows`、`tempMatrix1UpperBoundRows`：`matrix1` 的行下界和上界。
+  - `tempMatrix1LowerBoundColumns`、`tempMatrix1UpperBoundColumns`：`matrix1` 的列下界和上界。
+  - `tempMatrix2LowerBoundRows`、`tempMatrix2UpperBoundRows`：`matrix2` 的行下界和上界。
+  - `tempMatrix2LowerBoundColumns`、`tempMatrix2UpperBoundColumns`：`matrix2` 的列下界和上界。
+  - `tempResultMatrixLowerBoundRows`、`tempResultMatrixUpperBoundRows`：`matrixResult` 的行下界和上界。
+  - `tempResultMatrixLowerBoundColumns`、`tempResultMatrixUpperBoundColumns`：`matrixResult` 的列下界和上界。
+- 循环计数器：
+  - `tempCounterRows`：行循环计数器。
+  - `tempCounterColumns`：列循环计数器。
+
+#### 4. **常量定义（VAR_CONSTANT）**
+- `ROWS` 和 `COLUMNS`：用于标识矩阵的维度（行和列）。
+- 状态码常量：
+  - `STATUS_NO_ERROR`（16#0000）：无错误。
+  - 其他错误码（如 `ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS` 等）：用于指示具体的维度不匹配错误。
+
+#### 5. **算法流程**
+1. **获取矩阵的维度信息**：
+   - 使用 `LOWER_BOUND` 和 `UPPER_BOUND` 函数获取 `matrix1`、`matrix2` 和 `matrixResult` 的行和列的下界和上界。
+
+2. **错误检查**：
+   - 检查 `matrix1` 和 `matrix2` 的行/列下界是否匹配：
+     - 如果不匹配，设置 `error` 为 `TRUE`，并返回对应的状态码。
+   - 检查 `matrix1` 和 `matrixResult` 的行/列下界是否匹配：
+     - 如果不匹配，设置 `error` 为 `TRUE`，并返回对应的状态码。
+   - 检查 `matrix1` 和 `matrix2` 的行/列上界是否匹配：
+     - 如果不匹配，设置 `error` 为 `TRUE`，并返回对应的状态码。
+   - 检查 `matrix1` 和 `matrixResult` 的行/列上界是否匹配：
+     - 如果不匹配，设置 `error` 为 `TRUE`，并返回对应的状态码。
+
+3. **矩阵减法计算**：
+   - 如果所有维度检查通过，则进行矩阵减法：
+     - 使用嵌套的 `FOR` 循环遍历矩阵的每个元素。
+     - 计算 `matrix1[i,j] - matrix2[i,j]`，并将结果存储到 `matrixResult[i,j]`。
+
+4. **设置输出状态**：
+   - 如果没有错误，设置 `error` 为 `FALSE`，`status` 为 `STATUS_NO_ERROR`。
+   - 设置 `ENO` 为 `TRUE`（尽管文档说明不使用 `ENO` 机制）。
+
+#### 6. **异常处理**
+- 如果任何维度检查失败，函数会立即返回，并设置 `error` 和 `status` 以指示具体的错误类型。
+
+#### 7. **优化说明**
+- 使用 `S7_Optimized_Access := 'TRUE'` 启用优化访问，提高性能。
+- 错误检查优先执行，避免不必要的计算。
+
+#### 8. **调整建议**
+- 如果需要对稀疏矩阵或非连续存储的矩阵支持，可以扩展功能。
+- 可以增加对动态矩阵（运行时调整大小）的支持，但需要额外的逻辑处理。
+
+---
+
+### 代码流程总结
+1. **初始化**：获取矩阵的维度信息。
+2. **错误检查**：验证矩阵的维度是否匹配。
+3. **计算**：如果维度匹配，执行矩阵减法。
+4. **输出**：设置错误标志和状态码。
+
+该设计确保了矩阵减法的正确性和鲁棒性，同时提供了清晰的错误反馈机制。

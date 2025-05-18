@@ -1,0 +1,85 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_ReadPnInterfaceParameter` 用于读取 Profinet 接口的参数，包括 IP 地址、子网掩码、默认网关、MAC 地址和 Profinet 名称。功能块通过 `execute` 输入触发，并在完成后通过 `done`、`busy`、`error` 和 `status` 输出状态信息。
+
+#### 2. **输入和输出**
+- **输入**：
+  - `execute`：上升沿触发功能块的执行。
+  - `hardwareId`：指定要读取参数的 Profinet 接口的硬件 ID。
+- **输出**：
+  - `done`：功能块执行完成且无错误。
+  - `busy`：功能块正在执行中。
+  - `error`：执行过程中发生错误。
+  - `status`：功能块的执行状态和错误代码。
+  - `address`、`subnetMask`、`standardGateway`、`macAddress`、`pnName`：读取到的接口参数。
+
+#### 3. **内部状态管理**
+功能块使用状态机 (`statFBState`) 来管理执行流程，状态包括：
+- `FB_STATE_NO_PROCESSING`：无任务执行。
+- `FB_STATE_READ_RECORD`：读取 Profinet 接口的数据记录。
+- `FB_STATE_PROCESS_RECORD`：处理读取到的数据记录。
+
+#### 4. **执行流程**
+1. **触发条件**：
+   - 检测 `execute` 的上升沿（从 `FALSE` 到 `TRUE`）。
+   - 如果功能块当前未执行任务 (`statStatus = STATUS_NO_CALL`)，则初始化任务。
+
+2. **初始化**：
+   - 设置 `busy = TRUE`，`done = FALSE`，`error = FALSE`。
+   - 初始化输出参数（清零或清空）。
+   - 调用 `RDREC` 功能块读取 Profinet 接口的数据记录。
+
+3. **读取数据记录**：
+   - 使用 `RDREC` 功能块读取指定硬件 ID 的数据记录。
+   - 如果读取成功 (`VALID = TRUE`)，进入处理状态 (`FB_STATE_PROCESS_RECORD`)。
+   - 如果读取失败 (`ERROR = TRUE`)，设置错误状态并终止任务。
+
+4. **处理数据记录**：
+   - 从数据记录中解析 Profinet 名称、MAC 地址、IP 地址、子网掩码和默认网关。
+   - 数据记录中的字段可能需要对齐或偏移计算（例如 MAC 地址的起始位置）。
+   - 解析完成后，设置 `done = TRUE` 并退出状态机。
+
+5. **错误处理**：
+   - 如果状态机进入未定义状态，设置 `error = TRUE` 并终止任务。
+   - 如果 `RDREC` 返回错误，将错误代码传递给 `status`。
+
+6. **输出更新**：
+   - 根据 `statDone`、`statBusy`、`statError` 更新输出信号。
+   - 如果 `execute` 被释放（`FALSE`），重置输出状态。
+
+#### 5. **状态码**
+- `STATUS_NO_CALL`：无任务执行。
+- `STATUS_FIRST_CALL`：首次调用（任务初始化）。
+- `STATUS_SUBSEQUENT_CALL`：任务执行中。
+- `STATUS_EXECUTION_FINISHED`：任务完成。
+- `ERR_UNDEFINED_STATE`：状态机进入未定义状态。
+
+#### 6. **关键点**
+- 使用 `RDREC` 功能块读取 Profinet 接口的数据记录。
+- 数据记录的结构需要对齐（例如 Profinet 名称后可能需要填充字节）。
+- 状态机确保任务按顺序执行（读取 → 处理 → 完成）。
+- 错误状态通过 `status` 输出，便于调试。
+
+#### 7. **伪代码逻辑**
+```
+IF (execute上升沿) AND (当前无任务) THEN
+    初始化任务
+    调用RDREC读取数据记录
+END_IF
+
+IF RDREC完成 THEN
+    解析数据记录
+    更新输出参数
+    标记任务完成
+ELSE IF RDREC错误 THEN
+    标记错误状态
+END_IF
+
+更新输出信号(done, busy, error, status)
+```
+
+#### 8. **注意事项**
+- 数据记录的字段偏移可能需要根据 Profinet 接口的具体实现调整。
+- `RDREC` 的 `INDEX` 和 `MLEN` 参数需要与硬件匹配。
+- 功能块应在 Profinet 接口初始化完成后调用。

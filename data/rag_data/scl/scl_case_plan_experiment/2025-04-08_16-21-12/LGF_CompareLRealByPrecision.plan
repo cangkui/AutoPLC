@@ -1,0 +1,66 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于比较两个浮点数（LReal类型）是否在给定的精度范围内近似相等。由于浮点数在计算机中的存储和计算存在精度问题，直接比较可能不准确，因此需要引入一个精度参数来判定两个数是否“足够接近”。
+
+#### 2. **输入参数**
+- `valueA`：第一个浮点数（LReal类型）。
+- `valueB`：第二个浮点数（LReal类型）。
+- `precision`：比较的精度（LReal类型），用于定义“近似相等”的阈值。
+
+#### 3. **输出参数**
+- 返回值（Bool类型）：  
+  - `TRUE`：表示`valueA`和`valueB`在给定的精度范围内近似相等。  
+  - `FALSE`：表示`valueA`和`valueB`不满足近似相等的条件。
+
+#### 4. **算法逻辑**
+函数的比较逻辑基于以下条件（按优先级顺序检查）：
+1. **处理零值情况**：
+   - 如果`valueA`为零（`valueA = 0.0`），则检查`valueB`的绝对值是否小于等于`precision`。  
+     - 即：`ABS(#valueB) <= #precision`。
+   - 如果`valueB`为零（`valueB = 0.0`），则检查`valueA`的绝对值是否小于等于`precision`。  
+     - 即：`ABS(#valueA) <= #precision`。
+   - 这种处理是为了避免零值与其他极小值（如`1.0E-10`）在直接比较时被误判为不相等。
+
+2. **非零值比较**：
+   - 计算`valueA`和`valueB`的绝对差值：`ABS(#valueA - #valueB)`。
+   - 将该差值与`precision * ABS(#valueA)`进行比较。  
+     - 即：`ABS(#valueA - #valueB) <= (#precision * ABS(#valueA))`。
+   - 这种比较方式是一种相对误差检查，确保差值相对于`valueA`的大小是可接受的。
+
+3. **返回值**：
+   - 如果以上任一条件满足，则返回`TRUE`（近似相等）。  
+   - 否则返回`FALSE`（不相等）。
+
+#### 5. **边界条件和注意事项**
+- **精度参数的意义**：  
+  `precision`通常是一个很小的正数（如`1.0E-6`），用于定义“可接受的误差范围”。  
+  例如，`precision = 0.001`表示允许千分之一的相对误差。
+- **零值处理**：  
+  单独处理零值是为了避免`precision * ABS(#valueA)`在`valueA = 0`时失效（结果为0）。
+- **对称性问题**：  
+  当前逻辑中，非零值的比较是基于`valueA`的绝对值（`ABS(#valueA)`），因此`valueA`和`valueB`的顺序可能影响结果。  
+  如果需要完全对称的比较，可以修改为：  
+  `ABS(#valueA - #valueB) <= (#precision * MAX(ABS(#valueA), ABS(#valueB)))`。
+
+#### 6. **代码优化建议**
+- 当前代码中`ENO`被强制设为`TRUE`，表示不处理错误。如果需要对输入参数（如`precision`为负数）进行校验，可以扩展错误处理逻辑。
+- 可以增加对`precision`的校验（如`precision >= 0`），并在非法时通过`ENO := FALSE`标记错误。
+
+#### 7. **伪代码描述**
+```
+FUNCTION LGF_CompareLRealByPrecision(valueA, valueB, precision) : BOOL
+    IF (valueA = 0.0) THEN
+        RETURN (ABS(valueB) <= precision)
+    ELSE IF (valueB = 0.0) THEN
+        RETURN (ABS(valueA) <= precision)
+    ELSE
+        RETURN (ABS(valueA - valueB) <= (precision * ABS(valueA)))
+    END_IF
+END_FUNCTION
+```
+
+#### 8. **调整建议**
+- 如果希望比较逻辑完全对称（即`valueA`和`valueB`的顺序不影响结果），可以将非零比较修改为：  
+  `ABS(#valueA - #valueB) <= (#precision * MAX(ABS(#valueA), ABS(#valueB)))`。
+- 增加对`precision`的校验，确保其为非负数。

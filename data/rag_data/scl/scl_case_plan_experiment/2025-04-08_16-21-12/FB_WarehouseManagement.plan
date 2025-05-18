@@ -1,0 +1,58 @@
+### 算法流程描述
+
+#### 1. 变量定义
+- **输入变量**:
+  - `requestIn`: 入库请求信号（Bool）
+  - `requestOut`: 出库请求信号（Bool）
+- **输出变量**:
+  - `productNum`: 当前库存工件数量（Int）
+  - `libFreeNum`: 货架空闲位置数量（Int）
+  - `error`: 错误状态（Bool）
+  - `status`: 状态码（Word）
+- **输入/输出变量**:
+  - `library`: 货架占用状态数组（ARRAY[1..9] OF Bool），1表示占用，0表示空闲
+- **内部变量**:
+  - `statLastItemIndex`: 记录上一次操作的货架位置（Int）
+  - 常量定义:
+    - `STATUS_OK`: 正常状态码（16#0000）
+    - `STATUS_ALL_OCCUPIED`: 货架已满错误码（16#8001）
+    - `STATUS_ALL_EMPTY`: 货架为空错误码（16#8002）
+  - 临时变量:
+    - `tempIndex`: 循环索引（Int）
+    - `tempError`: 临时错误状态（Bool）
+    - `tempStatus`: 临时状态码（Word）
+
+#### 2. 主逻辑流程
+1. **初始化计算**:
+   - 遍历货架数组`library`，统计当前占用的货架位置数量`productNum`和空闲位置数量`libFreeNum`。
+   - 初始化`error`为`FALSE`，`status`为`STATUS_OK`。
+
+2. **入库逻辑**（`requestIn`为真）:
+   - 从货架最高层（第9层）向最低层（第1层）遍历:
+     - 如果找到空闲位置（`library[tempIndex] = FALSE`），则占用该位置（设置为`TRUE`），更新`productNum`和`libFreeNum`，并退出逻辑。
+   - 如果遍历完所有位置仍未找到空闲位置，设置`error`为`TRUE`，`status`为`STATUS_ALL_OCCUPIED`。
+
+3. **出库逻辑**（`requestOut`为真）:
+   - 从货架最低层（第1层）向最高层（第9层）遍历:
+     - 如果找到占用位置（`library[tempIndex] = TRUE`），则释放该位置（设置为`FALSE`），更新`productNum`和`libFreeNum`，并退出逻辑。
+   - 如果遍历完所有位置仍未找到占用位置，设置`error`为`TRUE`，`status`为`STATUS_ALL_EMPTY`。
+
+#### 3. 输出更新
+- 在`Main Logic`区域中直接更新输出变量`productNum`、`libFreeNum`、`error`和`status`，无需额外逻辑。
+
+### 代码调整建议
+1. **优化遍历逻辑**:
+   - 入库时从高到低遍历（9→1），出库时从低到高遍历（1→9），符合需求描述。
+   - 使用`RETURN`提前退出循环，避免不必要的遍历。
+
+2. **错误处理**:
+   - 错误状态和状态码在检测到异常时立即设置，确保及时反馈。
+
+3. **临时变量使用**:
+   - 临时变量`tempIndex`用于循环遍历，避免直接修改内部状态变量。
+
+4. **常量定义**:
+   - 使用常量`STATUS_OK`、`STATUS_ALL_OCCUPIED`和`STATUS_ALL_EMPTY`提高代码可读性。
+
+### 总结
+该算法通过遍历货架状态数组实现工件的入库和出库管理，优先占用高层和释放低层，确保高效存储和检索。错误状态和库存统计实时更新，逻辑清晰且符合需求。

@@ -1,0 +1,119 @@
+FUNCTION "LGF_TimeToString" : String
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_TimeToString
+   VAR_INPUT 
+      timeValue : Time;
+   END_VAR
+
+   VAR_OUTPUT 
+      stringDay : String;
+      stringHour : String;
+      stringMinute : String;
+      stringSecond : String;
+      stringMilliSecond : String;
+   END_VAR
+
+   VAR_TEMP 
+      tempTimeResult : String;
+      tempTimeMilliseconds : DInt;
+      tempDays : DInt;
+      tempHours : DInt;
+      tempMinutes : DInt;
+      tempSecond : DInt;
+      tempMillisecond : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      MS_PER_DAY : DInt := 86400000;
+      MS_PER_HOUR : DInt := 3600000;
+      MS_PER_MINUTE : DInt := 60000;
+      MS_PER_SECOND : DInt := 1000;
+      NUMBER_OF_CHAR_TO_DEL : Int := 1;
+      FIRST_POSITION : Int := 1;
+      NO_REMAINDER : Int := 0;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_TimeToString
+	  // Comment/Function: This function converts a time value to a string
+	  //                   When more than one time unit is specified, the value must not exceed 24 days, 23 hours, 59 minutes, 59 seconds or 999 milliseconds.
+	  //                   Output format is the folowing := '10D20H30M20S630MS', just existing parts would be added to the string
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V14 SP1 Upd 5
+	  // Restrictions:     ENO mechanism is not used, no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION Block info header
+	
+	REGION INITIALISATION
+	  #tempTimeResult := '';
+	END_REGION
+	
+	REGION CONVERT
+	  // convert from time to millisecond
+	  #tempTimeMilliseconds := TIME_TO_DINT(#timeValue);
+	  
+	  // calculate the days and remaining hours
+	  #tempDays := #tempTimeMilliseconds / #MS_PER_DAY;
+	  #tempTimeMilliseconds := #tempTimeMilliseconds MOD #MS_PER_DAY;
+	  
+	  // calculate the hours and remaining minutes
+	  #tempHours := #tempTimeMilliseconds / #MS_PER_HOUR;
+	  #tempTimeMilliseconds := #tempTimeMilliseconds MOD #MS_PER_HOUR;
+	  
+	  // calculate the minutes and remaining seconds
+	  #tempMinutes := #tempTimeMilliseconds / #MS_PER_MINUTE;
+	  #tempTimeMilliseconds := #tempTimeMilliseconds MOD #MS_PER_MINUTE;
+	  
+	  // calculate the seconds and remaining milliseconds
+	  #tempSecond := #tempTimeMilliseconds / #MS_PER_SECOND;
+	  #tempMillisecond := #tempTimeMilliseconds MOD #MS_PER_SECOND;
+	  
+	  // check if value is greater then zero and add to result string without leading "+"
+	  IF (#tempMillisecond > #NO_REMAINDER) THEN
+	    #stringMilliSecond := DELETE(IN := DINT_TO_STRING(#tempMillisecond), L := #NUMBER_OF_CHAR_TO_DEL, P := #FIRST_POSITION);
+	    #tempTimeResult := CONCAT(IN1 := #stringMilliSecond, IN2 := 'MS');
+	  END_IF;
+	  
+	  // check if value is greater then zero and add to result string without leading "+"
+	  IF (#tempSecond > #NO_REMAINDER) THEN
+	    #stringSecond := DELETE(IN := DINT_TO_STRING(#tempSecond), L := #NUMBER_OF_CHAR_TO_DEL, P := #FIRST_POSITION);
+	    #tempTimeResult := CONCAT(IN1 := #stringSecond, IN2 := 'S', IN3 := #tempTimeResult);
+	  END_IF;
+	  
+	  // check if value is greater then zero and add to result string without leading "+"
+	  IF (#tempMinutes > #NO_REMAINDER) THEN
+	    #stringMinute := DELETE(IN := DINT_TO_STRING(#tempMinutes), L := #NUMBER_OF_CHAR_TO_DEL, P := #FIRST_POSITION);
+	    #tempTimeResult := CONCAT(IN1 := #stringMinute, IN2 := 'M', IN3 := #tempTimeResult);
+	  END_IF;
+	  
+	  // check if value is greater then zero and add to result string without leading "+"
+	  IF (#tempHours > #NO_REMAINDER) THEN
+	    #stringHour := DELETE(IN := DINT_TO_STRING(#tempHours), L := #NUMBER_OF_CHAR_TO_DEL, P := #FIRST_POSITION);
+	    #tempTimeResult := CONCAT(IN1 := #stringHour, IN2 := 'H', IN3 := #tempTimeResult);
+	  END_IF;
+	  
+	  // check if value is greater then zero and add to result string without leading "+"
+	  IF (#tempDays > #NO_REMAINDER) THEN
+	    #stringDay := DELETE(IN := DINT_TO_STRING(#tempDays), L := #NUMBER_OF_CHAR_TO_DEL, P := #FIRST_POSITION);
+	    #tempTimeResult := CONCAT(IN1 := #stringDay, IN2 := 'D', IN3 := #tempTimeResult);
+	  END_IF;
+	END_REGION
+	
+	REGION OUTPUTS
+	  #LGF_TimeToString := #tempTimeResult;
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

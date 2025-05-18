@@ -1,0 +1,166 @@
+{
+    "title": "Device Activation and Deactivation State Machine",
+    "name": "LGF_ActDeactDevice",
+    "description": "Implements a state machine to activate and monitor or deactivate decentral devices.",
+    "type": "FUNCTION_BLOCK",
+    "input": [
+        {
+            "name": "enable",
+            "type": "Bool",
+            "description": "Enable functionality of FB"
+        },
+        {
+            "name": "activate",
+            "type": "Bool",
+            "description": "Rising edge: Activate device given by `hwId`"
+        },
+        {
+            "name": "deactivate",
+            "type": "Bool",
+            "description": "Rising edge: Deactivate device given by `hwId`"
+        },
+        {
+            "name": "hwId",
+            "type": "HW_DEVICE",
+            "description": "Hardware ID of the device which should be activated / deactivated"
+        },
+        {
+            "name": "parameter",
+            "type": "LGF_typeActDeactDeviceParameter",
+            "description": "Parameter dataset for the function `LGF_ActDeactDevice`"
+        }
+    ],
+    "output": [
+        {
+            "name": "valid",
+            "type": "Bool",
+            "description": "TRUE: Valid set of output values available at the FB"
+        },
+        {
+            "name": "busy",
+            "type": "Bool",
+            "description": "TRUE: FB is not finished and new output values can be expected"
+        },
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "TRUE: An error occurred during the execution of the FB"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "Status and error identification"
+        },
+        {
+            "name": "activating",
+            "type": "Bool",
+            "description": "Activation of device active"
+        },
+        {
+            "name": "isActivated",
+            "type": "Bool",
+            "description": "Device activated"
+        },
+        {
+            "name": "deactivating",
+            "type": "Bool",
+            "description": "Deactivating of device active"
+        },
+        {
+            "name": "isDeactivated",
+            "type": "Bool",
+            "description": "Device deactivated"
+        },
+        {
+            "name": "deviceStateOK",
+            "type": "Bool",
+            "description": "Device is activated and connected to IO-System"
+        },
+        {
+            "name": "diagnostics",
+            "type": "LGF_typeDiagnostics",
+            "description": "Diagnostic structure to store and transfer diagnostic information from blocks trough the interface."
+        }
+    ],
+    "in/out": [],
+    "return_value": [],
+    "status_codes": {
+        "16#7000": "STATUS_NO_CALL: No job being currently processed",
+        "16#7001": "STATUS_FIRST_CALL: First call after incoming new job",
+        "16#7002": "STATUS_SUBSEQUENT_CALL: Subsequent call during active processing",
+        "16#8600": "ERR_UNDEFINED_STATE: Due to an undefined state in state machine",
+        "16#8601": "ERR_LOG2GEO / ERR_GEO2LOG: Log2Geo or Geo2Log error, check diagnostics for more info",
+        "16#8640": "ERR_DEVICE_DEACTIVATING: Error during device deactivation",
+        "16#8641": "ERR_DEVICE_DEACTIVATING_TIME_OUT: Deactivation timeout error",
+        "16#8660": "ERR_DEVICE_ACTIVATING: Error during device activation",
+        "16#8661": "ERR_DEVICE_ACTIVATING_TIME_OUT: Activation timeout error",
+        "16#8662": "ERR_READ_DEVICES_STATES_DURING_ACTIVATION: Error: Read Device states (DeviceStates) during device activation",
+        "16#8670": "ERR_READ_DEVICES_STATES_WHILE_ACTIVE:Error: Read Device states (DeviceStates) while device active",
+        "16#8671": "ERR_DEVICE_STATE_WHILE_ACTIVE: Device states present error and is unreachable, faulty Device or IO-System",
+        "16#8672": "ERR_READ_ACTIVATION_STATE_WHILE_ACTIVE:Activation state (D_ACT_DP) of device is wrong",
+        "16#8690": "ERR_DISABLING_DEACT_DEVICE: Deactivation (D_ACT_DP) of device throws an error while disabling",
+        "16#8691": "ERR_DISABLING_WATCHDOG:Watchdog timer expired while disabling"
+    },
+    "user_defined_types": [
+        {
+            "name": "LGF_typeActDeactDeviceParameter",
+            "description": "UDT for configuring the behavior of the activation and deactivation process.",
+            "member": [
+                {
+                    "name": "timeOutActDeact",
+                    "type": "Time",
+                    "default": "T#2500ms",
+                    "description": "Time to monitor activation and deactivation commands"
+                },
+                {
+                    "name": "timeOutStateMonitoring",
+                    "type": "Time",
+                    "default": "T#100ms",
+                    "description": "Time to monitor device state"
+                },
+                {
+                    "name": "enableAndDeactivate",
+                    "type": "Bool",
+                    "default": "TRUE",
+                    "description": "Disable device during startup"
+                },
+                {
+                    "name": "enableAndActivate",
+                    "type": "Bool",
+                    "default": "FALSE",
+                    "description": "Enable device during startup"
+                },
+                {
+                    "name": "disableAndDeactivate",
+                    "type": "Bool",
+                    "default": "TRUE",
+                    "description": "Disable device during module disabling"
+                }
+            ]
+        },
+        {
+            "name": "LGF_typeDiagnostics",
+            "description": "UDT for diagnostic information from blocks.",
+            "member": [
+                {
+                    "name": "status",
+                    "type": "Word",
+                    "default": "16#0000",
+                    "description": "Status of the block or error identification"
+                },
+                {
+                    "name": "subfunctionStatus",
+                    "type": "Word",
+                    "default": "16#0000",
+                    "description": "Status or return value of called blocks"
+                },
+                {
+                    "name": "stateNumber",
+                    "type": "DInt",
+                    "default": "0",
+                    "description": "State in the state machine where error occurred"
+                }
+            ]
+        }
+    ]
+}

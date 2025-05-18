@@ -1,0 +1,23 @@
+{
+    "title": "TADDR_Param to String Converter",
+    "name": "LGF_TaddrToString",
+    "description": "The function converts a TADDR_Param system data type variable to a String data type variable.",
+    "type": "FUNCTION",
+    "input": [
+        {
+            "name": "ipAdressTaddr",
+            "type": "TADDR_Param",
+            "description": "IP-Address and Port number to convert into string"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": [
+        {
+            "type": "String",
+            "description": "IP-Address and Port number as string"
+        }
+    ],
+    "status_codes": {},
+    "user_defined_types": []
+}

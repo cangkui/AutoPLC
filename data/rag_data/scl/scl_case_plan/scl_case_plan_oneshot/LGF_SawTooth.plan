@@ -1,0 +1,106 @@
+### 算法流程描述（锯齿波信号生成器）
+
+#### 1. **功能概述**
+该功能块`LGF_SawTooth`用于生成一个锯齿波信号，信号由用户定义的步数（`numberSteps`）和增量范围（`incrementRange`）构成。信号可以设置为循环模式（`endlessSteps`）或单次模式，并通过定时器控制每一步的时间间隔（`timeRange`）。
+
+---
+
+#### 2. **输入参数**
+- **`startValue`**：锯齿波的起始值（整数）。
+- **`timeRange`**：每一步的时间间隔（时间类型）。
+- **`incrementRange`**：每一步的增量值（整数）。
+- **`numberSteps`**：锯齿波的步数（整数）。
+- **`endlessSteps`**：是否无限循环（布尔值）。
+  - `TRUE`：无限循环。
+  - `FALSE`：执行`numberSteps`后重置。
+- **`reset`**：重置信号（布尔值）。
+  - `TRUE`：重置所有状态到初始值。
+
+---
+
+#### 3. **输出参数**
+- **`value`**：当前锯齿波的值（整数）。
+
+---
+
+#### 4. **内部变量**
+- **静态变量**（用于保存输入参数和状态）：
+  - `statStartValue`：保存`startValue`。
+  - `statTimeRange`：保存`timeRange`。
+  - `statIncrementRange`：保存`incrementRange`。
+  - `statNumberSteps`：保存`numberSteps`。
+  - `statEndlessSteps`：保存`endlessSteps`。
+  - `statCurrentStep`：当前步数计数器。
+  - `statActValue`：当前锯齿波的值。
+  - `statFirstRun`：首次运行标志。
+  - `statStartTimer`：启动定时器标志。
+  - `statTimerFinished`：定时器完成标志。
+- **定时器**：
+  - `instTimer`：用于控制每一步的时间间隔（`TON_TIME`类型）。
+
+---
+
+#### 5. **算法流程**
+1. **初始化或重置**：
+   - 如果是首次运行（`statFirstRun = TRUE`）或收到`reset`信号：
+     - 将所有输入参数复制到静态变量。
+     - 重置`statActValue`为`startValue`。
+     - 重置`statCurrentStep`为0。
+     - 设置`statStartTimer`为`TRUE`以启动定时器。
+
+2. **定时器控制**：
+   - 调用`instTimer`定时器：
+     - `IN`：`statStartTimer`（启动定时器）。
+     - `PT`：`timeRange`（时间间隔）。
+     - `Q`：`statTimerFinished`（定时器完成标志）。
+   - 每次定时器完成后：
+     - 更新`statActValue`：`statActValue += statIncrementRange`。
+     - 更新`statCurrentStep`：`statCurrentStep += 1`。
+     - 如果`endlessSteps = FALSE`且`statCurrentStep > numberSteps`：
+       - 重置`statCurrentStep`为0。
+       - 重置`statActValue`为`startValue`。
+     - 如果`endlessSteps = TRUE`：
+       - 重置`statCurrentStep`为0（但继续累加`statActValue`）。
+     - 重置`statStartTimer`为`FALSE`（等待下一次启动）。
+
+3. **输出更新**：
+   - 将`statActValue`赋值给`value`。
+   - 如果`reset = TRUE`，强制`value = startValue`。
+
+---
+
+#### 6. **状态机逻辑**
+- **状态1：初始化/重置**：
+  - 复制输入参数到静态变量。
+  - 重置所有计数器。
+- **状态2：定时运行**：
+  - 定时器触发后更新值和步数。
+  - 根据`endlessSteps`决定是否重置。
+- **状态3：输出更新**：
+  - 始终输出当前值。
+
+---
+
+#### 7. **调整建议**
+1. **边缘检测优化**：
+   - 当前代码直接使用`reset`信号触发初始化，可以增加边缘检测（如`reset`的上升沿）以避免重复触发。
+
+2. **错误处理**：
+   - 增加对输入参数的校验（如`timeRange`不能为0，`numberSteps`必须为正数等）。
+
+3. **输出保护**：
+   - 当前`value`是直接输出的，可以增加限制逻辑（如最大值/最小值保护）。
+
+4. **定时器复用**：
+   - 如果需要在多步中复用定时器，可以优化`statStartTimer`的逻辑。
+
+---
+
+#### 8. **代码流程总结**
+1. **初始化**：保存输入参数，重置状态。
+2. **定时器控制**：每一步的时间间隔由定时器管理。
+3. **值更新**：定时器完成后更新值和步数。
+4. **循环/单次模式**：根据`endlessSteps`决定是否重置。
+5. **输出**：始终输出当前值。
+
+该设计通过静态变量保存状态，定时器控制步进时间，逻辑清晰且易于扩展。

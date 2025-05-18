@@ -1,0 +1,55 @@
+FUNCTION_BLOCK "LGF_IecTimerOnOff"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Industry Support'
+FAMILY : LGF
+NAME : LGF_IecTimerOnOff
+   VAR_INPUT 
+      in : Bool;
+      timeOnDelay : Time;
+      timeOffDelay : Time;
+   END_VAR
+
+   VAR_OUTPUT 
+      out { ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR 
+      instOnDelay {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : IEC_TIMER;
+      instOffDelay {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : IEC_TIMER;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_IecTimerOnOff
+	  // Comment/Function: The Block implements an IEC_Timer TON and TOF
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     ENO not in use, set to true, no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION DESCRIPTION
+	(/**/)
+	END_REGION DESCRIPTION
+	
+	REGION PROGRAM LOGIC
+	  #instOnDelay.TON(IN := #in,
+	               PT := #timeOnDelay);
+	  
+	  #instOffDelay.TOF(IN := #instOnDelay.Q,
+	                PT := #timeOffDelay);
+	  
+	  #out := #instOffDelay.Q;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION PROGRAM LOGIC
+	
+END_FUNCTION_BLOCK

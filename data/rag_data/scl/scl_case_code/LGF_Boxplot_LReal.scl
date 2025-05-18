@@ -1,0 +1,266 @@
+FUNCTION_BLOCK "LGF_Boxplot_LReal"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_Boxplot_LReal
+   VAR_INPUT 
+      execute : Bool;
+      rangeOutlier : LReal := 1.5;
+   END_VAR
+
+   VAR_OUTPUT 
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word := 16#0;
+      subfunctionStatus { ExternalWritable := 'False'} : Word;
+      outlierMax { ExternalWritable := 'False'} : LReal;
+      max { ExternalWritable := 'False'} : LReal;
+      q75 { ExternalWritable := 'False'} : LReal;
+      median { ExternalWritable := 'False'} : LReal;
+      q25 { ExternalWritable := 'False'} : LReal;
+      min { ExternalWritable := 'False'} : LReal;
+      outlierMin { ExternalWritable := 'False'} : LReal;
+      skewness { ExternalWritable := 'False'} : LReal;
+   END_VAR
+
+   VAR_IN_OUT 
+      values : Array[*] of LReal;
+   END_VAR
+
+   VAR 
+      statMaxNew { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statMinNew { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statSubfuncStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statExecuteOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      instShellSort { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : "LGF_ShellSort_LReal";
+      statMin { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statMax { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statQuartil25 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statQuartil75 { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statNumberOfElements { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;
+      statMedian { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statDeltaQuartil { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statOutlierMin { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statOutlierMax { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statSkewness { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statCounter { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statBorderOutlier { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempK : LReal;
+      tempValueLReal : LReal;
+      tempValueLReal1 : LReal;
+      tempArrLowBound : DInt;
+      tempArrUppBound : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO_LREAL : LReal := 0.0;
+      ZERO_DINT : DInt := 0;
+      RANGE_OUTLIER_LOWER_BORDER : LReal := 1.0;
+      ELEMENTS_COUNT_CORRECTION : Int := 1;
+      CONVERT_TO_PERCENT : Int := 100;
+      DIMENSION_ONE : UDInt := 1;
+      NO_REMAINDER : UDInt := 0;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_EXECUTION_FINISHED : Word := 16#0000;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_FIRST_CALL : Word := 16#7001;
+      ERR_NEG_ARR_BOUND : Word := 16#8200;
+      ERR_SHELL_SORT : Word := 16#8600;
+      ERR_RANGE_NOT_OK : Word := 16#9101;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_Boxplot_LReal
+	  // Comment/Function: The function block sorts the data row and calculates
+	  //                   the so-called "five point summary" for an array of long real
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled, forced to true - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //----------|------------|------------------------|----------------------------
+	  // Version  | Date       | Expert in charge       | Changes applied
+	  //----------|------------|------------------------|----------------------------
+	  // 01.00.00 | 05.11.2019 | Siemens Industry Online Support
+	  //                       | First released version
+	  // 03.00.00 | 23.04.2020 | Simatic Systems Support
+	  //                       | Set version to V3.0.0, harmonize the version of the whole library
+	  // 03.00.01 | 06.04.2021 | Simatic Systems Support
+	  //                       | Insert documentation
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Dectect execution bit
+	  //Positive edge detection
+	  IF #execute AND NOT #statExecuteOld THEN
+	    //count array elements
+	    #tempArrLowBound := LOWER_BOUND(ARR := #values, DIM := #DIMENSION_ONE);
+	    #tempArrUppBound := UPPER_BOUND(ARR := #values, DIM := #DIMENSION_ONE);
+	    
+	    //Reset outputs and statics
+	    #statStatus := #STATUS_FIRST_CALL;
+	    #statSubfuncStatus := #SUB_STATUS_NO_ERROR;
+	    #statQuartil25 := #ZERO_LREAL;
+	    #statMedian := #ZERO_LREAL;
+	    #statQuartil75 := #ZERO_LREAL;
+	    #statOutlierMax := #ZERO_LREAL;
+	    #statOutlierMin := #ZERO_LREAL;
+	    #statSkewness := #ZERO_LREAL;
+	    #statMaxNew := #ZERO_DINT;
+	    #statMinNew := #ZERO_DINT;
+	    #statMin := #ZERO_DINT;
+	    #statMax := #ZERO_DINT;
+	    
+	    //FB is currently inactive
+	  ELSIF NOT #execute THEN
+	    #statStatus := #STATUS_NO_CALL;
+	    #statSubfuncStatus := #SUB_STATUS_NO_ERROR;
+	  END_IF;
+	  #statExecuteOld := #execute;
+	END_REGION
+	
+	REGION Validation
+	  //Check rangeOutlier
+	  IF #statStatus = #STATUS_FIRST_CALL THEN
+	    //Value is not ok. Range have to be > 1.0 or 0.0
+	    IF #rangeOutlier <> #ZERO_LREAL AND #rangeOutlier <= #RANGE_OUTLIER_LOWER_BORDER THEN
+	      #statStatus := #ERR_RANGE_NOT_OK;
+	      
+	      //Check array boundry
+	    ELSIF #tempArrLowBound < 0 THEN
+	      #statStatus := #ERR_NEG_ARR_BOUND;
+	    END_IF;
+	  END_IF;
+	END_REGION
+	
+	REGION Boxplot calculation
+	  IF #statStatus = #STATUS_FIRST_CALL THEN
+	    //Get number of elents of the array
+	    #statNumberOfElements := (#tempArrUppBound - #tempArrLowBound + #ELEMENTS_COUNT_CORRECTION);
+	    
+	    //Sort array
+	    #instShellSort(array := #values);
+	    
+	    IF #instShellSort.error THEN
+	      #statStatus := #ERR_SHELL_SORT;
+	      #statSubfuncStatus := #instShellSort.status;
+	    ELSE
+	      #statMin := #values[#tempArrLowBound];
+	      #statMax := #values[#tempArrUppBound];
+	      //calculate median (Q50) - different calculation if the Number of Elements is even or odd 
+	      IF (#statNumberOfElements MOD 2) = #NO_REMAINDER THEN
+	        // if n is even -> calculate MEDIAN = (x(n/2)+x(n/2+1))/2 
+	        #tempValueLReal := #values[((#statNumberOfElements - #ELEMENTS_COUNT_CORRECTION) / 2)];
+	        #tempValueLReal1 := #values[((#statNumberOfElements - #ELEMENTS_COUNT_CORRECTION) / 2) + 1];
+	        #statMedian := ((#tempValueLReal1 + #tempValueLReal) / 2);
+	      ELSE
+	        // if n is odd -> MEDIAN = x(n+1/2)
+	        #statMedian := #values[(#statNumberOfElements + 1 - #ELEMENTS_COUNT_CORRECTION) / 2];
+	      END_IF;
+	      
+	      //calculate 1.quartil(Q25)
+	      // q1 = x(k) with  k=(n+3)/4 
+	      #tempK := (DINT_TO_LREAL(#statNumberOfElements + 3 - #ELEMENTS_COUNT_CORRECTION) / 4.0);
+	      
+	      #tempValueLReal := #values[TRUNC(#tempK)];
+	      #tempValueLReal1 := #values[TRUNC(#tempK) + 1];
+	      #statQuartil25 := #tempValueLReal + (FRAC_LREAL(#tempK) * (#tempValueLReal1 - #tempValueLReal));
+	      
+	      //calculate 3.quartil(Q75)
+	      //q3 = x(n+1-k) with k=(3n+1)/4
+	      #tempK := ((3 * DINT_TO_LREAL(#statNumberOfElements + 1 - #ELEMENTS_COUNT_CORRECTION)) / 4.0);
+	      
+	      #tempValueLReal := #values[TRUNC(#tempK)];
+	      #tempValueLReal1 := #values[TRUNC(#tempK) + 1];
+	      #statQuartil75 := #tempValueLReal + FRAC_LREAL(#tempK) * (#tempValueLReal1 - #tempValueLReal);
+	      
+	      //only if RANGE_OUTLIER <> 0
+	      IF #rangeOutlier <> 0 THEN
+	        //calculate Delta Q75-Q25
+	        #statDeltaQuartil := #statQuartil75 - #statQuartil25;
+	        //check for min outlier
+	        //calculate border for outlier
+	        #statBorderOutlier := #statQuartil25 - #rangeOutlier * #statDeltaQuartil;
+	        
+	        //search in array for values outside the border
+	        FOR #statCounter := 0 TO DINT_TO_INT(#statNumberOfElements - #ELEMENTS_COUNT_CORRECTION) DO
+	          #tempValueLReal := #values[#statCounter];
+	          
+	          IF #tempValueLReal < LREAL_TO_DINT(#statBorderOutlier) THEN
+	            //detected a value as outlier, check next value
+	            ;
+	          ELSE
+	            //all outlier detected. Calulate new Min Value in range and calulate outlier in %
+	            #statOutlierMin := DINT_TO_LREAL((#CONVERT_TO_PERCENT * #statCounter)) / DINT_TO_LREAL(#statNumberOfElements);
+	            #statMinNew := #tempValueLReal;
+	            EXIT;
+	          END_IF;
+	        END_FOR;
+	        
+	        //check for max outlier
+	        //calculate border for outlier
+	        #statBorderOutlier := #statQuartil75 + #rangeOutlier * #statDeltaQuartil;
+	        //search in array for values outside the border 
+	        FOR #statCounter := DINT_TO_INT(#statNumberOfElements - #ELEMENTS_COUNT_CORRECTION) TO 0 BY - 1 DO
+	          #tempValueLReal := #values[#statCounter];
+	          IF #tempValueLReal > LREAL_TO_DINT(#statBorderOutlier) THEN
+	            //detected a value as outlier, check next value
+	            ;
+	          ELSE
+	            //all outlier detected. Calulate new Max Value in range and calulate outliers in %
+	            #statOutlierMax := DINT_TO_LREAL((#CONVERT_TO_PERCENT * (#statNumberOfElements - INT_TO_DINT(#statCounter) - #ELEMENTS_COUNT_CORRECTION))) / DINT_TO_LREAL(#statNumberOfElements);
+	            #statMaxNew := #tempValueLReal;
+	            EXIT;
+	          END_IF;
+	        END_FOR;
+	      END_IF;
+	      
+	      //calculate Skewness
+	      //S= ((Q25 + Q75)-2*Q50) / (Q75 - Q25)
+	      #statSkewness := (#statQuartil75 + #statQuartil25 - 2.0 * #statMedian) / (#statQuartil75 - #statQuartil25);
+	      
+	      #statStatus := #STATUS_EXECUTION_FINISHED;
+	      #statSubfuncStatus := #SUB_STATUS_NO_ERROR;
+	      
+	    END_IF;
+	  END_IF;
+	END_REGION
+	
+	REGION Write Outputs
+	  IF #rangeOutlier <> #ZERO_DINT THEN
+	    #min := #statMinNew;
+	    #max := #statMaxNew;
+	  ELSE
+	    #min := #statMin;
+	    #max := #statMax;
+	  END_IF;
+	  
+	  #q25 := #statQuartil25;
+	  #median := #statMedian;
+	  #q75 := #statQuartil75;
+	  #outlierMin := #statOutlierMin;
+	  #outlierMax := #statOutlierMax;
+	  #skewness := #statSkewness;
+	  
+	  #error := #statStatus.%X15;
+	  #status := #statStatus;
+	  #subfunctionStatus := #statSubfuncStatus;
+	  
+	  // ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

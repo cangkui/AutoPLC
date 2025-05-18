@@ -1,0 +1,33 @@
+这是一个数据处理任务，算法流程如下：
+
+1. 初始化阶段：
+   - 初始化临时输出值tempY为0.0
+   - 初始化临时状态码tempStatus为无错误状态(16#0000)
+
+2. 输入验证阶段：
+   - 检查yMin是否大于yMax：
+     - 如果是，设置tempY为0.0，状态码为ERR_LOW_LIM_OVER_UP_LIM(16#8200)
+     - 如果否，继续执行缩放计算
+
+3. 缩放计算阶段：
+   - 检查x1和x2是否近似相等(差值小于PRECISION)：
+     - 如果是，直接将tempY设为y1(特殊情况处理)
+     - 如果否，使用线性方程y = m*x + t计算tempY，其中：
+       - m = (y2 - y1)/(x2 - x1)
+       - t = y1 - m*x1
+
+4. 输出限幅阶段：
+   - 检查计算得到的tempY：
+     - 如果小于yMin，将tempY设为yMin，状态码设为WARN_Y_LIMITED_TO_YMIN(16#6001)
+     - 如果大于yMax，将tempY设为yMax，状态码设为WARN_Y_LIMITED_TO_YMAX(16#6002)
+
+5. 输出阶段：
+   - 将tempStatus赋值给status输出
+   - 根据tempStatus的最高位设置error输出
+   - 将tempY作为函数返回值输出
+   - 强制ENO为TRUE(不使用ENO机制)
+
+注意点：
+- 使用PRECISION常量(1.0E-06)来判断浮点数近似相等
+- 错误处理通过error和status输出实现
+- 当yMin > yMax时直接报错，不执行后续计算

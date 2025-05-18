@@ -1,0 +1,114 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_AstroClock` 用于根据GPS坐标计算特定地点的日出和日落时间，并判断当前是否为白天。主要功能包括：
+- 输入GPS坐标（经纬度）、日出/日落时间偏移量。
+- 输出日出/日落时间、当前本地时间、是否为白天等状态信息。
+- 支持错误检测（如无效的经纬度输入）。
+
+#### 2. **输入变量**
+- `enable`：功能块使能信号（TRUE时激活计算）。
+- `positionGps`：GPS坐标（`LGF_typeGPS_DD` 类型，包含 `latitude` 和 `longitude`）。
+- `offsetSunrise`：日出时间偏移量（可正可负）。
+- `offsetSunset`：日落时间偏移量（可正可负）。
+
+#### 3. **输出变量**
+- `valid`：输出数据是否有效。
+- `busy`：功能块是否正在运行。
+- `error`：是否发生错误。
+- `status`：功能块状态或错误代码。
+- `actualLocalTime`：当前本地时间。
+- `sunriseTime`：日出时间（本地时间）。
+- `sunsetTime`：日落时间（本地时间）。
+- `isDaytime`：当前是否为白天（TRUE表示白天）。
+
+#### 4. **内部变量**
+- `statEnableOld`：存储上一次的 `enable` 状态，用于边缘检测。
+- `statBusy`：标记功能块是否忙碌。
+- `statStatus`：存储当前状态或错误代码。
+- `statSubfunctionStatus`：子功能状态。
+- `statLatitudeRadiant`/`statLongitudeHour`：转换后的经纬度（弧度/小时）。
+- 临时变量（`temp*`）：用于中间计算（如时间转换、天文计算等）。
+
+#### 5. **常量**
+- 天文计算相关常量（如 `PI`、`DEGREE_TO_RADIANT`）。
+- 状态/错误代码（如 `STATUS_NO_CALL`、`ERR_LATITUDE_VALUE`）。
+
+---
+
+### 主逻辑流程
+
+#### 1. **初始化与使能检测**
+- 检测 `enable` 的上升沿（从 FALSE → TRUE）：
+  - 初始化功能块状态（`statBusy := TRUE`，`statStatus := STATUS_IN_OPERATION`）。
+- 检测 `enable` 的下降沿（从 TRUE → FALSE）：
+  - 停止功能块（`statBusy := FALSE`，`statStatus := STATUS_NO_CALL`）。
+
+#### 2. **天文计算（`enable` 为 TRUE 时）**
+1. **读取系统时间和本地时间**：
+   - 调用 `RD_SYS_T` 获取UTC时间。
+   - 调用 `RD_LOC_T` 获取本地时间。
+   - 计算时区偏移（`tempTimeZone`）。
+
+2. **计算一年中的第几天**：
+   - 基于当前日期计算从1月1日至今的天数（`tempDayOfYear`）。
+
+3. **输入校验**：
+   - 检查纬度是否在 [-90°, 90°] 范围内。
+   - 检查经度是否在 [-180°, 180°] 范围内。
+   - 若无效，设置错误状态（如 `ERR_LATITUDE_VALUE`）。
+
+4. **日出计算**：
+   - 近似时间计算（`tempAproximateTime`）。
+   - 太阳平均近点角（`tempSunMeanAnomaly`）。
+   - 太阳真实黄经（`tempSunLongitude`）。
+   - 太阳赤纬（`tempSinDeclination`、`tempCosDeclination`）。
+   - 本地时角（`tempLocalHourAngle`）。
+   - 转换为本地时间并应用偏移量（`offsetSunrise`）。
+
+5. **日落计算**：
+   - 类似日出计算，但使用不同的近似时间（18时）。
+   - 最终应用偏移量（`offsetSunset`）。
+
+#### 3. **输出更新**
+- 将计算结果写入输出变量：
+  - `sunriseTime`：计算出的日出时间。
+  - `sunsetTime`：计算出的日落时间。
+  - `isDaytime`：当前时间是否在日出和日落之间。
+  - 状态信息（`valid`、`busy`、`error` 等）。
+
+---
+
+### 关键算法说明
+1. **天文公式**：
+   - 基于太阳高度角和本地时角计算日出/日落时间。
+   - 涉及球面三角学（如赤纬、时角转换）。
+
+2. **时间处理**：
+   - 使用 `DTL` 类型（日期时间）存储时间。
+   - 时区偏移通过 `T_DIFF` 计算。
+
+3. **错误处理**：
+   - 无效经纬度直接返回错误代码。
+   - 系统时间读取失败时标记错误（如 `ERR_RD_SYS_T`）。
+
+---
+
+### 代码调整建议
+1. **优化变量名**：
+   - 将 `tempAproximateTime` 改为 `tempApproximateTime`（拼写修正）。
+   - 简化部分临时变量名（如 `tempSunMeanRad` → `tempSunMeanRadian`）。
+
+2. **注释增强**：
+   - 为天文计算步骤添加公式说明（如引用权威算法来源）。
+
+3. **边界条件处理**：
+   - 明确处理 `offsetSunrise`/`offsetSunset` 导致时间跨天的情况。
+
+4. **常量分组**：
+   - 将天文常量、状态代码分区域存放，提高可读性。
+
+---
+
+### 总结
+该功能块通过天文算法和本地时间计算，实现了高精度的日出/日落时间预测，适用于需要根据地理位置自动调节光照的系统（如智能路灯、农业温室）。核心逻辑清晰，但需注意输入校验和错误处理的完备性。

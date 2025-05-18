@@ -1,0 +1,34 @@
+这是一个数据处理任务的功能块，主要用于对等时间间隔采样的信号进行数值微分计算。以下是算法流程描述：
+
+1. 初始化检查：
+   - 当检测到enable信号的上升沿时，进行初始化操作：
+     * 重置计数器statCount为0
+     * 清空存储的5个历史值数组statValues
+     * 设置状态为STATUS_FIRST_CALL
+
+2. 正常运行处理：
+   - 当enable信号保持为TRUE时：
+     a. 检测insert信号的上升沿：
+        * 将新值value插入到历史值数组statValues中（采用FIFO方式更新）
+        * 递增计数器statCount
+     b. 检查条件：
+        * 如果statCount ≤ 4（未收集足够数据），设置状态为STATUS_NOT_ENOUGH_VALUES
+        * 如果deltaT为0，设置状态为ERR_DELTA_T
+        * 否则执行数值微分计算：
+          使用五点微分公式：(y(n-2) - 8y(n-1) + 8y(n+1) - y(n+2))/(12*deltaT)
+          设置状态为STATUS_SUBSEQUENT_CALL
+
+3. 非激活状态处理：
+   - 当enable为FALSE时：
+     * 重置derivatedValue为0
+     * 设置状态为STATUS_NO_CALL
+
+4. 输出处理：
+   - 将计算结果statDerivatedValue输出到derivatedValue
+   - 将状态码statStatus输出到status
+   - 根据状态码最高位设置error标志
+
+5. 边缘检测维护：
+   - 保存当前enable和insert信号状态用于下次边缘检测
+
+该算法实现了对输入信号的数值微分计算，需要至少5个连续采样点才能输出有效结果，并提供了完整的状态跟踪和错误检测机制。

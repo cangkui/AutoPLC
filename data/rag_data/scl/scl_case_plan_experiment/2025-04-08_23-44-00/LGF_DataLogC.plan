@@ -1,0 +1,106 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个功能块 `LGF_DataLogC` 是一个独立的数据记录器，用于管理数据日志的创建、写入、清除和删除。它支持两种记录模式：
+- **触发模式**：通过外部信号 `triggerLogEntry` 触发记录。
+- **间隔模式**：按照设定的时间间隔 `loggingInterval` 自动记录。
+
+#### 2. **主要功能**
+- **初始化**：根据输入参数配置日志文件（如文件名、最大记录数、时间戳格式等）。
+- **记录数据**：支持手动触发或定时自动记录。
+- **日志管理**：支持清除日志内容或删除日志文件。
+- **错误处理**：检测并报告操作中的错误（如文件打开失败、写入失败等）。
+- **状态管理**：通过状态机控制功能块的执行流程。
+
+#### 3. **核心逻辑**
+1. **使能控制**：
+   - 当 `enable` 从 `FALSE` 变为 `TRUE` 时，初始化日志配置并进入“打开日志”状态。
+   - 当 `enable` 从 `TRUE` 变为 `FALSE` 时，关闭日志并完成禁用流程。
+
+2. **状态机设计**：
+   - **FB_STATE_NO_PROCESSING**：空闲状态，不执行任何操作。
+   - **FB_STATE_DL_OPEN**：尝试打开日志文件。如果文件不存在，则进入创建状态。
+   - **FB_STATE_DL_CREATE**：创建新的日志文件。
+   - **FB_STATE_DL_WAIT_FOR_TRIGGER**：等待触发信号（手动模式）。
+   - **FB_STATE_DL_WAIT_FOR_WRITE_CYCLE**：等待定时器超时（间隔模式）。
+   - **FB_STATE_DL_WRITE**：写入数据到日志文件。
+   - **FB_STATE_DL_CLEAR**：清除日志内容。
+   - **FB_STATE_DL_DELETE**：删除日志文件。
+   - **FB_STATE_DISABLING**：关闭日志文件并完成禁用流程。
+
+3. **边缘检测**：
+   - 检测 `triggerLogEntry`、`clearLog` 和 `deleteLog` 的上升沿，确保每次触发只执行一次操作。
+
+4. **错误处理**：
+   - 记录操作失败的错误代码和状态。
+   - 支持自动清除错误（如文件操作失败）或用户手动清除错误。
+
+5. **输出更新**：
+   - 根据当前状态和操作结果更新输出信号（如 `valid`、`busy`、`error` 等）。
+
+#### 4. **关键注意事项**
+- **日志满处理**：
+  - 如果启用环形缓冲区（`enableRingBuffer`），日志满时会覆盖旧数据。
+  - 否则，日志满时会停止记录并报告状态 `STATUS_MAX_ENTRIES_REACHED`。
+- **时间间隔模式**：
+  - 使用定时器 `instIntervalTimer` 控制记录间隔。
+- **多任务协调**：
+  - 通过状态机确保操作的顺序性（如必须先打开日志才能写入）。
+
+#### 5. **扩展性建议**
+- **多日志支持**：当前设计仅支持单个日志文件，可通过扩展 `ID` 管理多个日志。
+- **动态配置**：允许运行时修改日志参数（如 `maxNumberOfEntries`）。
+- **更详细的诊断信息**：在 `diagnostics` 中增加更多上下文信息（如错误时的数据内容）。
+
+#### 6. **伪代码流程**
+```plaintext
+IF enable上升沿 THEN
+    初始化日志参数
+    进入FB_STATE_DL_OPEN状态
+ELSE IF enable下降沿 THEN
+    进入FB_STATE_DISABLING状态
+END IF
+
+CASE 当前状态 OF
+    FB_STATE_DL_OPEN:
+        尝试打开日志
+        IF 成功 THEN
+            根据模式进入等待触发或写入状态
+        ELSE IF 文件不存在 THEN
+            进入FB_STATE_DL_CREATE状态
+        ELSE
+            报告错误
+        END IF
+
+    FB_STATE_DL_CREATE:
+        创建日志文件
+        IF 成功 THEN
+            根据模式进入等待触发或写入状态
+        ELSE
+            报告错误
+        END IF
+
+    FB_STATE_DL_WRITE:
+        写入数据
+        IF 日志满 THEN
+            根据环形缓冲区设置处理
+        ELSE IF 成功 THEN
+            返回等待状态
+        ELSE
+            报告错误
+        END IF
+
+    FB_STATE_DL_CLEAR/DELETE:
+        执行清除或删除操作
+        IF 成功 THEN
+            更新状态
+        ELSE
+            报告错误
+        END IF
+END CASE
+
+更新输出状态和诊断信息
+```
+
+#### 7. **总结**
+该功能块通过状态机实现了数据日志的全生命周期管理，支持灵活的触发方式和错误处理机制。核心在于状态转移的逻辑和边缘检测的准确性，确保每次操作都能按预期执行。

@@ -1,0 +1,39 @@
+{
+    "title": "DWORD bit count operation",
+    "name": "LGF_BitCount",
+    "description": "This block counts in a variable of type DWord how many bits are set (TRUE) and how many are not set (FALSE) and outputs the number at the outputs.",
+    "type": "FUNCTION",
+    "input": [
+        {
+            "name": "value",
+            "type": "DWord",
+            "description": "Tag where the bit states has to be counted"
+        },
+        {
+            "name": "numberOfBits",
+            "type": "USInt",
+            "description": "Number of bits in input tag \"value\" (bit size of Datatype), in case of Byte=8, Word=16, DWord=32"
+        }
+    ],
+    "output": [
+        {
+            "name": "countBitsFalse",
+            "type": "USInt",
+            "description": "Number of bits are FALSE in input tag \"value\""
+        },
+        {
+            "name": "countBitsTrue",
+            "type": "USInt",
+            "description": "Number of bits are TRUE in input tag \"value\""
+        }
+    ],
+    "in/out": [],
+    "return_value": [
+        {
+            "type": "Void",
+            "description": "Void - Function has no return value"
+        }
+    ],
+    "status_codes": {},
+    "user_defined_types": []
+}

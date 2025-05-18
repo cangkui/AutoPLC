@@ -1,0 +1,117 @@
+FUNCTION_BLOCK "LGF_SinusCI"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_SinusCI
+   VAR_INPUT 
+      amplitude : Real := 1.0;
+      offset : Real;
+      periode : UDInt := 1000;
+      phaseShift : Real;
+      callOB : OB_CYCLIC;
+      reset : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      value { ExternalWritable := 'False'} : Real;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subFunctionStatus { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR 
+      statRad { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real;
+      statPhaseShift { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real := 0.0;
+      statCounter { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : UDInt;
+   END_VAR
+
+   VAR_TEMP 
+      tempCycleTime : UDInt;
+      tempCyclePhase : UDInt;
+      tempCycleStatus : Word;
+      tempReadTimeStatus : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      SECOND_IN_MS : UDInt := 1000;
+      ZERO : Int := 0;
+      SLOPE : Int := 2;
+      TWO_PI : Real := 6.283185;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      QRY_CINT_OB_UNAVAILABLE : Word := 16#0000;
+      ERR_OB_UNAVAILABLE : Word := 16#8600;
+      ERR_QRY_CINT : Word := 16#8601;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_SinusCI
+	  // Comment/Function: This function generates a sinusoidal signal profile. For this it uses the time interval of the calling Cyclic Interrupt OB.
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V15.1 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Get sample time
+	  // get sample time, according to the cyclic interrupt OB number
+	  #tempReadTimeStatus := QRY_CINT(OB_NR := #callOB, CYCLE => #tempCycleTime,
+	                                  PHASE => #tempCyclePhase, STATUS => #tempCycleStatus);
+	  
+	  REGION Error handling
+	    // Generate error message of the QRY_CINT function
+	    IF #tempReadTimeStatus <> #ZERO THEN
+	      #error := TRUE;
+	      #status := #ERR_QRY_CINT;
+	      #subFunctionStatus := INT_TO_WORD(#tempReadTimeStatus);
+	      #value := #ZERO;
+	      RETURN;
+	      
+	      // Generate error message when OB unavailable
+	    ELSIF (#tempCycleStatus = #QRY_CINT_OB_UNAVAILABLE) THEN
+	      #error := TRUE;
+	      #status := #ERR_OB_UNAVAILABLE;
+	      #subFunctionStatus := #SUB_STATUS_NO_ERROR;
+	      #value := #ZERO;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	END_REGION
+	
+	REGION Caluclations and outputs assigment
+	  IF #reset THEN
+	    #statCounter := 0;
+	    #value := #ZERO;
+	  ELSE
+	    // Increment Counter with each call of "OB_Cyclic_interrupt"
+	    #statCounter += (#tempCycleTime) / #SECOND_IN_MS;
+	    #statCounter := #statCounter MOD (#periode);
+	    
+	    // Transfer to radians
+	    #statRad := UDINT_TO_REAL(#statCounter) * #TWO_PI / (UDINT_TO_REAL(#periode));
+	    #statPhaseShift := (#phaseShift * #TWO_PI) / UDINT_TO_REAL(#periode);
+	    
+	    // Calculate output value
+	    #value := SIN(#statRad + #statPhaseShift) * #amplitude + #offset;
+	  END_IF;
+	  #error := FALSE;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  #subFunctionStatus := #SUB_STATUS_NO_ERROR;
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

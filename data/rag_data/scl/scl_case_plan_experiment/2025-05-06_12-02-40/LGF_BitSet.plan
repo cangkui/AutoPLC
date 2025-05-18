@@ -1,0 +1,19 @@
+这是一个数据处理任务，算法流程如下：
+
+1. 输入处理：
+   - 接收输入参数：value（DWord类型）和bitNo（USInt类型）
+   - 定义常量：TRUE_BOOL_BIT（值为16#0001）和MAX_NO_OF_BITS（值为32）
+
+2. 位操作处理：
+   - 对bitNo进行模运算（bitNo MOD MAX_NO_OF_BITS）以确保位号在有效范围内（0-31）
+   - 将TRUE_BOOL_BIT左移位到bitNo指定的位置（使用SHL函数）
+   - 将移位后的值与原始value进行按位或（OR）运算
+
+3. 结果输出：
+   - 返回经过位设置操作后的DWord值
+   - 设置ENO为TRUE表示操作成功完成
+
+注意点：
+- 该函数没有错误处理逻辑，始终认为输入有效
+- 通过模运算自动处理超出范围的bitNo参数
+- 适用于DWord类型，但通过类型转换也可用于Word和Byte类型

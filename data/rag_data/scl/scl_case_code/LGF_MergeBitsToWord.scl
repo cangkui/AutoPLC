@@ -1,0 +1,57 @@
+FUNCTION "LGF_MergeBitsToWord" : Word
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_MergeBitsToWord
+   VAR_INPUT 
+      bit15 : Bool;
+      bit14 : Bool;
+      bit13 : Bool;
+      bit12 : Bool;
+      bit11 : Bool;
+      bit10 : Bool;
+      bit9 : Bool;
+      bit8 : Bool;
+      bit7 : Bool;
+      bit6 : Bool;
+      bit5 : Bool;
+      bit4 : Bool;
+      bit3 : Bool;
+      bit2 : Bool;
+      bit1 : Bool;
+      bit0 : Bool;
+   END_VAR
+
+   VAR_TEMP 
+      tempWord : Word;
+   END_VAR
+
+
+BEGIN
+	
+	REGION MERGE
+	  #tempWord.%X15 := #bit15;
+	  #tempWord.%X14 := #bit14;
+	  #tempWord.%X13 := #bit13;
+	  #tempWord.%X12 := #bit12;
+	  #tempWord.%X11 := #bit11;
+	  #tempWord.%X10 := #bit10;
+	  #tempWord.%X9 := #bit9;
+	  #tempWord.%X8 := #bit8;
+	  #tempWord.%X7 := #bit7;
+	  #tempWord.%X6 := #bit6;
+	  #tempWord.%X5 := #bit5;
+	  #tempWord.%X4 := #bit4;
+	  #tempWord.%X3 := #bit3;
+	  #tempWord.%X2 := #bit2;
+	  #tempWord.%X1 := #bit1;
+	  #tempWord.%X0 := #bit0;
+	END_REGION
+	
+	REGION OUTPUT
+	  #LGF_MergeBitsToWord := #tempWord;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

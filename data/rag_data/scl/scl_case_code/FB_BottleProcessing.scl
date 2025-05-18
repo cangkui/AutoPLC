@@ -1,0 +1,112 @@
+FUNCTION_BLOCK "FB_BottleProcessing"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    bottleSensor : Bool; 
+    cleaningConfirmButton : Bool; 
+    fillingConfirmButton : Bool; 
+    cappingConfirmButton : Bool; 
+    packingConfirmButton : Bool; 
+    finishedButton : Bool; 
+END_VAR
+
+VAR_OUTPUT
+    Pump_Motor : Bool; 
+    Filling_Valve : Bool; 
+    Capping_Machine : Bool; 
+    Packing_Machine : Bool; 
+    Completion_Light : Bool; 
+END_VAR
+
+VAR
+    currentState : Int := 0; 
+END_VAR
+
+VAR CONSTANT
+    STATE_WAITING_FOR_BOTTLE : Int := 0; 
+    STATE_CLEANING : Int := 1; 
+    STATE_WAITING_FOR_CLEANING_CONFIRMATION : Int := 2; 
+    STATE_FILLING : Int := 3; 
+    STATE_WAITING_FOR_FILLING_CONFIRMATION : Int := 4; 
+    STATE_CAPPING : Int := 5; 
+    STATE_WAITING_FOR_CAPPING_CONFIRMATION : Int := 6; 
+    STATE_PACKING : Int := 7; 
+    STATE_WAITING_FOR_PACKING_CONFIRMATION : Int := 8; 
+    STATE_COMPLETED : Int := 9; 
+END_VAR
+
+VAR_TEMP
+    tempExitStateLoop : Bool;
+END_VAR
+
+BEGIN
+    REGION State Machine
+        REPEAT
+            #tempExitStateLoop := TRUE;
+            CASE #currentState OF
+                #STATE_WAITING_FOR_BOTTLE:
+                    #Pump_Motor := FALSE;
+                    #Filling_Valve := FALSE;
+                    #Capping_Machine := FALSE;
+                    #Packing_Machine := FALSE;
+                    #Completion_Light := FALSE;
+                    IF #bottleSensor THEN
+                        #currentState := #STATE_CLEANING;
+                        #tempExitStateLoop := FALSE;
+                    END_IF;
+                #STATE_CLEANING:
+                    #Pump_Motor := TRUE;
+                    #Filling_Valve := FALSE;
+                    #Capping_Machine := FALSE;
+                    #Packing_Machine := FALSE;
+                    #Completion_Light := FALSE;
+                    IF #cleaningConfirmButton THEN
+                        #currentState := #STATE_FILLING;
+                        #tempExitStateLoop := FALSE;
+                    END_IF;
+                #STATE_FILLING:
+                    #Pump_Motor := FALSE;
+                    #Filling_Valve := TRUE;
+                    #Capping_Machine := FALSE;
+                    #Packing_Machine := FALSE;
+                    #Completion_Light := FALSE;
+                    IF #fillingConfirmButton THEN
+                        #currentState := #STATE_CAPPING;
+                        #tempExitStateLoop := FALSE;
+                    END_IF;
+                #STATE_CAPPING:
+                    #Pump_Motor := FALSE;
+                    #Filling_Valve := FALSE;
+                    #Capping_Machine := TRUE;
+                    #Packing_Machine := FALSE;
+                    #Completion_Light := FALSE;
+                    IF #cappingConfirmButton THEN
+                        #currentState := #STATE_PACKING;
+                        #tempExitStateLoop := FALSE;
+                    END_IF;
+                #STATE_PACKING:
+                    #Pump_Motor := FALSE;
+                    #Filling_Valve := FALSE;
+                    #Capping_Machine := FALSE;
+                    #Packing_Machine := TRUE;
+                    #Completion_Light := FALSE;
+                    IF #packingConfirmButton THEN
+                        #currentState := #STATE_COMPLETED;
+                        #tempExitStateLoop := FALSE;
+                    END_IF;
+                #STATE_COMPLETED:
+                    #Pump_Motor := FALSE;
+                    #Filling_Valve := FALSE;
+                    #Capping_Machine := FALSE;
+                    #Packing_Machine := FALSE;
+                    #Completion_Light := TRUE;
+                    IF #finishedButton THEN
+                        #currentState := #STATE_WAITING_FOR_BOTTLE;
+                        #tempExitStateLoop := FALSE;
+                    END_IF;
+            END_CASE;
+        UNTIL (TRUE = #tempExitStateLoop)
+        END_REPEAT;
+    END_REGION
+END_FUNCTION_BLOCK
+
+

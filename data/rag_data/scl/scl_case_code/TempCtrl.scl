@@ -1,0 +1,85 @@
+﻿FUNCTION_BLOCK "TempCtrl"
+{ S7_Optimized_Access := 'TRUE' }
+
+   VAR_INPUT 
+      TemperatureSensorInput : Real;   // 温度传感器输入值
+      SetTemperature : Real;   // 设定温度值
+   END_VAR
+
+   VAR_OUTPUT 
+      CurrentTemperature : Real;   // 当前温度显示
+      SetTempDisplay : Real;   // 设定温度显示
+      HeaterStatus : Bool;   // 加热器状态显示
+      OverheatProtection : Bool;   // 过热保护状态显示
+   END_VAR
+
+   VAR_IN_OUT 
+      HeaterOutput : Bool;   // 加热器控制输出
+   END_VAR
+
+   VAR 
+      HeaterState : Struct
+         IsEnabled : Bool;
+         OverheatProtectionTriggered : Bool;
+      END_STRUCT;
+      OverheatTimer  : TON_TIME;   // 过热保护定时器
+      SensorError : Bool;   // 传感器错误标志
+      CoolTimer  : TON_TIME;
+      OverheatTimerOutput  : Bool;
+      CoolTimerOutput  : Bool;
+   END_VAR
+
+
+BEGIN
+	// 显示当前温度和设定温度 
+	#CurrentTemperature := #TemperatureSensorInput;
+	#SetTempDisplay := #SetTemperature;
+	
+	// 检查传感器是否失效 
+	IF #TemperatureSensorInput < 0 OR #TemperatureSensorInput > 100 THEN
+	    #SensorError := TRUE;
+	ELSE
+	    #SensorError := FALSE;
+	END_IF;
+	
+	// 温度控制逻辑 
+	// 过热保护逻辑 
+	#OverheatTimer(IN := #HeaterOutput,
+	               PT := T#5S,
+	               Q => #OverheatTimerOutput);
+	IF #HeaterState.IsEnabled AND #OverheatTimerOutput THEN
+	    #HeaterState.OverheatProtectionTriggered := TRUE;
+	    #HeaterState.IsEnabled := FALSE;
+	    #HeaterOutput := FALSE;
+	END_IF;
+	#CoolTimer(IN := #HeaterState.OverheatProtectionTriggered,
+	           PT := t#3S,
+	           Q => #CoolTimerOutput);
+	IF #CoolTimerOutput THEN
+	    #HeaterState.OverheatProtectionTriggered := FALSE ;
+	END_IF;
+	
+	IF NOT #SensorError THEN
+	    IF #CurrentTemperature < #SetTemperature AND NOT #HeaterState.OverheatProtectionTriggered THEN
+	        IF NOT #HeaterState.IsEnabled THEN
+	            #HeaterState.IsEnabled := TRUE;
+	            #HeaterOutput := TRUE;
+	        END_IF;
+	    ELSIF #CurrentTemperature > #SetTemperature THEN
+	        IF #HeaterState.IsEnabled THEN
+	            #HeaterState.IsEnabled := FALSE;
+	            #HeaterOutput := FALSE;
+	        END_IF;
+	    END_IF;
+	    
+	ELSE
+	    // 传感器错误处理 
+	    #HeaterOutput := FALSE;
+	    #HeaterState.IsEnabled := FALSE;
+	END_IF;
+	
+	// 显示加热器状态和过热保护状态 
+	#HeaterStatus := #HeaterState.IsEnabled;
+	#OverheatProtection := #HeaterState.OverheatProtectionTriggered;
+END_FUNCTION_BLOCK
+

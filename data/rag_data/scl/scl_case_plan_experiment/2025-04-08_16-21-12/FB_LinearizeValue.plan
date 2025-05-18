@@ -1,0 +1,138 @@
+### 算法流程描述
+
+#### 1. 功能概述
+该功能块`FB_LinearizeValue`用于将输入的浮点数（原始测量值）按照不同的区间进行线性化转换，并输出转换后的线性化值。同时，当输入值超出有效范围时，会输出错误状态。
+
+#### 2. 输入输出定义
+- **输入**：
+  - `InputValue`：浮点数，表示原始测量值。
+- **输出**：
+  - `LinearizedValue`：浮点数，表示线性化后的值。
+  - `Error`：布尔值，表示是否发生错误（`TRUE`为错误，`FALSE`为正常）。
+  - `Status`：字（Word），表示状态代码（错误时为`16#8001`）。
+
+#### 3. 常量定义
+定义了多个常量用于区间边界和线性化范围：
+- `MIN_VALUE_1` ~ `MAX_VALUE_3`：输入值的区间边界。
+- `MIN_LINEAR_1` ~ `MAX_LINEAR_3`：线性化后的区间边界。
+- `ERROR_STATUS`：错误状态代码（`16#8001`）。
+
+#### 4. 主逻辑流程
+1. **初始化**：
+   - 将`Error`初始化为`FALSE`，`Status`初始化为`16#0000`。
+
+2. **输入验证**：
+   - 检查输入值是否在有效范围内（`1200.0`到`7000.0`）。
+   - 如果输入值无效（小于`1200.0`或大于`7000.0`）：
+     - 设置`Error`为`TRUE`，`Status`为`16#8001`。
+     - 如果输入值小于`1200.0`，输出`LinearizedValue`为`150.0`（`MIN_LINEAR_1`）。
+     - 如果输入值大于`7000.0`，输出`LinearizedValue`为`720.0`（`MAX_LINEAR_3`）。
+
+3. **线性化转换**：
+   - 根据输入值所在的区间，使用线性插值公式计算`LinearizedValue`：
+     - **区间1**（`1200.0` ≤ `InputValue` ≤ `3600.0`）：
+       ```math
+       LinearizedValue = 150.0 + \frac{(InputValue - 1200.0)}{(3600.0 - 1200.0)} \times (240.0 - 150.0)
+       ```
+     - **区间2**（`3600.0` < `InputValue` ≤ `4800.0`）：
+       ```math
+       LinearizedValue = 240.0 + \frac{(InputValue - 3600.0)}{(4800.0 - 3600.0)} \times (560.0 - 240.0)
+       ```
+     - **区间3**（`4800.0` < `InputValue` ≤ `7000.0`）：
+       ```math
+       LinearizedValue = 560.0 + \frac{(InputValue - 4800.0)}{(7000.0 - 4800.0)} \times (720.0 - 560.0)
+       ```
+
+4. **输出写入**：
+   - 将计算得到的`LinearizedValue`、`Error`和`Status`写入输出变量。
+
+#### 5. 边界条件处理
+- 输入值等于区间边界时（如`3600.0`或`4800.0`），会按照较高的区间处理（例如`3600.0`属于区间1，`3600.1`属于区间2）。
+- 输入值为`1200.0`或`7000.0`时，直接输出对应的线性化值（`150.0`或`720.0`），且不报错。
+
+#### 6. 错误处理
+- 输入值无效时，输出错误状态和边界值，但不会中断程序运行。
+
+### 代码调整建议
+1. **常量命名**：
+   - 可以更清晰地命名常量，例如：
+     - `INPUT_MIN_1`代替`MIN_VALUE_1`。
+     - `OUTPUT_MIN_1`代替`MIN_LINEAR_1`。
+   - 这样能更直观地区分输入和输出的区间边界。
+
+2. **区间边界检查**：
+   - 当前代码中区间边界检查使用了`<=`和`>`，可以统一为`<=`或`<`以避免歧义。
+   - 例如：
+     ```pascal
+     ELSIF #InputValue >= #MIN_VALUE_1 AND #InputValue < #MAX_VALUE_1 THEN
+     ```
+
+3. **注释补充**：
+   - 可以在线性化公式处添加注释，说明公式的含义和推导过程。
+
+4. **输入验证区域**：
+   - 当前代码中`Validation OF inputs and outputs`区域为空，可以添加对输入值的有效性检查（如是否为非负数或非NaN）。
+
+5. **状态码扩展**：
+   - 可以定义更多状态码（如`16#0001`表示输入值过低，`16#0002`表示输入值过高），以便更详细地描述错误类型。
+
+### 调整后的代码逻辑
+```pascal
+FUNCTION_BLOCK "FB_LinearizeValue"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      InputValue : Real;
+   END_VAR
+
+   VAR_OUTPUT 
+      LinearizedValue : Real;
+      Error : Bool;
+      Status : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      INPUT_MIN_1 : Real := 1200.0;
+      INPUT_MAX_1 : Real := 3600.0;
+      INPUT_MIN_2 : Real := 3600.0;
+      INPUT_MAX_2 : Real := 4800.0;
+      INPUT_MIN_3 : Real := 4800.0;
+      INPUT_MAX_3 : Real := 7000.0;
+      OUTPUT_MIN_1 : Real := 150.0;
+      OUTPUT_MAX_1 : Real := 240.0;
+      OUTPUT_MIN_2 : Real := 240.0;
+      OUTPUT_MAX_2 : Real := 560.0;
+      OUTPUT_MIN_3 : Real := 560.0;
+      OUTPUT_MAX_3 : Real := 720.0;
+      ERROR_STATUS : Word := 16#8001;
+   END_VAR
+
+BEGIN
+   // 初始化
+   #Error := FALSE;
+   #Status := 16#0000;
+
+   // 输入验证
+   IF #InputValue < #INPUT_MIN_1 OR #InputValue > #INPUT_MAX_3 THEN
+      #Error := TRUE;
+      #Status := #ERROR_STATUS;
+      IF #InputValue < #INPUT_MIN_1 THEN
+         #LinearizedValue := #OUTPUT_MIN_1;
+      ELSE
+         #LinearizedValue := #OUTPUT_MAX_3;
+      END_IF;
+   ELSE
+      // 线性化逻辑
+      IF #InputValue >= #INPUT_MIN_1 AND #InputValue < #INPUT_MAX_1 THEN
+         // 区间1：1200.0 ≤ InputValue < 3600.0 → 150.0 ~ 240.0
+         #LinearizedValue := #OUTPUT_MIN_1 + ((#InputValue - #INPUT_MIN_1) / (#INPUT_MAX_1 - #INPUT_MIN_1)) * (#OUTPUT_MAX_1 - #OUTPUT_MIN_1);
+      ELSIF #InputValue >= #INPUT_MIN_2 AND #InputValue < #INPUT_MAX_2 THEN
+         // 区间2：3600.0 ≤ InputValue < 4800.0 → 240.0 ~ 560.0
+         #LinearizedValue := #OUTPUT_MIN_2 + ((#InputValue - #INPUT_MIN_2) / (#INPUT_MAX_2 - #INPUT_MIN_2)) * (#OUTPUT_MAX_2 - #OUTPUT_MIN_2);
+      ELSIF #InputValue >= #INPUT_MIN_3 AND #InputValue <= #INPUT_MAX_3 THEN
+         // 区间3：4800.0 ≤ InputValue ≤ 7000.0 → 560.0 ~ 720.0
+         #LinearizedValue := #OUTPUT_MIN_3 + ((#InputValue - #INPUT_MIN_3) / (#INPUT_MAX_3 - #INPUT_MIN_3)) * (#OUTPUT_MAX_3 - #OUTPUT_MIN_3);
+      END_IF;
+   END_IF;
+END_FUNCTION_BLOCK
+```

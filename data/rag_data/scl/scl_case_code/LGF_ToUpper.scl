@@ -1,0 +1,69 @@
+FUNCTION "LGF_ToUpper" : String
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Industry Online Support'
+FAMILY : LGF
+NAME : LGF_ToUpper
+   VAR_INPUT 
+      In : String;
+   END_VAR
+
+   VAR_TEMP 
+      tempCurrentCharIndex : UInt;
+      tempStringLength : UInt;
+      tempCurrentChar : Char;
+      tempResult : String;
+   END_VAR
+
+   VAR CONSTANT 
+      TO_UPPER_OFFSET : USInt := 32;
+      LOWER_CASE_A : Char := 'a';
+      LOWER_CASE_Z : Char := 'z';
+      FIRST_CHARACTER_POSITION : UInt := 1;
+      NEXT_POSITION : UInt := 1;
+   END_VAR
+
+
+BEGIN
+	
+	REGION INITIALIZATION
+	  // First we clean up the resultstring to avoid returning random data
+	  #tempResult := '';
+	  #tempCurrentChar := '$00';
+	  
+	  // to avoid continuous system calls to LEN, we get the string length only once
+	  // as it doesn't change during the conversion
+	  #tempStringLength := INT_TO_UINT(LEN(#In));
+	  
+	  // we start converting at the beginning of the string. The first index into the string 
+	  // is 1 (not zero based counting)
+	  #tempCurrentCharIndex := #FIRST_CHARACTER_POSITION;
+	END_REGION
+	
+	REGION CONVERSION  
+	  WHILE #tempCurrentCharIndex <= #tempStringLength DO
+	    // We check the character at the index position in the string
+	    // its ASCII code must be between 'a' and 'z' (included) to be object of conversion
+	    IF TRUE
+	      AND #LOWER_CASE_A <= #In[#tempCurrentCharIndex]
+	      AND #In[#tempCurrentCharIndex] <= #LOWER_CASE_Z
+	    THEN
+	      // The character is in the range of ASCII codes object to conversion
+	      // Let's convert it into upper case
+	      #tempCurrentChar := USINT_TO_CHAR(CHAR_TO_USINT(#In[#tempCurrentCharIndex]) - #TO_UPPER_OFFSET);
+	    ELSE
+	      // the character is not object to conversion. Therefore, we only copy it into the result string
+	      #tempCurrentChar := #In[#tempCurrentCharIndex];
+	    END_IF;
+	    // Append the buffer character (may be converted) to the result string
+	    #tempResult := CONCAT(IN1 := #tempResult,
+	                          IN2 := #tempCurrentChar);
+	    // Move on to the next character in the string
+	    #tempCurrentCharIndex += #NEXT_POSITION;
+	  END_WHILE;
+	END_REGION
+	
+	// Returning the converted string as function result
+	#LGF_ToUpper := #tempResult;
+	ENO := TRUE;
+	
+END_FUNCTION

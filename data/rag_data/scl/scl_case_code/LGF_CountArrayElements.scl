@@ -1,0 +1,56 @@
+FUNCTION "LGF_CountArrayElements" : DInt
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Industry Support'
+FAMILY : LGF
+NAME : LGF_CountArrayElements
+   VAR_INPUT 
+      "array" : Variant;
+   END_VAR
+
+   VAR_TEMP 
+      tempBufferSize : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      RETURN_NO_ARRAY : DInt := -1;
+      RETURN_NO_BOOL_ARRAYS_NOT_SUPPORTED : DInt := -2;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright 2021
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_CountArrayElements
+	  // Function:         Count the number of array elements and returns the number of elements zero based (Array[0..x] of Type).
+	  // Library:          LGF(Library General Functions)
+	  // Author:           Siemens Industry Support
+	  // Tested with:      CPU 1516-3 PN/DP
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     --
+	  // Requirements:     S7-1200/1500
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION Process
+	  // Check if the #input is an ARRAY.
+	  // If so, the number of the ARRAY elements is read out.
+	  // If it is NOT an ARRAY, an Error is thrown and the result is -1 / -2
+	  IF IS_ARRAY(#array) AND TypeOfElements(#array) = Bool THEN
+	    #tempBufferSize := #RETURN_NO_BOOL_ARRAYS_NOT_SUPPORTED;
+	  ELSIF NOT IS_ARRAY(#array) THEN
+	    #tempBufferSize := #RETURN_NO_ARRAY;
+	  ELSE
+	    #tempBufferSize := UDINT_TO_DINT(CountOfElements(#array));
+	  END_IF;
+	END_REGION Process
+	
+	REGION Writing to outputs
+	  #LGF_CountArrayElements := #tempBufferSize;
+	  // no error handling by ENO needed
+	  ENO := true;
+	END_REGION Writing to outputs
+	
+END_FUNCTION

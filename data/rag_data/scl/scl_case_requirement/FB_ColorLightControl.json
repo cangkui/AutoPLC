@@ -1,0 +1,30 @@
+{
+    "title": "Console Indicator Light Sequence Control",
+    "description": "A console is equipped with 3 indicator lights, which are green, red, and yellow. It is necessary to cyclically control the status of these lights using a control button.\nControl requirements:\nUse an input parameter 'controlButton' to represent the state of the control button, which is a pulse signal, generating a transition from 0 to 1 each time it is triggered.\nUse three output parameters 'greenLight', 'redLight', and 'yellowLight' to control the corresponding green, red, and yellow indicator lights.\nThe sequence of button triggers and the corresponding light statuses are as follows:\n1st trigger: Only the green light 'greenLight' is on.\n2nd trigger: Only the red light 'redLight' is on.\n3rd trigger: Only the yellow light 'yellowLight' is on.\n4th trigger: All three lights are on.\n5th trigger: All three lights are off.\n6th trigger and onwards: Repeat the above cycle.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_ColorLightControl",
+    "input": [
+        {
+            "name": "controlButton",
+            "type": "Bool",
+            "description": "Control button switch, pulse signal"
+        }
+    ],
+    "output": [
+        {
+            "name": "greenLight",
+            "type": "Bool",
+            "description": "Green indicator light"
+        },
+        {
+            "name": "redLight",
+            "type": "Bool",
+            "description": "Red indicator light"
+        },
+        {
+            "name": "yellowLight",
+            "type": "Bool",
+            "description": "Yellow indicator light"
+        }
+    ]
+ }

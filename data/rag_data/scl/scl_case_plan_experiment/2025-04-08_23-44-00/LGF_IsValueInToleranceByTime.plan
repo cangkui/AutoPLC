@@ -1,0 +1,75 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块用于检查给定值是否在设定点的指定容差范围内，支持百分比或绝对值形式的容差设置。功能块还包含对设定点变化的检测和超限/欠限的延时报警功能。
+
+#### 2. **输入参数**
+- `value`：待检查的值（实数）
+- `setpoint`：设定点（实数）
+- `lowerMinimum`：下限容差（实数，可以是百分比或绝对值）
+- `upperMaximum`：上限容差（实数，可以是百分比或绝对值）
+- `reset`：复位信号（布尔）
+- `configuration`：配置参数（结构体，包含以下字段）：
+  - `disableLimits`：是否禁用限值检查
+  - `limitsAsAbsoluteValues`：限值是否为绝对值
+  - `toleranceAsAbsoluteValues`：容差是否为绝对值
+  - `upperLimitMonitoringTime`：上限超限监测时间
+  - `lowerLimitMonitoringTime`：下限欠限监测时间
+  - `setpointChangeMonitoringTime`：设定点变化监测时间
+
+#### 3. **输出参数**
+- `overHighLimit`：是否超过上限（布尔）
+- `belowLowLimit`：是否低于下限（布尔）
+- `inLimits`：是否在限值范围内（布尔）
+- `setpointChange`：设定点是否变化（布尔）
+- `error`：是否发生错误（布尔）
+- `status`：状态码（字）
+
+#### 4. **内部变量**
+- `instMonitorUpper`：上限监测定时器
+- `instMonitorLower`：下限监测定时器
+- `instMonitorChange`：设定点变化监测定时器
+- `statSetpointPrevious`：上一次的设定点值
+- `statResetPrev`：上一次的复位信号状态
+- `statSetpointChange`：设定点是否变化
+- `statWasWithinTolerance`：是否曾经在容差范围内
+
+#### 5. **算法流程**
+1. **初始化与限值计算**
+   - 根据配置参数计算当前值的上限和下限：
+     - 如果限值为绝对值，直接比较`value`与`upperMaximum`和`lowerMinimum`。
+     - 如果容差为绝对值，计算`setpoint ± upperMaximum/lowerMinimum`。
+     - 如果容差为百分比，计算`setpoint × (1 ± upperMaximum/lowerMinimum / 100)`。
+   - 检测设定点变化，若变化则重置`statWasWithinTolerance`。
+   - 处理复位信号，若复位则重置状态。
+
+2. **错误检查**
+   - 检查计算是否有效（如限值计算是否合理）。
+   - 检查设定点是否在限值范围内（仅当限值为绝对值时）。
+
+3. **限值评估**
+   - 启动上限监测定时器（若值超限且曾经在容差范围内或设定点变化监测中）。
+   - 启动下限监测定时器（若值欠限且曾经在容差范围内或设定点变化监测中）。
+   - 启动设定点变化监测定时器（若设定点变化且未曾在容差范围内）。
+
+4. **输出更新**
+   - `inLimits`：值在限值范围内且未超限/欠限，且设定点变化监测已完成。
+   - `overHighLimit`：上限监测定时器超时。
+   - `belowLowLimit`：下限监测定时器超时。
+   - `setpointChange`：设定点变化且未曾在容差范围内。
+   - `error`：无错误时设为`FALSE`。
+   - `status`：无错误时设为`STATUS_NO_ERROR`。
+
+#### 6. **注意事项**
+- 定时器的启动条件需确保仅在必要时启动（如曾经在容差范围内或设定点变化监测中）。
+- 设定点变化检测需记录上一次的设定点值。
+- 复位信号需正确处理状态重置。
+
+#### 7. **状态码**
+- `STATUS_NO_ERROR`（16#0000）：无错误。
+- `ERR_RANGE_LIMIT_VALUE_CALC`（16#8401）：限值计算错误。
+- `ERR_SETPOINT_ABOVE_HIGH_LIMIT`（16#8402）：设定点超过上限（限值为绝对值时）。
+- `ERR_SETPOINT_BELOW_LOW_LIMIT`（16#8403）：设定点低于下限（限值为绝对值时）。
+
+### 总结
+该功能块通过灵活的配置支持多种容差形式，结合定时器实现了超限/欠限的延时报警和设定点变化的监测。核心逻辑包括限值计算、定时器管理和状态更新。

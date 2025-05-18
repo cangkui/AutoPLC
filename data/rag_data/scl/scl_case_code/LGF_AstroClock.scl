@@ -1,0 +1,419 @@
+FUNCTION_BLOCK "LGF_AstroClock"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_AstroClock
+   VAR_INPUT 
+      enable : Bool;
+      positionGps : "LGF_typeGPS_DD";
+      offsetSunrise : Time;
+      offsetSunset : Time;
+   END_VAR
+
+   VAR_OUTPUT 
+      valid { ExternalWritable := 'False'} : Bool;
+      busy { ExternalWritable := 'False'} : Bool;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word := #STATUS_NO_CALL;
+      subFunctionStatus { ExternalWritable := 'False'} : Word;
+      actualLocalTime {InstructionName := 'DTL'; LibVersion := '1.0'; ExternalWritable := 'False'} : DTL;
+      sunriseTime {InstructionName := 'DTL'; LibVersion := '1.0'; ExternalWritable := 'False'} : DTL;
+      sunsetTime {InstructionName := 'DTL'; LibVersion := '1.0'; ExternalWritable := 'False'} : DTL;
+      isDaytime { ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR 
+      statEnableOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statBusy { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word := #STATUS_NO_CALL;
+      statSubfunctionStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statLongitudeHour { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real;
+      statLatitudeRadiant { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Real;
+   END_VAR
+
+   VAR_TEMP 
+      tempRetval : Word;
+      tempSysTime {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempOfficLocTime {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempDate1Jan {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempSunrise {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempSunset {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempTimeZone : Real;
+      tempDayOfYear : Real;
+      tempAproximateTime : Real;
+      tempSunMeanAnomaly : Real;
+      tempSunLongitude : Real;
+      tempSunMeanRad : Real;
+      tempSunLongitudeRadiant : Real;
+      tempSunAscension : Real;
+      tempSunAscensRad : Real;
+      tempSinDeclination : Real;
+      tempCosDeclination : Real;
+      tempCosLocHourAngle : Real;
+      tempLocalHourAngle : Real;
+      tempLocalMeanTime : Real;
+      tempUTC : Real;
+      tempLocalTime : Real;
+   END_VAR
+
+   VAR CONSTANT 
+      SUBSTATUS_DAYLIGHT_SAVING_TIME : Word := 16#0001;
+      NO_ERROR : Word := 16#0000;
+      STATUS_EXECUTION_FINISHED_NO_ERROR : Word := 16#0000;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_IN_OPERATION : Word := 16#7001;
+      ERR_LATITUDE_VALUE : Word := 16#8204;
+      ERR_LONGITUDE_VALUE : Word := 16#8205;
+      ERR_RD_SYS_T : Word := 16#8601;
+      ERR_RD_LOC_T : Word := 16#8602;
+      DEGREE_0 : Real := 0.0;
+      DEGREE_15 : Real := 15.0;
+      DEGREE_90 : Real := 90.0;
+      DEGREE_180 : Real := 180.0;
+      DEGREE_360 : Real := 360.0;
+      PI : Real := 3.141593;
+      DEGREE_TO_RADIANT : Real := 0.01745329;
+      RADIANT_TO_DEGREE : Real := 57.29578;
+      SUN_ZENIT : LReal := 1.58534073722818;
+      MAX_MIN_OR_SEC_59 : UInt := 59;
+      SECONDS_PER_HOUR : Real := 3600.0;
+      MINUTES_PER_HOUR : Real := 60.0;
+      HOURS_PER_DAY : Real := 24.0;
+      MS_PER_HOUR : Real := 3600000.0;
+      TIME_ZERO {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      FIRST_MONTH_AND_DAY : USInt := 1;
+      APPROXIMATE_TIME_6 : Int := 6;
+      APPROXIMATE_TIME_18 : Int := 18;
+      SUN_MEAN_ANOMALY_0_9856 : Real := 0.9856;
+      SUN_MEAN_ANOMALY_3_289 : Real := 3.289;
+      SUN_TRUE_LONGITUDE_0_02 : Real := 0.02;
+      SUN_TRUE_LONGITUDE_1_916 : Real := 1.916;
+      SUN_TRUE_LONGITUDE_2_0 : Real := 2.0;
+      SUN_TRUE_LONGITUDE_282_634 : Real := 282.634;
+      SUN_RIGHT_ASCENSION_0_91764 : Real := 0.91764;
+      SUN_RIGHT_ASCENSION_2_0 : Real := 2.0;
+      SUN_RIGHT_ASCENSION_2_PI : Real := 6.283185;
+      SUN_DECLINATION_0_39782 : Real := 0.39782;
+      SUM_LOCAL_HOUR_ANGLE : Real := 1.0;
+      LOCAL_MEAN_TIME_0_06571 : Real := 0.06571;
+      LOCAL_MEAN_TIME_6_622 : Real := 6.622;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_AstroClock
+	  // Comment/Function: Astronomical clock, optional offset, input format DD
+	  //                   "LGF_typeGPS_DD" - GPS position as decimal degree
+	  // Library/Family:   LGF
+	  // Author:           Siemens Industry Online Support
+	  // Tested with:      CPU1214C DC/DC/DC FW:V4.3
+	  // Engineering:      TIA Portal (V15.1)
+	  // Restrictions:     ENO disabled - error handling done with error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Extended description
+	  // Function:
+	  // Your position may be entered at LatitudeDD/LongitudeDD
+	  // Format signed degree(decimal)
+	  // 
+	  // OffsetSunrise is added to Latitude and output at Sunrise
+	  // OffsetSunset is added to Longitude and output at Sunset
+	  // 
+	  // daytime is set when the actual time is inbetween Sunrise and Sunset
+	  // ============================================================================
+	  // Advice:
+	  // please take care that the system time is permanently synchronizes anyhow
+	  // ============================================================================
+	  // Abbreviations
+	  // lon: Longitude
+	  // lat: Latitude
+	  // dir: direction (valid characters: n, N, s, S, e, E, w, W)
+	  // DD: decimal degrees (type Real)
+	  //=============================================================================
+	  // If a faulty value is entered at LatitudeDD
+	  // then the value of Sunrise is set to zero
+	  // and the value of Sunset is set to zero
+	  // and daytime is set to zero
+	END_REGION
+	
+	REGION Block processing
+	  // rising edge at enable
+	  IF (#enable AND NOT #statEnableOld) AND (#statStatus = #STATUS_NO_CALL) THEN // Enable FB
+	    // First call; initialize FB - set BUSY to TRUE
+	    #statBusy := TRUE;
+	    #statStatus := #STATUS_IN_OPERATION;
+	    #statSubfunctionStatus := #NO_ERROR;
+	    
+	    // falling edge at enable
+	  ELSIF (NOT #enable AND #statEnableOld) THEN  // Disable FB 
+	    // disbaling FB; set BUSY to FALSE
+	    #statBusy := FALSE;
+	    #statStatus := #STATUS_NO_CALL;
+	    #statSubfunctionStatus := #NO_ERROR;
+	    
+	    // just if block is in operation,
+	    // otherwise jump over region -> End here to reduce "system load"
+	  ELSIF (#enable AND #statEnableOld) THEN
+	    REGION Process astro clock calculation
+	      // reset internal status storage
+	      #statStatus := #STATUS_IN_OPERATION;
+	      #statSubfunctionStatus := #NO_ERROR;
+	      
+	      REGION System time, local time, time zone
+	        // Reading system time UTC
+	        #tempRetval := INT_TO_WORD(RD_SYS_T(#tempSysTime));
+	        
+	        IF (#tempRetval <> #NO_ERROR) THEN
+	          #statStatus := #ERR_RD_SYS_T;
+	          #statSubfunctionStatus := #tempRetval;
+	        END_IF;
+	        
+	        // Reading official actual local time
+	        #tempRetval := INT_TO_WORD(RD_LOC_T(#tempOfficLocTime));
+	        
+	        IF (#tempRetval <> #NO_ERROR) AND (#tempRetval <> #SUBSTATUS_DAYLIGHT_SAVING_TIME) THEN
+	          #statStatus := #ERR_RD_LOC_T;
+	          #statSubfunctionStatus := #tempRetval;
+	        END_IF;
+	        
+	        // Calculation of time difference #tempSysTime - #tempOfficLocTime
+	        #tempTimeZone := DINT_TO_REAL(TIME_TO_DINT(T_DIFF(IN1 := #tempSysTime, IN2 := #tempOfficLocTime))) / #MS_PER_HOUR;
+	      END_REGION System time, local time, time zone
+	      
+	      REGION Day of the year
+	        #tempDate1Jan.YEAR := #tempOfficLocTime.YEAR;
+	        #tempDate1Jan.MONTH := #FIRST_MONTH_AND_DAY;
+	        #tempDate1Jan.DAY := #FIRST_MONTH_AND_DAY;
+	        #tempDayOfYear := UDINT_TO_REAL(DATE_TO_UDINT(DTL_TO_DATE(#tempOfficLocTime)) - DATE_TO_UDINT(DTL_TO_DATE(#tempDate1Jan)) + 1);
+	      END_REGION Day of the year
+	      
+	      REGION input value check
+	        // input latitude DD > 90°, set fault
+	        IF (ABS(#positionGps.latitude) > #DEGREE_90) THEN
+	          #statStatus := #ERR_LATITUDE_VALUE;
+	        END_IF;
+	        
+	        // input longitude DD > 180°, set fault
+	        IF (ABS(#positionGps.longitude) > #DEGREE_180) THEN
+	          #statStatus := #ERR_LONGITUDE_VALUE;
+	        END_IF;
+	        
+	        // Copy GPS DD values to work variables and the convert to work units
+	        #statLatitudeRadiant := #positionGps.latitude * #DEGREE_TO_RADIANT;
+	        #statLongitudeHour := #positionGps.longitude / #DEGREE_15;
+	      END_REGION input value check      
+	      
+	      REGION Calculate Sunrise
+	        // Aproximate time 
+	        #tempAproximateTime := #tempDayOfYear + (#APPROXIMATE_TIME_6 - #statLongitudeHour) / #HOURS_PER_DAY;
+	        
+	        // Sun's mean anomaly
+	        #tempSunMeanAnomaly := #SUN_MEAN_ANOMALY_0_9856 * #tempAproximateTime - #SUN_MEAN_ANOMALY_3_289;
+	        #tempSunMeanRad := #tempSunMeanAnomaly * #DEGREE_TO_RADIANT;
+	        
+	        // Sun's true longitude
+	        #tempSunLongitude := #tempSunMeanAnomaly + #SUN_TRUE_LONGITUDE_282_634
+	        + #SUN_TRUE_LONGITUDE_1_916 * SIN(#tempSunMeanRad)
+	        + #SUN_TRUE_LONGITUDE_0_02 * SIN(#SUN_TRUE_LONGITUDE_2_0 * #tempSunMeanRad);
+	        
+	        WHILE #tempSunLongitude > #DEGREE_360 DO
+	          #tempSunLongitude -= #DEGREE_360;
+	        END_WHILE;
+	        
+	        WHILE #tempSunLongitude < #DEGREE_0 DO
+	          #tempSunLongitude += #DEGREE_360;
+	        END_WHILE;
+	        
+	        #tempSunLongitudeRadiant := #tempSunLongitude * #DEGREE_TO_RADIANT;
+	        
+	        // Sun's right ascension
+	        #tempSunAscensRad := ATAN(#SUN_RIGHT_ASCENSION_0_91764 * TAN(#tempSunLongitudeRadiant));
+	        
+	        WHILE #tempSunAscensRad > #SUN_RIGHT_ASCENSION_2_PI DO
+	          #tempSunAscensRad -= #SUN_RIGHT_ASCENSION_2_PI;
+	        END_WHILE;
+	        
+	        WHILE #tempSunAscensRad < #DEGREE_0 DO
+	          #tempSunAscensRad += #SUN_RIGHT_ASCENSION_2_PI;
+	        END_WHILE;
+	        
+	        #tempSunAscension := #tempSunAscensRad * #RADIANT_TO_DEGREE;
+	        #tempSunAscension := (#tempSunAscension
+	        + DINT_TO_REAL(FLOOR(#tempSunLongitude / #DEGREE_90)) * #DEGREE_90
+	        - DINT_TO_REAL(FLOOR(#tempSunAscension / #DEGREE_90)) * #DEGREE_90)
+	        / #DEGREE_15;
+	        
+	        // Sun's declination
+	        #tempSinDeclination := #SUN_DECLINATION_0_39782 * SIN(#tempSunLongitudeRadiant);
+	        #tempCosDeclination := COS(ASIN(#tempSinDeclination));
+	        
+	        // Sun's local hour angle angle
+	        #tempCosLocHourAngle := LREAL_TO_REAL(
+	                                              (COS(#SUN_ZENIT) - REAL_TO_LREAL(#tempSinDeclination * SIN(#statLatitudeRadiant)))
+	                                              / (#tempCosDeclination * COS(#statLatitudeRadiant))
+	        );
+	        
+	        IF (#tempCosLocHourAngle > #SUM_LOCAL_HOUR_ANGLE) THEN
+	          #tempCosLocHourAngle := #SUM_LOCAL_HOUR_ANGLE;
+	        ELSIF (#tempCosLocHourAngle < - #SUM_LOCAL_HOUR_ANGLE) THEN
+	          #tempCosLocHourAngle := - #SUM_LOCAL_HOUR_ANGLE;
+	        END_IF;
+	        
+	        // Calculate local hour angle for sunrise
+	        #tempLocalHourAngle := (#DEGREE_360 - ACOS(#tempCosLocHourAngle) * #RADIANT_TO_DEGREE) / #DEGREE_15;
+	        
+	        // Local mean time of rising/setting
+	        #tempLocalMeanTime := #tempLocalHourAngle + #tempSunAscension - (#LOCAL_MEAN_TIME_0_06571 * #tempAproximateTime) - #LOCAL_MEAN_TIME_6_622;
+	        
+	        // Adjust back TO UTC
+	        #tempUTC := #tempLocalMeanTime - #statLongitudeHour;
+	        
+	        IF (#tempUTC > #HOURS_PER_DAY) THEN
+	          #tempUTC -= #HOURS_PER_DAY;
+	        ELSIF (#tempUTC < 0) THEN
+	          #tempUTC += #HOURS_PER_DAY;
+	        END_IF;
+	        
+	        #tempLocalTime := #tempUTC - #tempTimeZone;
+	        
+	        IF (#tempLocalTime >= #HOURS_PER_DAY) THEN
+	          #tempLocalTime -= DINT_TO_REAL(TRUNC(#tempLocalTime / #HOURS_PER_DAY)) * #HOURS_PER_DAY;
+	        ELSIF (#tempLocalTime < 0) THEN
+	          #tempLocalTime += #HOURS_PER_DAY;
+	        END_IF;
+	        
+	        // Convert #tempLocalTime to DTL (#tempIntSunrise) and add offset
+	        #tempSunrise.YEAR := #tempOfficLocTime.YEAR;
+	        #tempSunrise.MONTH := #tempOfficLocTime.MONTH;
+	        #tempSunrise.DAY := #tempOfficLocTime.DAY;
+	        #tempSunrise := #tempSunrise + UDINT_TO_TIME(REAL_TO_UDINT(#tempLocalTime * #MS_PER_HOUR));
+	        #tempSunrise.NANOSECOND := 0;
+	        #tempSunrise += #offsetSunrise;
+	      END_REGION Calculate Sunrise
+	      
+	      REGION Calculate Sunset
+	        // Aproximate time 
+	        #tempAproximateTime := #tempDayOfYear + (#APPROXIMATE_TIME_18 - #statLongitudeHour) / #HOURS_PER_DAY;
+	        
+	        // Sun's mean anomaly
+	        #tempSunMeanAnomaly := #SUN_MEAN_ANOMALY_0_9856 * #tempAproximateTime - #SUN_MEAN_ANOMALY_3_289;
+	        #tempSunMeanRad := #tempSunMeanAnomaly * #DEGREE_TO_RADIANT;
+	        
+	        // Sun's true longitude
+	        #tempSunLongitude := #tempSunMeanAnomaly + #SUN_TRUE_LONGITUDE_282_634
+	        + #SUN_TRUE_LONGITUDE_1_916 * SIN(#tempSunMeanRad)
+	        + #SUN_TRUE_LONGITUDE_0_02 * SIN(#SUN_TRUE_LONGITUDE_2_0 * #tempSunMeanRad);
+	        
+	        WHILE #tempSunLongitude > #DEGREE_360 DO
+	          #tempSunLongitude -= #DEGREE_360;
+	        END_WHILE;
+	        
+	        WHILE #tempSunLongitude < #DEGREE_0 DO
+	          #tempSunLongitude += #DEGREE_360;
+	        END_WHILE;
+	        
+	        #tempSunLongitudeRadiant := #tempSunLongitude * #DEGREE_TO_RADIANT;
+	        
+	        // Sun's right ascension
+	        #tempSunAscensRad := ATAN(#SUN_RIGHT_ASCENSION_0_91764 * TAN(#tempSunLongitudeRadiant));
+	        
+	        WHILE #tempSunAscensRad > #SUN_RIGHT_ASCENSION_2_PI DO
+	          #tempSunAscensRad -= #SUN_RIGHT_ASCENSION_2_PI;
+	        END_WHILE;
+	        
+	        WHILE #tempSunAscensRad < #DEGREE_0 DO
+	          #tempSunAscensRad += #SUN_RIGHT_ASCENSION_2_PI;
+	        END_WHILE;
+	        
+	        #tempSunAscension := #tempSunAscensRad * #RADIANT_TO_DEGREE;
+	        #tempSunAscension := (#tempSunAscension
+	        + DINT_TO_REAL(FLOOR(#tempSunLongitude / #DEGREE_90)) * #DEGREE_90
+	        - DINT_TO_REAL(FLOOR(#tempSunAscension / #DEGREE_90)) * #DEGREE_90)
+	        / #DEGREE_15;
+	        
+	        // Sun's declination
+	        #tempSinDeclination := #SUN_DECLINATION_0_39782 * SIN(#tempSunLongitudeRadiant);
+	        #tempCosDeclination := COS(ASIN(#tempSinDeclination));
+	        
+	        // Sun's local hour angle
+	        #tempCosLocHourAngle := LREAL_TO_REAL(
+	                                              (COS(#SUN_ZENIT) - REAL_TO_LREAL(#tempSinDeclination * SIN(#statLatitudeRadiant)))
+	                                              / (#tempCosDeclination * COS(#statLatitudeRadiant))
+	        );
+	        
+	        IF (#tempCosLocHourAngle > #SUM_LOCAL_HOUR_ANGLE) THEN
+	          #tempCosLocHourAngle := #SUM_LOCAL_HOUR_ANGLE;
+	        ELSIF (#tempCosLocHourAngle < - #SUM_LOCAL_HOUR_ANGLE) THEN
+	          #tempCosLocHourAngle := - #SUM_LOCAL_HOUR_ANGLE;
+	        END_IF;
+	        
+	        // Calculation local hour angle for sunset
+	        #tempLocalHourAngle := ACOS(#tempCosLocHourAngle) * #RADIANT_TO_DEGREE / #DEGREE_15;
+	        
+	        // Local mean time of rising/setting
+	        #tempLocalMeanTime := #tempLocalHourAngle + #tempSunAscension - (#LOCAL_MEAN_TIME_0_06571 * #tempAproximateTime) - #LOCAL_MEAN_TIME_6_622;
+	        
+	        // Adjust back TO UTC
+	        #tempUTC := #tempLocalMeanTime - #statLongitudeHour;
+	        
+	        IF (#tempUTC > #HOURS_PER_DAY) THEN
+	          #tempUTC -= #HOURS_PER_DAY;
+	        ELSIF (#tempUTC < 0) THEN
+	          #tempUTC += #HOURS_PER_DAY;
+	        END_IF;
+	        
+	        #tempLocalTime := #tempUTC - #tempTimeZone;
+	        
+	        IF (#tempLocalTime >= #HOURS_PER_DAY) THEN
+	          #tempLocalTime -= DINT_TO_REAL(TRUNC(#tempLocalTime / #HOURS_PER_DAY)) * #HOURS_PER_DAY;
+	        ELSIF (#tempLocalTime < 0) THEN
+	          #tempLocalTime += #HOURS_PER_DAY;
+	        END_IF;
+	        
+	        // Convert #tempLocalTime to DTL (#tempIntSunset) and add offset
+	        #tempSunset.YEAR := #tempOfficLocTime.YEAR;
+	        #tempSunset.MONTH := #tempOfficLocTime.MONTH;
+	        #tempSunset.DAY := #tempOfficLocTime.DAY;
+	        #tempSunset := #tempSunset + UDINT_TO_TIME(REAL_TO_UDINT(#tempLocalTime * #MS_PER_HOUR));
+	        #tempSunset.NANOSECOND := 0;
+	        #tempSunset += #offsetSunset;
+	      END_REGION Calculate Sunset
+	      
+	    END_REGION Process astro clock calculation
+	  END_IF;
+	  
+	  // Edge detection store 'enable' input to memory
+	  #statEnableOld := #enable;
+	END_REGION Block processing
+	
+	REGION OUTPUTS
+	  // Write application specific values to outputs
+	  #actualLocalTime := #tempOfficLocTime;
+	  #sunriseTime := #tempSunrise;
+	  #sunsetTime := #tempSunset;
+	  // Evaluate Day (between Sunrise and Sunset)
+	  #isDaytime := (#tempOfficLocTime >= #tempSunrise) AND (#tempOfficLocTime <= #tempSunset);
+	  
+	  // Write static values to outputs
+	  #valid := NOT #statStatus.%X15 AND #statBusy;
+	  #busy := #statBusy;
+	  #error := #statStatus.%X15;
+	  #status := #statStatus;
+	  #subFunctionStatus := #statSubfunctionStatus;
+	  
+	  // ENO is not used, forced to TRUE
+	  ENO := TRUE;
+	END_REGION OUTPUTS
+	
+END_FUNCTION_BLOCK

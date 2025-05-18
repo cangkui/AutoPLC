@@ -1,0 +1,39 @@
+FUNCTION "LGF_BinaryToGray" : DWord
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_BinaryToGray
+   VAR_INPUT 
+      variableBinary : DWord;
+   END_VAR
+
+   VAR CONSTANT 
+      BIT_SHIFT_1 : USInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_BinaryToGray
+	  // Comment/Function: This function converts a binary value to a gray coded value
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V14 Update 1
+	  // Restrictions:     ENO disabled - no error handling needed
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION Block info header
+	
+	REGION OUTPUTS
+	  #LGF_BinaryToGray := #variableBinary XOR SHR(IN := #variableBinary, N := #BIT_SHIFT_1);
+	  
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

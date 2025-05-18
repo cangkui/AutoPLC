@@ -1,0 +1,1 @@
+{"title": "Endianness Detection Function", "name": "LGF_IsBigEndian", "description": "Detects the endianness of the executing system.", "type": "FUNCTION", "input": [], "output": [], "in/out": [], "return_value": [{"type": "Bool", "description": "TRUE if big endianness is detected"}], "status_codes": {}, "user_defined_types": []}

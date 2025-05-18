@@ -1,0 +1,54 @@
+### 算法流程描述（基于需求和代码分析）
+
+#### **1. 功能目标**
+- 生成一个随机无符号双整数（UDInt），范围：0 ~ 4,294,967,295（32位无符号整数）。
+- 提供错误状态和子功能状态反馈。
+
+#### **2. 核心逻辑**
+1. **获取系统时间作为随机种子**  
+   - 使用 `RD_SYS_T` 指令读取系统时间（精确到纳秒），存入 `tempTime`（DTL 类型）。
+   - 检查 `RD_SYS_T` 的执行状态：
+     - 若失败（状态码非 `16#0000`），设置错误标志 `error`，返回状态码 `ERR_RD_SYS_T`，并输出 `0`。
+     - 若成功，继续生成随机数。
+
+2. **生成随机数**  
+   - 提取系统时间的纳秒部分（`tempTime.NANOSECOND`），转换为 `DWord` 类型。
+   - **随机化处理**：交换纳秒值的字节顺序（`B0↔B3`，`B1↔B2`），生成 `tempRandomValue`。
+     - 例如：纳秒值 `0x12_34_56_78` → 随机值 `0x78_56_34_12`。
+   - 将结果转换为 `UDInt` 并返回。
+
+3. **状态反馈**  
+   - 成功时：`error = false`，状态码 `STATUS_FINISHED_NO_ERROR`。
+   - 失败时：`error = true`，状态码 `ERR_RD_SYS_T`。
+
+#### **3. 关键调整点**
+- **随机性优化**：当前算法依赖系统时间的纳秒部分，可能不够均匀。可改进为：
+  - 结合多个时间字段（如秒+纳秒）。
+  - 引入线性同余法（LCG）增强随机性。
+- **错误处理扩展**：增加对 `tempRandomValue` 有效性的校验（如是否为 `0`）。
+- **性能优化**：若需高频调用，可缓存种子值并迭代生成随机序列。
+
+#### **4. 伪代码流程**
+```plaintext
+FUNCTION LGF_Random_UDInt : UDInt
+    // 1. 读取系统时间
+    status = RD_SYS_T(tempTime)
+    IF status != SUCCESS THEN
+        error = TRUE
+        RETURN 0, ERR_RD_SYS_T
+    END_IF
+
+    // 2. 生成随机数
+    seed = tempTime.NANOSECOND
+    randomValue = SWAP_BYTES(seed)  // B0↔B3, B1↔B2
+
+    // 3. 返回结果
+    error = FALSE
+    RETURN randomValue, STATUS_FINISHED_NO_ERROR
+END_FUNCTION
+```
+
+#### **5. 与原始代码的差异**
+- **简化逻辑**：原始代码直接操作字节（`%B0`~`%B3`），伪代码使用 `SWAP_BYTES` 抽象。
+- **可读性**：伪代码省略了类型转换细节（如 `UDINT_TO_DWORD`），但实际实现需保留。
+- **扩展性**：伪代码预留了随机算法改进的接口（如替换 `SWAP_BYTES` 为更复杂的算法）。

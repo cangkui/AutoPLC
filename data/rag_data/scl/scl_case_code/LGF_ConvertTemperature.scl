@@ -1,0 +1,116 @@
+FUNCTION "LGF_ConvertTemperature" : Real
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry_Support
+FAMILY : LGF
+NAME : LGF_ConvertTemperature
+   VAR_INPUT 
+      mode : Int;
+      value : Real;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempConversionResult : Real;
+   END_VAR
+
+   VAR CONSTANT 
+      CELSIUS_TO_FAHRENHEIT : Int := 1;
+      CELSIUS_TO_FAHRENHEIT_GAIN : Real := 1.8;
+      CELSIUS_TO_FAHRENHEIT_OFFSET : Real := 32.0;
+      FAHRENHEIT_TO_CELSIUS : Int := 2;
+      FAHRENHEIT_TO_CELSIUS_GAIN : Real := 1.8;
+      FAHRENHEIT_TO_CELSIUS_OFFSET : Real := 32.0;
+      CELSIUS_TO_KELVIN : Int := 3;
+      CELSIUS_TO_KELVIN_OFFSET : Real := 273.15;
+      KELVIN_TO_CELSIUS : Int := 4;
+      KELVIN_TO_CELSIUS_OFFSET : Real := 273.15;
+      FAHRENHEIT_TO_KELVIN : Int := 5;
+      FAHRENHEIT_TO_KELVIN_GAIN : Real := 1.8;
+      FAHRENHEIT_TO_KELVIN_OFFSET_FAHRENHEIT : Real := 273.15;
+      FAHRENHEIT_TO_KELVIN_OFFSET : Real := 32.0;
+      KELVIN_TO_FAHRENHEIT : Int := 6;
+      KELVIN_TO_FAHRENHEIT_GAIN : Real := 1.8;
+      KELVIN_TO_FAHRENHEIT_OFFSET_KELVIN : Real := 273.15;
+      KELVIN_TO_FAHRENHEIT_OFFSET : Real := 32.0;
+      RANKINE_TO_KELVIN : Int := 7;
+      RANKINE_TO_KELVIN_GAIN_NUMERATOR : Real := 5.0;
+      RANKINE_TO_KELVIN_GAIN_DENOMINATOR : Real := 9.0;
+      KELVIN_TO_RANKINE : Int := 8;
+      KELVIN_TO_RANKINE_FACTOR : Real := 1.8;
+      NO_ERROR : Word := 16#0000;
+      ERR_WRONG_MODE : Word := 16#8200;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_ConvertTemperature
+	  // Comment/Function: This function converts the temperature in another unit by using an appropriate mode
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO disabled - error handling done with done and status (just for a wrong mode)
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION CONVERT
+	  CASE #mode OF
+	    #CELSIUS_TO_FAHRENHEIT:
+	      // F = C * 1.8 + 32
+	      #tempConversionResult := #value * #CELSIUS_TO_FAHRENHEIT_GAIN + #CELSIUS_TO_FAHRENHEIT_OFFSET;
+	      
+	    #FAHRENHEIT_TO_CELSIUS:
+	      // C = (F - 32) / 1.8
+	      #tempConversionResult := (#value - #FAHRENHEIT_TO_CELSIUS_OFFSET) / #FAHRENHEIT_TO_CELSIUS_GAIN;
+	      
+	    #CELSIUS_TO_KELVIN:
+	      // K = C + 273.15
+	      #tempConversionResult := #value + #CELSIUS_TO_KELVIN_OFFSET;
+	      
+	    #KELVIN_TO_CELSIUS:
+	      // C = K - 273.15
+	      #tempConversionResult := #value - #KELVIN_TO_CELSIUS_OFFSET;
+	      
+	    #FAHRENHEIT_TO_KELVIN:
+	      // K := ((C - 32.0) / 1.8) + 273.15
+	      #tempConversionResult := ((#value - #FAHRENHEIT_TO_KELVIN_OFFSET) / #FAHRENHEIT_TO_KELVIN_GAIN) + #FAHRENHEIT_TO_KELVIN_OFFSET_FAHRENHEIT;
+	      
+	    #KELVIN_TO_FAHRENHEIT:
+	      // F := (K - 273.15) * 1.8 + 32.0
+	      #tempConversionResult := ((#value - #KELVIN_TO_FAHRENHEIT_OFFSET_KELVIN) * #KELVIN_TO_FAHRENHEIT_GAIN) + #KELVIN_TO_FAHRENHEIT_OFFSET;
+	      
+	    #RANKINE_TO_KELVIN:
+	      // K =  5 / 9 *R
+	      #tempConversionResult := #RANKINE_TO_KELVIN_GAIN_NUMERATOR * #value / #RANKINE_TO_KELVIN_GAIN_DENOMINATOR;
+	      
+	    #KELVIN_TO_RANKINE:
+	      // R = 9 / 5 * K
+	      #tempConversionResult := #KELVIN_TO_RANKINE_FACTOR * #value;
+	      
+	    ELSE
+	      // no/ wrong mode selected
+	      #LGF_ConvertTemperature := 0.0;
+	      #error := TRUE;
+	      #status := #ERR_WRONG_MODE;
+	      RETURN;
+	  END_CASE;
+	END_REGION
+	
+	REGION OUTPUTS
+	  #LGF_ConvertTemperature := #tempConversionResult;
+	  #error := FALSE;
+	  #status := #NO_ERROR;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+END_FUNCTION

@@ -1,0 +1,49 @@
+FUNCTION "LGF_BitTest" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_SIMATIC_Systems_Support
+FAMILY : LGF
+NAME : LGF_BitTest
+   VAR_INPUT 
+      value : DWord;
+      bitNo : USInt;
+   END_VAR
+
+   VAR CONSTANT 
+      BINARY_ZERO : DWord := 16#0000;
+      TRUE_BOOL_BIT : DWord := 16#0001;
+      MAX_NO_OF_BITS : USInt := 32;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_BitTest
+	  // Comment/Function: Test bit in DWord if it is 1 or 0 respectively
+	  //                   returning TRUE or FALSE
+	  //                   can be used for Word and Byte as well, by convert
+	  //                   the passed paramter and the result using for e.g. Dword_to_Byte
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO not in use, set to true, no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION Logic
+	  // test the bit in tag
+	  // shift one true bit into the selected position
+	  // compare with input value with "AND" logic and check if different to zero
+	  // result is true if bit is true, otherwise it is false
+	  #LGF_BitTest := (#BINARY_ZERO <> (#value AND SHL(IN := #TRUE_BOOL_BIT, N := (#bitNo MOD #MAX_NO_OF_BITS))));
+	  
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

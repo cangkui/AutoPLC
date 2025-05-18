@@ -1,0 +1,61 @@
+### 算法流程描述
+
+#### 1. 变量定义
+- **输入变量**：addRecipe（添加配方请求）、deleteRecipe（删除配方请求）、modifyRecipe（修改配方请求）、queryRecipe（查询配方请求）、recipeIn（输入配方数据）
+- **输出变量**：recipeAdded（添加成功标志）、recipeDeleted（删除成功标志）、recipeModified（修改成功标志）、recipeQueryResult（查询结果）、error（错误标志）、status（状态码）
+- **输入/输出变量**：recipe（配方数据库，数组大小为10）
+- **内部变量**：freeIndex（空闲索引）、foundIndex（找到的索引）、index（临时索引）、found（查找标志）
+- **常量**：各种状态码（如STATUS_OK、STATUS_DUPLICATE_ID等）
+
+#### 2. 初始化
+- 初始化输出变量：error = FALSE，status = STATUS_OK，recipeAdded = FALSE，recipeDeleted = FALSE，recipeModified = FALSE。
+
+#### 3. 主逻辑
+主逻辑根据不同的请求信号（addRecipe、deleteRecipe、modifyRecipe、queryRecipe）执行相应的操作：
+
+##### 3.1 添加配方（addRecipe）
+1. **查找空闲位置和重复检查**：
+   - 遍历配方数据库（recipe），查找第一个recipeID为0的空闲位置（freeIndex）。
+   - 同时检查是否存在与输入配方（recipeIn）相同recipeID的配方（found）。
+2. **错误处理**：
+   - 如果找到重复ID（found = TRUE），设置error = TRUE，status = STATUS_DUPLICATE_ID。
+   - 如果没有空闲位置（freeIndex = 0），设置error = TRUE，status = STATUS_NO_SPACE。
+3. **添加配方**：
+   - 如果没有错误，将输入配方（recipeIn）存入空闲位置（recipe[freeIndex]），并设置recipeAdded = TRUE。
+
+##### 3.2 删除配方（deleteRecipe）
+1. **查找配方**：
+   - 遍历配方数据库，查找与输入配方（recipeIn）相同recipeID的配方。
+2. **删除操作**：
+   - 如果找到，将该配方的recipeID设置为0（标记为空闲），并设置recipeDeleted = TRUE。
+3. **错误处理**：
+   - 如果未找到，设置error = TRUE，status = STATUS_DELETE_NOT_FOUND。
+
+##### 3.3 修改配方（modifyRecipe）
+1. **查找配方**：
+   - 遍历配方数据库，查找与输入配方（recipeIn）相同recipeID的配方。
+2. **修改操作**：
+   - 如果找到，用输入配方（recipeIn）替换该位置的配方，并设置recipeModified = TRUE。
+3. **错误处理**：
+   - 如果未找到，设置error = TRUE，status = STATUS_MODIFY_NOT_FOUND。
+
+##### 3.4 查询配方（queryRecipe）
+1. **查找配方**：
+   - 遍历配方数据库，查找与输入配方（recipeIn）相同recipeID的配方。
+2. **返回结果**：
+   - 如果找到，将配方数据复制到recipeQueryResult。
+3. **错误处理**：
+   - 如果未找到，设置error = TRUE，status = STATUS_NOT_FOUND。
+
+#### 4. 输出处理
+- 主逻辑中已经直接设置了输出变量，因此无需额外的输出处理逻辑。
+
+### 关键点
+1. **边缘检测**：虽然代码中没有显式的边缘检测（如上次状态记录），但实际应用中可能需要检测请求信号的上升沿以避免重复操作。
+2. **优先级**：多个请求信号同时为TRUE时，代码会按顺序处理（add > delete > modify > query），但需求中未明确优先级，需根据实际需求调整。
+3. **错误处理**：每种操作都有明确的错误状态和错误码，便于调试和故障排查。
+4. **性能优化**：遍历数组时使用EXIT提前退出循环，减少不必要的遍历。
+
+### 扩展性建议
+- 如果需要支持更多配方，可以动态调整数组大小或使用更高效的数据结构（如哈希表）。
+- 可以增加配方的有效性检查（如比例总和为100%、温度范围等）。

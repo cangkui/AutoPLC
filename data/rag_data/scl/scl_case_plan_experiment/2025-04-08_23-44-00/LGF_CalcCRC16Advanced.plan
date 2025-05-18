@@ -1,0 +1,68 @@
+### **CRC-16高级计算函数的算法流程描述**
+
+#### **1. 功能概述**
+该函数用于计算给定数据流的CRC-16校验值，支持以下高级特性：
+- **可配置初始值**（`initValue`）
+- **可配置生成多项式**（`mask`）
+- **可配置最终异或值**（`finalXorValue`）
+- **输入字节位反转**（`reflectInput`）
+- **结果位反转**（`reflectResult`）
+- **可指定计算的数据长度**（`noOfElements`）
+
+#### **2. 主要流程**
+##### **(1) 初始化**
+- 设置初始CRC值（`tempCRC := initValue`）。
+- 计算输入数组的边界（`LOWER_BOUND` 和 `UPPER_BOUND`）。
+- 检查`noOfElements`是否有效：
+  - 如果`noOfElements > 0`，检查是否超出数组范围。
+  - 如果超出范围，返回错误状态（`ERR_NO_OF_ELEMENTS`）。
+  - 否则，调整计算范围（`tempUpperLimit := tempLowerLimit + noOfElements - 1`）。
+
+##### **(2) CRC计算**
+- **遍历输入数组**（`FOR tempIndexArray := tempLowerLimit TO tempUpperLimit`）：
+  - **输入字节位反转**（如果`reflectInput = TRUE`）：
+    - 将输入字节的每一位反转（`%X7 ↔ %X0, %X6 ↔ %X1, ...`）。
+  - **CRC计算核心**：
+    - 将当前字节左移8位（`SHL(IN := BYTE_TO_WORD(tempInput), N := 8)`）并与当前CRC值异或。
+    - **8次循环处理CRC**（`FOR tempIndexCRC := 0 TO 7`）：
+      - 检查最高位（`tempCRC.%X15`）：
+        - 如果为`1`，左移1位并与`mask`异或。
+        - 否则，仅左移1位。
+
+##### **(3) 结果处理**
+- **结果位反转**（如果`reflectResult = TRUE`）：
+  - 将CRC值的每一位反转（`%X15 ↔ %X0, %X14 ↔ %1, ...`）。
+- **最终异或**（`finalXorValue`）：
+  - 将反转后的CRC值（或原始CRC值）与`finalXorValue`异或，得到最终结果。
+- **状态返回**：
+  - 设置`status := STATUS_NO_ERROR`，`error := FALSE`，`ENO := TRUE`。
+
+#### **3. 关键逻辑**
+- **输入有效性检查**：确保`noOfElements`不超过数组范围。
+- **位反转处理**：
+  - 输入字节反转（`reflectInput`）。
+  - 结果反转（`reflectResult`）。
+- **CRC计算核心**：
+  - 基于多项式（`mask`）的移位-异或运算。
+- **最终异或**：增强校验码的随机性。
+
+#### **4. 适用场景**
+- **数据通信**（如Modbus、CAN等协议的CRC校验）。
+- **数据完整性验证**（如文件传输、EEPROM存储校验）。
+- **可配置CRC算法**（支持不同CRC标准，如CRC-16/CCITT、CRC-16/MODBUS等）。
+
+#### **5. 扩展性**
+- 可支持不同位宽（如CRC-8、CRC-32）。
+- 可扩展为查表法（`lookup-table`）优化计算速度。
+
+---
+
+### **总结**
+该函数是一个通用的CRC-16计算器，适用于多种通信协议和数据校验场景。其核心逻辑包括：
+1. **输入有效性检查**（防止越界）。
+2. **输入字节位反转**（可选）。
+3. **CRC计算**（基于多项式移位-异或）。
+4. **结果位反转**（可选）。
+5. **最终异或**（增强校验码随机性）。
+
+通过调整`initValue`、`mask`、`finalXorValue`等参数，可适配不同的CRC标准。

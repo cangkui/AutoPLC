@@ -1,0 +1,86 @@
+### CRC-16计算函数的算法流程描述
+
+#### 1. **功能概述**
+该函数`LGF_CalcCRC16`用于计算数据流的CRC-16校验值，主要用于数据传输中的错误检测。CRC（循环冗余校验）是一种常见的错误检测算法，通过多项式除法生成校验值。
+
+#### 2. **输入参数**
+- **initValue**：CRC计算的初始值（16位无符号整数）。
+- **mask**：生成多项式（16位无符号整数），用于CRC计算的核心算法。
+- **noOfElements**：参与CRC计算的数据元素数量（无符号整数）。
+- **array**：输入的数据流（字节数组），通过`VAR_IN_OUT`传递。
+
+#### 3. **输出参数**
+- **error**：布尔值，表示是否发生错误。
+- **status**：状态码（16位无符号整数），用于指示错误类型（如`ERR_NO_OF_ELEMENTS`）。
+- **返回值**：计算得到的CRC值（16位无符号整数）。
+
+#### 4. **算法流程**
+1. **初始化**
+   - 将`tempCRC`初始化为`initValue`。
+   - 计算输入数组的上下界（`tempLowerLimit`和`tempUpperLimit`）。
+
+2. **输入验证**
+   - 检查`noOfElements`是否合法：
+     - 如果`noOfElements > 0`，检查是否超出数组范围。
+     - 如果超出范围，设置错误标志`error = TRUE`，状态码`status = ERR_NO_OF_ELEMENTS`，并直接返回初始值。
+     - 如果合法，调整`tempUpperLimit`以匹配`noOfElements`。
+
+3. **CRC计算**
+   - **外层循环**：遍历数组中的每个字节（`tempIndexArray`从`tempLowerLimit`到`tempUpperLimit`）：
+     - 将当前字节左移8位（转换为16位），并与`tempCRC`进行异或（XOR）操作。
+   - **内层循环**：对每个字节的8位进行逐位处理（`tempIndexCRC`从0到7）：
+     - 检查`tempCRC`的最高位（MSB）是否为1：
+       - 如果是，左移1位后与`mask`进行异或。
+       - 如果不是，仅左移1位。
+
+4. **输出结果**
+   - 将最终计算得到的`tempCRC`作为返回值。
+   - 设置`error = FALSE`和`status = STATUS_NO_ERROR`，表示计算成功。
+
+#### 5. **关键逻辑调整**
+- **边缘检测**：代码中未显式处理`array`为空的情况，但通过`noOfElements`的验证间接确保数据有效性。
+- **性能优化**：使用常量（如`SHIFT_ONE_BIT`、`SHIFT_ONE_BYTE`）提高可读性和维护性。
+- **错误处理**：仅支持`ERR_NO_OF_ELEMENTS`一种错误类型，可根据需求扩展其他状态码。
+
+#### 6. **伪代码描述**
+```plaintext
+FUNCTION LGF_CalcCRC16(initValue, mask, noOfElements, array) RETURNS Word
+    // 初始化
+    tempCRC = initValue
+    lower = array.LOWER_BOUND
+    upper = array.UPPER_BOUND
+
+    // 输入验证
+    IF noOfElements > 0 THEN
+        IF noOfElements > (upper - lower + 1) THEN
+            error = TRUE
+            status = ERR_NO_OF_ELEMENTS
+            RETURN tempCRC
+        ELSE
+            upper = lower + noOfElements - 1
+        END_IF
+    END_IF
+
+    // CRC计算
+    FOR i FROM lower TO upper DO
+        tempCRC = tempCRC XOR (array[i] << 8)
+        FOR bit FROM 0 TO 7 DO
+            IF tempCRC.MSB == 1 THEN
+                tempCRC = (tempCRC << 1) XOR mask
+            ELSE
+                tempCRC = tempCRC << 1
+            END_IF
+        END_FOR
+    END_FOR
+
+    // 输出
+    error = FALSE
+    status = STATUS_NO_ERROR
+    RETURN tempCRC
+END_FUNCTION
+```
+
+#### 7. **注意事项**
+- **多项式选择**：`mask`的值需与实际CRC-16标准（如CRC-16-CCITT）匹配。
+- **字节序**：假设数据流为字节数组，高位字节在前。
+- **性能**：嵌套循环可能影响实时性，需在资源受限环境中测试。

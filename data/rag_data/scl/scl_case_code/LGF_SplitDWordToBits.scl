@@ -1,0 +1,88 @@
+FUNCTION "LGF_SplitDWordToBits" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SplitDWordToBits
+   VAR_INPUT 
+      doubleWord : DWord;
+   END_VAR
+
+   VAR_OUTPUT 
+      bit31 : Bool;
+      bit30 : Bool;
+      bit29 : Bool;
+      bit28 : Bool;
+      bit27 : Bool;
+      bit26 : Bool;
+      bit25 : Bool;
+      bit24 : Bool;
+      bit23 : Bool;
+      bit22 : Bool;
+      bit21 : Bool;
+      bit20 : Bool;
+      bit19 : Bool;
+      bit18 : Bool;
+      bit17 : Bool;
+      bit16 : Bool;
+      bit15 : Bool;
+      bit14 : Bool;
+      bit13 : Bool;
+      bit12 : Bool;
+      bit11 : Bool;
+      bit10 : Bool;
+      bit9 : Bool;
+      bit8 : Bool;
+      bit7 : Bool;
+      bit6 : Bool;
+      bit5 : Bool;
+      bit4 : Bool;
+      bit3 : Bool;
+      bit2 : Bool;
+      bit1 : Bool;
+      bit0 : Bool;
+   END_VAR
+
+	VAR CONSTANT 
+		MASK : doubleWord := 16#0001;
+	END_VAR	
+
+BEGIN
+	REGION OUTPUT
+	  // get the bits by slice access
+	  #bit0 := #doubleWord AND #MASK;
+	  #bit1 := SHR(IN := #doubleWord, N := 1) AND #MASK;
+	  #bit2 := SHR(IN := #doubleWord, N := 2) AND #MASK;
+	  #bit3 := SHR(IN := #doubleWord, N := 3) AND #MASK;
+	  #bit4 := SHR(IN := #doubleWord, N := 4) AND #MASK;
+	  #bit5 := SHR(IN := #doubleWord, N := 5) AND #MASK;
+	  #bit6 := SHR(IN := #doubleWord, N := 6) AND #MASK;
+	  #bit7 := SHR(IN := #doubleWord, N := 7) AND #MASK;
+	  #bit8  := SHR(IN := #doubleWord, N := 8) AND #MASK;
+	  #bit9  := SHR(IN := #doubleWord, N := 9) AND #MASK;
+	  #bit10 := SHR(IN := #doubleWord, N := 10) AND #MASK;
+	  #bit11 := SHR(IN := #doubleWord, N := 11) AND #MASK;
+	  #bit12 := SHR(IN := #doubleWord, N := 12) AND #MASK;
+	  #bit13 := SHR(IN := #doubleWord, N := 13) AND #MASK;
+	  #bit14 := SHR(IN := #doubleWord, N := 14) AND #MASK;
+	  #bit15 := SHR(IN := #doubleWord, N := 15) AND #MASK;
+	  #bit16 := SHR(IN := #doubleWord, N := 16) AND #MASK;
+	  #bit17 := SHR(IN := #doubleWord, N := 17) AND #MASK;
+	  #bit18 := SHR(IN := #doubleWord, N := 18) AND #MASK;
+	  #bit19 := SHR(IN := #doubleWord, N := 19) AND #MASK;
+	  #bit20 := SHR(IN := #doubleWord, N := 20) AND #MASK;
+	  #bit21 := SHR(IN := #doubleWord, N := 21) AND #MASK;
+	  #bit22 := SHR(IN := #doubleWord, N := 22) AND #MASK;
+	  #bit23 := SHR(IN := #doubleWord, N := 23) AND #MASK;
+	  #bit24 := SHR(IN := #doubleWord, N := 24) AND #MASK;
+	  #bit25 := SHR(IN := #doubleWord, N := 25) AND #MASK;
+	  #bit26 := SHR(IN := #doubleWord, N := 26) AND #MASK;
+	  #bit27 := SHR(IN := #doubleWord, N := 27) AND #MASK;
+	  #bit28 := SHR(IN := #doubleWord, N := 28) AND #MASK;
+	  #bit29 := SHR(IN := #doubleWord, N := 29) AND #MASK;
+	  #bit30 := SHR(IN := #doubleWord, N := 30) AND #MASK;
+	  #bit31 := SHR(IN := #doubleWord, N := 31) AND #MASK;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

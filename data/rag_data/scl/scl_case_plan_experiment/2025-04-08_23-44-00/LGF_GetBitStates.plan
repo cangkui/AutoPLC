@@ -1,0 +1,72 @@
+### 算法流程描述（DWord 边沿检测功能块）
+
+#### 1. **功能概述**
+该功能块用于检测一个 DWord（32位）输入值的**上升沿**和**下降沿**，并返回以下信息：
+- 是否有任何变化（`hasChanged`）
+- 是否有上升沿（`hasRisingEdges`）
+- 上升沿的位掩码（`risingBits`）
+- 上升沿的数量（`noOfRisingBits`）
+- 是否有下降沿（`hasFallingEdges`）
+- 下降沿的位掩码（`fallingBits`）
+- 下降沿的数量（`noOfFallingBits`）
+
+#### 2. **核心逻辑**
+1. **边沿检测**：
+   - **上升沿检测**：当前值（`value`）为 `1`，且上一次的值（`statPreviousValue`）为 `0` 的位。
+     - 计算方式：`risingBits = value AND (NOT statPreviousValue)`
+   - **下降沿检测**：当前值（`value`）为 `0`，且上一次的值（`statPreviousValue`）为 `1` 的位。
+     - 计算方式：`fallingBits = (NOT value) AND statPreviousValue`
+
+2. **边沿计数**：
+   - 使用**位操作算法**（参考 [Stanford Bit Twiddling Hacks](https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel)）计算 `risingBits` 和 `fallingBits` 中 `1` 的数量。
+   - 该算法通过分步掩码和移位操作高效统计 `1` 的个数。
+
+3. **输出更新**：
+   - `hasChanged`：如果 `risingBits` 或 `fallingBits` 不为零，则返回 `TRUE`。
+   - `hasRisingEdges`：如果 `risingBits` 不为零，则返回 `TRUE`。
+   - `hasFallingEdges`：如果 `fallingBits` 不为零，则返回 `TRUE`。
+   - 其他输出直接传递计算后的边沿掩码和数量。
+
+#### 3. **变量设计**
+- **输入**：
+  - `value`：待检测的 DWord 值。
+- **输出**：
+  - `hasChanged`、`hasRisingEdges`、`hasFallingEdges`：布尔值，表示是否有变化或边沿。
+  - `risingBits`、`fallingBits`：DWord，表示边沿的位掩码。
+  - `noOfRisingBits`、`noOfFallingBits`：USInt（无符号短整型），表示边沿数量。
+- **内部变量**：
+  - `statPreviousValue`：存储上一次的 `value`，用于边沿检测。
+  - 临时变量（`tempRisingResult`、`tempNoRisingBits` 等）：用于中间计算。
+
+#### 4. **算法流程**
+1. **边沿检测**：
+   - 计算 `risingBits` 和 `fallingBits`。
+2. **存储当前值**：
+   - 更新 `statPreviousValue = value`，供下一次检测使用。
+3. **边沿计数**：
+   - 使用位操作算法统计 `risingBits` 和 `fallingBits` 中的 `1` 的数量。
+4. **输出结果**：
+   - 根据计算结果设置所有输出变量。
+
+#### 5. **关键点**
+- **边沿检测**：通过 `AND` 和 `NOT` 操作实现，确保只检测变化的位。
+- **高效计数**：使用优化的位操作算法，避免逐位检查，提升性能。
+- **无错误处理**：该功能块不处理异常情况（如输入无效），直接输出计算结果。
+
+#### 6. **适用场景**
+- 适用于需要检测多位数信号边沿的场景，如：
+  - 多路开关状态监测。
+  - 并行数据流的边沿触发。
+  - 事件计数或状态变化记录。
+
+#### 7. **扩展性**
+- 如果需要支持更多位数（如 LWord 64 位），可以调整算法中的掩码和移位参数。
+- 可添加错误处理逻辑（如输入范围检查），但当前设计未包含。
+
+---
+
+### 总结
+该功能块的核心是通过位操作高效检测和统计 DWord 的边沿变化，适用于需要快速响应多路信号变化的工业控制场景。其设计重点在于：
+1. **边沿检测的位运算**（`AND` + `NOT`）。
+2. **高效的 `1` 的计数算法**（分步掩码和移位）。
+3. **简洁的输出接口**，直接提供边沿信息和数量。

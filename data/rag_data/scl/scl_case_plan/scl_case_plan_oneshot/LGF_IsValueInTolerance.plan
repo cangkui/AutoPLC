@@ -1,0 +1,74 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_IsValueInTolerance` 用于检查一个给定值 `value` 是否在设定值 `setpoint` 的百分比容差范围内。容差范围由 `tolerance` 参数定义，可以是正负百分比。函数返回布尔值表示是否在容差范围内，同时提供额外的输出信号（如超上限、低于下限、错误标志和状态码）。
+
+---
+
+#### 2. **输入参数**
+- `value` (LReal)：待检查的值。
+- `setpoint` (LReal)：目标设定值。
+- `tolerance` (LReal)：容差百分比（例如 5% 表示 ±5% 范围）。
+
+---
+
+#### 3. **输出参数**
+- `overHighLimit` (Bool)：`TRUE` 表示 `value` 超过上限。
+- `belowLowLimit` (Bool)：`TRUE` 表示 `value` 低于下限。
+- `error` (Bool)：`TRUE` 表示计算过程中发生错误（如无效的 `setpoint` 或 `tolerance`）。
+- `status` (Word)：状态码（例如 `16#0000` 表示无错误，`16#8401` 表示范围限制错误）。
+- **返回值** (Bool)：`TRUE` 表示 `value` 在容差范围内。
+
+---
+
+#### 4. **算法流程**
+1. **初始化与容差范围计算**
+   - 检查 `setpoint` 是否为正值：
+     - 如果是正值：
+       - 计算上限：`tempHighLimit = setpoint * (1 + |tolerance| / 100)`
+       - 计算下限：`tempLowLimit = setpoint * (1 - |tolerance| / 100)`
+     - 如果是负值或零：
+       - 计算上限：`tempHighLimit = setpoint * (1 - |tolerance| / 100)`
+       - 计算下限：`tempLowLimit = setpoint * (1 + |tolerance| / 100)`
+   - **容差范围对称性**：无论 `tolerance` 正负，均取其绝对值确保范围对称。
+
+2. **错误处理**
+   - 如果 `ENO`（使能输出）为 `FALSE`（表示前序逻辑出错）：
+     - 设置 `error = TRUE` 和状态码 `ERR_RANGE_LIMIT_VALUES`。
+     - 直接返回 `FALSE`，不执行后续检查。
+
+3. **范围检查**
+   - 检查 `value` 是否超过上限：`tempValueOverHighLimit = (value > tempHighLimit)`
+   - 检查 `value` 是否低于下限：`tempValueUnderLowLimit = (value < tempLowLimit)`
+
+4. **结果输出**
+   - 返回值：`NOT (tempValueOverHighLimit OR tempValueUnderLowLimit)`。
+   - 输出信号：
+     - `overHighLimit = tempValueOverHighLimit`
+     - `belowLowLimit = tempValueUnderLowLimit`
+     - `error = FALSE`（无错误时）
+     - `status = STATUS_NO_ERROR`
+
+5. **状态码与 ENO**
+   - 默认状态码为 `STATUS_NO_ERROR`。
+   - 强制 `ENO = TRUE`（禁用 PLC 的默认错误传递机制）。
+
+---
+
+#### 5. **关键逻辑调整**
+- **容差范围计算**：代码中通过 `setpoint` 的正负区分上下限计算方式，确保负值设定点的容差范围正确。
+- **错误处理**：优先检查 `ENO` 状态，避免无效计算。
+- **绝对值处理**：`tolerance` 使用 `ABS` 函数，避免用户输入负值导致逻辑错误。
+
+---
+
+#### 6. **示例调用**
+假设 `setpoint = 100.0`，`tolerance = 5.0`：
+- 上限：`100 * (1 + 0.05) = 105.0`
+- 下限：`100 * (1 - 0.05) = 95.0`
+- 若 `value = 102.0`，则返回 `TRUE`，所有输出信号为 `FALSE`。
+
+---
+
+### 总结
+该函数通过数学计算和逻辑比较实现容差检查，适用于工业控制中需要范围监控的场景（如温度、压力等）。其核心是通过 `setpoint` 和 `tolerance` 动态生成上下限，并严格处理边界条件和错误状态。

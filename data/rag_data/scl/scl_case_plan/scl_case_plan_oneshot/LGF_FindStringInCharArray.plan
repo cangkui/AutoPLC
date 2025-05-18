@@ -1,0 +1,66 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于在一个字符数组中查找指定的字符串，并返回该字符串在数组中的起始位置（基于零的索引）。如果未找到字符串，则返回-1。
+
+#### 2. **输入参数**
+- **searchFor**：需要查找的字符串。
+- **startPos**：从数组中的哪个位置开始查找（基于零的索引）。
+- **searchIn**（IN_OUT参数）：字符数组或字节数组，用于在其中查找字符串。
+
+#### 3. **输出参数**
+- **status**：函数执行的状态码。
+  - `16#0000`：无错误。
+  - `16#8200`：输入不是数组或数组元素类型不是CHAR或BYTE。
+
+#### 4. **返回值**
+- 返回找到的字符串的起始位置（基于零的索引），未找到则返回-1。
+
+#### 5. **算法流程**
+1. **初始化阶段**
+   - 设置临时变量初始值：
+     - `tempPosInString`：字符串中的当前位置，初始为0。
+     - `tempPosInArray`：数组中的当前位置，初始为`startPos`。
+     - `tempLenSearchFor`：`searchFor`字符串的长度。
+     - `status`：初始为`STATUS_NO_ERROR`。
+     - 返回值初始为-1。
+   - **输入验证**：
+     - 检查`searchIn`是否为数组，且数组元素类型是否为CHAR或BYTE。
+     - 如果不是，设置`status`为`ERR_NO_ARRAY`并直接返回。
+     - 如果是，获取数组的元素数量`tempNumElements`。
+
+2. **查找阶段**
+   - **循环查找**：
+     - 从`tempPosInArray`开始，将数组中的字符转换为字符串`tempString`（每次最多转换`LEN_STRING`个字符）。
+     - 在`tempString`中查找`searchFor`字符串，返回其位置`tempPosInString`。
+     - **如果找到**：
+       - 计算字符串在数组中的实际位置：`tempPosInArray + tempPosInString - 1`。
+       - 设置返回值并退出循环。
+     - **如果未找到**：
+       - 调整`tempPosInArray`，跳过已检查的部分（减去`searchFor`的长度以避免遗漏跨段的匹配）。
+   - **循环终止条件**：
+     - 找到字符串（`tempPosInString > 0`）。
+     - 或已遍历完整个数组（`tempPosInArray > tempNumElements`）。
+
+3. **返回结果**
+   - 如果找到字符串，返回其位置；否则返回-1。
+
+#### 6. **关键点**
+- **输入验证**：确保`searchIn`是合法的字符数组或字节数组。
+- **分段查找**：由于数组可能很大，每次只处理一部分（`LEN_STRING`长度），避免内存问题。
+- **位置调整**：每次未找到时，跳过已检查的部分，但保留`searchFor`长度的重叠部分，确保跨段的字符串也能被找到。
+
+#### 7. **调整建议**
+- 如果`startPos`超出数组范围，可以在初始化阶段直接返回-1。
+- 如果`searchFor`是空字符串，可以直接返回`startPos`（因为空字符串在任何位置都匹配）。
+- 可以优化`LEN_STRING`的值，平衡性能和内存使用。
+
+### 代码流程调整
+- **初始化阶段**：
+  - 增加对`startPos`的合法性检查（是否在数组范围内）。
+  - 增加对`searchFor`为空字符串的特殊处理。
+- **查找阶段**：
+  - 如果`tempLenSearchFor`为0，直接返回`startPos`。
+  - 如果`startPos >= tempNumElements`，直接返回-1。
+- **状态码**：
+  - 可以增加更多状态码，例如`ERR_INVALID_STARTPOS`（`startPos`非法）或`ERR_EMPTY_SEARCHFOR`（`searchFor`为空）。

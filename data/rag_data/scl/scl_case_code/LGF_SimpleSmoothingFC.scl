@@ -1,0 +1,93 @@
+FUNCTION "LGF_SimpleSmoothingFC" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SimpleSmoothingFC
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      values : Array[*] of LReal;
+      smoothedValues : Array[*] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempCount : Int;
+      tempNumberOfElements : Int;
+      tempNumberOfElementsOut : Int;
+      tempLowerBound : Int;
+      tempUpperBound : Int;
+      tempLowerBoundOut : Int;
+      tempUpperBoundOut : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      NUMBER_OF_ELEMENTS_CORRECTION : Int := 1;
+      DIMENSION_ONE : UDInt := 1;
+      MINIMUM_ARRAY_ELEMENTS : UDInt := 3;
+      NUMBER_OF_VALUES : UDInt := 3;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_NOT_ENOUGH_VALUES : Word := 16#8400;
+      ERR_ARRAY_DIFFERENT : Word := 16#8401;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_SimpleSmoothingFC
+	  // Comment/Function: This function calculates the smoothed values
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Checking number of lower and upper bound
+	  #tempLowerBound := DINT_TO_INT(LOWER_BOUND(ARR := #values, DIM := #DIMENSION_ONE));
+	  #tempUpperBound := DINT_TO_INT(UPPER_BOUND(ARR := #values, DIM := #DIMENSION_ONE));
+	  
+	  #tempNumberOfElements := #tempUpperBound - #tempLowerBound + #NUMBER_OF_ELEMENTS_CORRECTION;
+	  
+	  #tempLowerBoundOut := DINT_TO_INT(LOWER_BOUND(ARR := #smoothedValues, DIM := #DIMENSION_ONE));
+	  #tempUpperBoundOut := DINT_TO_INT(UPPER_BOUND(ARR := #smoothedValues, DIM := #DIMENSION_ONE));
+	  
+	  #tempNumberOfElementsOut := #tempUpperBoundOut - #tempLowerBoundOut + #NUMBER_OF_ELEMENTS_CORRECTION;
+	  
+	  // Check if size of arrays is ok
+	  IF #tempNumberOfElements <> #tempNumberOfElementsOut THEN
+	    #error := true;
+	    #status := #ERR_ARRAY_DIFFERENT;
+	    RETURN;
+	    // Check size of arrays if the are big enough
+	  ELSIF #tempNumberOfElements < #MINIMUM_ARRAY_ELEMENTS THEN
+	    #error := true;
+	    #status := #ERR_NOT_ENOUGH_VALUES;
+	    RETURN;
+	  END_IF;
+	  
+	  // Caluclating smoothed value
+	  // y(Nsmoothed)= (y(n-1)+y(n)+y(n+1)) / 3
+	  FOR #tempCount := #tempLowerBound + 1 TO #tempUpperBound - 1 DO
+	    #smoothedValues[#tempCount] := (#values[#tempCount - 1] + #values[#tempCount] + #values[#tempCount + 1]) / #NUMBER_OF_VALUES;
+	  END_FOR;
+	  
+	  #error := false;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  // ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

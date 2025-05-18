@@ -1,0 +1,111 @@
+### **算法流程描述：矩形信号发生器（LGF_RectangleCI）**
+
+#### **1. 功能概述**
+该功能块（FB）用于生成一个**矩形波信号**，其输出值 `value` 在 `offset + amplitude` 和 `offset - amplitude` 之间周期性切换。信号周期由 `periode` 参数控制，相位偏移由 `phaseShift` 参数调整。信号生成基于调用该 FB 的**循环中断 OB（OB_CYCLIC）**的周期时间。
+
+---
+
+#### **2. 输入参数**
+| 参数名 | 数据类型 | 默认值 | 描述 |
+|--------|---------|--------|------|
+| `amplitude` | `Real` | `1.0` | 矩形波的幅度 |
+| `offset` | `Real` | `0.0` | 信号的直流偏移 |
+| `periode` | `UDInt` | `1000` | 信号周期（毫秒） |
+| `phaseShift` | `Real` | `0.0` | 相位偏移（毫秒） |
+| `callOB` | `OB_CYCLIC` | - | 调用的循环中断 OB |
+| `reset` | `Bool` | `FALSE` | 复位信号，使计数器归零 |
+
+---
+
+#### **3. 输出参数**
+| 参数名 | 数据类型 | 默认值 | 描述 |
+|--------|---------|--------|------|
+| `value` | `Real` | - | 当前矩形波信号值 |
+| `error` | `Bool` | `FALSE` | 错误标志 |
+| `status` | `Word` | `16#0000` | 状态码 |
+| `subFunctionStatus` | `Word` | `16#0000` | 子函数状态码 |
+
+---
+
+#### **4. 内部变量**
+| 变量名 | 数据类型 | 描述 |
+|--------|---------|------|
+| `statCounter` | `UDInt` | 计数器，记录当前周期内的运行时间 |
+| `tempCycleTime` | `UDInt` | 临时存储循环 OB 的周期时间 |
+| `tempCyclePhase` | `UDInt` | 临时存储循环 OB 的相位 |
+| `tempCycleStatus` | `Word` | 临时存储循环 OB 的状态 |
+| `tempReadTimeStatus` | `Int` | 临时存储 `QRY_CINT` 的返回值 |
+| `tempValue` | `Real` | 临时存储计算后的信号值 |
+| `tempPhaseShift` | `UDInt` | 临时存储相位偏移 |
+
+---
+
+#### **5. 算法流程**
+1. **获取循环 OB 的周期时间**
+   - 调用 `QRY_CINT` 函数，查询 `callOB` 的周期时间 `tempCycleTime` 和相位 `tempCyclePhase`。
+   - **错误处理**：
+     - 如果 `QRY_CINT` 返回错误（`tempReadTimeStatus ≠ 0`），则：
+       - `error = TRUE`
+       - `status = ERR_QRY_CINT`
+       - `value = 0`
+       - 直接 `RETURN`
+     - 如果 OB 不可用（`tempCycleStatus = QRY_CINT_OB_UNAVAILABLE`），则：
+       - `error = TRUE`
+       - `status = ERR_OB_UNAVAILABLE`
+       - `value = 0`
+       - 直接 `RETURN`
+
+2. **计算相位偏移**
+   - `tempPhaseShift = REAL_TO_UDINT(phaseShift) MOD periode`  
+     （确保相位偏移不超过周期）
+
+3. **复位逻辑**
+   - 如果 `reset = TRUE`：
+     - `statCounter = tempPhaseShift`（重置计数器）
+     - `tempValue = 0`（输出归零）
+
+4. **正常运行时**
+   - **更新计数器**：
+     - `statCounter += tempCycleTime / SECOND_IN_MS`（累加时间）
+     - `statCounter = statCounter MOD periode`（确保在周期内循环）
+   - **计算输出值**：
+     - 如果 `statCounter` 在 `[tempPhaseShift, periode/2 + tempPhaseShift)` 区间：
+       - `tempValue = offset + amplitude`（高电平）
+     - 否则：
+       - `tempValue = offset - amplitude`（低电平）
+
+5. **输出赋值**
+   - `value = tempValue`
+   - `error = FALSE`
+   - `status = STATUS_FINISHED_NO_ERROR`
+   - `subFunctionStatus = SUB_STATUS_NO_ERROR`
+   - `ENO = TRUE`（强制使能输出）
+
+---
+
+#### **6. 状态码**
+| 状态码 | 描述 |
+|--------|------|
+| `16#0000` | 无错误 |
+| `16#8600` | OB 不可用 |
+| `16#8601` | `QRY_CINT` 查询错误 |
+
+---
+
+#### **7. 调整建议**
+- **优化相位计算**：如果 `phaseShift` 为负数，应增加处理逻辑（如取模后加 `periode`）。
+- **增加边界检查**：确保 `amplitude` 和 `periode` 不为零或负值。
+- **支持动态周期调整**：如果 `periode` 在运行时变化，应重新计算 `statCounter` 的模值。
+
+---
+
+### **总结**
+该 FB 通过循环 OB 的周期时间驱动计数器，生成矩形波信号。核心逻辑包括：
+1. **获取 OB 周期时间**
+2. **处理错误**
+3. **计算相位偏移**
+4. **更新计数器**
+5. **决定输出电平**
+6. **返回状态和值**
+
+适用于需要**周期性切换信号**的应用，如 PWM 控制、LED 闪烁、测试信号生成等。

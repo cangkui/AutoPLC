@@ -1,0 +1,65 @@
+FUNCTION_BLOCK "FB_ColorLightControl"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    controlButton : Bool; 
+END_VAR
+
+VAR_OUTPUT
+    greenLight : Bool; 
+    redLight : Bool; 
+    yellowLight : Bool; 
+END_VAR
+
+VAR
+    lightState : Int := 0; 
+    lastControlButtonState : Bool := FALSE; 
+END_VAR
+
+VAR_TEMP
+    
+END_VAR
+
+BEGIN
+    REGION Validation OF INPUT and OUTPUT 
+        
+    END_REGION
+
+    REGION main logic
+        
+        IF #controlButton AND NOT #lastControlButtonState THEN
+            #lightState += 1; 
+            IF #lightState > 5 THEN
+                #lightState := 1; 
+            END_IF;
+        END_IF;
+        #lastControlButtonState := #controlButton; 
+
+        
+        CASE #lightState OF
+            1:
+                #greenLight := TRUE;
+                #redLight := FALSE;
+                #yellowLight := FALSE;
+            2:
+                #greenLight := FALSE;
+                #redLight := TRUE;
+                #yellowLight := FALSE;
+            3:
+                #greenLight := FALSE;
+                #redLight := FALSE;
+                #yellowLight := TRUE;
+            4:
+                #greenLight := TRUE;
+                #redLight := TRUE;
+                #yellowLight := TRUE;
+            5:
+                #greenLight := FALSE;
+                #redLight := FALSE;
+                #yellowLight := FALSE;
+        END_CASE;
+    END_REGION
+
+    REGION Writting TO outputs
+        
+    END_REGION
+END_FUNCTION_BLOCK

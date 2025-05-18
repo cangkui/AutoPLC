@@ -1,0 +1,136 @@
+FUNCTION "LGF_DifferenceQuotientFC" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_DifferenceQuotientFC
+   VAR_INPUT 
+      deltaT : LReal;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      values : Array[*] of LReal;
+      derivatedValues : Array[*] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempLowerBound : Int;
+      tempUpperBound : Int;
+      tempNumberOfElements : Int;
+      tempLowerBoundOut : Int;
+      tempUpperBoundOut : Int;
+      tempNumberOfElementsOut : Int;
+      tempCount : Int;
+      tempDivision : LReal;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : LReal := 0.0;
+      NUMBER_OF_ELEMENTS_CORRECTION : Int := 1;
+      DIMENSION_ONE : UDInt := 1;
+      MINIMUM_ARRAY_ELEMENTS : UDInt := 4;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_DELTA_T : Word := 16#8200;
+      ERR_ARRAYS_DIFFERENT : Word := 16#8400;
+      ERR_NOT_ENOUGH_VALUES : Word := 16#8401;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_DifferenceQuotientFC
+	  // Comment/Function: This function differentiates a signal
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //----------|------------|------------------------|----------------------------
+	  // Version  | Date       | Expert in charge       | Changes applied
+	  //----------|------------|------------------------|----------------------------
+	  // 01.00.00 | 23.11.2018 | Siemens Industry Online Support
+	  //                       | First released version
+	  // 01.00.01 | 15.11.2019 | Simatic Systems Support
+	  //                       | Regions, comments and constants are added
+	  // 03.00.00 | 23.04.2020 | Simatic Systems Support
+	  //                       | Set version to V3.0.0, harmonize the version of the whole library
+	  // 03.00.01 | 06.04.2021 | Simatic Systems Support
+	  //                       | Insert documentation
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Checking number of lower and upper bound  
+	  #tempLowerBound := DINT_TO_INT(LOWER_BOUND(ARR := #values, DIM := #DIMENSION_ONE));
+	  #tempUpperBound := DINT_TO_INT(UPPER_BOUND(ARR := #values, DIM := #DIMENSION_ONE));
+	  
+	  #tempNumberOfElements := #tempUpperBound - #tempLowerBound + #NUMBER_OF_ELEMENTS_CORRECTION;
+	  
+	  #tempLowerBoundOut := DINT_TO_INT(LOWER_BOUND(ARR := #derivatedValues, DIM := #DIMENSION_ONE));
+	  #tempUpperBoundOut := DINT_TO_INT(UPPER_BOUND(ARR := #derivatedValues, DIM := #DIMENSION_ONE));
+	  
+	  #tempNumberOfElementsOut := #tempUpperBoundOut - #tempLowerBoundOut + #NUMBER_OF_ELEMENTS_CORRECTION;
+	  
+	  //check if size of arrays is ok
+	  IF #tempNumberOfElementsOut <> #tempNumberOfElements THEN
+	    #error := true;
+	    #status := #ERR_ARRAYS_DIFFERENT;
+	    RETURN;
+	    // check size of arrays if the are big enough
+	  ELSIF #tempNumberOfElements <= #MINIMUM_ARRAY_ELEMENTS THEN
+	    #error := true;
+	    #status := #ERR_NOT_ENOUGH_VALUES;
+	    RETURN;
+	    // DeltaT cannot be zero, devision by zero not possible.
+	  ELSIF #deltaT = #ZERO THEN
+	    #error := true;
+	    #status := #ERR_DELTA_T;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculating the derrivate values  
+	  // calculate derivate value 
+	  // keep the "Magic Numbers" as they are part of the Math equation and would extent the formular in a unreadable way
+	  // ẏ(n)=1/12h*(y(n-2)-8y(n-1)+8y(n+1)-y(n+2))
+	  // h = deltaT
+	  #tempDivision := 1.0 / (12.0 * #deltaT);
+	  FOR #tempCount := #tempLowerBound + 2 TO #tempUpperBound - 2 DO
+	    #derivatedValues[#tempCount] := #tempDivision * (#values[#tempCount - 2] - 8 * #values[#tempCount - 1] + 8 * #values[#tempCount + 1] - #values[#tempCount + 2]);
+	  END_FOR;
+	  
+	  // ẏ(n-2)=1/84h*(-125y(n-2)+136y(n-1)+48y(n)-88y(n+1)+29y(n+2))
+	  // h = deltaT
+	  #tempDivision := 1.0 / (84.0 * #deltaT);
+	  #derivatedValues[0] := #tempDivision * (-125 * #values[0] + 136 * #values[1] + 48 * #values[2] - 88 * #values[3] + 29 * #values[4]);
+	  
+	  // ẏ(n-1)=1/84h*(-38y(n-2)-2y(n-1)+24y(n)+26y(n+1)-10y(n+2))
+	  // h = deltaT
+	  #derivatedValues[1] := #tempDivision * (-38 * #values[0] - 2 * #values[1] + 24 * #values[2] + 26 * #values[3] - 10 * #values[4]);
+	  
+	  // ẏ(n+1)=1/84h(10y(n-2)-26y(n-1)-24y(n)+2y(n+1)+38y(n+2))
+	  // h = deltaT
+	  #derivatedValues[#tempUpperBound - 1] := #tempDivision * (10 * #values[#tempUpperBound - 4] - 26 * #values[#tempUpperBound - 3] - 24 * #values[#tempUpperBound - 2] + 2 * #values[#tempUpperBound - 1] + 38 * #values[#tempUpperBound]);
+	  
+	  // y(n-2)=1/84h(-29y(n-2)+88y(n-1)-48y(n)-136y(n+1)+125y(n+2))
+	  // h = deltaT
+	  #derivatedValues[#tempUpperBound] := #tempDivision * (-29 * #values[#tempUpperBound - 4] + 88 * #values[#tempUpperBound - 3] - 48 * #values[#tempUpperBound - 2] - 136 * #values[#tempUpperBound - 1] + 125 * #values[#tempUpperBound]);
+	  
+	  #error := false;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  // ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

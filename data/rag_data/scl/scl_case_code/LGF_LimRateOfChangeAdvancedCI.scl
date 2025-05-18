@@ -1,0 +1,342 @@
+FUNCTION_BLOCK "LGF_LimRateOfChangeAdvancedCI"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_LimRateOfChangeAdvancedCI
+   VAR_INPUT 
+      autoValue : LReal;
+      manualValue : LReal;
+      setPosUpRateLim : LReal;
+      setPosDownRateLim : LReal;
+      setNegUpRateLim : LReal;
+      setNegDownRateLim : LReal;
+      setHighLim : LReal;
+      setLowLim : LReal;
+      defaultOutValue : LReal;
+      enDefaultOutValue : Bool;
+      track : Bool;
+      manOp : Bool;
+      reset : Bool;
+      callOB : OB_CYCLIC;
+   END_VAR
+
+   VAR_OUTPUT 
+      outputValue { ExternalWritable := 'False'} : LReal;
+      posUpRateLim { ExternalWritable := 'False'} : Bool;
+      posDownRateLim { ExternalWritable := 'False'} : Bool;
+      negUpRateLim { ExternalWritable := 'False'} : Bool;
+      negDownRateLim { ExternalWritable := 'False'} : Bool;
+      highLim { ExternalWritable := 'False'} : Bool;
+      lowLim { ExternalWritable := 'False'} : Bool;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subfunctionStatus { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR 
+      statPrevOutputValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal := 0.0;
+      statManOp { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR_TEMP 
+      tempPosUp : Bool;
+      tempPosDown : Bool;
+      tempNegUp : Bool;
+      tempNegDown : Bool;
+      tempHighLim : Bool;
+      tempLowLim : Bool;
+      tempCycleReal : LReal;
+      tempOutv : LReal;
+      tempVar : LReal;
+      tempCycleTime : UDInt;
+      tempCyclePhase : UDInt;
+      tempCycleStatus : Word;
+      tempReadTimeStatus : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO_INT : Int := 0;
+      ZERO_REAL : LReal := 0.0;
+      SECOND_IN_MICROSECONDS : LReal := 1000000.0;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_NEG_RATE_LIM : Word := 16#8200;
+      ERR_NEG_RATE_OF_CHANGE : Word := 16#8202;
+      ERR_QRY_CINT : Word := 16#8600;
+      ERR_OB_UNAVAILABLE : Word := 16#8601;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_LimRateOfChangeAdvancedCI
+	  // Comment/Function: Generates a ramp function from a step function.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization
+	  #tempPosUp := FALSE;
+	  #tempPosDown := FALSE;
+	  #tempNegUp := FALSE;
+	  #tempNegDown := FALSE;
+	  #tempHighLim := FALSE;
+	  #tempLowLim := FALSE;
+	  #tempOutv := #autoValue;
+	  
+	  // get sample time, according to the cyclic interrupt OB number
+	  #tempReadTimeStatus := QRY_CINT(OB_NR := #callOB, CYCLE => #tempCycleTime, PHASE => #tempCyclePhase, STATUS => #tempCycleStatus);
+	  #tempCycleReal := UDINT_TO_REAL(#tempCycleTime) / #SECOND_IN_MICROSECONDS; // Time in seconds
+	END_REGION
+	
+	REGION Validation
+	  // Generate error message of the QRY_CINT function
+	  IF (#tempReadTimeStatus <> #ZERO_INT) THEN
+	    #error := TRUE;
+	    #subfunctionStatus := INT_TO_WORD(#tempReadTimeStatus);
+	    #status := #ERR_QRY_CINT;
+	    RETURN;
+	  END_IF;
+	  
+	  // Generate error message when OB unavailable
+	  IF #tempCycleStatus = #SUB_STATUS_NO_ERROR THEN
+	    #error := TRUE;
+	    #status := #ERR_OB_UNAVAILABLE;
+	    #subfunctionStatus := #STATUS_FINISHED_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  //Check high with low limit
+	  IF #setHighLim < #setLowLim THEN
+	    #error := TRUE;
+	    #status := #ERR_NEG_RATE_LIM;
+	    #subfunctionStatus := #STATUS_FINISHED_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  //Check rate limits for negative values
+	  IF (#setNegDownRateLim < #ZERO_REAL) OR (#setNegUpRateLim < #ZERO_REAL)
+	    OR (#setPosDownRateLim < #ZERO_REAL) OR (#setPosUpRateLim < #ZERO_REAL) THEN
+	    #error := TRUE;
+	    #status := #ERR_NEG_RATE_OF_CHANGE;
+	    #subfunctionStatus := #STATUS_FINISHED_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Function processing
+	  // RESTART
+	  // reset manual mode flag 
+	  IF #reset THEN
+	    #statManOp := FALSE;
+	    IF #enDefaultOutValue THEN
+	      // preset output
+	      #tempOutv := #defaultOutValue;
+	      // limitation of output
+	      // High limitation
+	      IF #tempOutv >= #setHighLim THEN
+	        #tempOutv := #setHighLim;
+	        #tempHighLim := TRUE;
+	      END_IF;
+	      
+	      // Low limitation
+	      IF #tempOutv <= #setLowLim THEN
+	        #tempOutv := #setLowLim;
+	        #tempLowLim := TRUE;
+	      END_IF;
+	    ELSE
+	      // reset output
+	      #tempOutv := #ZERO_REAL;
+	    END_IF;
+	  ELSE
+	    // OPERATING MODES
+	    // -------------------------------------------------------
+	    IF #manOp THEN
+	      //---// MANUAL MODE
+	      // bumples switch between manual mode and auto mode
+	      #tempOutv := #manualValue;
+	      // Keep manual mode until setpoint in the space of low and high limit
+	      #statManOp := TRUE;
+	    ELSE
+	      //---// AUTOMATIC MODE
+	      IF #enDefaultOutValue THEN
+	        // preset output by default value
+	        #tempOutv := #defaultOutValue;
+	      ELSE
+	        IF #track THEN
+	          // output has same value as input
+	          #tempOutv := #autoValue;
+	        ELSE
+	          // REGULAR FUNCTION
+	          // Negativ range
+	          IF #statPrevOutputValue < #ZERO_INT THEN
+	            IF #statPrevOutputValue > #autoValue THEN
+	              // limited rate of change
+	              #tempVar := #statPrevOutputValue - #setNegUpRateLim * #tempCycleReal;
+	              IF #autoValue < #tempVar THEN
+	                // Setpoint not reached yet
+	                // set notification for up rate limit in neg range
+	                #tempNegUp := TRUE;
+	                #tempOutv := #tempVar;
+	              END_IF;
+	            ELSE
+	              IF #setNegDownRateLim = #ZERO_REAL THEN
+	                // set notification for down rate limit in neg range
+	                #tempNegDown := TRUE;
+	                IF #autoValue <= #ZERO_REAL THEN
+	                  #tempOutv := #autoValue;
+	                ELSE
+	                  #tempOutv := #ZERO_REAL;
+	                END_IF;
+	              ELSE
+	                IF #autoValue <= #ZERO_REAL THEN
+	                  // limited rate of change
+	                  #tempVar := #statPrevOutputValue + #setNegDownRateLim * #tempCycleReal;
+	                  IF #autoValue > #tempVar THEN
+	                    // set notification for down rate limit in neg range
+	                    #tempNegDown := TRUE;
+	                    #tempOutv := #tempVar;
+	                  END_IF;
+	                ELSE
+	                  // changeover between neg. and pos. range
+	                  // period till zero-crossing
+	                  #tempVar := - #statPrevOutputValue / #setNegDownRateLim;
+	                  
+	                  IF #tempVar <= #tempCycleReal THEN
+	                    // period till zero-crossing shorten than sample time
+	                    // limited rate of change
+	                    #tempVar := (#tempCycleReal - #tempVar) * #setPosUpRateLim;
+	                    
+	                    IF #autoValue > #tempVar THEN
+	                      // set notification for rate limit 
+	                      #tempNegDown := FALSE;
+	                      #tempPosUp := TRUE;
+	                      #tempOutv := #tempVar;
+	                    END_IF;
+	                  ELSE
+	                    // set notification for rate limit
+	                    #tempNegDown := TRUE;
+	                    #tempPosUp := FALSE;
+	                    #tempOutv := #statPrevOutputValue + #tempCycleReal * #setNegDownRateLim;
+	                  END_IF;
+	                END_IF;
+	              END_IF;
+	            END_IF;
+	          ELSE
+	            // Positiv range + 0
+	            IF #statPrevOutputValue < #autoValue THEN
+	              // limited rate of change
+	              #tempVar := #statPrevOutputValue + #setPosUpRateLim * #tempCycleReal;
+	              IF #autoValue > #tempVar THEN
+	                // set notification for up rate limit in pos range
+	                #tempPosUp := TRUE;
+	                #tempOutv := #tempVar;
+	              END_IF;
+	            END_IF;
+	            
+	            IF #statPrevOutputValue >= #autoValue THEN
+	              IF #setPosDownRateLim = #ZERO_REAL THEN
+	                // set notification for down rate limit in pos range
+	                #tempPosDown := TRUE;
+	                IF #autoValue >= #ZERO_REAL THEN
+	                  #tempOutv := #autoValue;
+	                ELSE
+	                  #tempOutv := #ZERO_REAL;
+	                END_IF;
+	              ELSE
+	                IF #autoValue >= #ZERO_REAL THEN
+	                  // limited rate of change
+	                  #tempVar := #statPrevOutputValue - #setPosDownRateLim * #tempCycleReal;
+	                  IF #autoValue < #tempVar THEN
+	                    // set notification for up rate limit in pos range
+	                    #tempPosDown := TRUE;
+	                    #tempOutv := #tempVar;
+	                  END_IF;
+	                ELSE  // changeover between pos. and neg. range
+	                  // period till zero-crossing
+	                  #tempVar := #statPrevOutputValue / #setPosDownRateLim;
+	                  
+	                  IF #tempVar <= #tempCycleReal THEN
+	                    // limited rate of change
+	                    #tempVar := - (#tempCycleReal - #tempVar) * #setNegUpRateLim;
+	                    IF #autoValue < #tempVar THEN
+	                      // set notification for rate limit
+	                      #tempPosDown := False;
+	                      #tempNegUp := TRUE;
+	                      #tempOutv := #tempVar;
+	                    END_IF;
+	                  ELSE
+	                    // set notification for rate limit
+	                    #tempPosDown := TRUE;
+	                    #tempNegUp := FALSE;
+	                    #tempOutv := #statPrevOutputValue - #tempCycleReal * #setPosDownRateLim;
+	                  END_IF;
+	                END_IF;
+	              END_IF;
+	            END_IF;
+	          END_IF;
+	        END_IF;
+	      END_IF;
+	      
+	      // high/low level limitation
+	      IF #tempOutv >= #setHighLim THEN
+	        #tempHighLim := TRUE;
+	        IF NOT #statManOp THEN
+	          #tempOutv := #setHighLim;
+	          // correct up rate limit notification
+	          IF #tempOutv - #statPrevOutputValue < #setPosUpRateLim * #tempCycleReal THEN
+	            #tempPosUp := FALSE;
+	          END_IF;
+	        END_IF;
+	      ELSE
+	        IF #tempOutv <= #setLowLim THEN
+	          #tempLowLim := TRUE;
+	          IF NOT #statManOp THEN
+	            #tempOutv := #setLowLim;
+	            // correct up rate limit notification  
+	            IF #statPrevOutputValue - #tempOutv < #setNegUpRateLim * #tempCycleReal THEN
+	              #tempNegUp := FALSE;
+	            END_IF;
+	          END_IF;
+	        ELSE
+	          // reset manual mode flag when tempOutv between upper and lower limit
+	          #statManOp := FALSE;
+	        END_IF;
+	      END_IF;
+	    END_IF;
+	  END_IF;
+	  
+	  #statPrevOutputValue := #tempOutv;
+	END_REGION
+	
+	REGION writting to outputs
+	  #error := FALSE;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  #subfunctionStatus := #STATUS_FINISHED_NO_ERROR;
+	  
+	  #outputValue := #tempOutv;
+	  #posUpRateLim := #tempPosUp;
+	  #posDownRateLim := #tempPosDown;
+	  #negUpRateLim := #tempNegUp;
+	  #negDownRateLim := #tempNegDown;
+	  #highLim := #tempHighLim;
+	  #lowLim := #tempLowLim;
+	  
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

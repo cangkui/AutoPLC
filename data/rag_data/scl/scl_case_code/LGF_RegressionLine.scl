@@ -1,0 +1,115 @@
+FUNCTION "LGF_RegressionLine" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_RegressionLine
+   VAR_OUTPUT 
+      slope : LReal;
+      intercept : LReal;
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      values : Array[*] of "LGF_typeRegressionLine";
+   END_VAR
+
+   VAR_TEMP 
+      tempRegressionPoint : "LGF_typeRegressionLine";
+      tempIndex : DInt;
+      tempNumberOfElements : DInt;
+      tempLowerBound : DInt;
+      tempUpperBound : DInt;
+      tempSumXY : LReal;
+      tempSumX : LReal;
+      tempSumY : LReal;
+      tempSumX2 : LReal;
+      tempIntercept : LReal;
+      tempSlope : LReal;
+   END_VAR
+
+   VAR CONSTANT 
+      ARRAY_FIRST_DIMENSION : UInt := 1;
+      ELEMENTS_COUNT_CORRECTION : DInt := 1;
+      ELEMENTS_NUMBER_THRESHOLD : DInt := 2;
+      STATUS_EXECUTION_FINISHED : Word := 16#0000;
+      ERR_NOT_ENOUGH_VALUES : Word := 16#8200;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_RegressionLine
+	  // Comment/Function: This function calculates the regression line
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V15.1 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization and input data processing
+	  //calculate number of elements
+	  #tempLowerBound := LOWER_BOUND(ARR := #values, DIM := #ARRAY_FIRST_DIMENSION);
+	  #tempUpperBound := UPPER_BOUND(ARR := #values, DIM := #ARRAY_FIRST_DIMENSION);
+	  
+	  // Array elements calculation
+	  // (example: 6 - 2 = 4; but real number of elements is 5)
+	  #tempNumberOfElements := #tempUpperBound - #tempLowerBound + #ELEMENTS_COUNT_CORRECTION;
+	  
+	  // Check whether the array contains less than the maximum possible amount of elements
+	  IF #tempNumberOfElements < #ELEMENTS_NUMBER_THRESHOLD THEN
+	    #slope := 0.0;
+	    #intercept := 0.0;
+	    #error := TRUE;
+	    #status := #ERR_NOT_ENOUGH_VALUES;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Regression line calculation
+	  // caluclate sum of all needed values
+	  FOR #tempIndex := #tempLowerBound TO #tempUpperBound DO
+	    // make a temp copy first
+	    #tempRegressionPoint := #values[#tempIndex];
+	    
+	    // Sum of x(n) * y(n)
+	    #tempSumXY += #tempRegressionPoint.x * #tempRegressionPoint.y;
+	    // Sum of x(n) 
+	    #tempSumX += #tempRegressionPoint.x;
+	    // Sum of y(n)
+	    #tempSumY += #tempRegressionPoint.y;
+	    // Sum of x²(n)
+	    #tempSumX2 += SQR(#tempRegressionPoint.x);
+	  END_FOR;
+	  
+	  // b = (n * ∑(x(n) * y(n) - ( ∑x(n) * ∑y(n)))/
+	  //    (n * (∑x(n)^2) -(∑x(n) * ∑x(n)))
+	  #tempSlope := (#tempNumberOfElements * #tempSumXY - (#tempSumX * #tempSumY)) / (#tempNumberOfElements * #tempSumX2 - (#tempSumX * #tempSumX));
+	  
+	  // a = Y - bX : X and Y are the average values of x and y
+	  #tempIntercept := #tempSumY / #tempNumberOfElements - (#tempSlope * (#tempSumX / #tempNumberOfElements));
+	END_REGION
+	
+	REGION Outputs assignment
+	  // f(x)= a + b*x
+	  #slope := #tempSlope;
+	  #intercept := #tempIntercept;
+	  
+	  #error := false;
+	  #status := #STATUS_EXECUTION_FINISHED;
+	  // ENO not in use - force to true
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

@@ -1,0 +1,45 @@
+FUNCTION "LGF_SplitWordToBytes" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SplitWordToBytes
+	VAR_INPUT 
+		"word" : Word;
+	END_VAR
+
+	VAR_OUTPUT 
+		byte1 : Byte;
+		byte0 : Byte;
+	END_VAR
+
+	VAR CONSTANT 
+		MASK : Byte := 16#FF;
+	END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2018
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_SplitWordToBytes
+	  // Comment/Function: This function splits a Word variable into 2 Byte variables.
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V14 / V14SP1
+	  // Restrictions:     ENO disabled - no error handling, no failure possible.
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION
+	
+	REGION OUTPUT
+	  // get the bytes by slice access
+	  #byte0 := #word AND #MASK;
+	  #byte1 := SHR(IN := #word, N := 8) AND #MASK;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

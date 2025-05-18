@@ -1,0 +1,75 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_Boxplot_LReal` 用于计算输入数据集的箱线图（Boxplot）统计量，包括：
+- 最小值（min）
+- 第一四分位数（Q25）
+- 中位数（median）
+- 第三四分位数（Q75）
+- 最大值（max）
+- 异常值（outlierMin 和 outlierMax）
+- 偏度（skewness）
+
+#### 2. **输入输出**
+- **输入**：
+  - `execute`：触发计算的布尔信号（上升沿触发）。
+  - `rangeOutlier`：异常值检测的参数（默认为1.5）。
+  - `values`：输入的数据数组（可变长度，类型为 `LReal`）。
+- **输出**：
+  - 箱线图统计量（min、Q25、median、Q75、max、outlierMin、outlierMax、skewness）。
+  - 状态和错误信息（error、status、subfunctionStatus）。
+
+#### 3. **算法流程**
+1. **触发检测**：
+   - 检测 `execute` 的上升沿，触发计算。
+   - 如果 `execute` 为低电平，则标记状态为 `STATUS_NO_CALL`。
+
+2. **输入验证**：
+   - 检查 `rangeOutlier` 是否合法（必须 >1.0 或 =0.0）。
+   - 检查输入数组的边界是否为负值（`ERR_NEG_ARR_BOUND`）。
+
+3. **数据排序**：
+   - 使用 `LGF_ShellSort_LReal` 对输入数组 `values` 进行排序。
+   - 如果排序失败，标记错误状态 `ERR_SHELL_SORT`。
+
+4. **统计量计算**：
+   - **最小值（min）和最大值（max）**：直接从排序后的数组首尾获取。
+   - **中位数（median）**：
+     - 如果数组长度为偶数：取中间两个数的平均值。
+     - 如果数组长度为奇数：取中间的数。
+   - **四分位数（Q25 和 Q75）**：
+     - 使用线性插值法计算。
+   - **异常值检测**：
+     - 如果 `rangeOutlier` 不为零，计算四分位距（IQR = Q75 - Q25）。
+     - 定义异常值边界：
+       - 下边界：`Q25 - rangeOutlier * IQR`
+       - 上边界：`Q75 + rangeOutlier * IQR`
+     - 遍历数组，统计超出边界的异常值数量，并计算异常值百分比（`outlierMin` 和 `outlierMax`）。
+   - **偏度（skewness）**：
+     - 计算公式：`(Q25 + Q75 - 2 * median) / (Q75 - Q25)`。
+
+5. **输出更新**：
+   - 将计算得到的统计量赋值给输出变量。
+   - 更新状态和错误信息。
+
+#### 4. **状态和错误处理**
+- **状态码**：
+  - `STATUS_EXECUTION_FINISHED`：计算完成。
+  - `STATUS_NO_CALL`：未触发计算。
+  - `STATUS_FIRST_CALL`：首次触发计算。
+  - `ERR_RANGE_NOT_OK`：`rangeOutlier` 非法。
+  - `ERR_NEG_ARR_BOUND`：数组边界为负。
+  - `ERR_SHELL_SORT`：排序失败。
+- **错误标志**：
+  - `error`：状态码的最高位（`statStatus.%X15`）。
+
+#### 5. **代码调整建议**
+- **优化异常值检测**：
+  - 当前代码通过遍历数组检测异常值，可以优化为二分查找（因为数组已排序）。
+- **输入验证增强**：
+  - 增加对空数组或单元素数组的处理逻辑。
+- **状态机设计**：
+  - 可以引入状态机（如 `IDLE`、`SORTING`、`CALCULATING`、`FINISHED`）以支持多步计算。
+
+### 总结
+该功能块通过排序和插值法计算箱线图统计量，支持异常值检测和偏度计算。核心逻辑清晰，但可以通过优化遍历和增强输入验证进一步提升鲁棒性。

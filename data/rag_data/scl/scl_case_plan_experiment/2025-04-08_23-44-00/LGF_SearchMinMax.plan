@@ -1,0 +1,121 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于在给定的数组中查找最大值、最小值及其对应的索引位置。支持多种数据类型（如Int、UInt、DInt、Real等），并具备错误处理机制。
+
+#### 2. **输入输出定义**
+- **输入**：
+  - `variableArray`：Variant类型，表示待搜索的数组。
+- **输出**：
+  - `minValue`：Variant类型，数组中的最小值。
+  - `minValueIndex`：DInt类型，最小值的索引。
+  - `maxValue`：Variant类型，数组中的最大值。
+  - `maxValueIndex`：DInt类型，最大值的索引。
+  - `error`：Bool类型，错误标志。
+  - `status`：Word类型，状态码。
+  - `subfunctionStatus`：Word类型，子函数状态码。
+
+#### 3. **主要逻辑流程**
+1. **初始化**：
+   - 初始化错误标志、状态码和子函数状态码为默认值（无错误）。
+   
+2. **输入验证**：
+   - 检查输入是否为数组：
+     - 如果不是数组，设置错误标志和状态码（`ERR_NO_ARRAY`），并返回。
+   - 检查数组元素类型与输出变量类型是否一致：
+     - 如果不一致，设置错误标志和状态码（`ERR_NOT_EQUAL_TYPES`），并返回。
+   - 计算数组的结束索引（`tempArrayEndIndex`）。
+
+3. **搜索逻辑**：
+   - 根据数组元素类型（通过`TypeOfElements`判断），进入对应的搜索分支（如Int、UInt、DInt等）。
+   - 每个分支的逻辑类似：
+     - **初始化最大值和最小值**：
+       - 将数组的第一个元素赋值给临时最大值和最小值变量。
+     - **遍历数组**：
+       - 从第二个元素开始遍历数组。
+       - 比较当前元素与临时最大值和最小值，更新临时变量和索引。
+     - **错误检查**：
+       - 如果子函数（如`MOVE_BLK_VARIANT`）返回错误，设置错误标志和状态码（`ERR_MOVE_BLK_VARIANT`），并返回。
+
+4. **输出结果**：
+   - 将临时最大值和最小值及其索引赋值给输出变量。
+   - 检查子函数是否出错，如果出错则设置错误标志和状态码。
+
+5. **错误处理**：
+   - 如果数组类型不支持，设置错误标志和状态码（`ERR_WRONG_TYPE`），并返回。
+
+#### 4. **关键点**
+- **数据类型支持**：函数通过`TypeOfElements`判断数组类型，并进入对应的分支处理，确保支持多种数据类型。
+- **错误处理**：通过`error`、`status`和`subfunctionStatus`提供详细的错误信息。
+- **性能优化**：通过遍历数组一次完成最大值和最小值的查找，避免多次遍历。
+
+#### 5. **伪代码逻辑**
+```plaintext
+FUNCTION LGF_SearchMinMax
+  // 初始化
+  error = false
+  status = STATUS_NO_ERROR
+  subfunctionStatus = SUBFUNCTION_NO_ERROR
+
+  // 输入验证
+  IF NOT IS_ARRAY(variableArray) THEN
+    error = true
+    status = ERR_NO_ARRAY
+    RETURN
+  END_IF
+
+  IF TypeOfElements(variableArray) != TypeOf(minValue) OR TypeOf(minValue) != TypeOf(maxValue) THEN
+    error = true
+    status = ERR_NOT_EQUAL_TYPES
+    RETURN
+  END_IF
+
+  // 计算数组结束索引
+  tempArrayEndIndex = CountOfElements(variableArray) - 1
+
+  // 根据数据类型搜索
+  CASE TypeOfElements(variableArray) OF
+    Int:
+      // 初始化最大值和最小值
+      tempMaxInt = variableArray[0]
+      tempMinInt = tempMaxInt
+
+      // 遍历数组
+      FOR i = 1 TO tempArrayEndIndex DO
+        currentValue = variableArray[i]
+        IF currentValue < tempMinInt THEN
+          tempMinInt = currentValue
+          tempArrayIndexMin = i
+        ELSE IF currentValue > tempMaxInt THEN
+          tempMaxInt = currentValue
+          tempArrayIndexMax = i
+        END_IF
+      END_FOR
+    // 其他数据类型分支类似
+    ELSE:
+      error = true
+      status = ERR_WRONG_TYPE
+      RETURN
+  END_CASE
+
+  // 输出结果
+  minValue = variableArray[tempArrayIndexMin]
+  maxValue = variableArray[tempArrayIndexMax]
+  minValueIndex = tempArrayIndexMin
+  maxValueIndex = tempArrayIndexMax
+
+  // 错误检查
+  IF subfunctionStatus != SUBFUNCTION_NO_ERROR THEN
+    error = true
+    status = ERR_MOVE_BLK_VARIANT
+  END_IF
+END_FUNCTION
+```
+
+#### 6. **注意事项**
+- **数据类型一致性**：确保输入数组和输出变量的数据类型一致。
+- **错误处理**：调用者需检查`error`和`status`以确定函数是否执行成功。
+- **性能**：对于大型数组，单次遍历的设计保证了较高的效率。
+
+### 总结
+该函数通过类型判断和分支处理，实现了对多种数据类型数组的最大值和最小值查找，同时具备完善的错误处理机制。核心逻辑是通过遍历数组一次完成搜索，确保高效性和正确性。

@@ -1,0 +1,87 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个函数 `LGF_MatrixAddition` 用于将两个大小相同的矩阵（`matrix1` 和 `matrix2`）相加，并将结果存储在第三个矩阵（`matrixResult`）中。矩阵的数据类型是二维数组 `ARRAY[*,*] of LREAL`（即双精度浮点数）。函数还提供了错误检测机制，确保输入的矩阵和结果矩阵的维度一致。
+
+#### 2. **输入输出定义**
+- **输入/输出参数**：
+  - `matrix1` 和 `matrix2`：待相加的两个矩阵（通过 `VAR_IN_OUT` 传递）。
+  - `matrixResult`：存储相加结果的矩阵（通过 `VAR_IN_OUT` 传递）。
+- **输出参数**：
+  - `error`：布尔值，表示是否发生错误。
+  - `status`：状态码，用于指示具体的错误类型或成功状态。
+
+#### 3. **错误状态码**
+函数定义了一系列状态码，用于标识不同的错误情况，例如矩阵的行或列的下界或上界不匹配。如果检测到任何错误，函数会立即返回，并设置相应的 `error` 和 `status`。
+
+#### 4. **算法流程**
+1. **获取矩阵的维度信息**：
+   - 使用 `LOWER_BOUND` 和 `UPPER_BOUND` 函数获取每个矩阵的行和列的下界和上界。
+   - 将结果存储在临时变量中，便于后续比较和循环控制。
+
+2. **错误检测**：
+   - **检查下界是否匹配**：
+     - 检查 `matrix1` 和 `matrix2` 的行下界是否相同。
+     - 检查 `matrix1` 和 `matrixResult` 的行下界是否相同。
+     - 检查 `matrix1` 和 `matrix2` 的列下界是否相同。
+     - 检查 `matrix1` 和 `matrixResult` 的列下界是否相同。
+   - **检查上界是否匹配**：
+     - 检查 `matrix1` 和 `matrix2` 的行上界是否相同。
+     - 检查 `matrix1` 和 `matrixResult` 的行上界是否相同。
+     - 检查 `matrix1` 和 `matrix2` 的列上界是否相同。
+     - 检查 `matrix1` 和 `matrixResult` 的列上界是否相同。
+   - 如果任何一项检查失败，设置 `error` 为 `TRUE`，并返回相应的状态码。
+
+3. **矩阵相加**：
+   - 如果所有维度检查通过，使用嵌套的 `FOR` 循环遍历矩阵的每个元素。
+   - 将 `matrix1` 和 `matrix2` 的对应元素相加，结果存入 `matrixResult` 的对应位置。
+
+4. **设置成功状态**：
+   - 如果没有错误，设置 `error` 为 `FALSE`，`status` 为 `STATUS_NO_ERROR`。
+   - 设置 `ENO`（使能输出）为 `TRUE`，表示函数执行成功。
+
+#### 5. **代码调整建议**
+- **优化错误检测逻辑**：
+  - 可以将错误检测逻辑封装为一个单独的函数或区域，减少重复代码。
+  - 使用更简洁的条件表达式（例如 `OR` 组合）来减少 `IF` 语句的数量。
+- **性能优化**：
+  - 如果矩阵较大，可以考虑并行化或分块处理以提高性能（但 SCL 的限制可能不支持）。
+- **可读性改进**：
+  - 添加注释说明每个错误状态码的具体含义，便于调试和维护。
+  - 使用更具描述性的临时变量名（例如 `rowLowerBound` 而不是 `tempMatrix1LowerBoundRows`）。
+
+#### 6. **伪代码描述**
+```plaintext
+FUNCTION LGF_MatrixAddition
+    // 获取矩阵维度
+    matrix1_rows_low = LOWER_BOUND(matrix1, ROWS)
+    matrix1_cols_low = LOWER_BOUND(matrix1, COLUMNS)
+    // ... 其他矩阵的维度获取
+
+    // 检查下界和上界是否匹配
+    IF (matrix1_rows_low != matrix2_rows_low) THEN
+        error = TRUE
+        status = ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS
+        RETURN
+    // ... 其他检查
+
+    // 矩阵相加
+    FOR row FROM matrix1_rows_low TO matrix1_rows_high
+        FOR col FROM matrix1_cols_low TO matrix1_cols_high
+            matrixResult[row, col] = matrix1[row, col] + matrix2[row, col]
+        END_FOR
+    END_FOR
+
+    // 设置成功状态
+    error = FALSE
+    status = STATUS_NO_ERROR
+    ENO = TRUE
+END_FUNCTION
+```
+
+#### 7. **总结**
+该函数的核心逻辑是：
+1. 检查输入矩阵和结果矩阵的维度是否一致。
+2. 如果一致，执行矩阵加法。
+3. 如果不一致，返回相应的错误状态。
+代码结构清晰，但可以通过封装和优化进一步提高可读性和可维护性。

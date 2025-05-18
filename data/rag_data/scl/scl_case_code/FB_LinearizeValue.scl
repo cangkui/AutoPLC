@@ -1,0 +1,70 @@
+FUNCTION_BLOCK "FB_LinearizeValue"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      InputValue : Real;
+   END_VAR
+
+   VAR_OUTPUT 
+      LinearizedValue : Real;
+      Error : Bool;
+      Status : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      MIN_VALUE_1 : Real := 1200.0;
+      MAX_VALUE_1 : Real := 3600.0;
+      MIN_VALUE_2 : Real := 3600.0;
+      MAX_VALUE_2 : Real := 4800.0;
+      MIN_VALUE_3 : Real := 4800.0;
+      MAX_VALUE_3 : Real := 7000.0;
+      MIN_LINEAR_1 : Real := 150.0;
+      MAX_LINEAR_1 : Real := 240.0;
+      MIN_LINEAR_2 : Real := 240.0;
+      MAX_LINEAR_2 : Real := 560.0;
+      MIN_LINEAR_3 : Real := 560.0;
+      MAX_LINEAR_3 : Real := 720.0;
+      ERROR_STATUS : Word := 16#8001;
+   END_VAR
+
+
+BEGIN
+	
+	REGION initialization
+	    
+	    #Error := FALSE;
+	    #Status := 16#0000;
+	END_REGION
+	
+	REGION Validation OF inputs and outputs 
+	    
+	END_REGION
+	
+	REGION Linearization_Logic
+	    
+	    IF #InputValue < #MIN_VALUE_1 OR #InputValue > #MAX_VALUE_3 THEN
+	        
+	        #Error := TRUE;
+	        #Status := #ERROR_STATUS;
+	        IF #InputValue < #MIN_VALUE_1 THEN
+	            #LinearizedValue := #MIN_LINEAR_1;
+	        ELSE
+	            #LinearizedValue := #MAX_LINEAR_3;
+	        END_IF;
+	    ELSIF #InputValue >= #MIN_VALUE_1 AND #InputValue <= #MAX_VALUE_1 THEN
+	        
+	        #LinearizedValue := #MIN_LINEAR_1 + ((#InputValue - #MIN_VALUE_1) / (#MAX_VALUE_1 - #MIN_VALUE_1)) * (#MAX_LINEAR_1 - #MIN_LINEAR_1);
+	    ELSIF #InputValue > #MAX_VALUE_1 AND #InputValue <= #MAX_VALUE_2 THEN
+	        
+	        #LinearizedValue := #MIN_LINEAR_2 + ((#InputValue - #MIN_VALUE_2) / (#MAX_VALUE_2 - #MIN_VALUE_2)) * (#MAX_LINEAR_2 - #MIN_LINEAR_2);
+	    ELSIF #InputValue > #MAX_VALUE_2 AND #InputValue <= #MAX_VALUE_3 THEN
+	        
+	        #LinearizedValue := #MIN_LINEAR_3 + ((#InputValue - #MIN_VALUE_3) / (#MAX_VALUE_3 - #MIN_VALUE_3)) * (#MAX_LINEAR_3 - #MIN_LINEAR_3);
+	    END_IF;
+	END_REGION
+	
+	REGION Writting TO outputs
+	    
+	END_REGION
+	
+END_FUNCTION_BLOCK

@@ -1,0 +1,69 @@
+FUNCTION "LGF_SwapBlockWord" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Industry Support'
+FAMILY : LGF
+NAME : LGF_SwapBlockWord
+   VAR_IN_OUT 
+      data : Array[*] of Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempUpperIndex : DInt;
+      tempSwapIndex : DInt;
+      tempSwapValue : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      FIRST_DIMENSION : UDInt := 1;
+      NEXT_ELEMENT : DInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION Info
+	  // We are going to iterate through the provided array swapping the byte order.
+	  // In this procedure we neither care for the endianness of the original system or the 
+	  // current target system. This allows a universal use of this block.
+	  
+	  // Before we can start the iteration, we need to determine at least the lowest index
+	  // and the highest index in the provided array.
+	  // The lowest index is required to start with the first provided element.
+	  // With reaching the highest index we will break the iteration and return from the call
+	  // All the values inside the array have been swapped.
+	END_REGION
+	
+	REGION Process
+	  // First we set the swapIndex to the lowest possible array index. This is where we start
+	  // the swap procedure.
+	  #tempSwapIndex := LOWER_BOUND(ARR := #data, DIM := #FIRST_DIMENSION);
+	  
+	  // Next is to set a temporary variable to the maximum possible index of the array
+	  // This we do to avoid continuously calling the systemfunction. This in turn reduces
+	  // processing overhead and accelerates the processing.
+	  #tempUpperIndex := UPPER_BOUND(ARR := #data, DIM := #FIRST_DIMENSION);
+	  
+	  // Now we can iterate through all the elements and adjust the byte ordering
+	  WHILE (#tempSwapIndex < #tempUpperIndex) DO
+	    // Adjusting the endianness of a multibyte value simply swaps the byte order in the value
+	    // A multibyte value can be split into their indivdual bytes. Depending on the systems endianess
+	    // the significance of the bytes is different.
+	    // At a BigEndian system the significance is highest at the lowest address. The byte order
+	    // is: LowSignificanceByte HighSignificanceByte
+	    // With LittleEndian systems the significance is highest at the highest address. The byte order is  
+	    // reversed to the BigEndian format as: HighSignificanceByte LowSignificanceByte
+	    
+	    // to swap the order, we first read the value in question into a temporary variable, before
+	    // we store it back in reversed byte order.
+	    
+	    #tempSwapValue := #data[#tempSwapIndex];
+	    // We are now swapping the bytes. What was Byte0 becomes Byte1 and vice versa.
+	    #data[#tempSwapIndex].%B0 := #tempSwapValue.%B1;
+	    #data[#tempSwapIndex].%B1 := #tempSwapValue.%B0;
+	    
+	    // Let's move on to the next value
+	    #tempSwapIndex += #NEXT_ELEMENT;
+	  END_WHILE;
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

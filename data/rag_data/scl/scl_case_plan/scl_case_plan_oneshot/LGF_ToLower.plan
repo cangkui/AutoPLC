@@ -1,0 +1,77 @@
+### 算法流程描述：字符串转小写函数（LGF_ToLower）
+
+#### 1. **功能概述**
+- **目标**：将输入字符串中的所有大写字母转换为对应的小写字母，其他字符保持不变。
+- **输入**：一个字符串（`In`）。
+- **输出**：转换后的字符串（通过函数返回值返回）。
+
+#### 2. **核心逻辑**
+- **初始化阶段**：
+  - 清空临时结果字符串（`tempResult`），避免返回随机数据。
+  - 获取输入字符串的长度（`tempStringLength`），避免在循环中重复计算。
+  - 设置当前字符索引（`tempCurrentCharIndex`）为1（字符串索引从1开始）。
+
+- **转换阶段**：
+  - **循环遍历字符串**：从第一个字符到最后一个字符。
+    - **检查当前字符**：
+      - 如果字符是大写字母（ASCII码在`'A'`到`'Z'`之间），则将其转换为小写字母（通过ASCII码偏移量`32`）。
+      - 否则，直接保留原字符。
+    - **拼接结果**：将处理后的字符追加到临时结果字符串（`tempResult`）中。
+    - **移动索引**：指向下一个字符。
+
+- **返回结果**：
+  - 将临时结果字符串（`tempResult`）赋值给函数返回值（`LGF_ToLower`）。
+  - 设置执行成功标志（`ENO := TRUE`）。
+
+#### 3. **关键变量与常量**
+- **变量**：
+  - `tempCurrentCharIndex`：当前处理的字符索引。
+  - `tempStringLength`：输入字符串的长度。
+  - `tempCurrentChar`：当前处理的字符。
+  - `tempResult`：临时存储转换后的字符串。
+- **常量**：
+  - `TO_UPPER_OFFSET`：大写字母转小写字母的ASCII码偏移量（32）。
+  - `UPPER_CASE_A`和`UPPER_CASE_Z`：大写字母'A'和'Z'的ASCII码。
+  - `FIRST_CHARACTER_POSITION`和`NEXT_POSITION`：字符串索引的起始值和步长（均为1）。
+
+#### 4. **边界条件与优化**
+- **边界条件**：
+  - 空字符串：直接返回空字符串。
+  - 无大写字母的字符串：直接返回原字符串。
+- **优化**：
+  - 提前计算字符串长度，避免在循环中重复调用`LEN`函数。
+  - 使用临时变量存储中间结果，减少函数调用开销。
+
+#### 5. **代码调整建议**
+- **初始化阶段**：
+  - 可以增加对输入字符串是否为空的检查，避免不必要的循环。
+- **转换阶段**：
+  - 可以封装字符转换逻辑为一个单独的函数或代码块，提高可读性。
+- **返回阶段**：
+  - 可以增加对转换结果的验证（例如长度是否一致），确保逻辑正确性。
+
+#### 6. **伪代码描述**
+```
+FUNCTION LGF_ToLower(In: String) : String
+    // 初始化
+    tempResult := ""
+    tempStringLength := LEN(In)
+    tempCurrentCharIndex := 1
+
+    // 转换
+    WHILE tempCurrentCharIndex <= tempStringLength DO
+        currentChar := In[tempCurrentCharIndex]
+        IF currentChar >= 'A' AND currentChar <= 'Z' THEN
+            currentChar := ASCII_TO_CHAR(CHAR_TO_ASCII(currentChar) + 32)
+        END_IF
+        tempResult := CONCAT(tempResult, currentChar)
+        tempCurrentCharIndex += 1
+    END_WHILE
+
+    // 返回结果
+    RETURN tempResult
+END_FUNCTION
+```
+
+### 总结
+该算法通过遍历字符串中的每个字符，检查是否为大写字母并进行转换，最终拼接成结果字符串。逻辑清晰，效率较高，适合在PLC环境中执行。

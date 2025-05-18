@@ -1,0 +1,94 @@
+
+
+以下是基于需求与代码分析的箱线图计算算法流程描述：
+
+1. **执行触发检测**
+- 检测`execute`的上升沿触发计算
+- 获取数组边界并初始化统计变量：
+  ```plaintext
+  tempArrLowBound = LOWER_BOUND(values)
+  tempArrUppBound = UPPER_BOUND(values)
+  ```
+- 处理首次调用状态标志`STATUS_FIRST_CALL`
+
+2. **输入验证阶段**
+```plaintext
+IF 首次调用 THEN
+   验证rangeOutlier ∈ (0.0) ∪ (1.0, ∞) → 错误码ERR_RANGE_NOT_OK
+   检查数组下界 ≥ 0 → 错误码ERR_NEG_ARR_BOUND
+END_IF
+```
+
+3. **数据预处理**
+- 调用Shell排序功能块排序数组：
+```plaintext
+instShell(array = values)
+IF 排序失败 → 错误码ERR_SHELL_
+```
+
+4. **核心统计量计算**
+```plaintext
+统计元素总数 = tempArrUppBound - tempArrLowBound + 1
+
+中位数计算：
+IF 元素数偶数 → (values[n/2-1] + values[n/2])/2
+ELSE → values[(n+1)/2-1]
+
+Q25计算（线性插值）：
+k = (n + 3)/4 → values[floor(k)] + (k - floor(k))*(values[ceil(k)] - values[floor(k)])
+
+Q75计算（逆序插值）：
+k = (3n + 1)/4 → 类似Q25但反向计算
+```
+
+5. **离群值检测处理**
+```plaintext
+IF rangeOutlier ≠ 0 THEN
+   计算离群边界：
+   lowerBound = Q25 - 1.5*(Q75-Q25)
+   upperBound = Q75 + 1.5*(Q75-Q25)
+
+   正向遍历找最小非离群值：
+   FOR i FROM 0 TO n-1:
+      IF values[i] ≥ lowerBound → 确定minNew并计算outlierMin百分比
+
+   逆向遍历找最大非离群值：
+   FOR i FROM n-1 DOWNTO 0:
+      IF values[i] ≤ upperBound → 确定maxNew并计算outlierMax百分比
+END_IF
+```
+
+6. **偏度计算**
+```plaintext
+skewness = (Q25 + Q75 - 2*median) / (Q75 - Q25)
+```
+
+7. **输出结果处理**
+```plaintext
+根据rangeOutlier状态选择输出：
+min = IF range≠0 THEN minNew ELSE 原始min
+max = IF range≠0 THEN maxNew ELSE 原始max
+
+错误状态映射：
+error = status的最高位(bit15)状态
+```
+
+**流程调整要点**：
+1. 增加数组空检测逻辑（代码中未体现但应有保护）
+2. 统一百分数计算方式：`离群数量/总数*100`
+3. 优化循环退出机制：找到边界立即EXIT
+4. 处理特殊case：当所有数据都是离群值时返回100%
+5. 增加浮点计算保护：防止(Q75-Q25)=0导致的除零错误
+
+**关键变量映射**：
+```plaintext
+内部状态变量 → 输出映射：
+statQuartil25 → q25
+statMedian → median
+statQuartil75 → q75
+statOutlierMin → outlierMin
+statOutlierMax → outlierMax
+statSkewness → skewness
+```
+
+该流程完整覆盖了箱线图计算的数学要求，同时与现有代码的执行顺序和错误处理机制保持高度一致，可作为后续代码重构或移植的指导框架。

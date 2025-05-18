@@ -1,0 +1,67 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块（`LGF_SimpleSmoothingFB`）用于对输入值进行平滑处理，计算其线性平均值。平滑计算需要至少3个输入值，每次插入新值时更新平滑值。
+
+#### 2. **输入与输出**
+- **输入**：
+  - `enable`：激活功能块。
+  - `insert`：在上升沿时，将`value`的值插入到缓冲区中。
+  - `value`：待平滑处理的输入值（`LReal`类型）。
+- **输出**：
+  - `smoothedValue`：平滑后的值（`LReal`类型）。
+  - `error`：错误标志（`Bool`类型）。
+  - `status`：功能块的状态码（`Word`类型）。
+
+#### 3. **内部变量**
+- `statValues`：存储最近3个输入值的数组（`Array[0..2] of LReal`）。
+- `statCount`：已插入的值的数量（`Int`类型）。
+- `statSmoothedValue`：当前平滑值（`LReal`类型）。
+- `statStatus`：当前状态码（`Word`类型）。
+- `statEnableOld`、`statInsertOld`：用于检测`enable`和`insert`的上升沿（`Bool`类型）。
+
+#### 4. **常量定义**
+- `MINIMUM_NUMBER_OF_VALUES`：最小需要的输入值数量（2）。
+- `NUMBER_OF_VALUES`：实际需要的输入值数量（3）。
+- 状态码常量（如`STATUS_NO_CALL`、`STATUS_FIRST_CALL`等）。
+
+#### 5. **主逻辑流程**
+1. **初始化检查**：
+   - 检测`enable`的上升沿：
+     - 如果是上升沿，重置`statCount`和`statValues`数组，设置状态为`STATUS_FIRST_CALL`。
+   - 如果`enable`为`FALSE`，设置状态为`STATUS_NO_CALL`，并重置平滑值为0。
+
+2. **插入新值**：
+   - 检测`insert`的上升沿：
+     - 如果是上升沿，将新值`value`插入到`statValues`数组中（采用FIFO方式，丢弃最旧的值）。
+     - 更新`statCount`：
+       - 如果`statCount` ≤ `MINIMUM_NUMBER_OF_VALUES`，增加计数并设置状态为`STATUS_NOT_ENOUGH_VALUES`。
+       - 否则（即已收集3个值），计算平滑值（3个值的平均值），并设置状态为`STATUS_SUBSEQUENT_CALL`。
+
+3. **边缘检测更新**：
+   - 保存`enable`和`insert`的当前状态到`statEnableOld`和`statInsertOld`，用于下一次边缘检测。
+
+4. **输出更新**：
+   - 将`statSmoothedValue`输出到`smoothedValue`。
+   - 将`statStatus`输出到`status`。
+   - 根据`statStatus`的最高位设置`error`标志（`statStatus.%X15`）。
+
+#### 6. **状态码与错误处理**
+- `STATUS_NO_CALL`：功能块未激活（`enable`为`FALSE`）。
+- `STATUS_FIRST_CALL`：功能块首次激活（`enable`上升沿）。
+- `STATUS_SUBSEQUENT_CALL`：已收集足够值并计算平滑值。
+- `STATUS_NOT_ENOUGH_VALUES`：未收集足够值（`statCount` ≤ 2）。
+
+#### 7. **平滑计算**
+- 平滑值计算公式：
+  \[
+  \text{smoothedValue} = \frac{\text{statValues}[0] + \text{statValues}[1] + \text{statValues}[2]}{3}
+  \]
+
+#### 8. **注意事项**
+- 功能块仅在`enable`为`TRUE`时工作。
+- `insert`的上升沿触发新值的插入和平滑计算。
+- 错误标志`error`由`status`的最高位决定（`%X15`）。
+
+### 总结
+该功能块的核心逻辑是通过检测`enable`和`insert`的上升沿来管理输入值的收集和平滑计算。状态码和错误标志提供了运行时的反馈，确保功能块的正确性和可靠性。

@@ -1,0 +1,100 @@
+﻿FUNCTION_BLOCK "StackMin"
+{ S7_Optimized_Access := 'TRUE' }
+
+   VAR_INPUT 
+      push : Bool;   // 入栈
+      pop : Bool;   // 出栈
+      reset : Bool;   // 复位
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;   // 故障状态
+      status : Word;   // 状态代码
+   END_VAR
+
+   VAR_IN_OUT 
+      item : Int;   // 入栈或出栈的元素
+      stack : Array[0..3] of Int;   // 堆栈空间
+   END_VAR
+
+   VAR 
+      statStackIndex : Int;   // 堆栈指针
+      statMin : Int;
+   END_VAR
+
+   VAR_TEMP 
+      tempStackSize : DInt;
+      tempCount : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      STACK_FULL : Word := 16#8A04;   // 堆栈已满
+      STACK_EMPTY : Word := 16#8A05;   // 堆栈已空
+      NO_ERROR : Word := 16#0000;
+   END_VAR
+
+
+BEGIN
+	//设置堆栈长度
+	REGION StackSize
+	    #tempStackSize := 4;
+	END_REGION
+	
+	//入栈
+	REGION Push
+	    IF #push = TRUE THEN
+	        IF #statStackIndex >= #tempStackSize THEN             //判断是否满栈，如果已经满栈,则不执行入栈,并报错
+	            #error := TRUE;
+	            #status := #STACK_FULL;
+	            RETURN;
+	        END_IF;
+	        #stack[#statStackIndex] := #item;                    //否则放入元素
+	        #statStackIndex += 1;                                //堆栈指针上移
+	    END_IF;
+	END_REGION
+	
+	//出栈
+	REGION Pop
+	    IF #pop = TRUE THEN
+	        
+	        //判断空栈，如果已经空栈,则不执行出栈,并报错
+	        IF #statStackIndex <= 0 THEN                          
+	            #error := TRUE;
+	            #status := #STACK_EMPTY;
+	            RETURN;
+	        END_IF;
+	        
+	        //查找最小值所在位置
+	        #statMin := 0;
+	        IF #statStackIndex>1 THEN
+	            FOR #tempCount := 1 TO #statStackIndex - 1 DO
+	                IF #stack[#tempCount] < #stack[#statMin] THEN
+	                    #statMin := #tempCount;
+	                END_IF;
+	            END_FOR;
+	        END_IF;
+	        
+	        //取出元素，上面元素往下顺移
+	        #item := #stack[#statMin];               
+	        IF #statMin<>#statStackIndex-1 THEN
+	            FOR #tempCount := #statMin TO #statStackIndex - 2 DO
+	                #stack[#tempCount] := #stack[#tempCount + 1];
+	            END_FOR;
+	        END_IF;
+	        #stack[#statStackIndex - 1] := 0;
+	        #statStackIndex -= 1;                               //堆栈指针下移
+	    END_IF;
+	END_REGION
+	
+	//复位
+	REGION Reset
+	    IF #reset = TRUE THEN
+	        #statStackIndex := 0;
+	    END_IF;
+	END_REGION
+	
+	#error := FALSE;
+	#status := #NO_ERROR;
+	
+END_FUNCTION_BLOCK
+

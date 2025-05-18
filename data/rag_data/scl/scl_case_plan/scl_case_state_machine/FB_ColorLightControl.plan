@@ -1,0 +1,39 @@
+### 算法流程描述（过程控制任务）
+
+#### 1. 状态分析
+该过程控制任务涉及5个循环状态，通过按钮触发进行状态转换：
+- **状态1**：仅绿灯亮（greenLight=TRUE）
+- **状态2**：仅红灯亮（redLight=TRUE）
+- **状态3**：仅黄灯亮（yellowLight=TRUE）
+- **状态4**：三灯全亮（greenLight=TRUE, redLight=TRUE, yellowLight=TRUE）
+- **状态5**：三灯全灭（greenLight=FALSE, redLight=FALSE, yellowLight=FALSE）
+
+#### 2. 状态转移事件
+- **触发条件**：检测到controlButton的上升沿（从0→1的跳变）
+- **转移逻辑**：
+  1. 每次触发时，状态序号lightState递增
+  2. 当lightState>5时重置为1，实现循环控制
+  3. 未触发时保持当前状态
+
+#### 3. 输出控制逻辑
+采用CASE语句实现状态到输出的映射：
+| 状态 | greenLight | redLight | yellowLight |
+|------|------------|----------|-------------|
+| 1    | TRUE       | FALSE    | FALSE       |
+| 2    | FALSE      | TRUE     | FALSE       |
+| 3    | FALSE      | FALSE    | TRUE        |
+| 4    | TRUE       | TRUE     | TRUE        |
+| 5    | FALSE      | FALSE    | FALSE       |
+
+#### 4. 关键处理
+- **按钮消抖**：通过lastControlButtonState变量存储前一周期按钮状态，确保仅识别上升沿
+- **循环机制**：状态超过5时自动复位，形成1→2→3→4→5→1...的循环序列
+
+#### 5. 执行流程
+1. 检测controlButton上升沿
+2. 更新lightState（范围限制1-5）
+3. 根据lightState设置对应灯光组合
+4. 更新按钮状态记忆变量
+5. 循环执行
+
+该设计满足需求中要求的6次触发后循环的特性，且每个状态转换严格依赖按钮触发事件。

@@ -1,0 +1,47 @@
+{
+    "title": "Automated Warehouse Shelf Position Management System",
+    "description": "An automated warehouse requires a system to manage the storage positions of workpieces to ensure they can be stored and retrieved efficiently. There is a shelf in the warehouse with 9 levels, numbered from 1 to 9, with each level capable of storing only one workpiece.\nControl requirements:\n1. The system needs to maintain the storage status of the shelf, recording whether each level is occupied by a workpiece.\n2. When a workpiece is stored:\n   - Query the storage status of the shelf.\n   - If there is a free position, store it in the position with the higher number first.\n   - If all positions are occupied, output an error status with error=1 and error code status16#8001.\n3. When a workpiece is retrieved:\n   - Query the storage status of the shelf.\n   - If there is a workpiece on the shelf, retrieve the workpiece from the position with the lower number first.\n   - If all positions are empty, output an error status with error=1 and error code status16#8002.\n4. The system should be able to output the current number of workpieces in stock and the number of free positions on the shelf.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_WarehouseManagement",
+    "input": [
+        {
+            "name": "requestIn",
+            "type": "Bool",
+            "description": "Storage request signal"
+        },
+        {
+            "name": "requestOut",
+            "type": "Bool",
+            "description": "Retrieval request signal"
+        }
+    ],
+    "output": [
+        {
+            "name": "productNum",
+            "type": "Int",
+            "description": "Number of workpieces in stock"
+        },
+        {
+            "name": "libFreeNum",
+            "type": "Int",
+            "description": "Number of free positions on the shelf"
+        },
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "FALSE: No error occurred\nTRUE: An error occurred during execution"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "Status code"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "library",
+            "type": "Array[1..9] of Bool",
+            "description": "Occupancy status of each level of the shelf, 1 indicates occupied, 0 indicates free"
+        }
+    ]
+ }

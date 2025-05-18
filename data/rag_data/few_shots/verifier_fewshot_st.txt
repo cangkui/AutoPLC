@@ -1,0 +1,213 @@
+FUNCTION_BLOCK CalculateDayOfYear
+VAR_INPUT
+    Year : Int;  
+    Month : Int; 
+    Day : Int; 
+END_VAR
+
+VAR_OUTPUT
+    DayOfYear : Int; 
+    error : Bool; 
+    status : Word; 
+END_VAR
+
+VAR
+    DAYS_IN_MONTHS : ARRAY[1..12] OF Int := [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    isLeapYear : Bool;
+    daySum : Int := 0;
+END_VAR
+
+VAR CONSTANT
+    CONST_STATUS_OK : WORD := 160000;
+    CONST_STATUS_ERR_YEAR : WORD := 168001;
+    CONST_STATUS_ERR_MONTH : WORD := 168002;
+    CONST_STATUS_ERR_DAY : WORD := 168003;
+END_VAR
+
+BEGIN
+    // Check if year is within the valid range
+    IF (Year < 1000) OR (Year > 3000) THEN
+        error := TRUE;
+        status := CONST_STATUS_ERR_YEAR;
+        EXIT;
+    END_IF;
+    
+    // Check if month is valid
+    IF (Month < 1) OR (Month > 12) THEN
+        error := TRUE;
+        status := CONST_STATUS_ERR_MONTH;
+        EXIT;
+    END_IF;
+    
+    // Check if day is valid considering leap year
+    isLeapYear := ((Year MOD 4 = 0) AND (Year MOD 100 <> 0)) OR (Year MOD 400 = 0);
+    IF isLeapYear THEN
+        DAYS_IN_MONTHS[2] := 29;
+    ELSE
+        DAYS_IN_MONTHS[2] := 28;
+    END_IF;
+    
+    IF (Day < 1) OR (Day > DAYS_IN_MONTHS[Month]) THEN
+        error := TRUE;
+        status := CONST_STATUS_ERR_DAY;
+        EXIT;
+    END_IF;
+
+    // Calculate the day OF the year
+    FOR TEMP_i := 1 TO Month - 1 BY 1 DO
+        daySum += DAYS_IN_MONTHS[TEMP_i];
+    END_FOR;
+    DayOfYear := daySum + Day;
+
+    // assign your output variable here if necessary
+    DayOfYear := daySum + Day;
+    error := FALSE;
+    status := CONST_STATUS_OK;
+
+END_FUNCTION_BLOCK
+&&&&&
+---Static Analysis Error---
+Loop variable TEMP_i is not defined! Please define this variable in VAR first!
+---Static Analysis Error---
+&&&&&
+```plaintext
+- Modification suggestion 1: According to the static analysis results, the variable TEMP_i needs to be defined in the `VAR...END_VAR` block. If there is no such block, a new one needs to be created.
+(1)
+<code_segment>
+VAR
+    DAYS_IN_MONTHS : ARRAY[1..12] OF Int := [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    isLeapYear : Bool;
+    daySum : Int := 0;
+END_VAR
+</code_segment>
+<patch>
+VAR
+    DAYS_IN_MONTHS : ARRAY[1..12] OF Int := [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    isLeapYear : Bool;
+    daySum : Int := 0;
+    TEMP_i : Int;
+END_VAR
+</patch>
+```
+=====
+FUNCTION_BLOCK CalculateDayOfYear
+VAR_INPUT
+    Year : Int;  
+    Month : Int; 
+    Day : Int; 
+END_VAR
+
+VAR_OUTPUT
+    DayOfYear : Int; 
+    error : Bool; 
+    status : Word;
+END_VAR
+
+VAR
+    DAYS_IN_MONTHS : ARRAY[1..12] OF Int := [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    isLeapYear : Bool;
+    tempIndex : Int := 0;
+END_VAR
+
+VAR CONSTANT
+    STATUS_OK : WORD := 160000;
+    STATUS_ERR_YEAR : WORD := 168001;
+    STATUS_ERR_MONTH : WORD := 168002;
+    STATUS_ERR_DAY : WORD := 168003;
+END_VAR
+
+BEGIN
+
+    error := FALSE;
+    status := STATUS_OK;
+    DayOfYear := 0;
+    isLeapYear := ((Year MOD 4 = 0) AND (Year MOD 100 <> 0)) OR (Year MOD 400 = 0);
+    IF Year < 1000 OR Year > 3000 THEN
+        error := TRUE;
+        status := STATUS_ERR_YEAR;
+        RETURN;
+    ELSIF Month < 1 OR Month > 12 THEN
+        error := TRUE;
+        status := STATUS_ERR_MONTH;
+        RETURN;
+    ELSE
+        IF Month = 2 THEN
+            IF Day > (IF isLeapYear THEN 29 ELSE 28) THEN
+                error := TRUE;
+                status := STATUS_ERR_DAY;
+                RETURN;
+            END_IF;
+        ELSE
+            IF Day > DAYS_IN_MONTHS[Month] THEN
+                error := TRUE;
+                status := STATUS_ERR_DAY;
+                RETURN;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    IF Month > 1 THEN
+        FOR tempIndex := 1 TO Month - 1 BY 1 DO
+            DayOfYear += DAYS_IN_MONTHS[tempIndex];
+        END_FOR;
+    END_IF;
+    DayOfYear += Day;
+
+    IF NOT error THEN
+        DayOfYear := DayOfYear;
+    END_IF;
+END_FUNCTION_BLOCK
+&&&&&
+---Syntax Error No.1---
+-Feedback: extraneous input 'IF' expecting {'(', '-', '+', 'NOT', BOOLLiteral, BYTELiteral, CHARLiteral, STRINGLiteral, WORDLiteral, DWORDLiteral, POINTERLiteral, INTLiteral, DINTLiteral, REALLiteral, TIMELiteral, DATELiteral, TIME_OF_DAYLiteral, DATE_AND_TIMELiteral, GLOBALBOOLLiteral, Identifier}
+-Context: 
+```st
+            status := STATUS_ERR_MONTH;
+            RETURN;
+        ELSE
+            IF Month = 2 THEN
+                IF Day > (IF isLeapYear THEN 29 ELSE 28) THEN
+                    error := TRUE;
+                    status := STATUS_ERR_DAY;
+                    RETURN;
+                END_IF;
+            ELSE
+```
+------
+&&&&&
+```plaintext
+According to programming specifications, ST does not allow the use of ternary expressions and should use simple conditional expressions instead.
+(1)
+<code_segment>
+            status := STATUS_ERR_MONTH;
+            RETURN;
+        ELSE
+            IF Month = 2 THEN
+                IF Day > (IF isLeapYear THEN 29 ELSE 28) THEN
+                    error := TRUE;
+                    status := STATUS_ERR_DAY;
+                    RETURN;
+                END_IF;
+            ELSE
+</code_segment>
+<patch>
+            status := STATUS_ERR_MONTH;
+            RETURN;
+        ELSE
+            IF Month = 2 THEN
+                IF isLeapYear THEN
+                    IF Day > 29 THEN
+                        error := TRUE;
+                        status := STATUS_ERR_DAY;
+                        RETURN;
+                    END_IF;                
+                ELSE
+                    IF Day > 28 THEN
+                        error := TRUE;
+                        status := STATUS_ERR_DAY;
+                        RETURN;
+                    END_IF;      
+                END_IF;
+            ELSE
+</patch>
+```

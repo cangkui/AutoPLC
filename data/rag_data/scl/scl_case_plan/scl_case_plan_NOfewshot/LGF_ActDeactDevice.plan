@@ -1,0 +1,76 @@
+
+
+以下是基于需求及代码分析的算法流程描述：
+
+1. **功能块初始化**：
+- 当`enable`从False变为True时，初始化内部状态（清空诊断/错误标记）
+- 执行硬件地址转换（LOG2GEO获取地理地址，GEO2LOG获取IO系统ID）
+
+2. **主状态机流程**：
+```
+启用阶段（Enabling）
+├─ 启动设备信息获取模式（MODE_INFORMATION）
+├─ 根据参数决定初始状态：
+│   ├─ enableAndDeactivate=True ➔ 进入停用流程
+│   └─ enableAndActivate=True ➔ 进入激活流程
+
+停用流程（Deactivate）
+├─ 调用D_ACT_DP系统函数进行停用
+├─ 监控操作完成状态：
+│   ├─ 成功 ➔ 进入已停用状态
+│   ├─ 超时 ➔ 记录ERR_DEVICE_DEACTIVATING_TIME_OUT
+│   └─ 错误重试机制（最多连续两个周期）
+
+激活流程（Activate）
+├─ 调用D_ACT_DP系统函数进行激活
+├─ 监控设备状态：
+│   ├─ DeviceStates系统函数持续检查IO连接
+│   ├─ 成功且设备在线 ➔ 进入已激活状态
+│   ├─ 超时 ➔ 记录ERR_DEVICE_ACTIVATING_TIME_OUT
+│   └─ 错误重试机制
+
+运行监控
+├─ 已激活状态：
+│   ├─ 周期切换信息获取模式
+│   └─ 持续监测：
+│       ├─ 设备断连 ➔ 触发ERR_DEVICE_STATE_WHILE_ACTIVE
+│       └─ 激活状态异常 ➔ ERR_READ_ACTIVATION_STATE_WHILE_ACTIVE
+│
+└─ 已停用状态：
+    └─ 周期验证停用状态
+
+禁用流程（Disabling）
+├─ 根据参数决定是否执行最终停用
+├─ 清理内部状态
+└─ 重置所有输出信号
+```
+
+3. **错误处理机制**：
+```mermaid
+graph TD
+    ErrorDetection -->|系统函数返回错误| RecordSubStatus
+    ErrorDetection -->|状态机超时| SetTimeoutError
+    ErrorDetection -->|非法状态转换| UndefinedStateError
+    
+    RecordSubStatus --> UpdateDiagnostics[更新诊断结构体]
+    SetTimeoutError --> UpdateDiagnostics
+    UndefinedStateError --> UpdateDiagnostics
+    
+    UpdateDiagnostics --> ErrorClassification{错误类型}
+    
+    ErrorClassification -->|用户可清除| SetUserClearedFlag
+    ErrorClassification -->|自动恢复| RetryProcedure
+```
+
+4. **信号更新策略**：
+- `busy`信号在状态机非终态时保持True
+- `valid`仅在成功完成状态转换后置位
+- 错误信号保持到`enable`复位或错误条件消除
+- 设备状态信号（isActivated/isDeactivated）直接映射状态机当前状态
+
+5. **关键系统函数交互**：
+- **D_ACT_DP**：处理设备激活/停用核心操作
+- **DeviceStates**：获取IO系统设备连接状态
+- **LOG2GEO/GEO2LOG**：硬件地址转换基础服务
+
+此流程描述覆盖了代码中状态转换、错误处理、系统函数调用等核心逻辑，可作为后续代码生成的框架指导，同时保持了与原始代码结构的一致性。

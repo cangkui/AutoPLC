@@ -1,0 +1,68 @@
+### 算法流程描述
+
+#### 1. **初始化**
+- 在每次执行开始时，初始化所有输出状态：
+  - `error` 设为 `FALSE`
+  - `status` 设为 `STATUS_OK`（16#0000）
+  - `recipeAdded`、`recipeDeleted`、`recipeModified` 设为 `FALSE`
+
+#### 2. **主逻辑**
+根据不同的请求信号（`addRecipe`、`deleteRecipe`、`modifyRecipe`、`queryRecipe`）执行相应的操作：
+
+##### **添加配方（`addRecipe`）**
+1. **查找空位和重复ID**：
+   - 遍历 `recipe` 数组（1到10），检查是否存在 `recipeID = 0` 的空位，记录第一个空位的索引 `freeIndex`。
+   - 同时检查是否存在与输入 `recipeIn.recipeID` 相同的配方ID，如果存在，标记 `found = TRUE`。
+2. **错误处理**：
+   - 如果 `found = TRUE`，表示ID重复，设置 `error = TRUE` 和 `status = STATUS_DUPLICATE_ID`（16#8002）。
+   - 如果 `freeIndex = 0`，表示没有空位，设置 `error = TRUE` 和 `status = STATUS_NO_SPACE`（16#8003）。
+3. **存储配方**：
+   - 如果没有错误，将 `recipeIn` 存入 `recipe[freeIndex]`，并设置 `recipeAdded = TRUE`。
+
+##### **删除配方（`deleteRecipe`）**
+1. **查找配方**：
+   - 遍历 `recipe` 数组，查找 `recipeID = recipeIn.recipeID` 的配方，记录索引 `foundIndex`。
+2. **错误处理**：
+   - 如果未找到，设置 `error = TRUE` 和 `status = STATUS_DELETE_NOT_FOUND`（16#8004）。
+3. **删除配方**：
+   - 如果找到，将 `recipe[foundIndex].recipeID` 设为 `0`（标记为空位），并设置 `recipeDeleted = TRUE`。
+
+##### **修改配方（`modifyRecipe`）**
+1. **查找配方**：
+   - 遍历 `recipe` 数组，查找 `recipeID = recipeIn.recipeID` 的配方，记录索引 `foundIndex`。
+2. **错误处理**：
+   - 如果未找到，设置 `error = TRUE` 和 `status = STATUS_MODIFY_NOT_FOUND`（16#8005）。
+3. **修改配方**：
+   - 如果找到，用 `recipeIn` 替换 `recipe[foundIndex]`，并设置 `recipeModified = TRUE`。
+
+##### **查询配方（`queryRecipe`）**
+1. **查找配方**：
+   - 遍历 `recipe` 数组，查找 `recipeID = recipeIn.recipeID` 的配方。
+2. **错误处理**：
+   - 如果未找到，设置 `error = TRUE` 和 `status = STATUS_NOT_FOUND`（16#8001）。
+3. **返回查询结果**：
+   - 如果找到，将配方数据复制到 `recipeQueryResult`。
+
+#### 3. **输出更新**
+- 根据操作结果更新输出信号（`recipeAdded`、`recipeDeleted`、`recipeModified`、`recipeQueryResult`、`error`、`status`）。
+
+---
+
+### 代码流程调整建议
+1. **优化查找逻辑**：
+   - 当前代码在每次操作时都遍历整个数组，可以优化为在初始化时预计算空位和有效配方的索引，减少重复遍历。
+2. **状态机设计**：
+   - 如果请求信号可能同时触发（如 `addRecipe` 和 `deleteRecipe` 同时为 `TRUE`），建议引入优先级或状态机机制，确保每次只处理一个请求。
+3. **错误处理细化**：
+   - 可以增加更多错误状态码，例如无效的 `recipeID`（如负数或超出范围）。
+4. **输出区域**：
+   - `REGION Writting TO outputs` 目前为空，可以将输出信号的更新逻辑集中在此区域，提高代码可读性。
+
+---
+
+### 核心逻辑总结
+- **配方管理**：基于数组的增删改查，通过 `recipeID = 0` 标记空位。
+- **错误处理**：对重复ID、无空位、未找到配方等情况返回明确的错误状态。
+- **请求响应**：每个请求信号触发独立的操作，并更新对应的输出状态。
+
+这种设计适合PLC环境下的配方管理，兼顾了实时性和可靠性。

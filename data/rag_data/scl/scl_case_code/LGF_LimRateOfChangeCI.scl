@@ -1,0 +1,135 @@
+FUNCTION_BLOCK "LGF_LimRateOfChangeCI"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_LimRateOfChangeCI
+   VAR_INPUT 
+      value : LReal;
+      setChangeRate : LReal;
+      defaultOutValue : LReal;
+      enDefaultOutValue : Bool;
+      callOB : OB_CYCLIC;
+   END_VAR
+
+   VAR_OUTPUT 
+      delayedValue { ExternalWritable := 'False'} : LReal;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subfunctionStatus { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR 
+      statPrevOut { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempCycleTime : UDInt;
+      tempCyclePhase : UDInt;
+      tempCycleStatus : Word;
+      tempCycleTimeReal : LReal;
+      tempReadTimeStatus : Int;
+      tempOut : LReal;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO_INT : Int := 0;
+      ZERO_REAL : LReal := 0.0;
+      SECOND_IN_MICROSECONDS : LReal := 1000000.0;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_NEG_RATE_LIM : Word := 16#8200;
+      ERR_QRY_CINT : Word := 16#8600;
+      ERR_OB_UNAVAILABLE : Word := 16#8601;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_LimRateOfChangeCI
+	  // Comment/Function: Generates a ramp function from a step function.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Read cycle time of the call OB
+	  #tempReadTimeStatus := QRY_CINT(OB_NR := #callOB, CYCLE => #tempCycleTime, PHASE => #tempCyclePhase, STATUS => #tempCycleStatus);
+	  #tempCycleTimeReal := UDINT_TO_REAL(#tempCycleTime) / #SECOND_IN_MICROSECONDS;
+	END_REGION
+	
+	REGION Validation
+	  // Generate error message of the QRY_CINT function
+	  IF (#tempReadTimeStatus <> #ZERO_INT) THEN
+	    #error := TRUE;
+	    #subfunctionStatus := INT_TO_WORD(#tempReadTimeStatus);
+	    #status := #ERR_QRY_CINT;
+	    RETURN;
+	  END_IF;
+	  
+	  // Generate error message when OB unavailable
+	  IF #tempCycleStatus = 0 THEN
+	    #error := TRUE;
+	    #status := #ERR_OB_UNAVAILABLE;
+	    #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  //Check ChangeRate for negative value
+	  IF #setChangeRate < #ZERO_REAL THEN
+	    #error := TRUE;
+	    #status := #ERR_NEG_RATE_LIM;
+	    #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculation of rate of change
+	  //Default value output option
+	  IF #enDefaultOutValue THEN
+	    #statPrevOut := #defaultOutValue;
+	    #delayedValue := #defaultOutValue;
+	    
+	    #error := false;
+	    #status := #STATUS_FINISHED_NO_ERROR;
+	    #subfunctionStatus := #STATUS_FINISHED_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  #tempOut := #statPrevOut;
+	  
+	  // Ramp function
+	  IF #value < #tempOut THEN
+	    #tempOut := #tempOut - (#setChangeRate * #tempCycleTimeReal);
+	    #tempOut := MAX(IN1 := #tempOut, IN2 := #value);
+	    #statPrevOut := #tempOut;
+	  ELSIF #value > #tempOut THEN
+	    #tempOut := (#setChangeRate * #tempCycleTimeReal) + #tempOut;
+	    #tempOut := MIN(IN1 := #tempOut, IN2 := #value);
+	    #statPrevOut := #tempOut;
+	  END_IF;
+	END_REGION
+	
+	REGION Writting to outputs
+	  #delayedValue := #tempOut;
+	  
+	  #error := false;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	  
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

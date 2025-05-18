@@ -1,0 +1,97 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于计算给定日期（`date`）距离当年1月1日的天数。输入为`DTL`类型的日期，输出为天数（`DInt`），同时提供错误状态（`error`和`status`）的输出。
+
+#### 2. **输入与输出**
+- **输入**：
+  - `date`：`DTL`类型，表示待计算的日期。
+- **输出**：
+  - `error`：布尔类型，`FALSE`表示无错误，`TRUE`表示有错误。
+  - `status`：`Word`类型，用于标识函数执行状态或错误代码。
+  - **返回值**：`DInt`类型，表示从1月1日到输入日期的天数。
+
+#### 3. **错误处理**
+- 如果输入的日期无效（如超出范围），设置`error`为`TRUE`，`status`为`16#8201`（`ERR_LIM_DATE`）。
+- 默认情况下，`error`为`FALSE`，`status`为`16#0000`（`STATUS_NO_ERROR`）。
+
+#### 4. **主要逻辑**
+1. **初始化**：
+   - 复制输入日期到临时变量`tempDate`。
+   - 初始化累计天数`daysAccumulated`为0。
+
+2. **日期有效性检查**：
+   - 通过强制更新`tempDate`（如`tempDate := tempDate + TIME_ZERO_FORCE_UPDATE`）触发PLC的日期有效性检查。
+   - 如果检查失败（`ENO = FALSE`），设置错误状态并返回。
+
+3. **提取日期信息**：
+   - 从`tempDate`中提取年（`Year`）、月（`Month`）、日（`Day`）。
+
+4. **闰年判断**：
+   - 判断当前年份是否为闰年：
+     - 能被4整除但不能被100整除，或能被400整除的年份是闰年。
+   - 根据闰年结果调整2月的天数（28或29天）。
+
+5. **累计天数计算**：
+   - 遍历从1月到`Month - 1`的每个月，累加每个月的天数。
+   - 加上当前月份的天数（`Day`）。
+
+6. **输出结果**：
+   - 将累计天数赋值给返回值。
+   - 设置`error`为`FALSE`，`status`为`STATUS_NO_ERROR`。
+
+#### 5. **数据结构**
+- **常量**：
+  - 月份常量（如`JANUARY`、`FEBRUARY`等）。
+  - 状态码（`STATUS_NO_ERROR`、`ERR_LIM_DATE`）。
+- **数组**：
+  - `DAYS_IN_MONTH`：存储每个月的天数，2月根据闰年动态调整。
+
+#### 6. **注意事项**
+- 不依赖`ENO`进行错误处理，而是通过`error`和`status`输出错误信息。
+- 确保输入的`DTL`日期是有效的，否则直接返回错误。
+
+#### 7. **伪代码（逻辑描述）**
+```plaintext
+FUNCTION LGF_GetCalendarDay(date: DTL) : DInt
+    // 初始化
+    tempDate := date
+    daysAccumulated := 0
+
+    // 检查日期有效性
+    IF date无效 THEN
+        error := TRUE
+        status := ERR_LIM_DATE
+        RETURN daysAccumulated
+    END_IF
+
+    // 提取年月日
+    Year := tempDate.YEAR
+    Month := tempDate.MONTH
+    Day := tempDate.DAY
+
+    // 闰年判断
+    isLeapYear := (Year MOD 4 = 0 AND Year MOD 100 ≠ 0) OR (Year MOD 400 = 0)
+    IF isLeapYear THEN
+        DAYS_IN_MONTH[FEBRUARY] := 29
+    ELSE
+        DAYS_IN_MONTH[FEBRUARY] := 28
+    END_IF
+
+    // 累计天数
+    FOR month := JANUARY TO Month - 1 DO
+        daysAccumulated += DAYS_IN_MONTH[month]
+    END_FOR
+    daysAccumulated += Day
+
+    // 输出
+    error := FALSE
+    status := STATUS_NO_ERROR
+    RETURN daysAccumulated
+END_FUNCTION
+```
+
+#### 8. **调整建议**
+- 如果输入的日期无效，可以提前终止计算，避免无效操作。
+- 确保`DAYS_IN_MONTH`数组的索引从1开始，与月份常量对应。
+- 闰年判断逻辑可以封装为单独的函数以提高可读性。

@@ -1,0 +1,383 @@
+FUNCTION_BLOCK "LGF_TimerSwitch"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_TimerSwitch
+   VAR_INPUT 
+      onMonth : USInt;
+      onDay : USInt;
+      onWeekday : USInt;
+      onHour : USInt;
+      onMinute : USInt;
+      offMonth : USInt;
+      offDay : USInt;
+      offWeekday : USInt;
+      offHour : USInt;
+      offMinute : USInt;
+      mode : USInt;
+   END_VAR
+
+   VAR_OUTPUT 
+      signal { ExternalWritable := 'False'} : Bool;
+      actLocalTime {InstructionName := 'DTL'; LibVersion := '1.0'; ExternalWritable := 'False'} : DTL;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subFunctionStatus { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempTime {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempReadTimeStatus : Word;
+      tempOnTimeDtl {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempOnTimeTod : Time_Of_Day;
+      tempOffTimeDtl {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempOffTimeTod : Time_Of_Day;
+      tempActTimeDtl {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempActTimeTod : Time_Of_Day;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : USInt := 0;
+      CLEAR_DTL {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_NO_MODE_SELECTED : Word := 16#8200;
+      ERR_RD_LOC_T : Word := 16#8600;
+      MODE_PERMANENTLY_OFF : UInt := 0;
+      MODE_DAILY : UInt := 1;
+      MODE_WEEKLY : UInt := 2;
+      MODE_MONTHLY : UInt := 3;
+      MODE_YEARLY : UInt := 4;
+      MODE_WEEK_DAYS : UInt := 5;
+      MODE_WEEKEND_DAYS : UInt := 6;
+      MODE_PERMANENTLY_ON : UInt := 10;
+      MONTH_JANUARY : USInt := 1;
+      MONTH_DECEMBER : USInt := 12;
+      DAY_MONDAY : USInt := 2;
+      DAY_FRIDAY : USInt := 6;
+      DAY_SATURDAY : USInt := 7;
+      DAY_SUNDAY : USInt := 1;
+      DAY_NEXT_SUNDAY : USInt := 8;
+      DAY_NEXT_MONDAY : USInt := 9;
+      DATE_INCREMENT : USInt := 1;
+      DAY_INCREMENT : Time := T#1d;
+      WEEK_INCREMENT : Time := T#7d;
+      DAYS_PER_WEEK : USInt := 7;
+      DEFAULT_YEAR : UInt := 2015;
+      DEFAULT_MONTH : USInt := 2;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_TimerSwitch
+	  // Comment/Function: Timer Switch (daily, weekly, monthly, working days, ...)
+	  //                   Mode: Daily: 1, weekly: 2, monthly: 3, yearly: 4, workday: 5, weekend: 6
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V14 Update 1
+	  // Restrictions:     ENO disabled - error handling done with error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION INITIALISATION
+	  // Time ON init
+	  #tempOnTimeDtl.HOUR := #onHour;
+	  #tempOnTimeDtl.MINUTE := #onMinute;
+	  #tempOnTimeDtl.SECOND := #ZERO;
+	  #tempOnTimeDtl.NANOSECOND := #ZERO;
+	  // Time OFF init
+	  #tempOffTimeDtl.HOUR := #offHour;
+	  #tempOffTimeDtl.MINUTE := #offMinute;
+	  #tempOffTimeDtl.SECOND := #ZERO;
+	  #tempOffTimeDtl.NANOSECOND := #ZERO;
+	END_REGION
+	
+	REGION READ LOCAL TIME
+	  #tempReadTimeStatus := INT_TO_WORD(RD_LOC_T(#tempTime));
+	  
+	  // check result for error --> 16#8000 / MSB .X15
+	  IF #tempReadTimeStatus.%X15 THEN
+	    #error := TRUE;
+	    #status := #ERR_RD_LOC_T;
+	    #subFunctionStatus := #tempReadTimeStatus;
+	    #actLocalTime := #CLEAR_DTL;
+	    #signal := FALSE;
+	    RETURN;
+	  END_IF;
+	  
+	  // Store time of the current day
+	  #tempActTimeDtl := #tempTime;
+	  #tempActTimeTod := DTL_TO_TOD(#tempTime);
+	END_REGION
+	
+	REGION TIMER SWITCH LOGIC
+	  CASE #mode OF
+	    #MODE_DAILY:
+	      REGION DAILY MODE
+	        #tempOnTimeDtl.YEAR := #tempActTimeDtl.YEAR;
+	        #tempOnTimeDtl.MONTH := #tempActTimeDtl.MONTH;
+	        #tempOnTimeDtl.WEEKDAY := #tempActTimeDtl.WEEKDAY;
+	        #tempOnTimeDtl.DAY := #tempActTimeDtl.DAY;
+	        // Store time of the on day
+	        #tempOnTimeTod := DTL_TO_TOD(#tempOnTimeDtl);
+	        
+	        #tempOffTimeDtl.YEAR := #tempActTimeDtl.YEAR;
+	        #tempOffTimeDtl.MONTH := #tempActTimeDtl.MONTH;
+	        #tempOffTimeDtl.WEEKDAY := #tempActTimeDtl.WEEKDAY;
+	        #tempOffTimeDtl.DAY := #tempActTimeDtl.DAY;
+	        // Store time of the off day
+	        #tempOffTimeTod := DTL_TO_TOD(#tempOffTimeDtl);
+	        
+	        // Timer setting - overnight
+	        IF #tempOnTimeTod > #tempOffTimeTod THEN
+	          // Increase the day of the timeOff when midnight happens
+	          IF #tempActTimeTod > #tempOffTimeTod THEN
+	            #tempOffTimeDtl := #tempOffTimeDtl + #DAY_INCREMENT;
+	          ELSE
+	            // Decrease the day of the timeOn when midnight happens
+	            // Activate signal from the midnight
+	            #tempOnTimeDtl := #tempOnTimeDtl - #DAY_INCREMENT;
+	          END_IF;
+	        END_IF;
+	      END_REGION
+	      
+	    #MODE_WEEKLY:
+	      REGION WEEKLY MODE
+	        // Set the default date
+	        #tempOnTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempOnTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempOnTimeDtl.DAY := #onWeekday;  // Synchronize DTL.WEEKDAY with date
+	        
+	        #tempOnTimeTod := DTL_TO_TOD(#tempOnTimeDtl);
+	        
+	        #tempOffTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempOffTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempOffTimeDtl.DAY := #offWeekday;
+	        
+	        #tempOffTimeTod := DTL_TO_TOD(#tempOffTimeDtl);
+	        
+	        #tempActTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempActTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempActTimeDtl.DAY := #tempActTimeDtl.WEEKDAY;
+	        
+	        IF #onWeekday > #offWeekday OR
+	          (#onWeekday = #offWeekday AND #tempOnTimeTod > #tempOffTimeTod) THEN
+	          #tempOffTimeDtl.DAY := #offWeekday + #DAYS_PER_WEEK;
+	          
+	          IF #onWeekday > #tempActTimeDtl.WEEKDAY OR
+	            (#onWeekday = #offWeekday AND #tempActTimeTod < #tempOffTimeTod) THEN
+	            #tempActTimeDtl.DAY := #tempActTimeDtl.WEEKDAY + #DAYS_PER_WEEK;
+	          END_IF;
+	        END_IF;
+	      END_REGION
+	      
+	    #MODE_MONTHLY:
+	      REGION MONTHLY MODE
+	        #tempOnTimeDtl.YEAR := #tempActTimeDtl.YEAR;
+	        #tempOnTimeDtl.MONTH := #tempActTimeDtl.MONTH;
+	        #tempOnTimeDtl.WEEKDAY := #tempActTimeDtl.WEEKDAY;
+	        #tempOnTimeDtl.DAY := #onDay;
+	        
+	        #tempOnTimeTod := DTL_TO_TOD(#tempOnTimeDtl);
+	        
+	        #tempOffTimeDtl.YEAR := #tempActTimeDtl.YEAR;
+	        #tempOffTimeDtl.MONTH := #tempActTimeDtl.MONTH;
+	        #tempOffTimeDtl.WEEKDAY := #tempActTimeDtl.WEEKDAY;
+	        #tempOffTimeDtl.DAY := #offDay;
+	        
+	        #tempOffTimeTod := DTL_TO_TOD(#tempOffTimeDtl);
+	        
+	        // Timer setting - over new year
+	        IF #onDay > #offDay OR
+	          (#onDay = #offDay AND #tempOnTimeTod > #tempOffTimeTod) THEN
+	          IF #tempActTimeDtl.DAY > #offDay OR
+	            (#tempActTimeDtl.DAY = #offDay AND #tempActTimeTod > #tempOffTimeTod) THEN
+	            // Increase the month of the timeOff over new year
+	            IF #tempOffTimeDtl.MONTH = #MONTH_DECEMBER THEN
+	              #tempOffTimeDtl.MONTH := #MONTH_JANUARY;
+	              #tempOffTimeDtl.YEAR := #tempOffTimeDtl.YEAR + #DATE_INCREMENT;
+	            ELSE
+	              #tempOffTimeDtl.MONTH := #tempOffTimeDtl.MONTH + #DATE_INCREMENT;
+	            END_IF;
+	          ELSE
+	            // Decrease the month of the timeOn over new year
+	            IF #tempOnTimeDtl.MONTH = #MONTH_JANUARY THEN
+	              #tempOnTimeDtl.MONTH := #MONTH_DECEMBER;
+	              #tempOnTimeDtl.YEAR := #tempOnTimeDtl.YEAR - #DATE_INCREMENT;
+	            ELSE
+	              #tempOnTimeDtl.MONTH := #tempOnTimeDtl.MONTH - #DATE_INCREMENT;
+	            END_IF;
+	            
+	          END_IF;
+	        END_IF;
+	      END_REGION
+	      
+	    #MODE_YEARLY:
+	      REGION YEARLY MODE
+	        #tempOnTimeDtl.YEAR := #tempActTimeDtl.YEAR;
+	        #tempOnTimeDtl.MONTH := #onMonth;
+	        #tempOnTimeDtl.WEEKDAY := #tempActTimeDtl.WEEKDAY;
+	        #tempOnTimeDtl.DAY := #onDay;
+	        
+	        #tempOnTimeTod := DTL_TO_TOD(#tempOnTimeDtl);
+	        
+	        #tempOffTimeDtl.YEAR := #tempActTimeDtl.YEAR;
+	        #tempOffTimeDtl.MONTH := #offMonth;
+	        #tempOffTimeDtl.WEEKDAY := #tempActTimeDtl.WEEKDAY;
+	        #tempOffTimeDtl.DAY := #offDay;
+	        
+	        #tempOffTimeTod := DTL_TO_TOD(#tempOffTimeDtl);
+	        
+	        // Timer setting - over new year
+	        IF #onMonth > #offMonth OR
+	          (#onMonth = #offMonth AND #tempOnTimeTod > #tempOffTimeTod) THEN
+	          IF #tempActTimeDtl.MONTH > #offMonth OR
+	            (#tempActTimeDtl.MONTH = #offMonth AND #tempActTimeTod > #tempOffTimeTod) THEN
+	            // Increase the year of the timeOff when new year happens
+	            #tempOffTimeDtl.YEAR := #tempOffTimeDtl.YEAR + #DATE_INCREMENT;
+	          ELSE
+	            // Decrease the year of the timeOn when new year happens
+	            #tempOnTimeDtl.YEAR := #tempOnTimeDtl.YEAR - #DATE_INCREMENT;
+	          END_IF;
+	        END_IF;
+	      END_REGION
+	      
+	    #MODE_WEEK_DAYS:  // Working days (Monday - Friday)
+	      REGION WEEK DAYS MODE  
+	        #tempOnTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempOnTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempOnTimeDtl.DAY := #tempActTimeDtl.WEEKDAY;
+	        
+	        #tempOnTimeTod := DTL_TO_TOD(#tempOnTimeDtl);
+	        
+	        #tempOffTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempOffTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempOffTimeDtl.DAY := #tempActTimeDtl.WEEKDAY;
+	        
+	        #tempOffTimeTod := DTL_TO_TOD(#tempOffTimeDtl);
+	        
+	        #tempActTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempActTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempActTimeDtl.DAY := #tempActTimeDtl.WEEKDAY;
+	        
+	        // Timer setting - overnight
+	        IF #tempOnTimeTod > #tempOffTimeTod THEN
+	          IF #tempActTimeTod > #tempOffTimeTod THEN
+	            #tempOffTimeDtl := #tempOffTimeDtl + #DAY_INCREMENT;
+	          ELSE
+	            #tempOnTimeDtl := #tempOnTimeDtl - #DAY_INCREMENT;
+	          END_IF;
+	        END_IF;
+	        
+	        IF #tempOnTimeDtl.DAY <= #DAY_MONDAY THEN
+	          #tempOnTimeDtl.DAY := #DAY_MONDAY;
+	        ELSIF #tempOnTimeDtl.DAY > #DAY_FRIDAY THEN
+	          #tempOnTimeDtl.DAY := #DAY_FRIDAY;
+	        END_IF;
+	        
+	        IF #tempOffTimeDtl.DAY > #DAY_FRIDAY AND
+	          #tempOnTimeTod > #tempOffTimeTod THEN // #tempOffTime > Friday AND crossed midnight
+	          #tempOffTimeDtl.DAY := #DAY_SATURDAY;
+	        ELSIF #tempOffTimeDtl.DAY > #DAY_FRIDAY THEN
+	          #tempOffTimeDtl.DAY := #DAY_FRIDAY;
+	        END_IF;
+	      END_REGION
+	      
+	    #MODE_WEEKEND_DAYS:  // Weekend (Saturday and Sunday)    
+	      REGION WEEKEND DAYS MODE
+	        #tempOnTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempOnTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempOnTimeDtl.DAY := #tempActTimeDtl.WEEKDAY;
+	        
+	        IF #tempOnTimeDtl.DAY < #DAY_SATURDAY THEN
+	          #tempOnTimeDtl := #tempOnTimeDtl + #WEEK_INCREMENT;
+	        END_IF;
+	        
+	        #tempOnTimeTod := DTL_TO_TOD(#tempOnTimeDtl);
+	        
+	        #tempOffTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempOffTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempOffTimeDtl.DAY := #tempActTimeDtl.WEEKDAY;
+	        
+	        IF #tempOffTimeDtl.DAY < #DAY_SATURDAY THEN
+	          #tempOffTimeDtl := #tempOffTimeDtl + #WEEK_INCREMENT;
+	        END_IF;
+	        
+	        #tempOffTimeTod := DTL_TO_TOD(#tempOffTimeDtl);
+	        
+	        #tempActTimeDtl.YEAR := #DEFAULT_YEAR;
+	        #tempActTimeDtl.MONTH := #DEFAULT_MONTH;
+	        #tempActTimeDtl.DAY := #tempActTimeDtl.WEEKDAY;
+	        
+	        IF #tempActTimeDtl.DAY < #DAY_SATURDAY THEN
+	          #tempActTimeDtl := #tempActTimeDtl + #WEEK_INCREMENT;
+	        END_IF;
+	        
+	        #tempActTimeTod := DTL_TO_TOD(#tempTime);
+	        
+	        // Timer setting - overnight
+	        IF #tempOnTimeTod > #tempOffTimeTod THEN
+	          IF #tempActTimeTod > #tempOffTimeTod THEN
+	            #tempOffTimeDtl := #tempOffTimeDtl + #DAY_INCREMENT;
+	          ELSE
+	            #tempOnTimeDtl := #tempOnTimeDtl - #DAY_INCREMENT;
+	          END_IF;
+	        END_IF;
+	        
+	        IF #tempOnTimeDtl.DAY < #DAY_SATURDAY THEN
+	          #tempOnTimeDtl.DAY := #DAY_SATURDAY;
+	        ELSIF #tempOnTimeDtl.DAY > #DAY_NEXT_SUNDAY THEN
+	          #tempOnTimeDtl.DAY := #DAY_NEXT_SUNDAY;
+	        END_IF;
+	        
+	        IF #tempOffTimeDtl.DAY > #DAY_NEXT_SUNDAY AND
+	          #tempOnTimeTod > #tempOffTimeTod THEN // #tempOffTime.DAY > Sunday AND crossed midnight
+	          #tempOffTimeDtl.DAY := #DAY_NEXT_MONDAY;
+	        ELSIF #tempOffTimeDtl.DAY > #DAY_NEXT_SUNDAY THEN
+	          #tempOffTimeDtl.DAY := #DAY_NEXT_SUNDAY;
+	        END_IF;
+	      END_REGION
+	      
+	    #MODE_PERMANENTLY_ON:
+	      REGION PERMANENTLY ON
+	        ;
+	      END_REGION
+	      
+	    #MODE_PERMANENTLY_OFF:
+	      REGION PERMANENTLY ON
+	        ;
+	      END_REGION
+	      
+	    ELSE
+	      #signal := FALSE;
+	      #actLocalTime := #CLEAR_DTL;
+	      #error := TRUE;
+	      #status := #ERR_NO_MODE_SELECTED;
+	      #subFunctionStatus := USINT_TO_WORD(#mode);
+	      RETURN;
+	  END_CASE;
+	END_REGION
+	
+	REGION OUTPUT
+	  #actLocalTime := #tempTime;
+	  #signal := ((#tempActTimeDtl >= #tempOnTimeDtl) AND (#tempActTimeDtl < #tempOffTimeDtl) AND ((#mode <> #MODE_PERMANENTLY_OFF))) OR (#mode = #MODE_PERMANENTLY_ON);
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  #subFunctionStatus := #STATUS_NO_ERROR;
+	  
+	  // ENO is not used, forced to TRUE
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

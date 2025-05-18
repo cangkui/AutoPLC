@@ -1,0 +1,136 @@
+### 算法流程描述（基于自然语言需求和代码分析）
+
+#### 1. **功能概述**
+该功能块 `LGF_TimerSwitch` 是一个多功能定时器，支持以下模式：
+- **每日模式**（`MODE_DAILY`）：按天重复触发。
+- **每周模式**（`MODE_WEEKLY`）：按周重复触发（基于星期几）。
+- **每月模式**（`MODE_MONTHLY`）：按月重复触发（基于日期）。
+- **每年模式**（`MODE_YEARLY`）：按年重复触发（基于月份和日期）。
+- **工作日模式**（`MODE_WEEK_DAYS`）：仅在工作日（周一至周五）触发。
+- **周末模式**（`MODE_WEEKEND_DAYS`）：仅在周末（周六和周日）触发。
+- **常开模式**（`MODE_PERMANENTLY_ON`）：输出信号始终为 `TRUE`。
+- **常关模式**（`MODE_PERMANENTLY_OFF`）：输出信号始终为 `FALSE`。
+
+#### 2. **输入参数**
+- **时间参数**：
+  - `onMonth`、`onDay`、`onWeekday`、`onHour`、`onMinute`：定义信号开启的时间点。
+  - `offMonth`、`offDay`、`offWeekday`、`offHour`、`offMinute`：定义信号关闭的时间点。
+- **模式选择**：
+  - `mode`：选择定时器的工作模式（如 `MODE_DAILY`、`MODE_WEEKLY` 等）。
+
+#### 3. **输出参数**
+- `signal`：定时器输出信号（`TRUE` 或 `FALSE`）。
+- `actLocalTime`：当前本地时间（`DTL` 格式）。
+- `error`：错误标志（`TRUE` 表示错误）。
+- `status`：状态码（正常或错误类型）。
+- `subFunctionStatus`：子功能状态码。
+
+#### 4. **核心逻辑流程**
+1. **初始化**：
+   - 初始化 `onTime` 和 `offTime` 的时分秒（秒和纳秒固定为 0）。
+   - 设置默认年份和月份（用于部分模式的计算）。
+
+2. **读取本地时间**：
+   - 调用 `RD_LOC_T` 读取当前时间，并检查是否成功。
+   - 如果读取失败，设置错误标志并返回。
+
+3. **模式处理**（根据 `mode` 选择分支）：
+   - **每日模式**：
+     - 设置 `onTime` 和 `offTime` 的年月日为当前日期。
+     - 处理跨午夜的情况（如 `onTime` 在晚上，`offTime` 在次日早晨）。
+   - **每周模式**：
+     - 基于 `onWeekday` 和 `offWeekday` 计算触发时间。
+     - 处理跨周的情况（如 `onWeekday` 是周日，`offWeekday` 是周一）。
+   - **每月模式**：
+     - 基于 `onDay` 和 `offDay` 计算触发时间。
+     - 处理跨月的情况（如 `onDay` 是 31 日，`offDay` 是 1 日）。
+   - **每年模式**：
+     - 基于 `onMonth` 和 `offMonth` 计算触发时间。
+     - 处理跨年的情况（如 `onMonth` 是 12 月，`offMonth` 是 1 月）。
+   - **工作日模式**：
+     - 仅在工作日（周一至周五）触发。
+     - 处理跨午夜的情况。
+   - **周末模式**：
+     - 仅在周末（周六和周日）触发。
+     - 处理跨午夜的情况。
+   - **常开/常关模式**：
+     - 直接设置 `signal` 为 `TRUE` 或 `FALSE`。
+
+4. **输出处理**：
+   - 根据当前时间和模式计算 `signal` 的值：
+     - 如果当前时间在 `onTime` 和 `offTime` 之间，且模式非 `PERMANENTLY_OFF`，则 `signal` 为 `TRUE`。
+     - 如果模式为 `PERMANENTLY_ON`，则 `signal` 始终为 `TRUE`。
+   - 更新 `actLocalTime`、`error`、`status` 和 `subFunctionStatus`。
+
+#### 5. **错误处理**
+- 如果 `mode` 无效，设置 `error` 和 `status` 并返回。
+- 如果读取本地时间失败，设置 `error` 和 `status` 并返回。
+
+#### 6. **代码调整建议**
+- **优化跨时间处理**：
+  - 当前代码中跨午夜、跨周、跨月、跨年的逻辑较复杂，可以提取为单独的函数以提高可读性。
+- **输入验证**：
+  - 添加对 `onMonth`、`onDay` 等参数的合法性检查（如月份是否为 1-12）。
+- **常开/常关模式**：
+  - 当前代码中 `PERMANENTLY_ON` 和 `PERMANENTLY_OFF` 的逻辑可以合并简化。
+
+#### 7. **伪代码示例**
+```plaintext
+FUNCTION_BLOCK LGF_TimerSwitch
+  // 初始化
+  INIT:
+    SET onTime.HOUR = onHour
+    SET onTime.MINUTE = onMinute
+    SET offTime.HOUR = offHour
+    SET offTime.MINUTE = offMinute
+
+  // 读取时间
+  READ_TIME:
+    currentTime = RD_LOC_T()
+    IF RD_LOC_T 失败 THEN
+      SET error = TRUE
+      SET status = ERR_RD_LOC_T
+      RETURN
+    END_IF
+
+  // 模式分支
+  SWITCH (mode):
+    CASE MODE_DAILY:
+      // 设置 onTime 和 offTime 为当前日期
+      // 处理跨午夜
+    CASE MODE_WEEKLY:
+      // 设置 onTime 和 offTime 为当前星期几
+      // 处理跨周
+    CASE MODE_MONTHLY:
+      // 设置 onTime 和 offTime 为当前月份
+      // 处理跨月
+    CASE MODE_YEARLY:
+      // 设置 onTime 和 offTime 为当前年份
+      // 处理跨年
+    CASE MODE_WEEK_DAYS:
+      // 仅处理工作日
+    CASE MODE_WEEKEND_DAYS:
+      // 仅处理周末
+    CASE MODE_PERMANENTLY_ON:
+      SET signal = TRUE
+    CASE MODE_PERMANENTLY_OFF:
+      SET signal = FALSE
+    DEFAULT:
+      SET error = TRUE
+      SET status = ERR_NO_MODE_SELECTED
+      RETURN
+
+  // 输出
+  OUTPUT:
+    IF (mode == PERMANENTLY_ON) THEN
+      SET signal = TRUE
+    ELSE IF (mode == PERMANENTLY_OFF) THEN
+      SET signal = FALSE
+    ELSE
+      SET signal = (currentTime >= onTime AND currentTime < offTime)
+    END_IF
+    SET actLocalTime = currentTime
+    SET error = FALSE
+    SET status = STATUS_NO_ERROR
+END_FUNCTION_BLOCK
+```

@@ -1,0 +1,47 @@
+﻿{
+    "title": "Temperature Logic Control",
+    "description": "Write a function block FB to implement a temperature control logic. The program should include the following functions:\n1. Read the value of the temperature sensor through an analog input module.\n2. Compare the read temperature value TemperatureSensorInput with the set temperature value SetTemperature.\n3. If the actual temperature is lower than the set temperature, start the heater HeaterOutput.\n4. If the actual temperature is higher than the set temperature, turn off the heater HeaterOutput.\n5. If the heater works continuously for more than a certain period (for convenience, using 5s), it should trigger an overheating protection, automatically turn off the heater, and must wait for a certain period (for convenience, using 3s) before the overheating protection can be lifted.\n6. Provide status indication, displaying the current temperature, set temperature, heater status, and whether overheating protection is triggered.\n7. Provide temperature sensor fault judgment, if the read temperature value TemperatureSensorInput is less than 0 or greater than 100, it is considered a sensor fault, and the heater should be turned off.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TempCtrl",
+    "input": [
+        {
+            "name": "TemperatureSensorInput",
+            "type": "Real",
+            "description": "The input value of the temperature sensor, i.e., the actual temperature"
+        },
+        {
+            "name": "SetTemperature",
+            "type": "Real",
+            "description": "The set temperature value"
+        }
+    ],
+    "output": [
+        {
+            "name": "CurrentTemperature",
+            "type": "Real",
+            "description": "Display of the current temperature"
+        },
+        {
+            "name": "SetTempDisplay",
+            "type": "Real",
+            "description": "Display of the set temperature"
+        },
+        {
+            "name": "HeaterStatus",
+            "type": "Bool",
+            "description": "Display of the heater status"
+        },
+        {
+            "name": "OverheatProtection",
+            "type": "Bool",
+            "description": "Display of the overheating protection status"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "HeaterOutput",
+            "type": "Bool",
+            "description": "The control output of the heater"
+        }
+    ]
+}

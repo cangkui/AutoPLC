@@ -1,0 +1,60 @@
+
+
+以下是基于自然语言需求和SCL代码分析得出的算法流程思维链：
+
+1. **执行控制**
+- 通过边缘检测机制（上升沿）确保每个操作（push/pop/peek/clear）单次触发
+- 无操作信号时返回"STATUS_NO_CURRENT_JOBS"状态
+- 错误状态保持到下次操作前
+
+2. **输入验证序列**
+```
+[缓冲区类型检查] → [元素类型匹配检查] → [初始值类型验证]
+    ↓                 ↓                     ↓
+ERR_NO_ARRAY    ERR_WRONG_TYPE_ITEM   ERR_WRONG_TYPE_INITIAL_ITEM
+```
+
+3. **核心操作流程**
+```
+        [reset触发]
+           ↓
+重置索引(-1)/计数器(0)
+↓
+        [clear触发]
+           ↓
+遍历缓冲区填充初始值 → ERR_CLEAR_BUFFER
+           ↓
+重置索引/计数器
+↓
+        [peek/pop触发]
+           ↓
+检查空缓冲区 → ERR_BUFFER_EMPTY
+           ↓
+读取末位元素 → ERR_RETURN_LAST_ENTRY
+           ↓
+[pop时]替换为初始值 → ERR_POP_REPLACE_ITEM_BY_INIT_VALUE
+           ↓
+索引递减
+↓
+        [push触发]
+           ↓
+检查缓冲区满 → ERR_BUFFER_FULL
+           ↓
+写入新元素 → ERR_WRITE_ENTRY
+           ↓
+索引递增
+```
+
+4. **状态更新规则**
+- 元素计数 = 末位索引 + 1（索引从0开始）
+- 空状态 = 末位索引 < 0
+- 成功操作后重置错误标志
+- 内部错误码通过subFunctionStatus透传
+
+5. **特殊处理逻辑**
+- peek操作不修改缓冲区状态
+- clear操作执行全缓冲区初始化
+- 同时触发多个操作时按reset > clear > pop/peek > push的优先级处理
+- 索引范围强制约束在[-1, buffer_size-1]区间
+
+该流程通过维护末位指针（statLastItemIndex）实现栈顶跟踪，使用Variant类型操作保证数据通用性，通过类型安全检查确保数据一致性。错误处理贯穿所有操作阶段，保证异常状态可追溯。

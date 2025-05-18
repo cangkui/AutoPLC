@@ -1,0 +1,51 @@
+
+
+### 算法流程描述（基于代码调整）
+
+#### 核心逻辑结构
+1. **状态机驱动**：使用`currentState`变量跟踪当前工序阶段，定义9个状态常量描述各生产环节
+2. **循环状态处理**：通过`REPEAT-UNTIL`结构确保单次PLC扫描周期内处理所有可能的状态跃迁
+
+#### 详细流程
+```plaintext
+初始化阶段：
+  所有输出设备(Pump/Filling等)置为FALSE
+  完成指示灯熄灭
+  初始状态设为STATE_WAITING_FOR_BOTTLE（0）
+
+主循环：
+  REPEAT
+    1. 根据currentState进入对应处理分支：
+      ──┬─ 等待瓶子[0] ──▶ 持续检测bottleSensor
+        │                  ↑ 发现瓶子 → 跳转清洗状态[1]
+        ├─ 清洗[1] ──────▶ 启动Pump_Motor
+        │                  ↓ 检测到cleaningConfirmButton → 跳转灌装[3]
+        ├─ 灌装[3] ──────▶ 启动Filling_Valve
+        │                  ↓ 检测到fillingConfirmButton → 跳转封盖[5]
+        ├─ 封盖[5] ──────▶ 启动Capping_Machine
+        │                  ↓ 检测到cappingConfirmButton → 跳转包装[7]
+        ├─ 包装[7] ──────▶ 启动Packing_Machine
+        │                  ↓ 检测到packingConfirmButton → 跳转完成[9]
+        └─ 完成[9] ──────▶ 点亮Completion_Light
+                           ↓ 检测到finishedButton → 复位到等待瓶子[0]
+    
+    2. 每次状态跃迁后立即刷新设备控制信号
+    3. 通过tempExitStateLoop控制单周期内最多处理一个状态跃迁
+  UNTIL 无状态变化需要处理
+```
+
+#### 关键调整说明
+1. **状态跃迁优化**：将原始需求中的"等待确认"与"工作"状态合并（如STATE_CLEANING同时包含清洗执行和确认等待）
+2. **设备控制策略**：每个工作状态直接控制对应设备，跃迁时立即关闭前序设备
+3. **完成阶段处理**：保持指示灯常亮直到finishedButton触发，不同于中间过程的瞬时确认
+
+#### 异常处理提示
+```plaintext
+(需后续补充)
+- 超时监控：各工序阶段增加最大持续时间检测
+- 急停处理：添加全局急停信号复位所有状态
+- 传感器故障：检测bottleSensor异常持续触发
+```
+
+该流程通过紧凑的状态机设计实现了需求描述的核心业务流程，但需注意：  
+⚠️ `REPEAT`循环可能导致单PLC周期处理多个状态跃迁，实际应用中需确认硬件响应速度是否匹配

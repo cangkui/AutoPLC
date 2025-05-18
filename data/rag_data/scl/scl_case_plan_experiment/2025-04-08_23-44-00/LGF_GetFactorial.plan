@@ -1,0 +1,75 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于计算自然数（0到12）的阶乘（N!），并返回计算结果。由于阶乘结果增长迅速，12的阶乘是DInt类型能表示的最大值。
+
+#### 2. **输入与输出**
+- **输入参数**：
+  - `naturalNumber`：Int类型，表示要计算阶乘的自然数（0 ≤ naturalNumber ≤ 12）。
+  
+- **输出参数**：
+  - `error`：Bool类型，表示函数执行过程中是否发生错误（FALSE：无错误；TRUE：有错误）。
+  - `status`：Word类型，表示函数执行状态或错误代码（16#0000-16#7FFF为状态码，16#8000-16#FFFF为错误码）。
+  
+- **返回值**：
+  - DInt类型，返回计算得到的阶乘值。
+
+#### 3. **错误处理**
+- 如果输入的`naturalNumber`不在0到12范围内，函数应：
+  - 返回值为0。
+  - 设置`error`为TRUE。
+  - 设置`status`为错误码`ERR_WRONG_VALUE_RANGE`（16#8101）。
+  - 直接退出函数（`RETURN`）。
+
+#### 4. **阶乘计算逻辑**
+- 阶乘的计算通过预定义的常量值实现，避免运行时重复计算。
+- 使用`CASE`语句根据输入的`naturalNumber`选择对应的阶乘常量值：
+  - 例如，输入为0时，返回`FACTORIAL_OF_ZERO`（1）；输入为5时，返回`FACTORIAL_OF_FIVE`（120）。
+  - 输入为12时，返回`FACTORIAL_OF_TWELVE`（479001600）。
+
+#### 5. **输出赋值**
+- 如果没有错误：
+  - 返回值赋值为`tempFactorial`（从`CASE`语句中得到的阶乘值）。
+  - 设置`error`为FALSE。
+  - 设置`status`为`STATUS_NO_ERROR`（16#0000）。
+- 如果发生错误（输入超出范围）：
+  - 返回值赋值为0。
+  - 设置`error`和`status`为对应的错误值。
+
+#### 6. **优化与限制**
+- 使用预定义的常量值（如`FACTORIAL_OF_ZERO`到`FACTORIAL_OF_TWELVE`）提高效率。
+- 输入范围限制为0到12，因为13的阶乘（6227020800）超出DInt类型的最大值（2147483647）。
+- 不启用ENO机制，错误通过`error`和`status`输出。
+
+#### 7. **算法流程**
+1. **输入验证**：
+   - 检查`naturalNumber`是否在0到12范围内。
+   - 如果不在范围内，跳转到错误处理逻辑。
+2. **阶乘计算**：
+   - 通过`CASE`语句匹配输入值，选择对应的阶乘常量。
+3. **错误处理**：
+   - 如果输入无效，返回错误状态和默认值。
+4. **输出赋值**：
+   - 将阶乘结果赋值给返回值。
+   - 设置`error`和`status`为成功状态。
+
+#### 8. **伪代码逻辑**
+```
+IF naturalNumber < 0 OR naturalNumber > 12 THEN
+    RETURN 0, error=TRUE, status=ERR_WRONG_VALUE_RANGE
+ELSE
+    factorial_value = CASE naturalNumber OF
+        0: 1
+        1: 1
+        2: 2
+        ...
+        12: 479001600
+    END_CASE
+    RETURN factorial_value, error=FALSE, status=STATUS_NO_ERROR
+END_IF
+```
+
+#### 9. **注意事项**
+- 输入范围必须严格限制，否则会导致溢出或错误。
+- 预定义的常量值可以替换为运行时计算，但会降低效率。
+- 错误码和状态码应遵循规范（如16#8000以上为错误）。

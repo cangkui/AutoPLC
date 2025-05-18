@@ -1,0 +1,134 @@
+### 算法流程描述
+
+#### 1. **功能块概述**
+这个功能块 `LGF_ActDeactDevice` 实现了一个状态机，用于激活、监控和去激活分布式设备（如 PN 或 DP 设备）。它支持以下功能：
+- 通过 `activate` 和 `deactivate` 输入信号触发设备的激活或去激活。
+- 监控设备状态（如连接状态、错误状态）。
+- 提供丰富的输出信号（如 `busy`、`error`、`status`）和诊断信息。
+- 支持超时处理和错误恢复机制。
+
+---
+
+#### 2. **核心逻辑流程**
+##### **(1) 初始化与使能处理**
+- **输入信号**：`enable` 用于启用或禁用功能块。
+- **逻辑**：
+  - 当 `enable` 从 `FALSE` 变为 `TRUE` 时，初始化功能块（重置变量、诊断信息等）。
+  - 当 `enable` 从 `TRUE` 变为 `FALSE` 时，触发去激活流程（`FB_STATE_DISABLING_START`）。
+  - 在初始化时，通过 `LOG2GEO` 和 `GEO2LOG` 函数获取设备的硬件地址和 IO 系统信息。
+
+##### **(2) 命令检测**
+- **输入信号**：`activate` 和 `deactivate` 的上升沿触发设备激活或去激活。
+- **逻辑**：
+  - 检测 `activate` 或 `deactivate` 的上升沿，跳转到对应的状态（`FB_STATE_ACTIVATE_START` 或 `FB_STATE_DEACTIVATE_START`）。
+  - 忽略重复触发或无效状态下的命令。
+
+##### **(3) 状态机核心状态**
+状态机包含以下主要状态：
+1. **`FB_STATE_ENABLING_START` / `FB_STATE_ENABLING_WAIT`**  
+   - 初始化设备信息，根据配置（`parameter.enableAndActivate` 或 `parameter.enableAndDeactivate`）决定是否自动激活或去激活设备。
+2. **`FB_STATE_ACTIVATE_START` / `FB_STATE_ACTIVATE_WAIT`**  
+   - 调用 `D_ACT_DP` 函数激活设备。
+   - 监控激活结果和超时，处理错误（如 `ERR_DEVICE_ACTIVATING`）。
+3. **`FB_STATE_ACTIVATED`**  
+   - 定期检查设备状态（通过 `DeviceStates` 函数）。
+   - 处理设备连接错误或超时（如 `ERR_DEVICE_STATE_WHILE_ACTIVE`）。
+4. **`FB_STATE_DEACTIVATE_START` / `FB_STATE_DEACTIVATE_WAIT`**  
+   - 调用 `D_ACT_DP` 函数去激活设备。
+   - 监控去激活结果和超时，处理错误（如 `ERR_DEVICE_DEACTIVATING`）。
+5. **`FB_STATE_DEACTIVATED`**  
+   - 定期检查设备是否处于去激活状态。
+6. **`FB_STATE_DISABLING_START` / `FB_STATE_DISABLING_WAIT`**  
+   - 在功能块禁用时，根据配置（`parameter.disableAndDeactivate`）决定是否去激活设备。
+
+##### **(4) 错误处理**
+- **错误类型**：包括设备激活/去激活失败、超时、设备状态读取错误等。
+- **逻辑**：
+  - 错误信息记录到 `diagnostics` 输出中（包括状态码、子状态码和错误发生时的状态机位置）。
+  - 支持自动恢复（如重试激活）或用户手动清除错误（通过重新使能功能块）。
+
+##### **(5) 输出更新**
+- **输出信号**：根据状态机当前状态更新 `valid`、`busy`、`error`、`status` 等输出。
+- **特殊输出**：
+  - `activating` / `deactivating`：标记设备正在激活或去激活。
+  - `isActivated` / `isDeactivated`：标记设备最终状态。
+  - `deviceStateOK`：标记设备已激活且连接正常。
+
+---
+
+#### 3. **关键设计点**
+1. **状态机驱动**：  
+   - 使用 `REPEAT-UNTIL` 循环实现多状态单周期处理，避免阻塞。
+   - 通过 `tempExitStateLoop` 控制状态机是否继续执行（如等待异步操作完成）。
+
+2. **超时处理**：  
+   - 使用 `IEC_TIMER` 监控激活、去激活和设备状态检查的超时。
+   - 超时触发错误（如 `ERR_DEVICE_ACTIVATING_TIME_OUT`）。
+
+3. **诊断信息**：  
+   - 错误发生时，记录详细的诊断信息（如 `ERR_LOG2GEO` 或 `ERR_DEVICE_STATE_WHILE_ACTIVE`）。
+   - 支持用户通过 `diagnostics` 输出调试问题。
+
+4. **配置参数**：  
+   - `parameter` 输入允许用户自定义超时时间、初始激活/去激活行为等。
+
+---
+
+#### 4. **伪代码流程**
+```plaintext
+IF enable上升沿 THEN
+    初始化功能块
+    跳转到FB_STATE_ENABLING_START
+ELSE IF enable下降沿 THEN
+    跳转到FB_STATE_DISABLING_START
+END_IF
+
+IF 检测到activate上升沿 THEN
+    跳转到FB_STATE_ACTIVATE_START
+ELSE IF 检测到deactivate上升沿 THEN
+    跳转到FB_STATE_DEACTIVATE_START
+END_IF
+
+CASE 当前状态 OF
+    FB_STATE_ENABLING_START:
+        获取设备硬件地址和IO系统信息
+        跳转到FB_STATE_ENABLING_WAIT
+    FB_STATE_ENABLING_WAIT:
+        根据配置决定跳转到激活或去激活状态
+    FB_STATE_ACTIVATE_START:
+        调用D_ACT_DP激活设备
+        跳转到FB_STATE_ACTIVATE_WAIT
+    FB_STATE_ACTIVATE_WAIT:
+        检查激活结果或超时
+        成功则跳转到FB_STATE_ACTIVATED，失败则重试或报错
+    FB_STATE_ACTIVATED:
+        定期检查设备状态
+        错误则跳转到FB_STATE_ACTIVATE_START
+    FB_STATE_DEACTIVATE_START:
+        调用D_ACT_DP去激活设备
+        跳转到FB_STATE_DEACTIVATE_WAIT
+    FB_STATE_DEACTIVATE_WAIT:
+        检查去激活结果或超时
+        成功则跳转到FB_STATE_DEACTIVATED，失败则重试或报错
+    FB_STATE_DISABLING_START:
+        根据配置决定是否去激活设备
+        跳转到FB_STATE_DISABLING_WAIT
+    FB_STATE_DISABLING_WAIT:
+        检查去激活结果或超时
+        完成则禁用功能块
+END_CASE
+
+更新输出信号（valid、busy、error等）
+```
+
+---
+
+#### 5. **注意事项**
+1. **边缘检测**：  
+   - 对 `enable`、`activate`、`deactivate` 输入信号必须进行上升沿检测。
+2. **异步操作**：  
+   - `D_ACT_DP` 和 `DeviceStates` 是异步函数，需通过 `busy` 信号等待其完成。
+3. **错误恢复**：  
+   - 自动恢复逻辑（如重试）需结合超时机制，避免无限循环。
+4. **诊断信息**：  
+   - 错误发生时，应优先保证 `diagnostics` 输出的准确性，便于问题定位。

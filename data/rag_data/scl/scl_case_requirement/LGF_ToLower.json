@@ -1,0 +1,23 @@
+{
+    "title": "String Lower Case Converter",
+    "name": "LGF_ToLower",
+    "description": "This function converts the capital letters of a string into their lower case equivalents.",
+    "type": "FUNCTION",
+    "input": [
+        {
+            "name": "In",
+            "type": "String",
+            "description": "String input"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": [
+        {
+            "type": "String",
+            "description": "Resulting string, after the conversion"
+        }
+    ],
+    "status_codes": {},
+    "user_defined_types": []
+}

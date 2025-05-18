@@ -1,0 +1,52 @@
+
+
+### 算法流程描述
+
+#### 1. 输入有效性校验
+- **触发条件**：每次功能块执行时首先进行输入校验  
+- **逻辑步骤**：  
+  a. 检查`InputNumber`是否在有效范围（0 ≤ 输入值 < 10000）  
+  b. 若超出范围：  
+  &nbsp;&nbsp;&nbsp;① 置`error`为`TRUE`  
+  &nbsp;&nbsp;&nbsp;② 设置状态码`status=16#8001`（预定义错误码）  
+  &nbsp;&nbsp;&nbsp;③ 跳过后续处理直接返回  
+  c. 若在有效范围：  
+  &nbsp;&nbsp;&nbsp;① 清空错误标志`error=FALSE`  
+  &nbsp;&nbsp;&nbsp;② 设置状态码`status=16#0000`（预定义成功码）
+
+#### 2. 数字位分解
+- **核心操作**：通过数学运算分离各数位  
+- **计算步骤**：  
+  a. **千位计算**：`Thousands = InputNumber / 1000`（整除运算）  
+  b. **百位计算**：  
+  &nbsp;&nbsp;&nbsp;① 取余`InputNumber MOD 1000`得到后三位  
+  &nbsp;&nbsp;&nbsp;② 再整除`100`得百位值  
+  c. **十位计算**：  
+  &nbsp;&nbsp;&nbsp;① 取余`InputNumber MOD 100`得到后两位  
+  &nbsp;&nbsp;&nbsp;② 再整除`10`得十位值  
+  d. **个位计算**：直接取模`InputNumber MOD 10`
+
+#### 3. 最小值计算
+- **初始化**：设置临时变量`tempMin=255`（Byte类型最大值）  
+- **遍历比较**：  
+  a. **千位检查**：  
+  &nbsp;&nbsp;&nbsp;若`Thousands≠0`且`Thousands<当前tempMin` → 更新`tempMin`  
+  b. **百位检查**：  
+  &nbsp;&nbsp;&nbsp;若`Hundreds≠0`且`Hundreds<当前tempMin` → 更新`tempMin`  
+  c. **十位检查**：  
+  &nbsp;&nbsp;&nbsp;若`Tens≠0`且`Tens<当前tempMin` → 更新`tempMin`  
+  d. **个位检查**：  
+  &nbsp;&nbsp;&nbsp;若`Ones≠0`且`Ones<当前tempMin` → 更新`tempMin`  
+- **特殊处理**：  
+  当`InputNumber=0`时，强制设置`tempMin=0`
+
+#### 4. 输出阶段
+- **结果传递**：将`tempMin`值赋给最终输出`Min`  
+- **数据输出**：同步输出`Thousands`、`Hundreds`、`Tens`、`Ones`及错误状态信号
+
+### 代码调整说明
+- **优化点**：在最小值计算模块添加短路判断逻辑，当检测到`tempMin=0`时可提前终止比较（但原代码未实现该优化）  
+- **边界处理**：  
+  a. 输入为`0`时的特殊处理独立于遍历流程  
+  b. 使用`255`作为初始极大值确保正确性  
+- **类型匹配**：所有数位输出使用`Byte`类型，确保值域在0-255合理范围内

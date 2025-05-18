@@ -1,0 +1,34 @@
+这是一个数据处理任务，主要功能是检测布尔信号的边沿变化并在指定监控时间内统计边沿数量。以下是算法流程描述：
+
+1. 初始化阶段：
+   - 初始化内部状态变量（statTriggerPrevious、statTimeElapsedFlag、statTriggerCounter）
+   - 进行边沿检测：比较当前trigger输入与上一次状态（statTriggerPrevious）
+
+2. 边沿检测处理：
+   - 当检测到上升沿（trigger从FALSE变为TRUE）时：
+     a. 启动监控定时器（instTimer），设置时间为monitorTime
+     b. 边沿计数器（statTriggerCounter）加1
+
+3. 定时器监控阶段：
+   - 当定时器未超时（instTimer.Q为FALSE）时：
+     a. 如果trigger变为FALSE且时间已超时标志（statTimeElapsedFlag）为TRUE：
+        - 重置所有输出状态（single/double/long/severalEdges）
+        - 重置边沿计数器和定时器
+        - 清除时间超时标志
+     b. 如果检测到边沿（statTriggerCounter≠0）：
+        - 根据边沿数量设置相应输出：
+          * 1个边沿且trigger保持TRUE → 设置long输出
+          * 1个边沿 → 设置single输出
+          * 2个边沿 → 设置double输出
+          * 多于2个边沿 → 设置severalEdges输出
+        - 更新noOfEdges输出为当前边沿计数
+        - 设置时间超时标志
+
+4. 输出更新阶段：
+   - 将临时计算结果（tempSingle/tempDouble等）赋给实际输出变量
+   - 强制ENO输出为TRUE（不使用错误处理）
+
+注意点：
+- 所有输出信号在监控时间结束后至少保持一个周期，或在trigger保持TRUE时持续输出
+- 边沿计数在每次检测到上升沿时递增
+- 系统在trigger变为FALSE且监控结束后自动重置

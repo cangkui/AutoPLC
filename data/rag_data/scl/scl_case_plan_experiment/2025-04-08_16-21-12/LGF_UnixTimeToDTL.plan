@@ -1,0 +1,59 @@
+### **算法流程描述：Unix时间转DTL时间转换器**  
+
+#### **1. 功能概述**  
+该函数用于将Unix时间（`DInt`类型，表示自1970-01-01 00:00:00 UTC以来的秒数）转换为西门子PLC的DTL（Date and Time Long）格式。转换后的时间基于UTC，不考虑时区偏移。  
+
+#### **2. 输入/输出定义**  
+- **输入**：  
+  - `timeUnix`（`DInt`）：待转换的Unix时间戳。  
+- **输出**：  
+  - `error`（`Bool`）：错误标志，`TRUE`表示转换失败。  
+  - `status`（`Word`）：状态码，用于标识转换状态（成功/警告/错误）。  
+- **返回值**（`DTL`）：转换后的日期时间，若出错则返回`DTL#1990-01-01-00:00:00`。  
+
+#### **3. 关键常量定义**  
+- `DELTA_1970_1990`（`DInt`）：1970-01-01至1990-01-01的秒数（631,152,000秒）。  
+- `SEC_PER_DAY`（`DInt`）：一天的秒数（86,400秒）。  
+- `SEC_PER_HOUR`（`DInt`）：一小时的秒数（3,600秒）。  
+- `SEC_PER_MINUTE`（`DInt`）：一分钟的秒数（60秒）。  
+- `STATUS_NO_ERROR`（`Word`）：成功状态码（`16#0000`）。  
+- `WARN_CONVERSION_LIMIT`（`Word`）：警告状态码（`16#6001`，表示时间戳等于1990-01-01）。  
+- `ERR_TIME_BEFORE_1990`（`Word`）：错误状态码（`16#8000`，表示时间戳早于1990-01-01）。  
+
+#### **4. 算法流程**  
+1. **输入验证**  
+   - **检查时间戳是否早于1990-01-01**：  
+     - 若`timeUnix < DELTA_1970_1990`，则返回错误（`error = TRUE`，`status = ERR_TIME_BEFORE_1990`），并输出默认时间`DTL#1990-01-01-00:00:00`。  
+   - **检查时间戳是否等于1990-01-01**：  
+     - 若`timeUnix = DELTA_1970_1990`，返回警告（`error = FALSE`，`status = WARN_CONVERSION_LIMIT`），并输出`DTL#1990-01-01-00:00:00`。  
+
+2. **日期计算**  
+   - 计算自1990-01-01以来的天数：  
+     ```plaintext
+     tempDate = (timeUnix - DELTA_1970_1990) / SEC_PER_DAY
+     ```  
+   - 使用`DINT_TO_DATE`和`DATE_TO_DTL`将天数转换为DTL格式的日期部分。  
+
+3. **时间计算**  
+   - 计算剩余秒数（扣除天数后的秒数）：  
+     ```plaintext
+     tempTime = timeUnix - DELTA_1970_1990 - (tempDate * SEC_PER_DAY)
+     ```  
+   - 分解剩余秒数为小时、分钟和秒：  
+     - `HOUR = tempTime / SEC_PER_HOUR`  
+     - `MINUTE = (tempTime MOD SEC_PER_HOUR) / SEC_PER_MINUTE`  
+     - `SECOND = tempTime MOD SEC_PER_MINUTE`  
+
+4. **输出结果**  
+   - 若转换成功，返回`tempDTL`（包含计算后的日期和时间），并设置`error = FALSE`，`status = STATUS_NO_ERROR`。  
+
+#### **5. 异常处理**  
+- **时间戳早于1990-01-01**：直接返回错误，不进行转换。  
+- **时间戳等于1990-01-01**：返回警告，但仍输出默认时间。  
+
+#### **6. 代码优化建议**  
+- 可增加对`timeUnix`上限的检查（如超过PLC支持的DTL范围）。  
+- 若需支持时区转换，可额外增加时区偏移参数。  
+
+### **总结**  
+该算法通过计算Unix时间戳与1990-01-01的差值，分解出天数、小时、分钟和秒，最终转换为DTL格式。输入验证确保时间戳的有效性，状态码和错误标志提供清晰的执行反馈。

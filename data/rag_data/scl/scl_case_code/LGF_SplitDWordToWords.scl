@@ -1,0 +1,29 @@
+FUNCTION "LGF_SplitDWordToWords" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SplitDWordToWords
+	VAR_INPUT 
+		doubleWord : DWord;
+	END_VAR
+
+	VAR_OUTPUT 
+		word1 : Word;
+		word0 : Word;
+	END_VAR
+
+	VAR CONSTANT 
+		MASK : Byte := 16#FFFF;
+	END_VAR	
+
+BEGIN
+	
+	REGION OUTPUT
+	  // get the bytes by slice access
+	  #word0 := #doubleWord AND #MASK;
+	  #word1 := SHR(IN := #doubleWord, N := 16) AND #MASK;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

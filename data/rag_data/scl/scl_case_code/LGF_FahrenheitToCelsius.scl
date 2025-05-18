@@ -1,0 +1,47 @@
+FUNCTION "LGF_FahrenheitToCelsius" : Real
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry_Support
+FAMILY : LGF
+NAME : LGF_FahrenheitToCelsius
+   VAR_INPUT 
+      value : Real;
+   END_VAR
+
+   VAR_TEMP 
+      tempCelsiusTemperature : Real;
+   END_VAR
+
+   VAR CONSTANT 
+      TEMPERATURE_GAIN : Real := 1.8;
+      TEMPERATURE_OFFSET : Real := 32.0;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_FahrenheitToCelsius
+	  // Comment/Function: This function converts a temperature value - from °Fahrenheit to °Celsius
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO disabled - no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION CONVERT
+	  #tempCelsiusTemperature := (#value - #TEMPERATURE_OFFSET) / #TEMPERATURE_GAIN;
+	END_REGION
+	
+	REGION OUTPUTS
+	  #LGF_FahrenheitToCelsius := #tempCelsiusTemperature;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

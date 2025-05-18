@@ -1,0 +1,119 @@
+FUNCTION_BLOCK "LGF_TriangleCI"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_TriangleCI
+   VAR_INPUT 
+      amplitude : Real := 1.0;
+      offset : Real;
+      periode : UDInt := 1000;
+      phaseShift : Real;
+      callOB : OB_CYCLIC;
+      reset : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      value { ExternalWritable := 'False'} : Real;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word := 16#0;
+      subFunctionStatus { ExternalWritable := 'False'} : Word := 16#0;
+   END_VAR
+
+   VAR 
+      statCounter { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : UDInt;
+   END_VAR
+
+   VAR_TEMP 
+      tempCycleTime : UDInt;
+      tempCyclePhase : UDInt;
+      tempCycleStatus : Word;
+      tempReadTimeStatus : Int;
+      tempValue : Real;
+      tempPhaseShift : Real;
+   END_VAR
+
+   VAR CONSTANT 
+      SECOND_IN_MS : UDInt := 1000;
+      ZERO : Int := 0;
+      SLOPE : Real := 4.0;
+      NEGATIVE_LINE_Y_OFFSET : Real := 2.0;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      QRY_CINT_OB_UNAVAILABLE : Word := 16#0000;
+      ERR_OB_UNAVAILABLE : Word := 16#8600;
+      ERR_QRY_CINT : Word := 16#8601;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_TriangleCI
+	  // Comment/Function: This function generates a triangular signal profile. For this it uses the time interval of the calling Cyclic Interrupt OB.
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V15.1 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Get sample time
+	  // get sample time, according to the cyclic interrupt OB number
+	  #tempReadTimeStatus := QRY_CINT(OB_NR := #callOB, CYCLE => #tempCycleTime,
+	                                  PHASE => #tempCyclePhase, STATUS => #tempCycleStatus);
+	  
+	  REGION Error handling
+	    // Generate error message of the QRY_CINT function
+	    IF #tempReadTimeStatus <> #ZERO THEN
+	      #error := TRUE;
+	      #status := #ERR_QRY_CINT;
+	      #subFunctionStatus := INT_TO_WORD(#tempReadTimeStatus);
+	      #value := #ZERO;
+	      RETURN;
+	      
+	      // Generate error message when OB unavailable
+	    ELSIF (#tempCycleStatus = #QRY_CINT_OB_UNAVAILABLE) THEN
+	      #error := TRUE;
+	      #status := #ERR_OB_UNAVAILABLE;
+	      #subFunctionStatus := #SUB_STATUS_NO_ERROR;
+	      #value := #ZERO;
+	      RETURN;
+	    END_IF;
+	  END_REGION
+	END_REGION
+	
+	REGION Caluclations and outputs assigment  
+	  IF #reset THEN
+	    #statCounter := 0;
+	    #tempValue := #ZERO;
+	  ELSE
+	    // Increment Counter with each call of "OB_Cyclic_interrupt"
+	    #statCounter += #tempCycleTime / #SECOND_IN_MS;
+	    #statCounter := #statCounter MOD #periode;
+	    
+	    // calculate true phase shift with modulo
+	    #tempPhaseShift := UDINT_TO_REAL((#statCounter + REAL_TO_UDINT(#phaseShift)) MOD #periode);
+	    
+	    // formula to calculate triangle
+	    #tempValue := ABS((#SLOPE / UDINT_TO_REAL(#periode) * #tempPhaseShift - #NEGATIVE_LINE_Y_OFFSET) * #amplitude) - #amplitude;
+	  END_IF;
+	  
+	  // write Output value
+	  #value := #tempValue + #offset;
+	  #error := FALSE;
+	  #status := #STATUS_FINISHED_NO_ERROR;
+	  #subFunctionStatus := #STATUS_FINISHED_NO_ERROR;
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

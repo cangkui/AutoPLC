@@ -1,0 +1,73 @@
+### 算法流程描述（用于指导代码实现）
+
+#### 1. **功能概述**
+该函数用于检查一个给定值是否在设定的范围内（以设定值为中心，±范围的一半）。同时提供超出上限、低于下限的错误标志，以及执行状态和错误信息。
+
+#### 2. **输入参数**
+- `value`（LReal）：待检查的值。
+- `setpoint`（LReal）：设定值（范围的中心点）。
+- `range`（LReal）：范围（总宽度，即上限和下限之间的总距离）。
+
+#### 3. **输出参数**
+- `overHighLimit`（Bool）：`TRUE` 表示 `value` 超过上限。
+- `belowLowLimit`（Bool）：`TRUE` 表示 `value` 低于下限。
+- `error`（Bool）：`TRUE` 表示执行过程中发生错误。
+- `status`（Word）：状态码（`16#0000` 表示无错误，`16#8401` 表示范围限制错误）。
+- **返回值**（Bool）：`TRUE` 表示 `value` 在范围内。
+
+#### 4. **算法流程**
+1. **初始化与范围计算**
+   - 计算上限和下限：
+     - 上限 = `setpoint + (0.5 * ABS(range))`
+     - 下限 = `setpoint - (0.5 * ABS(range))`
+   - 检查输入有效性（如 `range` 是否为负数或其他非法值）：
+     - 如果无效，设置 `error = TRUE`，`status = ERR_RANGE_LIMIT_VALUES`，并返回 `FALSE`。
+
+2. **范围检查**
+   - 检查 `value` 是否超过上限：
+     - `overHighLimit = (value > 上限)`
+   - 检查 `value` 是否低于下限：
+     - `belowLowLimit = (value < 下限)`
+
+3. **结果输出**
+   - 返回值：
+     - 如果 `value` 在范围内（即 `NOT (overHighLimit OR belowLowLimit)`），返回 `TRUE`；否则返回 `FALSE`。
+   - 设置输出标志：
+     - `overHighLimit` 和 `belowLowLimit` 直接反映检查结果。
+     - `error = FALSE`（无错误）。
+     - `status = STATUS_NO_ERROR`（无错误状态码）。
+
+4. **错误处理**
+   - 如果输入参数无效（如 `range` 为负数），直接标记错误并返回。
+
+#### 5. **注意事项**
+- 使用 `ABS(range)` 确保范围计算始终为正。
+- 不依赖 `ENO` 机制，错误通过 `error` 和 `status` 输出。
+- 状态码遵循规范（`16#0000` 为无错误，`16#8000-16#FFFF` 为错误码）。
+
+#### 6. **伪代码逻辑（简化）**
+```plaintext
+FUNCTION LGF_IsValueInRange(value, setpoint, range) -> Bool
+    // 计算上下限
+    highLimit = setpoint + 0.5 * ABS(range)
+    lowLimit = setpoint - 0.5 * ABS(range)
+
+    // 检查输入有效性（如range为负）
+    IF 输入无效 THEN
+        error = TRUE
+        status = ERR_RANGE_LIMIT_VALUES
+        RETURN FALSE
+    END_IF
+
+    // 检查范围
+    overHighLimit = (value > highLimit)
+    belowLowLimit = (value < lowLimit)
+
+    // 设置输出
+    RETURN NOT (overHighLimit OR belowLowLimit)
+END_FUNCTION
+```
+
+#### 7. **调整建议**
+- 如果需求扩展（如动态调整范围或设定值），可以增加状态机或缓存机制。
+- 可支持更多错误码（如 `value` 为非法浮点数）。

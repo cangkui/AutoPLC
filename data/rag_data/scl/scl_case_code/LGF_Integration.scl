@@ -1,0 +1,163 @@
+FUNCTION_BLOCK "LGF_Integration"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_Integration
+   VAR_INPUT 
+      enable : Bool;
+      value : LReal;
+      reset : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      integral { ExternalWritable := 'False'} : LReal;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subfunctionStatus { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR 
+      statLastTime {InstructionName := 'DTL'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DTL;
+      statInputOldValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statIntegral { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempSysTime {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      tempTimeDiffrence : LReal;
+      tempCalculation : LReal;
+      tempRetval : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      CLEAR_TIME {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      SECOND_IN_MS : LReal := 1000.0;
+      DIVIDE_BY_TWO : LReal := 2.0;
+      ZERO : LReal := 0.0;
+      STATUS_EXECUTION_FINISHED_NO_ERROR : Word := 16#0000;
+      SUB_STATUS_NO_ERROR : Word := 16#0000;
+      ERR_READ_SYS_TIME : Word := 16#8600;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_Integration
+	  // Comment/Function: Integrates the input value
+	  //                   integration by trapezoidal rule
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V3.0 / S7-1215
+	  // Engineering:      TIA Portal V16 Update 4
+	  // Restrictions:     ENO disabled - no error handling by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //----------|------------|------------------------|----------------------------
+	  // Version  | Date       | Expert in charge       | Changes applied
+	  //----------|------------|------------------------|----------------------------
+	  // 01.00.00 17.02.2017  Siemens Industry Online Support
+	  //                      First released version
+	  // 01.00.01 17.08.2018  Siemens Industry Online Support
+	  //                      Upgrade: TIA V15 Update 2
+	  // 01.00.02 23.11.2018  Siemens Industry Online Support
+	  //                      Upgrade: TIA V15.1
+	  // 01.01.00 12.11.2019  Simatic Systems Support
+	  //                      Regions, comments and constants are added, code refactored
+	  // 03.00.00 23.04.2020  Simatic Systems Support
+	  //                      Set version to V3.0.0, harmonize the version of the whole library
+	  // 03.00.01 09.02.2021  Simatic Systems Support
+	  //                      Insert documentation
+	  // 03.00.02 07.06.2021  Simatic Systems Support
+	  //                      Fix bug - incompatibility with S7-1200 and LTIME
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	//Reset region must be before the enable region so that even if the function disabled, the user can reset the values.
+	REGION Reset the function
+	  IF #reset THEN
+	    #statInputOldValue := #ZERO;
+	    #statIntegral := #ZERO;
+	    
+	    // Clear LastTime value.
+	    // Initial condition - first Delta time will be 0.
+	    #statLastTime := #CLEAR_TIME;
+	    
+	    #integral := #ZERO;
+	    #error := false;
+	    #status := #STATUS_EXECUTION_FINISHED_NO_ERROR;
+	    #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	END_REGION Reset the function
+	
+	REGION Enable/Disable integral calculation
+	  IF NOT #enable THEN
+	    #statInputOldValue := #ZERO;
+	    
+	    // Clear LastTime value.
+	    // If it is not cleared when the function is enabled again,
+	    // the first value will be multiplied with the time difference of the whole disable time
+	    // Initial condition - first Delta time will be 0.
+	    #statLastTime := #CLEAR_TIME;
+	    
+	    #integral := #statIntegral;
+	    #error := false;
+	    #status := #STATUS_EXECUTION_FINISHED_NO_ERROR;
+	    #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	END_REGION Enable/Disable integral calculation
+	
+	REGION Get system time
+	  // Read system time
+	  #tempRetval := INT_TO_WORD(RD_SYS_T(OUT => #tempSysTime));
+	  
+	  // Error Handling read system time
+	  IF (#tempRetval > #SUB_STATUS_NO_ERROR) THEN
+	    #integral := #statIntegral;
+	    #error := TRUE;
+	    #status := #ERR_READ_SYS_TIME;
+	    #subfunctionStatus := #tempRetval;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculating the integral
+	  // Calculate time difference between last and actual time
+	  // coverting from DTL via time and DInt to Real
+	  // scale from millisecond to second
+	  #tempTimeDiffrence := DINT_TO_REAL(TIME_TO_DINT(T_DIFF(IN1 := #tempSysTime, IN2 := #statLastTime))) / #SECOND_IN_MS;
+	  
+	  // Write actual to last time
+	  #statLastTime := #tempSysTime;
+	  
+	  // integration by trapezoidal rule
+	  // add LastScalIn to ScalIn
+	  // divide by two --> avarage of both - old and actual value
+	  // multiply with time delta --> area unterneath the both borders
+	  #tempCalculation := (#value + #statInputOldValue) * #tempTimeDiffrence / #DIVIDE_BY_TWO;
+	  
+	  // Calculate new integral
+	  #statIntegral += #tempCalculation;
+	  
+	  // Save last input
+	  #statInputOldValue := #value;
+	END_REGION Calculating the integral
+	
+	REGION Write outputs
+	  #integral := #statIntegral;
+	  #error := false;
+	  #status := #STATUS_EXECUTION_FINISHED_NO_ERROR;
+	  #subfunctionStatus := #SUB_STATUS_NO_ERROR;
+	  
+	  //ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION Write outputs
+	
+END_FUNCTION_BLOCK

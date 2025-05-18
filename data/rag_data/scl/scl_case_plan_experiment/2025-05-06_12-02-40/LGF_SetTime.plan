@@ -1,0 +1,52 @@
+这是一个过程控制任务，主要功能是设置系统时间、本地时间和时区。根据需求描述和代码实现，我将分析其算法流程：
+
+1. 状态分析：
+- FB_STATE_NO_PROCESSING：空闲状态，无处理任务
+- FB_STATE_SET_TIME：设置时间状态
+- FB_STATE_SET_TIMEZONE：设置时区状态
+
+2. 状态转移事件：
+- 当execute输入上升沿触发时，从NO_PROCESSING状态转移到SET_TIME状态
+- 在SET_TIME状态成功完成时间设置后，自动转移到SET_TIMEZONE状态
+- 在SET_TIMEZONE状态完成后，返回NO_PROCESSING状态
+- 任何状态出现错误时，直接返回NO_PROCESSING状态
+
+3. 算法流程：
+3.1 初始化阶段：
+- 检测execute输入的上升沿
+- 验证时区参数的有效性（-1200到+1400范围内）
+- 初始化时间转换规则结构体，包括：
+  * 设置基准偏移量(Bias)
+  * 设置时区名称(TimeZoneName)
+  * 设置夏令时偏移量(DaylightBias)
+
+3.2 设置时间阶段：
+- 根据isLocalTime输入判断设置本地时间还是UTC时间：
+  * 本地时间：调用WR_LOC_T函数
+  * UTC时间：调用WR_SYS_T函数
+- 检查函数返回值，处理可能的错误
+
+3.3 设置时区阶段：
+- 调用SET_TIMEZONE功能块设置时区
+- 监控功能块的执行状态：
+  * 完成时记录最后设置的时区名称
+  * 错误时记录错误状态
+
+3.4 输出处理：
+- 根据处理结果设置输出信号：
+  * done：操作成功完成
+  * busy：操作进行中
+  * error：操作过程中发生错误
+  * status：详细状态码
+  * lastSetTimeZone：最后设置的时区名称
+
+4. 错误处理：
+- 无效时区参数：返回ERR_WRONG_TIMEZONE
+- 设置本地时间失败：返回ERR_SET_TIME_LOCAL
+- 设置UTC时间失败：返回ERR_SET_TIME_UTC
+- 设置时区失败：返回ERR_SET_TIMEZONE
+- 未定义状态：返回ERR_UNDEFINED_STATE
+
+5. 状态维持：
+- 如果没有触发事件或处理未完成，保持当前状态
+- 错误发生时立即终止当前处理流程

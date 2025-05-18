@@ -1,0 +1,26 @@
+这是一个数据处理任务，主要功能是跟踪并记录输入值的历史最小值和最大值。以下是算法流程描述：
+
+1. 初始化阶段：
+   - 内部变量statStoreMinValue初始化为LREAL_MAX（最大浮点数值）
+   - 内部变量statStoreMaxValue初始化为LREAL_MIN（最小浮点数值）
+
+2. 主处理逻辑：
+   a) 检查reset输入：
+      - 如果reset为TRUE：
+        * 将statStoreMinValue重置为LREAL_MAX
+        * 将statStoreMaxValue重置为LREAL_MIN
+      - 如果reset为FALSE：
+        * 比较当前输入value与statStoreMinValue：
+          · 如果value < statStoreMinValue，则更新statStoreMinValue为value
+        * 比较当前输入value与statStoreMaxValue：
+          · 如果value > statStoreMaxValue，则更新statStoreMaxValue为value
+
+3. 输出阶段：
+   - 将statStoreMinValue输出到minValue
+   - 将statStoreMaxValue输出到maxValue
+
+4. 特殊处理：
+   - 每次调用都会执行上述比较和更新逻辑
+   - 没有错误处理机制，ENO始终设置为TRUE
+
+这个算法实现了持续跟踪输入值的最小值和最大值功能，通过reset信号可以随时重置跟踪历史。每次调用时都会将当前存储的最小值和最大值输出到对应的输出变量。

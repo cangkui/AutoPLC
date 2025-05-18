@@ -1,0 +1,68 @@
+### **算法流程描述（多项式平滑功能块）**  
+
+#### **1. 功能概述**  
+该功能块（`LGF_SmoothByPolynomFB`）用于对输入值进行**3次多项式平滑**计算。它需要**5个输入值**才能计算出一个平滑后的输出值。  
+
+#### **2. 输入/输出变量**  
+- **输入变量**  
+  - `enable`：激活功能块（上升沿触发初始化）。  
+  - `insert`：在上升沿时，将 `value` 存入缓冲区，并尝试计算平滑值。  
+  - `value`：待平滑的输入值（`LReal` 类型）。  
+
+- **输出变量**  
+  - `smoothedValue`：平滑后的输出值。  
+  - `error`：错误标志（`TRUE` 表示计算过程中发生错误）。  
+  - `status`：功能块状态（如 `STATUS_NO_CALL`、`STATUS_NOT_ENOUGH_VALUES` 等）。  
+
+#### **3. 内部变量**  
+- `statValues[0..4]`：存储最近5个输入值的数组（用于多项式计算）。  
+- `statCount`：记录已存储的输入值数量（初始为0，最大为5）。  
+- `statSmoothedValue`：临时存储平滑后的计算结果。  
+- `statStatus`：当前状态（如 `STATUS_FIRST_CALL`、`STATUS_SUBSEQUENT_CALL`）。  
+- `statEnableOld` 和 `statInsertOld`：用于检测 `enable` 和 `insert` 的上升沿。  
+
+#### **4. 算法流程**  
+1. **初始化（`enable` 上升沿）**  
+   - 重置 `statCount = 0`，清空 `statValues` 数组。  
+   - 设置状态 `statStatus = STATUS_FIRST_CALL`。  
+
+2. **数据插入（`insert` 上升沿）**  
+   - 将新值 `value` 存入 `statValues[4]`，并向前移动旧值（类似 FIFO 队列）。  
+   - 如果 `statCount < 5`，则递增 `statCount`，并设置状态 `STATUS_NOT_ENOUGH_VALUES`。  
+   - 如果 `statCount >= 5`，则进行平滑计算：  
+     - 使用 **3次多项式平滑公式**：
+       \[
+       y(n) = \frac{1}{35} \left( -3 \cdot y(n-2) + 12 \cdot y(n-1) + 17 \cdot y(n) + 12 \cdot y(n+1) - 3 \cdot y(n+2) \right)
+       \]
+     - 计算结果存入 `statSmoothedValue`，并设置状态 `STATUS_SUBSEQUENT_CALL`。  
+
+3. **输出更新**  
+   - `smoothedValue = statSmoothedValue`  
+   - `status = statStatus`  
+   - `error = statStatus.%X15`（取状态字的最高位作为错误标志）  
+
+4. **异常处理**  
+   - 如果 `enable = FALSE`，则状态设为 `STATUS_NO_CALL`，输出 `smoothedValue = 0`。  
+
+#### **5. 状态码说明**  
+| 状态码 | 含义 |
+|--------|------|
+| `16#7000` (`STATUS_NO_CALL`) | 功能块未激活（`enable = FALSE`） |
+| `16#7001` (`STATUS_FIRST_CALL`) | 首次调用（`enable` 上升沿） |
+| `16#7002` (`STATUS_SUBSEQUENT_CALL`) | 正常计算（已收集足够数据） |
+| `16#7010` (`STATUS_NOT_ENOUGH_VALUES`) | 数据不足（`statCount < 5`） |
+
+#### **6. 代码优化建议**  
+- 可以增加**输入有效性检查**（如 `value` 是否为 `NaN` 或超出范围）。  
+- 可以增加**平滑系数可配置化**（如允许用户调整多项式权重）。  
+- 可以增加**缓冲区溢出保护**（如 `statCount` 超过 5 时的处理）。  
+
+---
+
+### **总结**  
+该功能块的核心逻辑是：  
+1. **检测 `enable` 和 `insert` 的上升沿**。  
+2. **存储5个输入值**，并在足够数据时进行**3次多项式平滑计算**。  
+3. **输出平滑值**，并更新状态和错误标志。  
+
+适用于**需要平滑处理的数据流**，如传感器信号滤波、噪声抑制等场景。

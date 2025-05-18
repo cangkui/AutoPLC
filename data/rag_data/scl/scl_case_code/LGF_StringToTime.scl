@@ -1,0 +1,96 @@
+FUNCTION "LGF_StringToTime" : Time
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_StringToTime
+   VAR_INPUT 
+      timeValue : String;
+   END_VAR
+
+   VAR_TEMP 
+      tempStringTime : String;
+      tempCharacterPosition : Int;
+      tempTimeNumber : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      MS_PER_DAY : DInt := 86400000;
+      MS_PER_HOUR : DInt := 3600000;
+      MS_PER_MINUTE : DInt := 60000;
+      MS_PER_SECOND : DInt := 1000;
+      DAY_CHAR : Char := 'D';
+      HOUR_CHAR : Char := 'H';
+      MINUTE_CHAR : Char := 'M';
+      SECOND_CHAR : Char := 'S';
+      MILLISECOND_CHAR : String := 'MS';
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_StringToTime
+	  // Comment/Function: This function converts a string time value to a time
+	  //                   input format is the following := '10D20H30M20S630MS',
+	  //                   just existing parts would be added to the string
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO mechanism is not used, no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION Block info header
+	
+	REGION INITIALISATION
+	  #tempStringTime := #timeValue;
+	  #tempTimeNumber := 0;
+	END_REGION
+	
+	REGION CONVERT
+	  // determine number of days and add to time number in DInt
+	  #tempCharacterPosition := FIND(IN1 := #tempStringTime, IN2 := #DAY_CHAR);
+	  IF (#tempCharacterPosition <> 0) THEN
+	    #tempTimeNumber += STRING_TO_DINT(LEFT(IN := #tempStringTime, L := #tempCharacterPosition)) * #MS_PER_DAY;
+	    #tempStringTime := DELETE(IN := #tempStringTime, L := #tempCharacterPosition, P := 1);
+	  END_IF;
+	  
+	  // determine number of hours and add to time number in DInt
+	  #tempCharacterPosition := FIND(IN1 := #tempStringTime, IN2 := #HOUR_CHAR);
+	  IF (#tempCharacterPosition <> 0) THEN
+	    #tempTimeNumber += STRING_TO_DINT(LEFT(IN := #tempStringTime, L := #tempCharacterPosition)) * #MS_PER_HOUR;
+	    #tempStringTime := DELETE(IN := #tempStringTime, L := #tempCharacterPosition, P := 1);
+	  END_IF;
+	  
+	  // determine number of minutes and add to time number in DInt
+	  #tempCharacterPosition := FIND(IN1 := #tempStringTime, IN2 := #MINUTE_CHAR);
+	  IF (#tempCharacterPosition <> 0) THEN
+	    #tempTimeNumber += STRING_TO_DINT(LEFT(IN := #tempStringTime, L := #tempCharacterPosition)) * #MS_PER_MINUTE;
+	    #tempStringTime := DELETE(IN := #tempStringTime, L := #tempCharacterPosition, P := 1);
+	  END_IF;
+	  
+	  // determine number of seconds and add to time number in DInt
+	  #tempCharacterPosition := FIND(IN1 := #tempStringTime, IN2 := #SECOND_CHAR);
+	  IF (#tempCharacterPosition <> 0) THEN
+	    #tempTimeNumber += STRING_TO_DINT(LEFT(IN := #tempStringTime, L := #tempCharacterPosition)) * #MS_PER_SECOND;
+	    #tempStringTime := DELETE(IN := #tempStringTime, L := #tempCharacterPosition, P := 1);
+	  END_IF;
+	  
+	  // determine number of milliseconds and add to time number in DInt
+	  #tempCharacterPosition := FIND(IN1 := #tempStringTime, IN2 := #MILLISECOND_CHAR);
+	  IF (#tempCharacterPosition <> 0) THEN
+	    #tempTimeNumber += STRING_TO_DINT(LEFT(IN := #tempStringTime, L := #tempCharacterPosition));
+	  END_IF;
+	END_REGION
+	
+	REGION OUTPUTS
+	  // convert number given in milliseconds from DInt to Time
+	  #LGF_StringToTime := DINT_TO_TIME(#tempTimeNumber);
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

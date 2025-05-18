@@ -1,0 +1,153 @@
+FUNCTION "LGF_CalcCRC16Advanced" : Word
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_CRC16Advanced
+   VAR_INPUT 
+      initValue { S7_PredefinedAssignment := '16#00'} : Word;
+      mask { S7_PredefinedAssignment := '16#00'} : Word;
+      finalXorValue { S7_PredefinedAssignment := '16#00'} : Word;
+      reflectInput { S7_PredefinedAssignment := 'FALSE'} : Bool;
+      reflectResult { S7_PredefinedAssignment := 'FALSE'} : Bool;
+      noOfElements { S7_PredefinedAssignment := '0'} : UInt;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      "array" : Array[*] of Byte;
+   END_VAR
+
+   VAR_TEMP 
+      tempInput : Byte;
+      tempCRC : Word;
+      tempInvCRC : Word;
+      tempLowerLimit : DInt;
+      tempUpperLimit : DInt;
+      tempIndexArray : DInt;
+      tempIndexCRC : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      SHIFT_ONE_BIT : UInt := 1;
+      SHIFT_ONE_BYTE : UInt := 8;
+      ARRAY_FIRST_DIMENSION : UInt := 1;
+      CRC_LOOP_LOWER_LIMIT : DInt := 0;
+      CRC_LOOP_UPPER_LIMIT : DInt := 7;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_NO_OF_ELEMENTS : Word := 16#8400;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_CRC16Advanced
+	  // Comment/Function: This function makes a CRC calculation according
+	  //                   to the CRC-16 advanced algorithm
+	  //                   advanced because of reflect In/Out and final XOR combination
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU 1515F-2 PN FW:V2.6
+	  // Engineering:      TIA Portal V15.1 Update 2
+	  // Restrictions:     ENO disabled - no error handling, no failure possible
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization and input data processing
+	  // Defining initial value for algorithm
+	  #tempCRC := #initValue;
+	  // Input array size calculation
+	  #tempLowerLimit := LOWER_BOUND(ARR := #array, DIM := #ARRAY_FIRST_DIMENSION);
+	  #tempUpperLimit := UPPER_BOUND(ARR := #array, DIM := #ARRAY_FIRST_DIMENSION);
+	  
+	  // check paramter `noOfELements`, if gretaer than zero check if fits to array size
+	  IF #noOfElements > 0 THEN
+	    IF #noOfElements > (#tempUpperLimit - #tempLowerLimit + 1) THEN
+	      #status := #ERR_NO_OF_ELEMENTS;
+	      #error := TRUE;
+	      ENO := FALSE;
+	      #LGF_CalcCRC16Advanced := #tempCRC;
+	      RETURN;
+	    ELSE
+	      #tempUpperLimit := #tempLowerLimit + #noOfElements - 1;
+	    END_IF;
+	  END_IF;
+	END_REGION
+	
+	REGION CRC calculation
+	  FOR #tempIndexArray := #tempLowerLimit TO #tempUpperLimit DO
+	    
+	    IF #reflectInput THEN
+	      // Reverse bit order in input byte
+	      #tempInput.%X7 := #array[#tempIndexArray].%X0;
+	      #tempInput.%X6 := #array[#tempIndexArray].%X1;
+	      #tempInput.%X5 := #array[#tempIndexArray].%X2;
+	      #tempInput.%X4 := #array[#tempIndexArray].%X3;
+	      #tempInput.%X3 := #array[#tempIndexArray].%X4;
+	      #tempInput.%X2 := #array[#tempIndexArray].%X5;
+	      #tempInput.%X1 := #array[#tempIndexArray].%X6;
+	      #tempInput.%X0 := #array[#tempIndexArray].%X7;
+	    ELSE
+	      #tempInput := #array[#tempIndexArray];
+	    END_IF;
+	    
+	    // Perform division using XOR function for appropriate Word in array (with shift byte into MSB of 16bit CRC)
+	    #tempCRC := #tempCRC XOR SHL(IN := BYTE_TO_WORD(#tempInput), N := #SHIFT_ONE_BYTE);
+	    
+	    FOR #tempIndexCRC := #CRC_LOOP_LOWER_LIMIT TO #CRC_LOOP_UPPER_LIMIT DO
+	      // Check if MSB is set
+	      IF #tempCRC.%X15 THEN
+	        // Shift left and perform division by mask polynomial using XOR function
+	        #tempCRC := SHL(IN := #tempCRC, N := #SHIFT_ONE_BIT) XOR #mask;
+	      ELSE
+	        // Shift left without division
+	        #tempCRC := SHL(IN := #tempCRC, N := #SHIFT_ONE_BIT);
+	      END_IF;
+	    END_FOR;
+	    
+	  END_FOR;
+	END_REGION
+	
+	REGION Outputs assignment
+	  IF #reflectResult THEN
+	    // Reverse bit order in CRC checksum
+	    #tempInvCRC.%X15 := #tempCRC.%X0;
+	    #tempInvCRC.%X14 := #tempCRC.%X1;
+	    #tempInvCRC.%X13 := #tempCRC.%X2;
+	    #tempInvCRC.%X12 := #tempCRC.%X3;
+	    #tempInvCRC.%X11 := #tempCRC.%X4;
+	    #tempInvCRC.%X10 := #tempCRC.%X5;
+	    #tempInvCRC.%X9 := #tempCRC.%X6;
+	    #tempInvCRC.%X8 := #tempCRC.%X7;
+	    #tempInvCRC.%X7 := #tempCRC.%X8;
+	    #tempInvCRC.%X6 := #tempCRC.%X9;
+	    #tempInvCRC.%X5 := #tempCRC.%X10;
+	    #tempInvCRC.%X4 := #tempCRC.%X11;
+	    #tempInvCRC.%X3 := #tempCRC.%X12;
+	    #tempInvCRC.%X2 := #tempCRC.%X13;
+	    #tempInvCRC.%X1 := #tempCRC.%X14;
+	    #tempInvCRC.%X0 := #tempCRC.%X15;
+	    
+	    #LGF_CalcCRC16Advanced := #tempInvCRC XOR #finalXorValue;
+	  ELSE
+	    #LGF_CalcCRC16Advanced := #tempCRC XOR #finalXorValue;
+	  END_IF;
+	  
+	  #status := #STATUS_NO_ERROR;
+	  #error := FALSE;
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

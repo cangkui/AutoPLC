@@ -1,0 +1,59 @@
+FUNCTION "LGF_GrayToBinary" : DWord
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_GrayToBinary
+   VAR_INPUT 
+      variableGray : DWord;
+   END_VAR
+
+   VAR_TEMP 
+      tempBinaryBits : DWord;
+   END_VAR
+
+   VAR CONSTANT 
+      BIT_SHIFT_16 : USInt := 16;
+      BIT_SHIFT_8 : USInt := 8;
+      BIT_SHIFT_4 : USInt := 4;
+      BIT_SHIFT_2 : USInt := 2;
+      BIT_SHIFT_1 : USInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_GrayToBinary
+	  // Comment/Function: This function converts a gray coded value to a binary.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V14 Update 1
+	  // Restrictions:     ENO disabled - no error handling needed
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION Block info header
+	
+	REGION INITIALISATION
+	  #tempBinaryBits := #variableGray;
+	END_REGION
+	
+	REGION PROGRAM LOGIC
+	  #tempBinaryBits := #tempBinaryBits XOR SHR(IN := #tempBinaryBits, N := #BIT_SHIFT_16);
+	  #tempBinaryBits := #tempBinaryBits XOR SHR(IN := #tempBinaryBits, N := #BIT_SHIFT_8);
+	  #tempBinaryBits := #tempBinaryBits XOR SHR(IN := #tempBinaryBits, N := #BIT_SHIFT_4);
+	  #tempBinaryBits := #tempBinaryBits XOR SHR(IN := #tempBinaryBits, N := #BIT_SHIFT_2);
+	  #tempBinaryBits := #tempBinaryBits XOR SHR(IN := #tempBinaryBits, N := #BIT_SHIFT_1);
+	END_REGION
+	
+	REGION OUTPUTS
+	  #LGF_GrayToBinary := #tempBinaryBits;
+	  
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

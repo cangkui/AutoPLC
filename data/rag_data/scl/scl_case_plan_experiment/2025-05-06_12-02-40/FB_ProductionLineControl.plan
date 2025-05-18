@@ -1,0 +1,45 @@
+这是一个过程控制任务，涉及多个状态和状态转移。以下是算法流程分析：
+
+1. 状态定义：
+- STATE_A：初始状态，等待产品到达工作站A
+- STATE_B：产品正在从工作站A移动到工作站B
+- STATE_C：产品正在从工作站B移动到工作站C
+- STATE_D：产品完成所有工作站处理
+
+2. 模式切换逻辑：
+- 当Mode为FALSE（手动模式）时：
+  * 重置当前状态为STATE_A
+  * 电机正转由ForwardButton控制，反转由ReverseButton控制
+  * 正反转操作互锁，不能同时进行
+
+- 当Mode为TRUE（自动模式）时：
+  * 根据当前状态执行相应逻辑：
+    a) STATE_A：
+       - 当SensorA检测到产品且ButtonA被按下时
+       - 转移到STATE_B
+       - 启动电机正转
+    b) STATE_B：
+       - 当SensorB检测到产品且ButtonB被按下时
+       - 转移到STATE_C
+       - 启动电机正转
+    c) STATE_C：
+       - 当SensorC检测到产品且ButtonC被按下时
+       - 转移到STATE_D
+       - 点亮完成指示灯
+    d) STATE_D：
+       - 当SensorC不再检测到产品时
+       - 转移回STATE_A
+       - 关闭完成指示灯
+       - 否则保持指示灯亮
+
+3. 输出控制：
+- 电机正转输出由当前状态决定
+- 电机反转输出仅在手动模式下有效
+- 完成指示灯在STATE_D状态下控制
+
+4. 状态保持：
+- 如果没有发生状态转移事件，保持当前状态和相应输出
+- 自动模式下电机反转输出始终为FALSE
+
+5. 状态转移图：
+STATE_A → (SensorA AND ButtonA) → STATE_B → (SensorB AND ButtonB) → STATE_C → (SensorC AND ButtonC) → STATE_D → (NOT SensorC) → STATE_A

@@ -1,0 +1,57 @@
+FUNCTION "LGF_SplitWordToBits" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SplitWordToBits
+   VAR_INPUT 
+      "word" : Word;
+   END_VAR
+
+   VAR_OUTPUT 
+      bit15 : Bool;
+      bit14 : Bool;
+      bit13 : Bool;
+      bit12 : Bool;
+      bit11 : Bool;
+      bit10 : Bool;
+      bit9 : Bool;
+      bit8 : Bool;
+      bit7 : Bool;
+      bit6 : Bool;
+      bit5 : Bool;
+      bit4 : Bool;
+      bit3 : Bool;
+      bit2 : Bool;
+      bit1 : Bool;
+      bit0 : Bool;
+   END_VAR
+
+   
+	VAR CONSTANT 
+		MASK : word := 16#0001;
+	END_VAR	
+
+BEGIN
+
+	REGION OUTPUT
+		#bit0 := #word AND #MASK;
+		#bit1 := SHR(IN := #word, N := 1) AND #MASK;
+		#bit2 := SHR(IN := #word, N := 2) AND #MASK;
+		#bit3 := SHR(IN := #word, N := 3) AND #MASK;
+		#bit4 := SHR(IN := #word, N := 4) AND #MASK;
+		#bit5 := SHR(IN := #word, N := 5) AND #MASK;
+		#bit6 := SHR(IN := #word, N := 6) AND #MASK;
+		#bit7 := SHR(IN := #word, N := 7) AND #MASK;
+		#bit8  := SHR(IN := #word, N := 8) AND #MASK;
+		#bit9  := SHR(IN := #word, N := 9) AND #MASK;
+		#bit10 := SHR(IN := #word, N := 10) AND #MASK;
+		#bit11 := SHR(IN := #word, N := 11) AND #MASK;
+		#bit12 := SHR(IN := #word, N := 12) AND #MASK;
+		#bit13 := SHR(IN := #word, N := 13) AND #MASK;
+		#bit14 := SHR(IN := #word, N := 14) AND #MASK;
+		#bit15 := SHR(IN := #word, N := 15) AND #MASK;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

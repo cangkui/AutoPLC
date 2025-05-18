@@ -1,0 +1,33 @@
+这是一个数据处理任务，用于生成锯齿波信号。以下是算法流程描述：
+
+1. 初始化阶段：
+   - 首次运行或收到reset信号时：
+     * 将所有输入参数(startValue, timeRange, incrementRange, numberSteps, endlessSteps)保存到静态变量
+     * 重置当前值为起始值(startValue)
+     * 重置当前步数为0
+     * 设置定时器启动标志为TRUE
+
+2. 信号生成阶段：
+   - 当定时器完成且未收到reset信号时：
+     * 当前值增加增量值(incrementRange)
+     * 当前步数加1
+     * 如果非无限模式(endlessSteps=FALSE)：
+       + 检查是否达到设定步数(numberSteps)
+       + 如果达到则重置当前值和步数
+     * 如果无限模式(endlessSteps=TRUE)则只重置步数
+     * 重置定时器启动标志为FALSE
+
+3. 定时器控制：
+   - 调用定时器功能块(TON_TIME)：
+     * 使用保存的时间范围(timeRange)作为定时时间
+     * 定时完成信号用于触发下一次值更新
+
+4. 输出处理：
+   - 将当前值输出到value变量
+   - 如果收到reset信号，立即将当前值重置为startValue
+
+5. 循环机制：
+   - 每次定时器完成后自动重新启动定时器
+   - 根据模式(endlessSteps)决定是否循环或保持最终值
+
+整个过程通过定时器控制信号步进的时间间隔，通过增量值控制信号变化的幅度，通过步数控制信号周期长度。

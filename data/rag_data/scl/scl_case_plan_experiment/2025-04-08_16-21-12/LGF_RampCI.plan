@@ -1,0 +1,122 @@
+### 算法流程描述（基于自然语言需求和代码实现）
+
+#### 1. **功能概述**
+该功能块（`LGF_RampCI`）用于生成基于插值点表的线性插值速度曲线。主要功能包括：
+- 根据输入的插值点表（`setpoints`）生成平滑的输出值（`outputValue`）。
+- 支持启动（`start`）、暂停（`hold`）、继续（`continue`）、循环运行（`cyclicOP`）等操作。
+- 支持重置（`reset`）和默认输出值（`defaultOutValue`）。
+- 提供当前插值点编号（`stepNumber`）、剩余时间（`remainTime`）等状态信息。
+
+---
+
+#### 2. **核心逻辑流程**
+以下是功能块的主要执行流程：
+
+##### **2.1 初始化与输入验证**
+1. **获取周期时间**：
+   - 通过`QRY_CINT`读取调用OB的周期时间（`tempCycleTime`），转换为毫秒。
+   - 检查OB是否可用，若不可用则报错（`ERR_OB_UNAVAILABLE`）。
+2. **验证插值点表**：
+   - 检查数组下界是否为0，否则报错（`ERR_ARRAY_LOWER_BOUND`）。
+
+##### **2.2 启动逻辑（`start`信号上升沿）**
+1. **首次触发**：
+   - 计算插值点表的总时间（`statTotalTime`）。
+   - 初始化输出值为第一个插值点的值（`setpoints[0].outputValue`）。
+   - 设置下一目标值（`statEndValue`）为第二个插值点的值。
+   - 标记为“首次调用”（`STATUS_FIRST_CALL`）。
+2. **非首次触发**：
+   - 若未启动，则标记为“无错误完成”（`STATUS_FINISHED_NO_ERROR`）。
+
+##### **2.3 重置逻辑（`reset`信号上升沿）**
+1. 重置所有内部状态：
+   - 输出值归零（`tempNewValue := 0`）。
+   - 清空剩余时间（`statActualRestTime := T#0MS`）。
+   - 重置插值点编号（`statActualStep := 0`）。
+   - 重新计算总时间（`statTotalTime`）。
+
+##### **2.4 运行逻辑**
+1. **暂停模式（`hold`为真）**：
+   - 冻结当前输出值（`tempNewValue := statOldValue`）。
+   - 若继续（`continue`），则从指定插值点（`contStepNbr`）和剩余时间（`contStepTime`）恢复。
+2. **正常运行模式**：
+   - **插值计算**：
+     - 根据当前剩余时间（`statActualRestTime`）和周期时间（`tempSampleTime`），线性插值计算输出值：
+       ```scala
+       tempNewValue = statOldValue + (statEndValue - statOldValue) * (tempCycleTime / statActualRestTime)
+       ```
+     - 更新剩余时间和总剩余时间。
+   - **到达插值点**：
+     - 若当前插值点未结束，更新下一目标值和剩余时间。
+     - 若到达最后一个插值点：
+       - 循环模式（`cyclicOP`）则重新启动。
+       - 否则停止插值表（`statTimeTableActiv := FALSE`）。
+
+##### **2.5 其他功能**
+1. **更新总时间（`updateTime`上升沿）**：
+   - 重新计算插值点表的总时间和剩余总时间。
+2. **默认输出（`enDefaultOutValue`为真）**：
+   - 强制输出为默认值（`defaultOutValue`），并停用插值表。
+
+---
+
+#### 3. **输出更新**
+- **输出值**：根据当前模式（运行、暂停、默认）更新`outputValue`。
+- **状态信息**：
+  - `stepNumber`：当前插值点编号。
+  - `remainTime`：到达下一插值点的剩余时间。
+  - `totalTime`：插值点表总时间。
+  - `error`和`status`：错误和状态码（如`STATUS_FURTHER_CALLS`）。
+
+---
+
+#### 4. **关键调整点**
+1. **边缘检测**：
+   - 对`start`、`reset`、`updateTime`等信号使用`statStartMem`、`statResetMem`等变量检测上升沿。
+2. **时间处理**：
+   - 所有时间单位为毫秒，需确保`Time`类型与`UDINT`的转换正确。
+3. **错误处理**：
+   - 优先检查OB和数组边界错误，错误发生时直接`RETURN`。
+
+---
+
+#### 5. **伪代码流程**
+```plaintext
+IF 检测到OB或数组错误 THEN
+    设置错误状态并返回
+END_IF
+
+IF start上升沿 THEN
+    初始化插值表（计算总时间、设置首个输出值）
+ELSEIF reset上升沿 THEN
+    重置所有状态
+END_IF
+
+IF 正常运行 THEN
+    IF hold为真 THEN
+        冻结输出
+        IF continue为真 THEN
+            从指定点继续
+        END_IF
+    ELSE
+        计算线性插值输出
+        IF 到达插值点 THEN
+            更新下一目标值
+            IF 到达末尾 AND cyclicOP为真 THEN
+                循环重启
+            END_IF
+        END_IF
+    END_IF
+END_IF
+
+IF enDefaultOutValue为真 THEN
+    输出默认值
+END_IF
+
+更新输出和状态信息
+```
+
+---
+
+### 总结
+该功能块通过状态机模式管理插值过程，核心是通过线性插值和时间控制实现平滑曲线。需特别注意边缘检测、错误处理和周期时间的精确计算。

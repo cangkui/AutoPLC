@@ -1,0 +1,89 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个函数 `LGF_IsValueInLimits` 用于检查一个给定的值是否在指定的范围内。它接收三个输入参数（`value`、`lowLimit`、`highLimit`），并返回多个输出参数，包括是否超出上限、是否低于下限、是否发生错误以及状态码。
+
+#### 2. **输入参数**
+- `value`：需要检查的值（LReal 类型）。
+- `lowLimit`：范围的下限（LReal 类型）。
+- `highLimit`：范围的上限（LReal 类型）。
+
+#### 3. **输出参数**
+- `overHighLimit`：如果 `value` 大于 `highLimit`，则为 `TRUE`。
+- `belowLowLimit`：如果 `value` 小于 `lowLimit`，则为 `TRUE`。
+- `error`：如果发生错误（例如 `highLimit < lowLimit`），则为 `TRUE`。
+- `status`：状态码（Word 类型），用于指示函数执行的状态或错误类型。
+- 返回值：如果 `value` 在 `lowLimit` 和 `highLimit` 之间（包括等于），则为 `TRUE`。
+
+#### 4. **状态码**
+- `16#0000`：无错误（`STATUS_NO_ERROR`）。
+- `16#8401`：错误，`highLimit` 小于 `lowLimit`（`ERR_RANGE_HIGH_BELOW_LOW_LIMIT`）。
+
+#### 5. **算法流程**
+1. **初始化与范围检查**
+   - 检查 `highLimit` 是否小于 `lowLimit`：
+     - 如果是，设置 `error` 为 `TRUE`，`status` 为 `ERR_RANGE_HIGH_BELOW_LOW_LIMIT`，并返回 `FALSE`。
+     - 如果否，继续执行。
+
+2. **范围评估**
+   - 检查 `value` 是否大于 `highLimit`：
+     - 如果是，设置 `tempValueOverHighLimit` 为 `TRUE`。
+     - 如果否，设置为 `FALSE`。
+   - 检查 `value` 是否小于 `lowLimit`：
+     - 如果是，设置 `tempValueUnderLowLimit` 为 `TRUE`。
+     - 如果否，设置为 `FALSE`。
+
+3. **输出结果**
+   - 返回值：如果 `value` 既不大于 `highLimit` 也不小于 `lowLimit`，则返回 `TRUE`；否则返回 `FALSE`。
+   - 设置 `overHighLimit` 和 `belowLowLimit` 为对应的临时变量值。
+   - 如果没有错误，设置 `error` 为 `FALSE`，`status` 为 `STATUS_NO_ERROR`。
+
+#### 6. **代码调整建议**
+- **优化逻辑**：可以将 `tempValueOverHighLimit` 和 `tempValueUnderLowLimit` 的计算直接赋值给输出变量，避免使用临时变量。
+- **状态码扩展**：可以增加更多的状态码，例如 `value` 等于 `lowLimit` 或 `highLimit` 时的状态码。
+- **注释完善**：在代码中添加更多注释，说明每个步骤的目的和逻辑。
+
+#### 7. **调整后的代码逻辑**
+```plaintext
+FUNCTION "LGF_IsValueInLimits" : Bool
+VAR_INPUT
+    value : LReal;
+    lowLimit : LReal;
+    highLimit : LReal;
+END_VAR
+
+VAR_OUTPUT
+    overHighLimit : Bool;
+    belowLowLimit : Bool;
+    error : Bool;
+    status : Word;
+END_VAR
+
+VAR_CONSTANT
+    STATUS_NO_ERROR : Word := 16#0000;
+    ERR_RANGE_HIGH_BELOW_LOW_LIMIT : Word := 16#8401;
+END_VAR
+
+BEGIN
+    // 检查 highLimit 是否小于 lowLimit
+    IF #highLimit < #lowLimit THEN
+        #error := TRUE;
+        #status := #ERR_RANGE_HIGH_BELOW_LOW_LIMIT;
+        #overHighLimit := FALSE;
+        #belowLowLimit := FALSE;
+        RETURN FALSE;
+    END_IF;
+
+    // 检查 value 是否超出范围
+    #overHighLimit := #value > #highLimit;
+    #belowLowLimit := #value < #lowLimit;
+
+    // 设置返回值和状态
+    #error := FALSE;
+    #status := #STATUS_NO_ERROR;
+    RETURN NOT (#overHighLimit OR #belowLowLimit);
+END_FUNCTION
+```
+
+#### 8. **总结**
+这个函数的核心逻辑是检查输入值是否在指定的范围内，并通过多个输出参数提供详细的检查结果。通过优化代码结构和增加注释，可以提高代码的可读性和可维护性。

@@ -1,0 +1,66 @@
+### 算法流程描述：LWord 字节序调整功能
+
+#### 1. **功能概述**
+- 该功能用于调整多字节数据（LWord类型）的字节序（endianness），即交换字节顺序。
+- 适用于任何系统（大端或小端），不关心原始或目标系统的字节序，具有通用性。
+
+#### 2. **输入输出**
+- **输入/输出参数**：
+  - `data`：`Array[*] of LWord`，待调整字节序的数据数组。
+- **返回值**：无（Void）。
+
+#### 3. **核心逻辑**
+1. **初始化索引**：
+   - 获取数组的最小索引（`LOWER_BOUND`）作为起始点。
+   - 获取数组的最大索引（`UPPER_BOUND`）作为终止条件。
+
+2. **遍历数组**：
+   - 从最小索引开始，逐个处理数组中的每个元素。
+   - 对每个元素执行字节序交换操作。
+
+3. **字节序交换**：
+   - 将当前元素的值暂存到临时变量。
+   - 交换字节顺序：
+     - 字节0 ↔ 字节7
+     - 字节1 ↔ 字节6
+     - 字节2 ↔ 字节5
+     - 字节3 ↔ 字节4
+   - 将交换后的值写回原数组位置。
+
+4. **终止条件**：
+   - 当索引达到最大索引时，停止遍历。
+
+#### 4. **优化点**
+- **减少系统调用**：提前计算并存储数组的最大索引，避免在循环中重复调用`UPPER_BOUND`。
+- **直接操作字节**：通过`%B0`到`%B7`直接访问字节，高效完成交换。
+
+#### 5. **异常处理**
+- 无显式异常处理，但隐含以下假设：
+  - 数组索引有效。
+  - 数组元素为`LWord`类型（4字节或8字节，具体取决于实现）。
+
+#### 6. **扩展性**
+- 可扩展为支持其他多字节类型（如`DWord`、`Word`）的字节序调整。
+- 可通过参数化字节长度或交换规则增强通用性。
+
+#### 7. **伪代码示意（非具体实现）**
+```plaintext
+FUNCTION SwapBlockLWord
+    INPUT/OUTPUT: data array of LWord
+    TEMP: lowerIndex, upperIndex, swapIndex, tempValue
+
+    lowerIndex = getLowerBound(data)
+    upperIndex = getUpperBound(data)
+    swapIndex = lowerIndex
+
+    WHILE swapIndex <= upperIndex DO
+        tempValue = data[swapIndex]
+        data[swapIndex] = swapBytes(tempValue)
+        swapIndex += 1
+    END_WHILE
+END_FUNCTION
+```
+
+#### 8. **注意事项**
+- 确保数组在调用前已正确初始化。
+- 适用于批量处理场景，单次调用可处理整个数组。

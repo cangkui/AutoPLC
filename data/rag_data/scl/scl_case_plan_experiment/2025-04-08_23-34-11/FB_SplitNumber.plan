@@ -1,0 +1,62 @@
+### 算法流程描述
+
+#### 1. 输入验证
+- **目的**：确保输入值在有效范围内（0 ≤ InputNumber < 10000）
+- **逻辑**：
+  - 如果输入值无效（InputNumber < 0 或 InputNumber ≥ 10000），则：
+    - 设置 `error = TRUE`
+    - 设置 `status = 16#8001`（错误代码）
+    - 直接返回，不执行后续逻辑
+  - 如果输入值有效，则：
+    - 设置 `error = FALSE`
+    - 设置 `status = 16#0000`（成功代码）
+
+#### 2. 数字分离
+- **目的**：将输入的四位数分解为千位、百位、十位和个位
+- **逻辑**：
+  - **千位**：`Thousands = InputNumber / 1000`（整除）
+  - **百位**：`Hundreds = (InputNumber MOD 1000) / 100`（取模后整除）
+  - **十位**：`Tens = (InputNumber MOD 100) / 10`（取模后整除）
+  - **个位**：`Ones = InputNumber MOD 10`（直接取模）
+
+#### 3. 计算最小非零数字
+- **目的**：找出千位、百位、十位、个位中的最小非零数字
+- **逻辑**：
+  - 初始化 `tempMin = 255`（临时变量，用于比较）
+  - 依次检查千位、百位、十位、个位：
+    - 如果当前位不为零且小于 `tempMin`，则更新 `tempMin`
+  - 如果输入值为 0，则直接设置 `tempMin = 0`
+  - 最终将 `tempMin` 赋值给输出 `Min`
+
+#### 4. 输出结果
+- **目的**：将计算结果写入输出变量
+- **逻辑**：
+  - 直接赋值（已在数字分离和最小非零数字计算中完成）
+
+---
+
+### 代码调整建议
+1. **优化最小非零数字计算**：
+   - 可以使用更简洁的比较逻辑，例如：
+     ```scl
+     #tempMin := 255;
+     IF #Thousands > 0 THEN #tempMin := MIN(#tempMin, #Thousands); END_IF;
+     IF #Hundreds > 0 THEN #tempMin := MIN(#tempMin, #Hundreds); END_IF;
+     IF #Tens > 0 THEN #tempMin := MIN(#tempMin, #Tens); END_IF;
+     IF #Ones > 0 THEN #tempMin := MIN(#tempMin, #Ones); END_IF;
+     IF #InputNumber = 0 THEN #tempMin := 0; END_IF;
+     ```
+   - 如果 SCL 支持 `MIN` 函数，可以进一步简化。
+
+2. **错误处理优化**：
+   - 可以增加对输入值的类型检查（如果输入可能为非整数）。
+
+3. **常量命名**：
+   - 建议将 `255` 定义为常量（如 `MAX_BYTE`），提高可读性。
+
+---
+
+### 总结
+该算法通过以下步骤实现需求：
+1. **输入验证** → 2. **数字分离** → 3. **最小非零数字计算** → 4. **输出结果**  
+逻辑清晰，覆盖所有需求点，适合类似数字分解场景的通用实现。

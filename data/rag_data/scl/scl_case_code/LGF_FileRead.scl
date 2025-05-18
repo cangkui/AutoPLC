@@ -1,0 +1,389 @@
+FUNCTION_BLOCK "LGF_FileRead"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens SIMATIC Systems Support'
+FAMILY : LGF
+NAME : LGF_FileRead
+   VAR_INPUT 
+      execute : Bool;
+      dataLengthMustMatch : Bool;
+      fileName : String;
+   END_VAR
+
+   VAR_OUTPUT 
+      done { ExternalWritable := 'False'} : Bool;
+      busy { ExternalWritable := 'False'} : Bool;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word := #STATUS_NO_CALL;
+      dataLength { ExternalWritable := 'False'} : DInt;
+      diagnostics { ExternalWritable := 'False'} : "LGF_typeDiagnostics";
+   END_VAR
+
+   VAR_IN_OUT 
+      bufferByteArray : Array[*] of Byte;
+      data : Variant;
+   END_VAR
+
+   VAR 
+      statInternal { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Struct
+         executePrevious { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         done { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         busy { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         error { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         diagnostics { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : "LGF_typeDiagnostics" := (#STATUS_NO_CALL, (), ());
+         emptyDiagnostics { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : "LGF_typeDiagnostics" := (#STATUS_NO_CALL, (), ());
+      END_STRUCT;
+      instFileRead {InstructionName := 'FileReadC'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : FileReadC;
+      statMainState { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt := #FB_STATE_NO_PROCESSING;
+      statParameterDataIsByteArray { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statAsynchronusMode { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statBufferSize { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;
+      statLengthData { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt;
+      statLengthFile { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt := 0;
+   END_VAR
+
+   VAR_TEMP 
+      tempExecute : Bool;
+      tempExitStateLoop : Bool;
+      tempResult : Word;
+      tempBufferPosition : DInt;
+      tempPathPrefix : String;
+   END_VAR
+
+   VAR CONSTANT 
+      PATH_PREFIX : String := 'UserFiles/';
+      FB_STATE_NO_PROCESSING : DInt := 0;
+      FB_STATE_INIT : DInt := 1;
+      FB_STATE_FILE_READ : DInt := 2;
+      FB_STATE_PARAMETER_TO_INTERFACE : DInt := 3;
+      STATUS_EXECUTION_FINISHED : Word := 16#0000;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_FIRST_CALL : Word := 16#7001;
+      STATUS_SUBSEQUENT_CALL : Word := 16#7002;
+      ERR_UNDEFINED_STATE : Word := 16#8600;
+      "- - - Application Error codes" : Word;
+      ERR_BUFFER_LOWERBOUND : Word := 16#8201;
+      ERR_BUFFER_ARRAY_TO_SMALL_TO_COPY : Word := 16#8202;
+      ERR_FILE_PATH : Word := 16#8401;
+      ERR_FILE_SIZE_GRATER_THEN_DATA_SIZE : Word := 16#8411;
+      ERR_FILE_SIZE_LESS_THEN_DATA_SIZE : Word := 16#8412;
+      ERR_MOVE_BLK_VARIANT : Word := 16#8601;
+      ERR_DATA_SERIALIZE : Word := 16#8602;
+      ERR_DATA_DESERIALIZE : Word := 16#8603;
+      ERR_FILE_READ_INIT : Word := 16#8604;
+      ERR_FILE_READ : Word := 16#8605;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //================================================================================
+	  // SIEMENS AG
+	  // (c)Copyright 2017 All Rights Reserved
+	  //--------------------------------------------------------------------------------
+	  // Library:       LGF (Library General Functions) 
+	  // Tested with:   S7-1510SP-F
+	  // Engineering:   TIA Portal V15
+	  // Restrictions:  ---
+	  // Requirements:  S7-1500/S7-1500T FW 2.5
+	  // Functionality: This function block offers reading data as binary / serialized data stream
+	  //                from files stored on the PLC's memory card in the folder `UserFiles`.
+	  //--------------------------------------------------------------------------------
+	  //================================================================================
+	END_REGION
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION TRIGGERING
+	  #tempExecute := #execute; // Work with temporary value / create process image
+	  IF (#tempExecute = TRUE) AND (#statInternal.executePrevious = FALSE) // Check if FB is triggered
+	    // FB shall finish current job before new job can be started with rising edge of execute
+	    AND (#statInternal.diagnostics.status = #STATUS_NO_CALL)
+	  THEN // First call; initialize FB
+	    #statInternal.done := FALSE;
+	    #statInternal.busy := TRUE;
+	    #statInternal.error := FALSE;
+	    
+	    #statMainState := #FB_STATE_INIT; // State machine - start processing
+	    // Initialize functionality: reset of variables, diagnostics, etc.
+	    #statInternal.diagnostics := #statInternal.emptyDiagnostics;
+	    #statInternal.diagnostics.status := #STATUS_FIRST_CALL;
+	    #diagnostics := #statInternal.emptyDiagnostics;
+	    
+	    // Initialize functionality: call subsidiary FBs with FALSE
+	    #instFileRead(REQ := FALSE);
+	    
+	  ELSIF (#statInternal.diagnostics.status = #STATUS_FIRST_CALL) THEN
+	    #statInternal.diagnostics.status := #STATUS_SUBSEQUENT_CALL;
+	  END_IF;
+	  
+	  // Edge detection 'execute' input
+	  #statInternal.executePrevious := #tempExecute;
+	END_REGION TRIGGERING
+	
+	IF (#statInternal.diagnostics.status = #STATUS_NO_CALL) THEN // Nothing to do -> End here to reduce "system load"
+	  RETURN;
+	END_IF;
+	
+	REGION STATE_MACHINE
+	  // if one ore more runs in the same cycle are necessary, set #tempStateChangeActive := TRUE;
+	  REPEAT
+	    // reset #tempExitStateLoop := TRUE; as its defined state to prevent endless loop
+	    #tempExitStateLoop := TRUE;
+	    
+	    // State machine of FB
+	    CASE #statMainState OF
+	      #FB_STATE_NO_PROCESSING: // No processing active (Note: this state must always be present and left empty)
+	        ;
+	        
+	      #FB_STATE_INIT:
+	        REGION Init
+	          REGION Verify File Path
+	            #tempPathPrefix := #PATH_PREFIX;
+	            
+	            FOR #tempBufferPosition := 1 TO DINT_TO_INT(LEN(#tempPathPrefix)) DO
+	              IF #fileName[#tempBufferPosition] <> #tempPathPrefix[#tempBufferPosition] THEN
+	                // Characters arenÄt identiacal
+	                #statInternal.diagnostics.status := #ERR_FILE_PATH;
+	                #statInternal.diagnostics.subfunctionStatus := DINT_TO_WORD(#tempBufferPosition);
+	                // stop execution and leave block
+	                EXIT;
+	              END_IF;
+	            END_FOR;
+	            
+	            IF #statInternal.diagnostics.status.%X15 THEN
+	              EXIT;
+	            END_IF;
+	          END_REGION
+	          
+	          REGION Verify buffer boundary
+	            // check buffer size
+	            // check lower boundary
+	            #tempResult := DINT_TO_WORD(LOWER_BOUND(ARR := #bufferByteArray, DIM := 1));
+	            
+	            IF 0 <> #tempResult THEN
+	              // ERROR: buffer lowerbound has to be 0
+	              #statInternal.diagnostics.status := #ERR_BUFFER_LOWERBOUND;
+	              #statInternal.diagnostics.subfunctionStatus := #tempResult;
+	              // stop execution and leave block
+	              EXIT;
+	            ELSE
+	              ; // nothing to do, just proceed
+	            END_IF;
+	            
+	            // get upper boundary and calc size of buffer
+	            #statBufferSize := UPPER_BOUND(ARR := #bufferByteArray, DIM := 1) + 1;
+	          END_REGION
+	          
+	          // verify parameter data types
+	          REGION Verify parameter data types
+	            // check type of Parameter attached to IN/OUT
+	            // if Array proceed here, Array limits checked by move block variant
+	            IF IS_ARRAY(#data) AND TypeOfElements(#data) = Byte THEN
+	              // data type match - nothing to do
+	              #statParameterDataIsByteArray := TRUE;
+	              // get array size
+	              #statLengthData := UDINT_TO_DINT(CountOfElements(#data));
+	              
+	              // verify if buffer is big enough to store data
+	              IF #statBufferSize < #statLengthData THEN
+	                // ERROR: buffer array is to small for data array
+	                #statInternal.diagnostics.status := #ERR_BUFFER_ARRAY_TO_SMALL_TO_COPY;
+	                #statInternal.diagnostics.subfunctionStatus := 16#0000;
+	                // stop execution and leave block
+	                EXIT;
+	              ELSE
+	                ; // nothing to do, just proceed
+	              END_IF;
+	              
+	            ELSE
+	              #statParameterDataIsByteArray := FALSE;
+	              #statLengthData := 0;
+	              #tempResult := INT_TO_WORD(
+	                                         Serialize(SRC_VARIABLE := #data,
+	                                                   DEST_ARRAY => #bufferByteArray,
+	                                                   POS := #statLengthData));
+	              
+	              // check if serialize parameter structure was successful, otherwise set ERROR
+	              IF 16#0000 <> #tempResult THEN
+	                #statInternal.diagnostics.status := #ERR_DATA_SERIALIZE;
+	                #statInternal.diagnostics.subfunctionStatus := #tempResult;
+	                // stop execution and leave block
+	                EXIT;
+	              ELSE
+	                ; // nothing to do, just proceed
+	              END_IF;
+	            END_IF;
+	          END_REGION
+	          
+	          REGION File handler init
+	            // Set length for FileRead call
+	            IF #dataLengthMustMatch THEN
+	              #instFileRead.Length := 0;
+	            ELSE
+	              #instFileRead.Length := DINT_TO_UDINT(#statLengthData);
+	            END_IF;
+	            
+	            // init file read with false
+	            #instFileRead(REQ := FALSE);
+	            
+	            IF #instFileRead.Error THEN
+	              #statInternal.diagnostics.status := #ERR_FILE_READ_INIT;
+	              #statInternal.diagnostics.subfunctionStatus := #instFileRead.Status;
+	              // stop execution and leave block
+	              EXIT;
+	            ELSE //IF TRUE = #instFileReadC.Done THEN
+	              // next state
+	              #statMainState := #FB_STATE_FILE_READ;
+	              // ASYNCRONUS - set to true:
+	              #tempExitStateLoop := #statAsynchronusMode;
+	            END_IF;
+	          END_REGION
+	        END_REGION
+	        
+	      #FB_STATE_FILE_READ:
+	        REGION File handling
+	          // set file handler request to true
+	          #instFileRead(REQ    := TRUE,
+	                        Name   := #fileName,
+	                        Offset := UDINT#0,
+	                        Data   := #bufferByteArray);
+	          
+	          IF #instFileRead.Error THEN
+	            #statLengthFile := UDINT_TO_DINT(#instFileRead.ResultLength);
+	            #statInternal.diagnostics.status := #ERR_FILE_READ;
+	            #statInternal.diagnostics.subfunctionStatus := #instFileRead.Status;
+	            // stop execution and leave block
+	            EXIT;
+	            
+	          ELSIF #instFileRead.Done THEN
+	            #statLengthFile := UDINT_TO_DINT(#instFileRead.ResultLength);
+	            // Check file length parameter
+	            IF TRUE
+	              AND #dataLengthMustMatch
+	              AND (#statLengthFile > #statLengthData)
+	            THEN
+	              #statInternal.diagnostics.status := #ERR_FILE_SIZE_GRATER_THEN_DATA_SIZE;
+	              #statInternal.diagnostics.subfunctionStatus := DINT_TO_WORD(#statLengthData);
+	              // stop execution and leave block
+	              EXIT;
+	              
+	            ELSIF TRUE
+	              AND #dataLengthMustMatch
+	              AND (#statLengthFile < #statLengthData)
+	            THEN
+	              #statInternal.diagnostics.status := #ERR_FILE_SIZE_LESS_THEN_DATA_SIZE;
+	              #statInternal.diagnostics.subfunctionStatus := DINT_TO_WORD(#statLengthData);
+	              // stop execution and leave block
+	              EXIT;
+	              
+	            ELSE
+	              // next state
+	              #statMainState := #FB_STATE_PARAMETER_TO_INTERFACE;
+	              // ASYNCRONUS - set to true:
+	              #tempExitStateLoop := #statAsynchronusMode;
+	            END_IF;
+	            
+	          ELSE
+	            ; // nothing to do, just proceed
+	          END_IF;
+	        END_REGION
+	        
+	      #FB_STATE_PARAMETER_TO_INTERFACE:
+	        REGION Parameter handling 
+	          // if paramter is byte array - just copy
+	          IF #statParameterDataIsByteArray THEN
+	            // copy buffer array into paramter array
+	            #tempResult := INT_TO_WORD(
+	                                       MOVE_BLK_VARIANT(SRC := #bufferByteArray,
+	                                                        COUNT := DINT_TO_UDINT(#statLengthData),
+	                                                        SRC_INDEX := DINT#0,
+	                                                        DEST_INDEX := DINT#0,
+	                                                        DEST => #data)
+	            );
+	            
+	            // check if move parameter structure was successful, otherwise set ERROR
+	            IF 16#0000 <> #tempResult THEN
+	              #statInternal.diagnostics.status := #ERR_MOVE_BLK_VARIANT;
+	              #statInternal.diagnostics.subfunctionStatus := #tempResult;
+	              // stop execution and leave block
+	              EXIT;
+	            ELSE
+	              // next state switched by status
+	              #statInternal.diagnostics.status := #STATUS_EXECUTION_FINISHED;
+	              #statInternal.diagnostics.subfunctionStatus := 16#0000;
+	            END_IF;
+	            
+	          ELSE
+	            // elsif paramter is NOT byte array - DESERIALZE
+	            // init buffer size/position pointer
+	            #tempBufferPosition := 0;
+	            // deserialize data from buffer
+	            #tempResult := INT_TO_WORD(
+	                                       Deserialize(
+	                                                   SRC_ARRAY := #bufferByteArray,
+	                                                   DEST_VARIABLE => #data,
+	                                                   POS := #tempBufferPosition)
+	            );
+	            
+	            // check if serialize parameter structure was successful, otherwise set ERROR
+	            IF 16#0000 <> #tempResult THEN
+	              #statInternal.diagnostics.status := #ERR_DATA_DESERIALIZE;
+	              #statInternal.diagnostics.subfunctionStatus := #tempResult;
+	              // stop execution and leave block
+	              EXIT;
+	            ELSE
+	              // next state switched by status
+	              #statInternal.diagnostics.status := #STATUS_EXECUTION_FINISHED;
+	              #statInternal.diagnostics.subfunctionStatus := 16#0000;
+	            END_IF;
+	          END_IF;
+	        END_REGION
+	        
+	      ELSE // Undefined state in state machine reached
+	        #statInternal.diagnostics.status := #ERR_UNDEFINED_STATE;
+	    END_CASE;
+	    // if one ore more runs in the same cycle are necessary, set #tempExitStateLoop := FALSE;
+	    // check state, if condition = TRUE --> #tempExitStateLoop = TRUE --> LEAVE LOOP
+	  UNTIL (TRUE = #tempExitStateLoop)
+	  END_REPEAT;
+	END_REGION STATE_MACHINE
+	
+	REGION OUTPUTS
+	  // Write outputs
+	  IF (#statInternal.diagnostics.status = #STATUS_EXECUTION_FINISHED) AND (#statInternal.done = FALSE) THEN // Execution finished without errors
+	    #statInternal.done := TRUE;
+	    #statInternal.busy := FALSE;
+	    #statInternal.error := FALSE;
+	    #statMainState := #FB_STATE_NO_PROCESSING; // Switch state machine to "no processing"
+	    
+	  ELSIF (#statInternal.diagnostics.status.%X15 = TRUE) AND (#statInternal.error = FALSE) THEN // Error occurred (#statStatus is 16#8000 to 16#FFFF)
+	    #statInternal.done := FALSE;
+	    #statInternal.busy := FALSE;
+	    #statInternal.error := TRUE;
+	    // Write diagnostics
+	    #statInternal.diagnostics.stateNumber := #statMainState;
+	    #diagnostics := #statInternal.diagnostics;
+	    #statMainState := #FB_STATE_NO_PROCESSING; // Switch state machine to "no processing"
+	    
+	  ELSIF (#tempExecute = FALSE) AND ((#statInternal.done = TRUE) OR (#statInternal.error = TRUE)) THEN // Reset outputs
+	    #statInternal.done := FALSE;
+	    #statInternal.busy := FALSE;
+	    #statInternal.error := FALSE;
+	    #statInternal.diagnostics.status := #STATUS_NO_CALL;
+	    #statLengthData := 0;
+	    #statLengthFile := 0;
+	  END_IF;
+	  
+	  // Write static values to outputs
+	  #done := #statInternal.done;
+	  #busy := #statInternal.busy;
+	  #error := #statInternal.error;
+	  #status := #statInternal.diagnostics.status;
+	  
+	  #dataLength := #statLengthData;
+	  ENO := #statInternal.error;
+	END_REGION OUTPUTS
+	
+END_FUNCTION_BLOCK

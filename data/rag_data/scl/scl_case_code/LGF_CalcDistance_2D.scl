@@ -1,0 +1,42 @@
+FUNCTION "LGF_CalcDistance_2D" : LReal
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_CalcDistance_2D
+   VAR_INPUT 
+      x1 : LReal;
+      y1 : LReal;
+      x2 : LReal;
+      y2 : LReal;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // Siemens AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_CalcDistance_2D
+	  // Comment/Function: Calculates the distance between two points in 2D space
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - ENO mechanism is not used
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Program
+	  // Calculating the distance
+	  #LGF_CalcDistance_2D := SQRT(SQR(#x2 - #x1) + SQR(#y2 - #y1));
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

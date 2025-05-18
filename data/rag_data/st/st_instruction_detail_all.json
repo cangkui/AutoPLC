@@ -1,0 +1,1299 @@
+{
+    "R_TRIG": {
+        "instruction_name": "R_TRIG",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "CLK",
+                    "type": "BOOL",
+                    "description": "The arrival signal that will trigger an edge detection on this signal."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "The result of the edge detection."
+                }
+            ]
+        },
+        "example_code": "VAR\nR_TRIG_DB:R_TRIG;\nEND_VAR \nBEGIN\nR_TRIG_DB(TagIn, TagOut);\nIt is necessary to define the R_TRIG type variable R_TRIG_DB in the VAR...END_VAR section. The previous state of the variable in CLK is stored in the 'R_TRIG_DB' variable. If the signal state of 'TagIn' is detected to change from '0' to '1', then the signal state of 'TagOut' will be '1' for one cycle.",
+        "additional_info": "None.",
+        "brief_description": "The function is to detect the rising edge of the input signal. When the input CLK changes from '0' to '1', a rising edge signal is generated in the output Q. It can be applied in scenarios where detection of the rising edge change of a signal is required."
+    },
+    "F_TRIG": {
+        "instruction_name": "F_TRIG",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "CLK",
+                    "type": "BOOL",
+                    "description": "Arrival signal, which will query the edge of this signal."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "Result of edge detection."
+                }
+            ]
+        },
+        "example_code": "VAR\nF_TRIG_DB:F_TRIG;\nEND_VAR \nBEGIN\nF_TRIG_DB(TagIn, TagOut);\nYou need to define a variable of type F_TRIG named F_TRIG_DB in the VAR...END_VAR area. The previous state of the variable in CLK is stored in the variable \"F_TRIG_DB\". If a change is detected in the signal state of \"TagIn\" from \"1\" to \"0\", the signal state of \"TagOut\" will be \"1\" for one cycle.",
+        "additional_info": "After the CPU starts, if the input value of \"CLK\" is FALSE, the \"F_TRIG\" will set the output \"Q\" to TRUE and hold it for one cycle.",
+        "brief_description": "The function is to detect the transition of input CLK from \"1\" to \"0\" and generate a falling edge signal in output Q, which can be applied in scenarios where it is necessary to detect the falling edge of a signal and perform corresponding processing."
+    },
+    "TP": {
+        "instruction_name": "TP",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "BOOL",
+                    "description": "Start input."
+                },
+                {
+                    "name": "PT",
+                    "type": "TIME",
+                    "description": "Duration of the pulse."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "Output that remains set during the PT duration."
+                },
+                {
+                    "name": "ET",
+                    "type": "TIME",
+                    "description": "Current value of the timer."
+                }
+            ]
+        },
+        "example_code": "VAR\nTP_DB: TP_TIME;\nEND_VAR \nBEGIN\n TP_DB(Start, PresetTime, Status, ElapsedTime);  The TP_TIME variable TP_DB needs to be defined in the VAR...END_VAR area. When the 'Start' signal rises, the PT preset time starts timing, and the 'Status' is set to '1'. The current time value is stored in 'ElapsedTime'.",
+        "additional_info": "Each time the 'Generate Pulse' instruction is called, an IEC timer is assigned to store instance data.",
+        "brief_description": "The function generates a pulse of duration PT based on the rising edge of the input signal IN, setting the output Q to 1 until the PT time automatically resets, while also allowing monitoring of the current timer value ET. It can be applied in situations requiring control of specific time pulse signals."
+    },
+    "TON": {
+        "instruction_name": "TON",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "BOOL",
+                    "description": "Start input."
+                },
+                {
+                    "name": "PT",
+                    "type": "TIME",
+                    "description": "Duration of the time delay."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "The operand that holds the set state when the PT time of the timer runs out."
+                },
+                {
+                    "name": "ET",
+                    "type": "TIME",
+                    "description": "The current value of the timer."
+                }
+            ]
+        },
+        "example_code": "VAR\nTON_DB:TON_TIME;\nEND_VAR \nBEGIN\n TON_DB(Start, PresetTime, Status, ElapsedTime); It is necessary to define a variable of type TON_TIME called TON_DB in the VAR...END_VAR area. When the 'Start' signal rises, the PT preset time begins counting. After the time period has elapsed, 'Status' is set to '1'. As long as 'Start' is '1', 'Status' remains set. The current time value is stored in 'ElapsedTime'.",
+        "additional_info": "Each call to the 'Time On Delay' instruction must be assigned to an IEC timer that stores instance data.",
+        "brief_description": "The function is 'Time On Delay', which can be applied to start a timer on the rising edge of an input signal and set the output parameter after a specified time delay."
+    },
+    "TOF": {
+        "instruction_name": "TOF",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "BOOL",
+                    "description": "Start input."
+                },
+                {
+                    "name": "PT",
+                    "type": "TIME",
+                    "description": "Duration of the off-delay."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "Output reset after exceeding the time PT."
+                },
+                {
+                    "name": "ET",
+                    "type": "TIME",
+                    "description": "Current value of the timer."
+                }
+            ]
+        },
+        "example_code": "VAR\nTOF_DB:TOF_TIME;\nEND_VAR \nBEGIN\n TOF_DB(Start, PresetTime, Status, ElapsedTime); // TOF_TIME type variable TOF_DB must be defined in the VAR...END_VAR region. The 'Status' is set when there is a rising edge on the 'Start' signal. When 'Start' changes to '0', the preset time PT starts counting. After the time ends, 'Status' is reset. The current time value is stored in 'ElapsedTime.'",
+        "additional_info": "Each time the 'off-delay' instruction is called, it must be assigned to an IEC timer that stores instance data.",
+        "brief_description": "The function starts the output on the rising edge of the input signal and begins timing when the input signal changes to '0'. After reaching the preset time, the output is reset. The current timer value can also be obtained, making it applicable in scenarios that require a response to the input signal and automatically resetting the output after a certain time."
+    },
+    "TONR": {
+        "instruction_name": "TONR",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "BOOL",
+                    "description": "Start input."
+                },
+                {
+                    "name": "R",
+                    "type": "BOOL",
+                    "description": "Reset parameters ET and Q."
+                },
+                {
+                    "name": "PT",
+                    "type": "TIME",
+                    "description": "The maximum duration for timing record."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "The operand remains set when the time within the timer PT has expired."
+                },
+                {
+                    "name": "ET",
+                    "type": "TIME",
+                    "description": "Accumulated time."
+                }
+            ]
+        },
+        "example_code": "VAR\nTONR_DB:TONR_TIME;\nEND_VAR \nBEGIN\nTONR_DB(Start, Reset, PresetTime, Status, Time); You need to define a variable of type TONR_TIME named TONR_DB in the VAR...END_VAR area. When the 'Start' signal rises, the PT preset time starts timing. The accumulated time value will be stored in 'Time'. When the specified time value in PT is reached, 'Status' is set to '1'.",
+        "additional_info": "Each time the 'time accumulator' instruction is called, it must be assigned an IEC timer for storing instance data.",
+        "brief_description": "The function accumulates the time value over a specified period using a time accumulator as long as the start input signal status is '1'. It can be applied in scenarios where accumulating recorded time values is required."
+    },
+    "RESET_TIMER": {
+        "instruction_name": "RESET_TIMER",
+        "parameters": {
+            "Output": [
+                {
+                    "name": "<IEC Timer>",
+                    "type": "IEC_TIMER, TP_TIME, TON_TIME, TOF_TIME, TONR_TIME",
+                    "description": "The IEC timer to be reset."
+                }
+            ]
+        },
+        "example_code": "IF started = false THEN TON_DB.TON(Start, PresetTime, Status, ElapsedTime); started := true; END_IF; IF TON_DB.ET < T25s THEN RESET_TIMER(TIMETON_DB); started := false; END_IF; When the variable started is '0', the 'Turn On Delay' instruction is executed. If the elapsed time of the IEC timer 'TON_DB' is less than 25 seconds, the 'Reset Timer' instruction is executed, resetting the timer stored in the background data block 'TON_DB'.",
+        "additional_info": "Re-initializing the actual value of the IEC timer while it is running can disrupt its functionality and may lead to inconsistencies between the program and the actual process.",
+        "brief_description": "The function resets the specified IEC timer to '0', applicable in scenarios where reinitializing the IEC timer is necessary, for instance, when the current time of the timer is less than a specific threshold, requiring it to be reset to restart timing."
+    },
+    "PRESET_TIMER": {
+        "instruction_name": "PRESET_TIMER",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<Duration>",
+                    "type": "TIME",
+                    "description": "The duration for which the IEC timer will run."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "<IEC Timer>",
+                    "type": "IEC_TIMER, TP_TIME, TON_TIME, TOF_TIME, TONR_TIME",
+                    "description": "The IEC timer that is set with the specified duration."
+                }
+            ]
+        },
+        "example_code": "IF started = false THEN TON_DB.TON(Start, PresetTime, Status, ElapsedTime); started := true; preset := true END_IF; IF TON_DB.ET < T10s AND preset = true THEN PRESET_TIMER(T25s, TIMETON_DB); preset := false; END_IF; When the variable started is '0', execute 'turn on'.",
+        "additional_info": "If the specified IEC timer is already counting when the instruction is executed, the instruction will override the current value of that specified IEC timer.",
+        "brief_description": "The function is to set the time for the IEC timer. If the input logical operation result is '1', this instruction is executed in each cycle, applicable to scenarios requiring a reset or preset timer time."
+    },
+    "CTU": {
+        "instruction_name": "CTU",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "CU",
+                    "type": "BOOL",
+                    "description": "Count input."
+                },
+                {
+                    "name": "R",
+                    "type": "BOOL",
+                    "description": "Reset input."
+                },
+                {
+                    "name": "PV",
+                    "type": "INTEGER",
+                    "description": "Target value for setting output Q."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "Counter status."
+                },
+                {
+                    "name": "CV",
+                    "type": "INTEGER, CHAR, WCHAR, DATE",
+                    "description": "Current counter value."
+                }
+            ]
+        },
+        "example_code": "IEC_COUNTER_DB.CTU(Start, Reset, PresetValue, Status, CounterValue);",
+        "additional_info": "The counter value increments until it reaches the upper limit of the data type.",
+        "brief_description": "The function increments the CV parameter value using the 'Count Up' instruction, executed when the signal state of CU changes from '0' to '1'. It can be applied in scenarios where counting or tracking the number of occurrences of events is needed, such as counting products on a production line or statistics on machine operating times."
+    },
+    "CTD": {
+        "instruction_name": "CTD",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "CD",
+                    "type": "BOOL",
+                    "description": "Count input."
+                },
+                {
+                    "name": "LD",
+                    "type": "BOOL",
+                    "description": "Load input."
+                },
+                {
+                    "name": "PV",
+                    "type": "INTEGER",
+                    "description": "The target value to set the output CV when LD = 1."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Q",
+                    "type": "BOOL",
+                    "description": "Counter status."
+                },
+                {
+                    "name": "CV",
+                    "type": "INTEGER, CHAR, WCHAR, DATE",
+                    "description": "Current counter value."
+                }
+            ]
+        },
+        "example_code": "IEC_SCOUNTER_DB.CTD(CD := Start, LD := Load, PV := PresetValue, Status, CV => CounterValue);",
+        "additional_info": "The counter value decreases until it reaches the lower limit of the data type.",
+        "brief_description": "This function is a decrement counting instruction used to decrease the value of the CV parameter. When the signal state of the CD parameter transitions from '0' to '1' (rising edge), this instruction is executed, decreasing the current counter value CV by '1'. This instruction can be applied in scenarios where it is necessary to count events or decrease a count value when a specific condition is met."
+    },
+    "CTUD": {
+        "instruction_name": "CTUD",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "CU",
+                    "type": "BOOL",
+                    "description": "Count Up Input."
+                },
+                {
+                    "name": "CD",
+                    "type": "BOOL",
+                    "description": "Count Down Input."
+                },
+                {
+                    "name": "R",
+                    "type": "BOOL",
+                    "description": "Reset Input."
+                },
+                {
+                    "name": "LD",
+                    "type": "BOOL",
+                    "description": "Load Input."
+                },
+                {
+                    "name": "PV",
+                    "type": "INTEGER",
+                    "description": "The value to set output QU / When LD = 1, set output CV value."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "QU",
+                    "type": "BOOL",
+                    "description": "Status of the counter increment."
+                },
+                {
+                    "name": "QD",
+                    "type": "BOOL",
+                    "description": "Status of the counter decrement."
+                },
+                {
+                    "name": "CV",
+                    "type": "INTEGER, CHAR, WCHAR, DATE",
+                    "description": "Current value of the counter."
+                }
+            ]
+        },
+        "example_code": "IEC_COUNTER_DB.CTUD(CU := Start1, CD := Start2, LD := Load, R := Reset, PV := PresetValue, QU => CU_Status, QD => CD_Status, CV => CounterValue);",
+        "additional_info": "If both CU and CD rise at the same time in one program cycle, the counter value remains unchanged.",
+        "brief_description": "The function uses the 'Count Up/Down' instruction to increment and decrement the counter value of the CV parameter. Depending on the signal states of CU and CD, the value of parameter CV will increase or decrease accordingly. It can be used in scenarios that require counting up or down, such as counters on production lines, countdowns for traffic lights, etc."
+    },
+    "ABS": {
+        "instruction_name": "ABS",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<Expression>",
+                    "type": "SINT, INT, DINT, LINT, Float",
+                    "description": "Input value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "SINT, INT, DINT, LINT, Float",
+                    "description": "Result."
+                }
+            ]
+        },
+        "example_code": "Result1 := ABS(Value);",
+        "additional_info": "The result has the same data type as the input value.",
+        "brief_description": "The function calculates the absolute value of the input and saves the result to the specified operand. It can be applied in scenarios where the absolute value of a variable is needed."
+    },
+    "MIN": {
+        "instruction_name": "MIN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN1",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "The first input value."
+                },
+                {
+                    "name": "IN2",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "The second input value."
+                },
+                {
+                    "name": "INn",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "Other inserted inputs (the values to be compared)."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "The result."
+                }
+            ]
+        },
+        "example_code": "Result := MIN(Value1, Value2, Value3);",
+        "additional_info": "The result is the minimum value among all inputs.",
+        "brief_description": "The function compares multiple input values and returns the minimum value. It can be applied in scenarios that require comparing multiple values to find the minimum."
+    },
+    "MAX": {
+        "instruction_name": "MAX",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN1",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "The first input value."
+                },
+                {
+                    "name": "IN2",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "The second input value."
+                },
+                {
+                    "name": "INn",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "Other input values to compare."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := MAX(Value1, Value2, Value3);",
+        "additional_info": "The result is the maximum value among all inputs.",
+        "brief_description": "The function compares multiple input values and returns the maximum value, applicable in scenarios where finding the largest value among several numbers is needed."
+    },
+    "LIMIT": {
+        "instruction_name": "LIMIT",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "MN",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "Lower limit."
+                },
+                {
+                    "name": "IN",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "Input value."
+                },
+                {
+                    "name": "MX",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "Upper limit."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "Integer, Float, TIME, TOD, DATE, DTL",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := LIMIT(Minimum, Value, Maximum);",
+        "additional_info": "If MN is greater than MX, the result is the value of the IN parameter, and ENO is '0'.",
+        "brief_description": "The function limits the value of parameter IN between the values of parameters MN and MX, and can be applied in scenarios where a value needs to be constrained within a certain range."
+    },
+    "SQRT": {
+        "instruction_name": "SQRT",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Input value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result1 := SQRT(Value);",
+        "additional_info": "If the input value is less than zero, it returns an invalid floating-point number.",
+        "brief_description": "The function calculates the square root of the input value and stores the result in the specified operand. It can be applied in situations where square root calculation is needed."
+    },
+    "LN": {
+        "instruction_name": "LN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Input value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result1 := LN(Value);",
+        "additional_info": "If the input value is less than zero, it returns an invalid floating point number.",
+        "brief_description": "The function calculates the natural logarithm of the input value with base e, which can be applied in scenarios requiring the natural logarithm of a floating point number."
+    },
+    "EXP": {
+        "instruction_name": "EXP",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Input value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result1 := EXP(Value);",
+        "additional_info": "None.",
+        "brief_description": "The function calculates the exponential value using base e, and stores the result in the specified operand. It can be applied in scenarios requiring exponential value calculations."
+    },
+    "SIN": {
+        "instruction_name": "SIN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Input value (angle value in radians)."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := SIN(Value);",
+        "additional_info": "None.",
+        "brief_description": "The function calculates the sine of the input value and can be applied in scenarios that require the sine of an angle value in radians."
+    },
+    "COS": {
+        "instruction_name": "COS",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Input value (angle value in radians)."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := COS(Value);",
+        "additional_info": "None.",
+        "brief_description": "This function calculates the cosine of the input value and can be used in scenarios that require the cosine of an angle value in radians."
+    },
+    "TAN": {
+        "instruction_name": "TAN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Input value (angle value in radians)."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := TAN(Value);",
+        "additional_info": "None.",
+        "brief_description": "The function calculates the tangent of the input value (input value in radians) and can be used in scenarios that require calculating the tangent of angles."
+    },
+    "ASIN": {
+        "instruction_name": "ASIN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Sine value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := ASIN(Value);",
+        "additional_info": "The result is in the range of -π/2 to +π/2.",
+        "brief_description": "The function is used to compute the angle corresponding to a sine value, applicable in situations where the angle needs to be determined, especially when the sine value is known and falls within the range of -1 to +1."
+    },
+    "ACOS": {
+        "instruction_name": "ACOS",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Cosine value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := ACOS(Value);",
+        "additional_info": "The result ranges from 0 to +π.",
+        "brief_description": "The function calculates the angle value corresponding to a cosine value and can be applied to solve for the angle corresponding to a cosine value of a float number between -1 and +1."
+    },
+    "ATAN": {
+        "instruction_name": "ATAN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Tangent value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result."
+                }
+            ]
+        },
+        "example_code": "Result := ATAN(Value);",
+        "additional_info": "The result ranges between -π/2 and +π/2.",
+        "brief_description": "This function calculates the angle corresponding to a given tangent value and can be applied in situations where the inverse tangent value needs to be determined."
+    },
+    "FRAC": {
+        "instruction_name": "FRAC",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "<expression>",
+                    "type": "float",
+                    "description": "Input value."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "float",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result1 := FRAC(Value);",
+        "additional_info": "None.",
+        "brief_description": "The function returns the decimal part of a number and can be applied in scenarios where the decimal portion of a floating-point number needs to be obtained."
+    },
+    "ROUND": {
+        "instruction_name": "ROUND",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "Expression",
+                    "type": "float",
+                    "description": "The input value to be rounded."
+                }
+            ]
+        },
+        "example_code": "ROUND(inputValToRound);",
+        "additional_info": "If the input value is exactly halfway between an even and an odd integer, the even integer is chosen.",
+        "brief_description": "This function rounds the input value to the nearest integer. If the input value is exactly halfway between an even and an odd integer, it chooses the even integer. It can be applied in scenarios where floating-point numbers need to be rounded."
+    },
+    "CEIL": {
+        "instruction_name": "CEIL",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "Expression",
+                    "type": "Float",
+                    "description": "Input value."
+                }
+            ]
+        },
+        "example_code": "CEIL(inputValue);",
+        "additional_info": "The function value can be greater than or equal to the input value.",
+        "brief_description": "The function rounds a floating-point number up to the nearest integer, applicable in scenarios where it is necessary to adjust a floating-point value to the closest integer that is greater than or equal to that value."
+    },
+    "FLOOR": {
+        "instruction_name": "FLOOR",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "Expression",
+                    "type": "float",
+                    "description": "Input value."
+                }
+            ]
+        },
+        "example_code": "FLOOR(inputValue);",
+        "additional_info": "The function value can be equal to or less than the input value.",
+        "brief_description": "This function rounds down a floating-point number to the nearest smaller integer. It can be used in scenarios where floating-point values need to be converted to the nearest smaller integer."
+    },
+    "TRUNC": {
+        "instruction_name": "TRUNC",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "expression",
+                    "type": "float",
+                    "description": "Input value."
+                }
+            ]
+        },
+        "example_code": "TRUNC(inputValue);",
+        "additional_info": "This instruction only selects the integer part of the input value, excluding the decimal places.",
+        "brief_description": "The function is used for truncating to an integer, directly extracting the integer part from the input value, and can be applied in scenarios where the integer part of a floating-point number is needed while disregarding the decimal places."
+    },
+    "SHR": {
+        "instruction_name": "SHR",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "bit string or integer",
+                    "description": "The value to be shifted."
+                },
+                {
+                    "name": "N",
+                    "type": "USINT, UINT, etc.",
+                    "description": "The number of bits to shift the value (IN)."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "bit string, integer",
+                    "description": "The result."
+                }
+            ]
+        },
+        "example_code": "Result := SHR(in_byte, n);  This is used to shift the operand in_byte to the right by n bits. The result of this instruction is returned as the function value in the 'Result' operand.",
+        "additional_info": "When shifting unsigned values, fill the empty bits on the left with zeros; when shifting signed values, fill with the sign bit's status.",
+        "brief_description": "The function shifts the content of the parameter to the right bit by bit, which can be applied to scenarios that require right bit manipulation."
+    },
+    "SHL": {
+        "instruction_name": "SHL",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "Bit string or integer",
+                    "description": "The value to be shifted."
+                },
+                {
+                    "name": "N",
+                    "type": "USINT, UINT, etc.",
+                    "description": "The number of bits to shift the value (IN)."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "Bit string, integer",
+                    "description": "Result"
+                }
+            ]
+        },
+        "example_code": "Result := SHL(in_byte, n);  This shifts the operand in_byte left by n bits. The result of this instruction is returned as the function value in the 'Result' operand.",
+        "additional_info": "The bits that become vacant due to the shift will be filled with 0.",
+        "brief_description": "The function shifts the contents of the parameters one bit to the left and can be applied in scenarios that require left shifting of bit strings or integers."
+    },
+    "ROL": {
+        "instruction_name": "ROL",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "bit string/integer",
+                    "description": "The value to be rotated."
+                },
+                {
+                    "name": "N",
+                    "type": "USINT/UINT/UDINT/ULINT",
+                    "description": "The number of positions to rotate the value (IN)."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "bit string/integer",
+                    "description": "The result."
+                }
+            ]
+        },
+        "example_code": "Result := ROL(valueToRotate, numberBitPos);",
+        "additional_info": "If the value of parameter N is '0', the value of input IN is used as the result. If the value of parameter N is greater than the available bit size, the operand value in IN will be rotated by the specified number of bits.",
+        "brief_description": "The function performs a bitwise left rotation of the contents of parameter IN and returns the result. It can be applied in scenarios where data bits need to be rotated left."
+    },
+    "TIME": {
+        "instruction_name": "TIME",
+        "parameters": {
+            "Return": [
+                {
+                    "name": "RET_VAL",
+                    "type": "TIME",
+                    "description": "The system time read."
+                }
+            ]
+        },
+        "example_code": "",
+        "additional_info": "The system time is a time counter that starts counting from 0 until the maximum value of 2147483647 ms. When it overflows, the system time will start counting again from '0'.",
+        "brief_description": "This function reads the system time of the CPU and can be used in scenarios that require obtaining the current system time or calculating program runtime."
+    },
+    "MAX_LEN": {
+        "instruction_name": "MAX_LEN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "STRING",
+                    "description": "WSTRING, string."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "INT",
+                    "description": "DINT, maximum character count."
+                }
+            ]
+        },
+        "example_code": "maxLength := MAX_LEN(inputSTRING);",
+        "additional_info": "(W)STRING data type variables contain two lengths.",
+        "brief_description": "The function determines the maximum length of the input string and outputs it as a numeric value. It can be applied in scenarios that require obtaining the string length for further processing."
+    },
+    "JOIN": {
+        "instruction_name": "JOIN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "Mode",
+                    "type": "DWORD",
+                    "description": "Specifies the merging mode (CSV or FSR)."
+                },
+                {
+                    "name": "RecSeparator",
+                    "type": "Variant",
+                    "description": "The separator or padding character for the source string."
+                },
+                {
+                    "name": "EndSeparator",
+                    "type": "Variant",
+                    "description": "The separator at the end of the conversion."
+                },
+                {
+                    "name": "SrcStruct",
+                    "type": "Variant",
+                    "description": "Pointer to the source string."
+                },
+                {
+                    "name": "Count",
+                    "type": "UDINT",
+                    "description": "The number of strings to concatenate."
+                }
+            ],
+            "InOut": [
+                {
+                    "name": "DestArray",
+                    "type": "Variant",
+                    "description": "Area where the converted characters are written."
+                },
+                {
+                    "name": "Position",
+                    "type": "UDINT",
+                    "description": "Index for the position within the entire string."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "INT",
+                    "description": "The status of the instruction."
+                }
+            ]
+        },
+        "example_code": "",
+        "additional_info": "The JOIN instruction requires attention to the maximum length limit of strings and the choice of separators when concatenating strings.",
+        "brief_description": "This function merges multiple strings into an array using specified separators, applicable in scenarios requiring the consolidation of scattered string data into a single array format."
+    },
+    "SPLIT": {
+        "instruction_name": "SPLIT",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "Mode",
+                    "type": "DWord",
+                    "description": "Specifies the splitting method."
+                },
+                {
+                    "name": "RecSeparator",
+                    "type": "Variant",
+                    "description": "CSV format separator or filler character for FSR format."
+                },
+                {
+                    "name": "EndSeparator",
+                    "type": "Variant",
+                    "description": "Separator at the end of the complete string."
+                },
+                {
+                    "name": "SrcArray",
+                    "type": "Variant",
+                    "description": "Pointer to the array to be read."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "Count",
+                    "type": "UDInt",
+                    "description": "Number of strings found."
+                }
+            ],
+            "InOut": [
+                {
+                    "name": "DestStruct",
+                    "type": "Variant",
+                    "description": "Structure containing the converted strings."
+                },
+                {
+                    "name": "Position",
+                    "type": "UDInt",
+                    "description": "Position to start reading the array."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "Ret_Val",
+                    "type": "Int",
+                    "description": "Result/error code of the instruction execution."
+                }
+            ]
+        },
+        "example_code": "",
+        "additional_info": "The SPLIT instruction must consider different formats and separator selections when splitting strings.",
+        "brief_description": "The function splits a character array into multiple strings based on specified separators, applicable for processing CSV and FSR formatted data."
+    },
+    "ATH": {
+        "instruction_name": "ATH",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "Variant",
+                    "description": "Pointer to an ASCII string."
+                },
+                {
+                    "name": "N",
+                    "type": "INT",
+                    "description": "Number of ASCII characters to be converted."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "OUT",
+                    "type": "Variant",
+                    "description": "Converted hexadecimal number."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "RET_VAL",
+                    "type": "WORD",
+                    "description": "Status of the instruction."
+                }
+            ]
+        },
+        "example_code": "",
+        "additional_info": "The ATH instruction only accepts numbers 0-9 and uppercase or lowercase letters A-F during conversion. Other characters will be converted to 0.",
+        "brief_description": "The function is to convert an ASCII string to the corresponding hexadecimal number, applicable in scenarios where a string representation of a hexadecimal number needs to be converted into a usable value for calculations or display."
+    },
+    "HTA": {
+        "instruction_name": "HTA",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "Variant",
+                    "description": "Starting address of the hexadecimal number."
+                },
+                {
+                    "name": "N",
+                    "type": "UINT",
+                    "description": "Number of hexadecimal bytes to be converted."
+                }
+            ],
+            "Output": [
+                {
+                    "name": "OUT",
+                    "type": "Variant",
+                    "description": "Storage address for the result."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "RET_VAL",
+                    "type": "WORD",
+                    "description": "Error message."
+                }
+            ]
+        },
+        "example_code": "",
+        "additional_info": "The HTA instruction will produce an ASCII string length that is twice the length of the input value during conversion.",
+        "brief_description": "The function converts a hexadecimal number to the corresponding ASCII string and can be applied in scenarios where hexadecimal data stored in a variable needs to be converted into a readable ASCII string."
+    },
+    "LEN": {
+        "instruction_name": "LEN",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, string."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "INT",
+                    "description": "I, Q, M, D, L, number of valid characters."
+                }
+            ]
+        },
+        "example_code": "strLength := LEN(inputSTRING);",
+        "additional_info": "The LEN instruction can read the actual number of characters used in a string; the length of an empty string is zero.",
+        "brief_description": "The function determines the current length of (W)STRING data type variables and can be applied in scenarios where it is necessary to obtain the length of a string."
+    },
+    "CONCAT": {
+        "instruction_name": "CONCAT",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN1",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the first string."
+                },
+                {
+                    "name": "IN2",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the second string."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L, the resulting string."
+                }
+            ]
+        },
+        "example_code": "result := CONCAT(inputstring1,inputstring2);",
+        "additional_info": "The CONCAT instruction limits the output to the available length if the result exceeds the OUT parameter length during concatenation.",
+        "brief_description": "The function merges two strings and can be applied in scenarios that require concatenating two strings together."
+    },
+    "LEFT": {
+        "instruction_name": "LEFT",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or a constant, string."
+                },
+                {
+                    "name": "L",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or a constant, number of characters to extract."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L, the extracted portion of the string."
+                }
+            ]
+        },
+        "example_code": "result := LEFT(inputSTRING, extractNumber);",
+        "additional_info": "The LEFT instruction returns the entire string if L is greater than the string length when extracting.",
+        "brief_description": "The function extracts characters from the left side of a string, applicable in scenarios where the left portion or the first few characters of the string need to be obtained."
+    },
+    "RIGHT": {
+        "instruction_name": "RIGHT",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, string."
+                },
+                {
+                    "name": "L",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, number of characters to extract."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L, extracted part of the string."
+                }
+            ]
+        },
+        "example_code": "result := RIGHT(inputSTRING,extractNumber);",
+        "additional_info": "The RIGHT instruction returns the entire string if L is greater than the string length when extracting.",
+        "brief_description": "Function used to extract characters from the right side of a string, applicable to scenarios where all characters after a certain position in the string need to be obtained."
+    },
+    "MID": {
+        "instruction_name": "MID",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, string."
+                },
+                {
+                    "name": "L",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, the length of the string to extract."
+                },
+                {
+                    "name": "P",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, the position of the first character to extract."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L, the extracted substring."
+                }
+            ]
+        },
+        "example_code": "result := MID(inputSTRING, extractNumber, startingPoint);",
+        "additional_info": "The MID instruction returns an empty string if P exceeds the length of the string when extracting.",
+        "brief_description": "The function extracts the middle characters from a string and can be applied to scenarios where a substring at a specified position in the string is needed."
+    },
+    "DELETE": {
+        "instruction_name": "DELETE",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, string."
+                },
+                {
+                    "name": "L",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, the number of characters to delete."
+                },
+                {
+                    "name": "P",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, the position of the first character to delete."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L, the generated string."
+                }
+            ]
+        },
+        "example_code": "result := MID(inputSTRING, extractNumber, startingPoint);",
+        "additional_info": "The DELETE instruction, when deleting, returns an empty string or the original string if P or L is negative or exceeds the string length.",
+        "brief_description": "The function is to delete characters at specific positions in a string, which can be applied in scenarios where it is necessary to remove a specified number of characters from a given position in a string."
+    },
+    "INSERT": {
+        "instruction_name": "INSERT",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN1",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the original string."
+                },
+                {
+                    "name": "IN2",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the string to be inserted."
+                },
+                {
+                    "name": "P",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, the insertion position."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L, the generated string."
+                }
+            ]
+        },
+        "example_code": "result := INSERT(input1_STRING, input2_STRING, startingPoint);",
+        "additional_info": "The INSERT instruction, when inserting, if P exceeds the length of IN1, IN2 will be appended to the end of IN1.",
+        "brief_description": "The function is to insert characters into a string, which can be applied in scenarios where a new string needs to be inserted at a specified position in the original string."
+    },
+    "REPLACE": {
+        "instruction_name": "REPLACE",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN1",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the string containing characters to be replaced."
+                },
+                {
+                    "name": "IN2",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the string containing characters to insert."
+                },
+                {
+                    "name": "L",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, the number of characters to be replaced."
+                },
+                {
+                    "name": "P",
+                    "type": "BYTE",
+                    "description": "INT, SINT, USINT, I, Q, M, D, L or constant, the position of the first character to be replaced."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L, the generated string."
+                }
+            ]
+        },
+        "example_code": "result := REPLACE(input1_STRING,input2_STRING,replaceNumber,startingPoint);",
+        "additional_info": "The REPLACE instruction returns an empty string if P or L is negative or zero during replacement.",
+        "brief_description": "The function is to replace characters in a string, applicable in scenarios where specific characters or a specified number of characters in a string need to be replaced with other characters."
+    },
+    "FIND": {
+        "instruction_name": "FIND",
+        "parameters": {
+            "Input": [
+                {
+                    "name": "IN1",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the string to be searched."
+                },
+                {
+                    "name": "IN2",
+                    "type": "STRING",
+                    "description": "WSTRING, D, L or constant, the string to search for."
+                }
+            ],
+            "Return": [
+                {
+                    "name": "OUT",
+                    "type": "INT",
+                    "description": "I, Q, M, D, L, character position."
+                }
+            ]
+        },
+        "example_code": "result := FIND(inputSTRING, STRINGsearchedFor);",
+        "additional_info": "The FIND instruction outputs the position of the first occurrence of the value when searching; if there are no matches, it outputs 0.",
+        "brief_description": "The function is to find a specific character or string within a string and return the position of its first occurrence, applicable in scenarios that require locating a particular character or substring within a string."
+    }
+}

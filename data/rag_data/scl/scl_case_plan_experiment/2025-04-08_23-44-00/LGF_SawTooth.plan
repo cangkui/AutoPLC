@@ -1,0 +1,64 @@
+### 算法流程描述
+
+#### 1. 功能概述
+该功能块用于生成一个锯齿波信号，信号由一系列递增的步进值组成。每个步进值持续一个设定的时间周期，当达到设定的步数或时间周期后，信号会重置或继续循环（取决于配置）。
+
+#### 2. 输入参数
+- **startValue**：锯齿波的起始值（整数）。
+- **timeRange**：每个步进值持续的时间周期（时间类型）。
+- **incrementRange**：每次步进的增量值（整数）。
+- **numberSteps**：锯齿波的步数（整数）。
+- **endlessSteps**：是否无限循环（布尔值）。若为`TRUE`，则忽略`numberSteps`，持续循环；若为`FALSE`，则在完成`numberSteps`后重置。
+- **reset**：重置信号（布尔值）。若为`TRUE`，则立即重置锯齿波信号到起始值。
+
+#### 3. 输出参数
+- **value**：当前锯齿波信号的值（整数）。
+
+#### 4. 内部变量
+- **statStartValue**：存储起始值。
+- **statTimeRange**：存储时间周期。
+- **statIncrementRange**：存储增量值。
+- **statNumberSteps**：存储步数。
+- **statEndlessSteps**：存储是否无限循环。
+- **statCurrentStep**：当前步数计数器。
+- **statFirstRun**：首次运行标志。
+- **statStartTimer**：启动定时器标志。
+- **statTimerFinished**：定时器完成标志。
+- **instTimer**：定时器实例（`TON_TIME`）。
+- **statActValue**：当前锯齿波值。
+
+#### 5. 算法流程
+1. **初始化阶段**：
+   - 如果是首次运行或收到`reset`信号，将所有输入参数复制到内部静态变量，并重置相关状态（如当前值、步数计数器、定时器标志等）。
+   - 将当前值设置为起始值。
+
+2. **步进逻辑**：
+   - 当定时器完成且未收到`reset`信号时：
+     - 更新当前值（`statActValue += statIncrementRange`）。
+     - 步数计数器递增（`statCurrentStep += 1`）。
+     - 如果未启用无限循环（`endlessSteps = FALSE`）且步数达到设定值（`statCurrentStep > statNumberSteps`），则重置当前值和步数计数器。
+     - 如果启用无限循环，则重置步数计数器（`statCurrentStep := 0`）。
+     - 重置定时器启动标志（`statStartTimer := FALSE`）。
+
+3. **定时器控制**：
+   - 调用定时器实例（`instTimer`），设置时间周期（`PT := statTimeRange`），并检测定时器完成信号（`Q => statTimerFinished`）。
+   - 启动定时器（`statStartTimer := TRUE`）。
+
+4. **输出更新**：
+   - 将当前值（`statActValue`）输出到`value`。
+   - 如果收到`reset`信号，强制将当前值设置为起始值。
+
+#### 6. 关键逻辑
+- **边缘检测**：通过`statFirstRun`和`reset`信号实现初始化或强制重置。
+- **步进控制**：通过定时器和步数计数器实现步进逻辑。
+- **循环模式**：通过`endlessSteps`决定是否在达到步数后重置或继续循环。
+
+#### 7. 注意事项
+- 定时器的启动和完成标志需正确管理，避免重复触发。
+- 步数计数器和当前值的更新需同步，确保逻辑一致性。
+- 输出值的更新需在每次步进或重置后立即生效。
+
+### 调整建议
+- 如果需求中未明确要求`reset`信号强制输出起始值，可以调整逻辑，仅在初始化或完成步数时重置。
+- 可以增加对输入参数的校验（如`numberSteps > 0`），但需注意性能影响。
+- 如果锯齿波需要支持递减模式，可以扩展`incrementRange`为有符号整数。

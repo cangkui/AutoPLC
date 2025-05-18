@@ -1,0 +1,146 @@
+### UTF-8 字节流解码算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_DecodeUtf8` 用于将 UTF-8 编码的字节流解码为宽字符串（`WString`）。它支持从指定的起始位置开始解码，并可以限制解码的字符数量。如果遇到不支持的字符或边界条件，会返回相应的状态码。
+
+#### 2. **输入参数**
+- **`byteStream`**：UTF-8 编码的字节流（`Array[*] of Byte`）。
+- **`startPos`**：解码的起始位置（`DInt`）。
+- **`count`**：需要解码的字符数量（`UInt`）。如果为 0，则解码到字节流结束。
+
+#### 3. **输出参数**
+- **`decodedString`**（`IN_OUT`）：解码后的宽字符串（`WString`）。
+- **返回值**（`Word`）：状态码，表示解码过程中的错误或警告。
+
+#### 4. **状态码**
+- **成功**：`STATUS_NO_ERROR`（`16#0000`）。
+- **警告**：
+  - `WARN_UNSUPPORTED_CHAR`（`16#7FFD`）：遇到不支持的字符。
+  - `WARN_STREAM_EXCEEDS_MAX_LEN`（`16#7FFE`）：解码的字符串超过最大长度。
+- **错误**：
+  - `ERR_START_POS_OUTSIDE`（`16#8201`）：起始位置超出字节流范围。
+  - `ERR_COUNT_EXCEEDS_BOUNDS`（`16#8202`）：解码的字符数量超出字节流范围。
+  - `ERR_COUNT_EXCEEDS_MAX_LEN`（`16#8203`）：解码的字符数量超过 `WString` 的最大长度。
+
+#### 5. **算法流程**
+1. **初始化**
+   - 检查输入参数的有效性：
+     - 如果 `startPos` 超出字节流范围，返回 `ERR_START_POS_OUTSIDE`。
+     - 如果 `startPos + count` 超出字节流范围，返回 `ERR_COUNT_EXCEEDS_BOUNDS`。
+     - 如果 `count` 超过 `WString` 的最大长度，返回 `ERR_COUNT_EXCEEDS_MAX_LEN`。
+   - 初始化临时变量：
+     - `tempString`：存储解码后的字符串。
+     - `tempPos`：当前解码位置。
+     - `tempStatus`：初始化为 `STATUS_NO_ERROR`。
+
+2. **解码循环**
+   - 循环条件：直到解码的字符数量达到 `count`（如果 `count > 0`）或字节流结束。
+   - 根据当前字节的高位判断字符的编码长度：
+     - **1 字节字符**（`0xxxxxxx`）：
+       - 直接读取字节值作为 Unicode 码点。
+     - **2 字节字符**（`110xxxxx`）：
+       - 读取第一个字节的低 5 位，左移 6 位。
+       - 读取第二个字节的低 6 位，合并到码点。
+     - **3 字节字符**（`1110xxxx`）：
+       - 读取第一个字节的低 4 位，左移 12 位。
+       - 读取第二个字节的低 6 位，左移 6 位。
+       - 读取第三个字节的低 6 位，合并到码点。
+       - 检查码点是否超过 `MAX_CODEPOINT`（`16#D7FF`），如果超过则替换为 `REPLACEMENT_CHAR`（`16#003F`）。
+     - **4 字节字符**（`11110xxx`）：
+       - 直接替换为 `REPLACEMENT_CHAR`（因为 `WString` 不支持超过 `16#D7FF` 的码点）。
+     - **无效字符**：
+       - 替换为 `REPLACEMENT_CHAR`，并设置 `WARN_UNSUPPORTED_CHAR` 警告。
+   - 将解码后的码点转换为 `WChar` 并拼接到 `tempString`。
+   - 如果 `tempString` 超过最大长度，设置 `WARN_STREAM_EXCEEDS_MAX_LEN` 并退出循环。
+
+3. **输出结果**
+   - 如果状态码表示错误（最高位为 1），清空 `decodedString`。
+   - 否则，将 `tempString` 赋值给 `decodedString`。
+   - 返回状态码。
+
+#### 6. **代码调整建议**
+- **优化码点处理**：
+  - 对于 3 字节字符，可以提前检查码点是否有效，避免不必要的计算。
+- **错误处理**：
+  - 在解码循环中，如果遇到无效的 UTF-8 序列（如不完整的多字节字符），可以提前终止并返回错误。
+- **性能优化**：
+  - 如果 `count` 为 0，可以跳过长度检查，直接解码到字节流结束。
+
+#### 7. **伪代码描述**
+```
+FUNCTION LGF_DecodeUtf8
+  INPUT: byteStream, startPos, count
+  OUTPUT: decodedString, status
+
+  // 初始化
+  tempString = ""
+  tempPos = startPos
+  tempStatus = STATUS_NO_ERROR
+
+  // 检查参数
+  IF startPos < lowerBound OR startPos > upperBound THEN
+    tempStatus = ERR_START_POS_OUTSIDE
+  ELSE IF startPos + count > upperBound THEN
+    tempStatus = ERR_COUNT_EXCEEDS_BOUNDS
+  ELSE IF count > maxLen THEN
+    tempStatus = ERR_COUNT_EXCEEDS_MAX_LEN
+  END IF
+
+  // 解码循环
+  IF tempStatus == STATUS_NO_ERROR THEN
+    WHILE (count == 0 OR LEN(tempString) < count) AND tempPos <= upperBound
+      // 根据字节高位判断编码长度
+      IF byteStream[tempPos] & 0x80 == 0 THEN
+        // 1 字节字符
+        codepoint = byteStream[tempPos]
+        tempPos += 1
+      ELSE IF byteStream[tempPos] & 0xE0 == 0xC0 THEN
+        // 2 字节字符
+        codepoint = (byteStream[tempPos] & 0x1F) << 6
+        codepoint |= (byteStream[tempPos + 1] & 0x3F)
+        tempPos += 2
+      ELSE IF byteStream[tempPos] & 0xF0 == 0xE0 THEN
+        // 3 字节字符
+        codepoint = (byteStream[tempPos] & 0x0F) << 12
+        codepoint |= (byteStream[tempPos + 1] & 0x3F) << 6
+        codepoint |= (byteStream[tempPos + 2] & 0x3F)
+        tempPos += 3
+        IF codepoint > MAX_CODEPOINT THEN
+          codepoint = REPLACEMENT_CHAR
+          tempStatus = WARN_UNSUPPORTED_CHAR
+        END IF
+      ELSE IF byteStream[tempPos] & 0xF8 == 0xF0 THEN
+        // 4 字节字符（不支持）
+        codepoint = REPLACEMENT_CHAR
+        tempPos += 4
+        tempStatus = WARN_UNSUPPORTED_CHAR
+      ELSE
+        // 无效字符
+        codepoint = REPLACEMENT_CHAR
+        tempPos += 1
+        tempStatus = WARN_UNSUPPORTED_CHAR
+      END IF
+
+      // 拼接字符
+      tempString += DWORD_TO_WCHAR(codepoint)
+
+      // 检查长度
+      IF LEN(tempString) >= maxLen THEN
+        tempStatus = WARN_STREAM_EXCEEDS_MAX_LEN
+        BREAK
+      END IF
+    END WHILE
+  END IF
+
+  // 输出结果
+  IF tempStatus & 0x8000 THEN
+    decodedString = ""
+  ELSE
+    decodedString = tempString
+  END IF
+  RETURN tempStatus
+END FUNCTION
+```
+
+#### 8. **总结**
+该算法通过逐字节解析 UTF-8 编码的字节流，支持从指定位置开始解码，并可以限制解码的字符数量。对于不支持的字符或边界条件，会返回相应的状态码。代码逻辑清晰，但可以进一步优化错误处理和性能。

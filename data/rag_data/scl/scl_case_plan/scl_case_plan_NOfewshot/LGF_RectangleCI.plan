@@ -1,0 +1,51 @@
+
+
+以下是LGF_RectangleCI功能块的算法流程描述：
+
+1. **获取采样时间**  
+调用QRY_CINT系统函数，根据callOB参数获取对应的循环中断OB周期时间。同时捕获三种异常状态：
+- 若QRY_CINT返回值≠0 → 设置ERR_QRY_CINT错误
+- 若返回的OB状态不可用 → 设置ERR_OB_UNAVAILABLE错误
+- 错误发生时立即终止执行并清空输出值
+
+2. **相位偏移处理**  
+将Real类型的phaseShift转换为无符号整型，并通过MOD运算确保相位偏移量始终小于周期值：
+```scala
+tempPhaseShift = REAL_TO_UDINT(phaseShift) MOD periode
+```
+
+3. **复位处理机制**  
+当reset信号激活时：
+- 将计数器初始化为相位偏移量
+- 输出值强制归零
+- 保持错误状态为FALSE
+
+4. **波形生成核心逻辑**  
+正常运行时执行以下时序控制：
+```scala
+statCounter += (OB实际调用间隔时间/1000)  // 将毫秒转换为秒单位
+statCounter = statCounter MOD periode    // 周期循环控制
+
+IF statCounter ∈ [tempPhaseShift, periode/2 + tempPhaseShift) THEN
+    value = offset + amplitude
+ELSE
+    value = offset - amplitude
+END_IF
+```
+
+5. **信号输出规则**  
+输出波形始终满足：
+- 高电平持续时间 = 周期/2
+- 低电平持续时间 = 周期/2
+- 整体波形按相位偏移量平移
+- 最终输出叠加offset参数
+
+6. **状态监控机制**  
+正常运行时持续更新：
+```scala
+error = FALSE
+status = 16#0000
+subFunctionStatus = 16#0000
+```
+
+注：该算法通过MOD运算实现无累计误差的周期循环，采用中断OB的实际调用间隔时间作为时间基准，确保波形生成的时间精度与PLC扫描周期解耦。相位偏移量的转换采用截断处理而非四舍五入，需注意超过UDINT表示范围的输入值将产生意外偏移。

@@ -1,0 +1,53 @@
+
+
+### 算法流程描述（SCL实现逻辑）
+
+#### 核心处理逻辑
+1. **初始化阶段**:
+   - 将初始CRC值`initValue`与输入数据`value`进行异或运算，作为临时CRC计算的起点
+   - `tempCRC = initValue XOR value`
+
+2. **位处理循环**（8次迭代）:
+   ```plaintext
+   FOR 每个bit位 (0 → 7):
+     IF 当前tempCRC的最高位（bit7）为1:
+         a. 执行左移1位操作
+         b. 将移位结果与生成多项式mask进行异或
+     ELSE:
+         a. 仅执行左移1位操作
+   ```
+
+3. **结果输出**:
+   - 将最终计算得到的`tempCRC`作为函数返回值
+   - 固定设置ENO状态为TRUE（无错误处理）
+
+#### 关键实现特征
+1. **位操作优化**:
+   - 使用SHL指令实现快速移位
+   - 直接访问bit7（%X7）进行最高位判断
+   - 异或运算作为核心多项式除法实现
+
+2. **预定义常量**:
+   - 移位位数（SHIFT_ONE_BIT = 1）
+   - 循环控制（CRC_LOOP_LOWER_LIMIT = 0，CRC_LOOP_UPPER_LIMIT = 7）
+
+3. **硬件适配**:
+   - 使用S7优化访问模式（S7_Optimized_Access）
+   - 默认值预分配（initValue/mask的初始值配置）
+
+#### 处理流程图
+```mermaid
+graph TD
+    Start[输入 initValue/mask/value] --> Init[异或初始化 tempCRC]
+    Init --> LoopStart[开始8次位处理]
+    LoopStart --> CheckBit{最高位为1?}
+    CheckBit -->|Yes| ShiftXOR[左移 + XOR mask]
+    CheckBit -->|No| ShiftOnly[仅左移]
+    ShiftXOR --> LoopEnd
+    ShiftOnly --> LoopEnd
+    LoopEnd --> LoopCheck{完成8次循环?}
+    LoopCheck -->|否| LoopStart
+    LoopCheck -->|是| Output[返回tempCRC]
+```
+
+该流程严格遵循经典CRC-8算法实现，通过位操作优化确保执行效率，适用于工业控制环境中的实时数据处理需求。

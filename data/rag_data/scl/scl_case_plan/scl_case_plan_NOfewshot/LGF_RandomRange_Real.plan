@@ -1,0 +1,37 @@
+
+
+以下是基于需求和代码调整后的算法流程描述：
+
+1. **输入有效性校验**
+   - 若检测到maxValue < minValue：
+     * 置error=True，status=ERR_MAX_LESS_MIN
+     * 返回0并退出函数
+
+2. **系统时间采集**
+   - 调用RD_SYS_T获取当前系统时间存入tempTime
+   - 若系统时间读取失败：
+     * 置error=True，status=ERR_RD_SYS_T
+     * 返回0并退出函数
+
+3. **随机种子生成**
+   - 提取tempTime的纳秒字段（NANOSECOND）
+   - 将纳秒值转换为DWord格式的tempNanoSecondInDWord
+   - 通过字节倒序重组生成随机种子：
+     * 将tempNanoSecondInDWord的字节0->B3
+     * 字节1->B2，字节2->B1，字节3->B0
+
+4. **数值归一化处理**
+   - 将32位随机种子转换为0.0~1.0范围：
+     * tempNormReal = tempRandomValue / 4294967295.0
+
+5. **范围映射计算**
+   - 线性缩放至目标区间：
+     * 随机值 = tempNormReal × (maxValue - minValue) + minValue
+
+6. **状态反馈设置**
+   - 成功时：
+     * error=False
+     * status=STATUS_FINISHED_NO_ERROR
+     * subfunctionStatus=SUB_STATUS_NO_ERROR
+
+注：该流程通过系统时间的纳秒级精度作为随机源，采用字节倒置重组增强随机性分布，最后通过线性变换实现精确范围映射。错误处理优先于计算逻辑，确保异常状态及时返回。

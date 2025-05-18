@@ -1,0 +1,91 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_CountBooleanEdges` 用于检测输入信号 `trigger` 在指定的监控时间 `monitorTime` 内的边沿（上升沿）数量，并根据边沿数量输出不同的状态信号：
+- `single`：检测到单个边沿。
+- `double`：检测到两个边沿。
+- `long`：检测到单个边沿且输入信号在监控时间内保持为 `TRUE`。
+- `severalEdges`：检测到多个（超过两个）边沿。
+- `noOfEdges`：边沿的具体数量。
+
+#### 2. **变量定义**
+- **输入变量**：
+  - `trigger`：布尔信号，用于检测边沿。
+  - `monitorTime`：时间类型，指定监控时间。
+- **输出变量**：
+  - `single`、`double`、`long`、`severalEdges`：布尔信号，表示不同的边沿状态。
+  - `noOfEdges`：无符号短整型，表示边沿数量。
+- **内部变量**：
+  - `instTimer`：IEC 定时器，用于监控时间。
+  - `statTriggerPrevious`：存储上一次 `trigger` 的状态，用于边沿检测。
+  - `statTimeElapsedFlag`：标志位，表示监控时间是否已结束。
+  - `statTriggerCounter`：计数器，记录边沿数量。
+- **临时变量**：
+  - `tempTriggerEdge`：临时存储边沿检测结果。
+  - `tempSingle`、`tempDouble`、`tempLong`、`tempSeveralEdges`、`tempNoOfEdges`：临时存储输出状态。
+
+#### 3. **算法逻辑**
+1. **初始化**：
+   - 检测 `trigger` 的上升沿：
+     ```pascal
+     #tempTriggerEdge := #trigger AND NOT #statTriggerPrevious;
+     #statTriggerPrevious := #trigger;
+     ```
+   - 如果检测到边沿，启动定时器并增加边沿计数器：
+     ```pascal
+     IF #tempTriggerEdge THEN
+         #instTimer.TP(IN := TRUE, PT := #monitorTime);
+         #statTriggerCounter += 1;
+     END_IF;
+     ```
+2. **监控时间结束后的处理**：
+   - 如果定时器未运行（监控时间结束）且检测到至少一个边沿：
+     - 如果 `trigger` 为 `FALSE` 且 `statTimeElapsedFlag` 为 `TRUE`，则重置所有状态：
+       ```pascal
+       IF NOT #trigger AND #statTimeElapsedFlag THEN
+           #tempLong := #tempSingle := #tempDouble := #tempSeveralEdges := FALSE;
+           #tempNoOfEdges := #statTriggerCounter := 0;
+           #statTimeElapsedFlag := FALSE;
+           #instTimer.TP(IN := FALSE, PT := #monitorTime);
+       ```
+     - 否则，根据边沿数量设置输出状态：
+       ```pascal
+       ELSIF (#statTriggerCounter <> 0) THEN
+           IF #trigger AND #statTriggerCounter = 1 THEN
+               #tempLong := TRUE;
+           ELSIF #statTriggerCounter = 1 THEN
+               #tempSingle := TRUE;
+           ELSIF #statTriggerCounter = 2 THEN
+               #tempDouble := TRUE;
+           ELSE
+               #tempSeveralEdges := TRUE;
+           END_IF;
+           #tempNoOfEdges := #statTriggerCounter;
+           #statTimeElapsedFlag := TRUE;
+       END_IF;
+       ```
+3. **输出更新**：
+   - 将临时变量赋值给输出：
+     ```pascal
+     #single := #tempSingle;
+     #double := #tempDouble;
+     #long := #tempLong;
+     #severalEdges := #tempSeveralEdges;
+     #noOfEdges := #tempNoOfEdges;
+     ```
+
+#### 4. **调整建议**
+- **边沿检测优化**：确保 `statTriggerPrevious` 在每次循环开始时更新，避免漏检。
+- **定时器管理**：在监控时间结束后，明确是否需要手动重置定时器（如代码中所示）。
+- **状态标志管理**：`statTimeElapsedFlag` 用于标记监控时间结束，确保在重置时清除该标志。
+
+#### 5. **流程图**
+1. 检测 `trigger` 上升沿。
+2. 如果是上升沿，启动定时器并增加计数器。
+3. 监控时间结束后：
+   - 如果 `trigger` 为 `FALSE` 且标志为 `TRUE`，则重置所有状态。
+   - 否则，根据计数器值设置输出状态。
+4. 更新输出信号。
+
+### 总结
+该功能块通过定时器和计数器实现了对输入信号边沿的检测和分类，逻辑清晰且易于扩展。调整时需注意定时器和状态标志的管理，以确保功能的正确性。

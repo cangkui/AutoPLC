@@ -1,0 +1,61 @@
+### 算法流程描述（Kelvin 转 Rankine 温度转换）
+
+#### 1. **功能概述**
+   - 该函数 `LGF_KelvinToRankine` 用于将温度值从 **开尔文（°K）** 转换为 **兰金（°R）**。
+   - 转换公式：  
+     \[
+     \text{°Rankine} = \text{°Kelvin} \times 1.8
+     \]
+   - 输入：`value`（开尔文温度值，`Real` 类型）。
+   - 输出：转换后的兰金温度值（`Real` 类型），通过函数返回值返回。
+
+#### 2. **变量定义**
+   - **输入变量**：
+     - `value`：待转换的开尔文温度值（`Real`）。
+   - **临时变量**：
+     - `tempRankineTemperature`：存储转换后的兰金温度值（`Real`）。
+   - **常量**：
+     - `TEMPERATURE_GAIN`：转换系数（`1.8`，`Real` 类型）。
+
+#### 3. **算法流程**
+   - **步骤 1：初始化**
+     - 检查输入 `value` 是否有效（如非负数，但代码中未显式处理）。
+   - **步骤 2：温度转换**
+     - 使用公式计算兰金温度：
+       \[
+       \text{tempRankineTemperature} = \text{value} \times \text{TEMPERATURE\_GAIN}
+       \]
+   - **步骤 3：输出结果**
+     - 将计算结果赋值给函数返回值 `LGF_KelvinToRankine`。
+     - 设置 `ENO`（使能输出）为 `TRUE`，表示无错误。
+
+#### 4. **代码调整建议**
+   - **输入验证**（可选）：
+     - 如果输入 `value` 为负数（开尔文温度不能为负），可以返回错误或默认值（但当前代码未处理）。
+   - **优化计算**：
+     - 可以直接返回 `value * 1.8`，无需临时变量（但临时变量可能用于调试或扩展）。
+   - **错误处理**：
+     - 当前代码未处理异常情况（如输入无效），如需增强可添加 `ENO` 逻辑。
+
+#### 5. **伪代码描述**
+```plaintext
+FUNCTION LGF_KelvinToRankine : Real
+INPUT:
+    value : Real  // 开尔文温度
+VARIABLES:
+    tempRankineTemperature : Real  // 临时存储兰金温度
+    CONSTANT TEMPERATURE_GAIN := 1.8  // 转换系数
+BEGIN
+    // 计算兰金温度
+    tempRankineTemperature := value * TEMPERATURE_GAIN;
+    
+    // 返回结果
+    LGF_KelvinToRankine := tempRankineTemperature;
+    ENO := TRUE;  // 无错误
+END_FUNCTION
+```
+
+#### 6. **总结**
+   - 该函数是一个简单的数学转换，核心逻辑是乘法运算。
+   - 代码结构清晰，但缺乏输入验证（如开尔文温度不能为负）。
+   - 如果需求扩展（如支持错误处理），可以优化 `ENO` 逻辑。

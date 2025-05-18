@@ -1,0 +1,191 @@
+### **FIFO Buffer Management 算法流程描述**
+
+#### **1. 功能概述**
+该功能块 `LGF_FIFO` 实现了一个 **FIFO（先进先出）环形缓冲区**，用于存储和检索数据。主要功能包括：
+- **入队（Enqueue）**：将数据存入缓冲区。
+- **出队（Dequeue）**：从缓冲区取出最早存入的数据。
+- **重置（Reset）**：清空缓冲区索引和计数器。
+- **清除（Clear）**：用初始值 `initialItem` 填充整个缓冲区，并重置索引和计数器。
+
+#### **2. 输入/输出变量**
+| **变量类型** | **变量名** | **数据类型** | **描述** |
+|-------------|-----------|-------------|---------|
+| **输入** | `enqueue` | `Bool` | 入队触发信号（上升沿有效） |
+| **输入** | `dequeue` | `Bool` | 出队触发信号（上升沿有效） |
+| **输入** | `reset` | `Bool` | 重置缓冲区（立即生效） |
+| **输入** | `clear` | `Bool` | 清除缓冲区并用 `initialItem` 填充（上升沿有效） |
+| **输入** | `initialItem` | `Variant` | 缓冲区初始化值 |
+| **输出** | `error` | `Bool` | 错误标志 |
+| **输出** | `status` | `Word` | 状态码（错误类型） |
+| **输出** | `subFunctionStatus` | `Word` | 子功能状态码 |
+| **输出** | `elementCount` | `DInt` | 当前缓冲区中的元素数量 |
+| **输出** | `isEmpty` | `Bool` | 缓冲区是否为空 |
+| **In/Out** | `item` | `Variant` | 入队/出队的数据 |
+| **In/Out** | `buffer` | `Variant` | 环形缓冲区（数组） |
+
+#### **3. 内部变量**
+| **变量名** | **数据类型** | **描述** |
+|-----------|-------------|---------|
+| `statEdgesMem` | `Struct` | 存储 `enqueue`、`dequeue`、`clear` 的上一次状态（用于上升沿检测） |
+| `statFirstItemIndex` | `Int` | 当前缓冲区中最早存入的数据索引（初始值 `-1` 表示空） |
+| `statNextEmptyItemIndex` | `Int` | 下一个可写入的空位索引（初始值 `0`） |
+| `statElementCount` | `DInt` | 当前缓冲区中的元素数量（内部计算用） |
+
+#### **4. 算法流程**
+1. **边缘检测（Edge Detection）**
+   - 检测 `enqueue`、`dequeue`、`clear` 的上升沿：
+     ```scl
+     #tempEdges.enqueue := #enqueue AND NOT #statEdgesMem.enqueue;
+     #tempEdges.dequeue := #dequeue AND NOT #statEdgesMem.dequeue;
+     #tempEdges.clear := #clear AND NOT #statEdgesMem.clear;
+     ```
+   - 存储当前状态供下一次检测：
+     ```scl
+     #statEdgesMem.enqueue := #enqueue;
+     #statEdgesMem.dequeue := #dequeue;
+     #statEdgesMem.clear := #clear;
+     ```
+
+2. **输入验证（Input Validation）**
+   - **检查 `buffer` 是否为数组**：
+     ```scl
+     IF NOT IS_ARRAY(#buffer) THEN
+         #error := TRUE;
+         #status := #ERR_NO_ARRAY;
+         RETURN;
+     END_IF;
+     ```
+   - **检查 `item` 和 `buffer` 的数据类型是否匹配**：
+     ```scl
+     IF TypeOf(#item) <> TypeOfElements(#buffer) THEN
+         #error := TRUE;
+         #status := #ERR_WRONG_TYPE_ITEM;
+         RETURN;
+     END_IF;
+     ```
+   - **检查 `initialItem` 和 `item` 的数据类型是否匹配**：
+     ```scl
+     IF TypeOf(#item) <> TypeOf(#initialItem) THEN
+         #error := TRUE;
+         #status := #ERR_WRONG_TYPE_INITIAL_ITEM;
+         RETURN;
+     END_IF;
+     ```
+   - **检查索引是否在数组范围内**：
+     ```scl
+     IF #statNextEmptyItemIndex >= #tempBufferSize OR #statFirstItemIndex >= #tempBufferSize THEN
+         #error := TRUE;
+         #status := #ERR_INDEX_IN_ARRAY_LIMITS_1;
+         RETURN;
+     END_IF;
+     ```
+
+3. **重置（Reset）**
+   - 直接重置索引和计数器：
+     ```scl
+     IF #reset THEN
+         #statFirstItemIndex := -1;
+         #statNextEmptyItemIndex := 0;
+         #statElementCount := 0;
+         RETURN;
+     END_IF;
+     ```
+
+4. **清除（Clear）**
+   - 用 `initialItem` 填充整个缓冲区：
+     ```scl
+     IF #tempEdges.clear THEN
+         FOR #tempCounter := 0 TO #tempBufferSize - 1 DO
+             #buffer[#tempCounter] := #initialItem;
+         END_FOR;
+         #statFirstItemIndex := -1;
+         #statNextEmptyItemIndex := 0;
+         #statElementCount := 0;
+         RETURN;
+     END_IF;
+     ```
+
+5. **出队（Dequeue）**
+   - **检查缓冲区是否为空**：
+     ```scl
+     IF #statFirstItemIndex = -1 THEN
+         #error := TRUE;
+         #status := #ERR_BUFFER_EMPTY;
+         RETURN;
+     END_IF;
+     ```
+   - **读取最早存入的数据**：
+     ```scl
+     #item := #buffer[#statFirstItemIndex];
+     ```
+   - **更新索引**：
+     ```scl
+     #statFirstItemIndex := (#statFirstItemIndex + 1) MOD #tempBufferSize;
+     IF #statFirstItemIndex = #statNextEmptyItemIndex THEN
+         #statFirstItemIndex := -1;
+         #statNextEmptyItemIndex := 0;
+     END_IF;
+     ```
+   - **减少元素计数**：
+     ```scl
+     #statElementCount -= 1;
+     ```
+
+6. **入队（Enqueue）**
+   - **检查缓冲区是否已满**：
+     ```scl
+     IF #statNextEmptyItemIndex = #statFirstItemIndex THEN
+         #error := TRUE;
+         #status := #ERR_BUFFER_FULL;
+         RETURN;
+     END_IF;
+     ```
+   - **写入数据到缓冲区**：
+     ```scl
+     #buffer[#statNextEmptyItemIndex] := #item;
+     ```
+   - **更新索引**：
+     ```scl
+     #statNextEmptyItemIndex := (#statNextEmptyItemIndex + 1) MOD #tempBufferSize;
+     IF #statFirstItemIndex = -1 THEN
+         #statFirstItemIndex := 0;
+     END_IF;
+     ```
+   - **增加元素计数**：
+     ```scl
+     #statElementCount += 1;
+     ```
+
+7. **更新输出**
+   - 更新 `elementCount` 和 `isEmpty`：
+     ```scl
+     #elementCount := #statElementCount;
+     #isEmpty := (#statElementCount <= 0);
+     ```
+   - 设置状态码：
+     ```scl
+     #error := FALSE;
+     #status := #STATUS_NO_ERROR;
+     ```
+
+#### **5. 状态码（Error Handling）**
+| **状态码** | **描述** |
+|-----------|---------|
+| `16#0000` | 无错误 |
+| `16#8001` | 缓冲区为空 |
+| `16#8002` | 缓冲区已满 |
+| `16#8200` | `buffer` 不是数组 |
+| `16#8201` | `item` 和 `buffer` 数据类型不匹配 |
+| `16#8202` | `initialItem` 和 `item` 数据类型不匹配 |
+| `16#8601` | 索引超出数组范围 |
+
+#### **6. 优化建议**
+1. **简化索引计算**：
+   - 使用 `MOD` 运算实现环形缓冲区索引循环。
+2. **减少冗余检查**：
+   - 在 `enqueue` 和 `dequeue` 之前检查缓冲区状态，避免不必要的操作。
+3. **更清晰的错误处理**：
+   - 使用 `ENO` 输出错误状态，便于 PLC 程序调试。
+
+#### **7. 总结**
+该 FIFO 缓冲区管理功能块通过 **环形数组** 实现，支持 **入队、出队、重置、清除** 操作，并具备 **数据类型检查、索引管理、错误处理** 功能。适用于需要 **先进先出数据管理** 的 PLC 应用场景，如 **数据队列、任务调度、通信缓冲** 等。

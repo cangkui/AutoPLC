@@ -1,0 +1,76 @@
+### **算法流程描述：随机实数范围生成器（LGF_RandomRange_Real）**
+
+#### **1. 功能概述**
+该函数用于在给定的 `[minValue, maxValue]` 范围内生成一个随机实数。如果输入参数无效（如 `maxValue < minValue`）或系统时间读取失败，则返回错误状态码，并输出 `0.0`。
+
+---
+
+#### **2. 输入参数**
+- **`minValue`** (`Real`)：随机数的最小值（下界）。
+- **`maxValue`** (`Real`)：随机数的最大值（上界）。
+
+#### **3. 输出参数**
+- **`error`** (`Bool`)：错误标志（`TRUE` 表示出错）。
+- **`status`** (`Word`)：状态码（如 `16#0000` 表示成功）。
+- **`subfunctionStatus`** (`Word`)：子函数状态（如 `RD_SYS_T` 的返回值）。
+
+#### **4. 返回值**
+- **`LGF_RandomRange_Real`** (`Real`)：生成的随机数，范围在 `[minValue, maxValue]` 之间。
+
+---
+
+### **5. 算法流程**
+#### **(1) 输入验证**
+- **检查 `maxValue < minValue`**  
+  - 如果 `maxValue < minValue`，则：
+    - 设置 `error = TRUE`。
+    - 设置 `status = ERR_MAX_LESS_MIN (16#8200)`。
+    - 返回 `0.0`。
+  - 否则，继续执行。
+
+#### **(2) 读取系统时间（作为随机种子）**
+- **调用 `RD_SYS_T` 获取当前系统时间**（存储到 `tempTime`）。
+  - 如果读取失败（`tempTimeStatus != 16#0000`）：
+    - 设置 `error = TRUE`。
+    - 设置 `status = ERR_RD_SYS_T (16#8600)`。
+    - 返回 `0.0`。
+  - 否则，继续执行。
+
+#### **(3) 生成随机数**
+- **提取纳秒部分（`tempTime.NANOSECOND`）** 并转换为 `DWord`。
+- **交换字节顺序**（`B0-B3` 交换）以增加随机性：
+  ```plaintext
+  tempRandomValue.B3 = tempNanoSecondInDWord.B0
+  tempRandomValue.B2 = tempNanoSecondInDWord.B1
+  tempRandomValue.B1 = tempNanoSecondInDWord.B2
+  tempRandomValue.B0 = tempNanoSecondInDWord.B3
+  ```
+- **归一化到 `[0.0, 1.0]` 范围**：
+  ```plaintext
+  tempNormReal = UDINT_TO_REAL(tempRandomValue) / MAX_UDINT
+  ```
+- **映射到目标范围 `[minValue, maxValue]`**：
+  ```plaintext
+  LGF_RandomRange_Real = tempNormReal * (maxValue - minValue) + minValue
+  ```
+
+#### **(4) 返回结果**
+- **设置成功状态**：
+  ```plaintext
+  error = FALSE
+  status = STATUS_FINISHED_NO_ERROR (16#0000)
+  subfunctionStatus = SUB_STATUS_NO_ERROR (16#0000)
+  ```
+- **返回计算得到的随机数**。
+
+---
+
+### **6. 代码调整建议**
+- **优化随机性**：如果系统时间变化较慢（如 PLC 扫描周期短），可以考虑结合其他变量（如计数器）增强随机性。
+- **增加边界检查**：如果 `minValue = maxValue`，可以直接返回 `minValue`，避免不必要的计算。
+- **错误处理优化**：可以增加更多错误码，如 `ERR_INVALID_RANGE`（当 `minValue = maxValue` 时）。
+
+---
+
+### **7. 总结**
+该算法通过 **系统时间纳秒部分** 作为随机种子，经过 **字节交换、归一化、线性映射** 后生成目标范围内的随机实数。如果输入无效或系统时间读取失败，则返回错误状态码。适用于需要随机数的工业控制场景（如模拟测试、随机采样等）。

@@ -1,0 +1,17 @@
+这是一个数据处理任务，算法流程如下：
+
+1. 算法开始
+2. 接收输入参数：value（Kelvin温度值，Real类型）
+3. 定义常量转换系数：TEMPERATURE_GAIN = 1.8（Real类型）
+4. 计算转换：
+   - 将输入value乘以转换系数TEMPERATURE_GAIN
+   - 结果存储在临时变量tempRankineTemperature中
+5. 返回结果：
+   - 将tempRankineTemperature的值赋给函数返回值
+6. 算法结束
+
+注意事项：
+- 这是一个纯计算函数，不涉及状态转换
+- 不需要错误处理逻辑
+- 直接进行单位转换计算并返回结果
+- 转换公式为：Rankine = Kelvin × 1.8

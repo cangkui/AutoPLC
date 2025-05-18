@@ -1,0 +1,481 @@
+FUNCTION_BLOCK "LGF_SetTime"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SetTime
+   VAR_INPUT 
+      execute : Bool;
+      systemTime {InstructionName := 'DTL'; LibVersion := '1.0'} : DTL;
+      isLocalTime : Bool;
+      timeZone : Int;
+      isDaylightSavingTime : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      done { ExternalWritable := 'False'} : Bool;
+      busy { ExternalWritable := 'False'} : Bool;
+      error { ExternalWritable := 'False'} : Bool;
+      lastSetTimeZone { ExternalWritable := 'False'} : String;
+      status { ExternalWritable := 'False'} : Word := #STATUS_NO_CALL;
+      subFunctionStatus { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR 
+      statExecuteOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statDone { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statBusy { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statError { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word := #STATUS_NO_CALL;
+      statSubFunctionStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statFBState { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt := #FB_STATE_NO_PROCESSING;
+      instSetTimeZone {InstructionName := 'SET_TIMEZONE'; LibVersion := '1.1'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : SET_TIMEZONE;
+      statTimeZone {InstructionName := 'TimeTransformationRule'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : TimeTransformationRule := (0, 60, 3, 5, 1, 2, 0, 10, 5, 1, 3, 0, 'not even set by LGF_TimeZone');
+   END_VAR
+
+   VAR_TEMP 
+      tempExecute : Bool;
+      tempSetTimeZoneDone : Bool;
+      tempSetTimeZoneBusy : Bool;
+      tempSetTimeZoneError : Bool;
+      tempSetTimeZoneStatus : Word;
+      tempResultSetTime : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      FB_STATE_NO_PROCESSING : DInt := 0;
+      FB_STATE_SET_TIME : DInt := 1;
+      FB_STATE_SET_TIMEZONE : DInt := 2;
+      STATUS_EXECUTION_FINISHED_NO_ERROR : Word := 16#0000;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_FIRST_CALL : Word := 16#7001;
+      STATUS_SUBSEQUENT_CALL : Word := 16#7002;
+      ERR_UNDEFINED_STATE : Word := 16#8600;
+      ERR_WRONG_TIMEZONE : Word := 16#8601;
+      ERR_SET_TIME_LOCAL : Word := 16#8201;
+      ERR_SET_TIME_UTC : Word := 16#8202;
+      ERR_SET_TIMEZONE : Word := 16#8203;
+      UTC_MINUS_1200 : Int := -1200;
+      UTC_MINUS_1200_BIAS : Int := -720;
+      UTC_MINUS_1200_NAME : String := '(UTC -12:00)';
+      UTC_MINUS_1100 : Int := -1100;
+      UTC_MINUS_1100_BIAS : Int := -660;
+      UTC_MINUS_1100_NAME : String := '(UTC -11:00)';
+      UTC_MINUS_1000 : Int := -1000;
+      UTC_MINUS_1000_BIAS : Int := -600;
+      UTC_MINUS_1000_NAME : String := '(UTC -10:00)';
+      UTC_MINUS_0930 : Int := -930;
+      UTC_MINUS_0930_BIAS : Int := -570;
+      UTC_MINUS_0930_NAME : String := '(UTC -09:30)';
+      UTC_MINUS_0900 : Int := -900;
+      UTC_MINUS_0900_BIAS : Int := -540;
+      UTC_MINUS_0900_NAME : String := '(UTC -09:00)';
+      UTC_MINUS_0800 : Int := -800;
+      UTC_MINUS_0800_BIAS : Int := -480;
+      UTC_MINUS_0800_NAME : String := '(UTC -08:00)';
+      UTC_MINUS_0700 : Int := -700;
+      UTC_MINUS_0700_BIAS : Int := -420;
+      UTC_MINUS_0700_NAME : String := '(UTC -07:00)';
+      UTC_MINUS_0600 : Int := -600;
+      UTC_MINUS_0600_BIAS : Int := -360;
+      UTC_MINUS_0600_NAME : String := '(UTC -06:00)';
+      UTC_MINUS_0500 : Int := -500;
+      UTC_MINUS_0500_BIAS : Int := -300;
+      UTC_MINUS_0500_NAME : String := '(UTC -05:00)';
+      UTC_MINUS_0400 : Int := -400;
+      UTC_MINUS_0400_BIAS : Int := -240;
+      UTC_MINUS_0400_NAME : String := '(UTC -04:00)';
+      UTC_MINUS_0330 : Int := -0330;
+      UTC_MINUS_0330_BIAS : Int := -210;
+      UTC_MINUS_0330_NAME : String := '(UTC -03:30)';
+      UTC_MINUS_0300 : Int := -300;
+      UTC_MINUS_0300_BIAS : Int := -180;
+      UTC_MINUS_0300_NAME : String := '(UTC -03:00)';
+      UTC_MINUS_0200 : Int := -200;
+      UTC_MINUS_0200_BIAS : Int := -120;
+      UTC_MINUS_0200_NAME : String := '(UTC -02:00)';
+      UTC_MINUS_0100 : Int := -100;
+      UTC_MINUS_0100_BIAS : Int := -60;
+      UTC_MINUS_0100_NAME : String := '(UTC -01:00)';
+      UTC_0 : Int := 0;
+      UTC_0_BIAS : Int := 0;
+      UTC_0_NAME : String := '(UTC)';
+      UTC_100 : Int := 100;
+      UTC_100_BIAS : Int := 60;
+      UTC_100_NAME : String := '(UTC +01:00)';
+      UTC_200 : Int := 200;
+      UTC_200_BIAS : Int := 120;
+      UTC_200_NAME : String := '(UTC +02:00)';
+      UTC_300 : Int := 300;
+      UTC_300_BIAS : Int := 180;
+      UTC_300_NAME : String := '(UTC +03:00)';
+      UTC_330 : Int := 330;
+      UTC_330_BIAS : Int := 210;
+      UTC_330_NAME : String := '(UTC +03:30)';
+      UTC_400 : Int := 400;
+      UTC_400_BIAS : Int := 240;
+      UTC_400_NAME : String := '(UTC +04:00)';
+      UTC_430 : Int := 430;
+      UTC_430_BIAS : Int := 270;
+      UTC_430_NAME : String := '(UTC +04:30)';
+      UTC_500 : Int := 500;
+      UTC_500_BIAS : Int := 300;
+      UTC_500_NAME : String := '(UTC +05:00)';
+      UTC_530 : Int := 530;
+      UTC_530_BIAS : Int := 330;
+      UTC_530_NAME : String := '(UTC +05:30)';
+      UTC_545 : Int := 545;
+      UTC_545_BIAS : Int := 345;
+      UTC_545_NAME : String := '(UTC +05:45)';
+      UTC_600 : Int := 600;
+      UTC_600_BIAS : Int := 360;
+      UTC_600_NAME : String := '(UTC +06:00)';
+      UTC_630 : Int := 630;
+      UTC_630_BIAS : Int := 390;
+      UTC_630_NAME : String := '(UTC +06:30)';
+      UTC_700 : Int := 700;
+      UTC_700_BIAS : Int := 420;
+      UTC_700_NAME : String := '(UTC +07:00)';
+      UTC_800 : Int := 800;
+      UTC_800_BIAS : Int := 480;
+      UTC_800_NAME : String := '(UTC +08:00)';
+      UTC_830 : Int := 830;
+      UTC_830_BIAS : Int := 510;
+      UTC_830_NAME : String := '(UTC +08:30)';
+      UTC_845 : Int := 845;
+      UTC_845_BIAS : Int := 525;
+      UTC_845_NAME : String := '(UTC +08:45)';
+      UTC_900 : Int := 900;
+      UTC_900_BIAS : Int := 540;
+      UTC_900_NAME : String := '(UTC +09:00)';
+      UTC_930 : Int := 930;
+      UTC_930_BIAS : Int := 570;
+      UTC_930_NAME : String := '(UTC +09:30)';
+      UTC_1000 : Int := 1000;
+      UTC_1000_BIAS : Int := 600;
+      UTC_1000_NAME : String := '(UTC +10:00)';
+      UTC_1030 : Int := 1030;
+      UTC_1030_BIAS : Int := 630;
+      UTC_1030_NAME : String := '(UTC +10:30)';
+      UTC_1100 : Int := 1100;
+      UTC_1100_BIAS : Int := 660;
+      UTC_1100_NAME : String := '(UTC +11:00)';
+      UTC_1200 : Int := 1200;
+      UTC_1200_BIAS : Int := 720;
+      UTC_1200_NAME : String := '(UTC +12:00)';
+      UTC_1245 : Int := 1245;
+      UTC_1245_BIAS : Int := 765;
+      UTC_1245_NAME : String := '(UTC +12:45)';
+      UTC_1300 : Int := 1300;
+      UTC_1300_BIAS : Int := 780;
+      UTC_1300_NAME : String := '(UTC +13:00)';
+      UTC_1400 : Int := 1400;
+      UTC_1400_BIAS : Int := 840;
+      UTC_1400_NAME : String := '(UTC +14:00)';
+      DAYLIGHT_BIAS_ON : Int := 60;
+      DAYLIGHT_BIAS_OFF : Int := 0;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_SetTime
+	  // Comment/Function: Set system / local time, time zone
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V14 Update 1
+	  // Restrictions:     ENO disabled - error handling done with error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	#tempExecute := #execute; // Work with temporary value / create process image
+	
+	REGION TRIGGERING
+	  IF (#tempExecute = TRUE) AND (#statExecuteOld = FALSE) // Check if FB is triggered
+	    // FB shall finish current job before new job can be started with rising edge of execute
+	    AND (#statStatus = #STATUS_NO_CALL)
+	  THEN // First call; initialize FB
+	    #statDone := FALSE;
+	    #statBusy := TRUE;
+	    #statError := FALSE;
+	    #statStatus := #STATUS_FIRST_CALL;
+	    #statSubFunctionStatus := #STATUS_EXECUTION_FINISHED_NO_ERROR;
+	    // State machine - start processing
+	    #statFBState := #FB_STATE_SET_TIME;
+	    
+	    // Initialize functionality: reset of variables, diagnostics, etc.
+	    // Set timzone values for systemfunction
+	    CASE #timeZone OF
+	      #UTC_MINUS_1200:  // (UTC -12:00) Eniwetok, Kwajalein
+	        #statTimeZone.Bias := #UTC_MINUS_1200_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_1200_NAME;
+	      #UTC_MINUS_1100:  // (UTC -11:00) Midway Island
+	        #statTimeZone.Bias := #UTC_MINUS_1100_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_1100_NAME;
+	      #UTC_MINUS_1000:  // (UTC -10:00) Hawaii
+	        #statTimeZone.Bias := #UTC_MINUS_1000_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_1000_NAME;
+	      #UTC_MINUS_0930:  // (UTC -09:30) (French) Polynesia
+	        #statTimeZone.Bias := #UTC_MINUS_0930_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0930_NAME;
+	      #UTC_MINUS_0900:  // (UTC -09:00) Alaska
+	        #statTimeZone.Bias := #UTC_MINUS_0900_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0900_NAME;
+	      #UTC_MINUS_0800:  // (UTC -08:00) Tijuana, Los Angeles, Seattle, Vancouver
+	        #statTimeZone.Bias := #UTC_MINUS_0800_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0800_NAME;
+	      #UTC_MINUS_0700:  // (UTC -07:00) Arizona, Denver, Salt Lake City, Calgary
+	        #statTimeZone.Bias := #UTC_MINUS_0700_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0700_NAME;
+	      #UTC_MINUS_0600:  // (UTC -06:00) Chicago, Dallas, Kansas City, Winnipeg
+	        #statTimeZone.Bias := #UTC_MINUS_0600_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0600_NAME;
+	      #UTC_MINUS_0500:  // (UTC -05:00) Eastern Time (USA & Canada)
+	        #statTimeZone.Bias := #UTC_MINUS_0500_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0500_NAME;
+	      #UTC_MINUS_0400:  // (UTC -04:00) La Paz, Georgetown
+	        #statTimeZone.Bias := #UTC_MINUS_0400_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0400_NAME;
+	      #UTC_MINUS_0330:  // (UTC -03:30) Newfoundland
+	        #statTimeZone.Bias := #UTC_MINUS_0330_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0330_NAME;
+	      #UTC_MINUS_0300:  // (UTC -03:00) Brasilia, Buenos Aires
+	        #statTimeZone.Bias := #UTC_MINUS_0300_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0300_NAME;
+	      #UTC_MINUS_0200:  // (UTC -02:00) Mid-Atlantic
+	        #statTimeZone.Bias := #UTC_MINUS_0200_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0200_NAME;
+	      #UTC_MINUS_0100:  // (UTC -01:00) Azores, Cape Verde Is.
+	        #statTimeZone.Bias := #UTC_MINUS_0100_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_MINUS_0100_NAME;
+	      #UTC_0:  // (UTC) Dublin, Edinburgh, Lisbon, London
+	        #statTimeZone.Bias := #UTC_0_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_0_NAME;
+	      #UTC_100:  // (UTC +01:00) Berlin, Bern, Brussels, Rome, Stockholm, Vienna
+	        #statTimeZone.Bias := #UTC_100_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_100_NAME;
+	      #UTC_200: // (UTC +02:00) Athens, Istanbul, Minsk, Bucharest
+	        #statTimeZone.Bias := #UTC_200_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_200_NAME;
+	      #UTC_300: // (UTC +03:00) Moscow, St. Petersburg, Baghdad, Kuwait, Riyadh
+	        #statTimeZone.Bias := #UTC_300_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_300_NAME;
+	      #UTC_330: // (UTC +03:00) Iran
+	        #statTimeZone.Bias := #UTC_330_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_330_NAME;
+	      #UTC_400: // (UTC +04:00) Abu Dhabi, Muscat
+	        #statTimeZone.Bias := #UTC_400_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_400_NAME;
+	      #UTC_430: // (UTC +04:30) Afghanistan
+	        #statTimeZone.Bias := #UTC_430_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_430_NAME;
+	      #UTC_500: // (UTC +05:00) Islamabad, Karachi, Tashkent
+	        #statTimeZone.Bias := #UTC_500_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_500_NAME;
+	      #UTC_530: // (UTC +05:30) India, Sri Lanka
+	        #statTimeZone.Bias := #UTC_530_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_530_NAME;
+	      #UTC_545: // (UTC +05:45) Nepal
+	        #statTimeZone.Bias := #UTC_545_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_545_NAME;
+	      #UTC_600: // (UTC +06:00) Astana, Almaty, Dhaka, Colombo, Banglatesh, Butan
+	        #statTimeZone.Bias := #UTC_600_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_600_NAME;
+	      #UTC_630: // (UTC +06:30) Coco Island, Mayanmar
+	        #statTimeZone.Bias := #UTC_630_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_630_NAME;
+	      #UTC_700: // (UTC +07:00) Bangkok, Hanoi, Jakarta
+	        #statTimeZone.Bias := #UTC_700_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_700_NAME;
+	      #UTC_800: // (UTC +08:00) Beijing, Chongqing, Hong Kong, Urumqi
+	        #statTimeZone.Bias := #UTC_800_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_800_NAME;
+	      #UTC_830: // (UTC +08:30) North Corea (old)
+	        #statTimeZone.Bias := #UTC_830_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_830_NAME;
+	      #UTC_845: // (UTC +08:45) Western Australia, Eucla
+	        #statTimeZone.Bias := #UTC_845_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_845_NAME;
+	      #UTC_900: // (UTC +09:00) Yakutsk, Osaka, Sapporo, Tokyo, Seoul
+	        #statTimeZone.Bias := #UTC_900_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_900_NAME;
+	      #UTC_930: // (UTC +09:30) Australia: Northern Territory, South Australia
+	        #statTimeZone.Bias := #UTC_930_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_930_NAME;
+	      #UTC_1000: // (UTC +10:00) Brisbane, Canberra, Melbourne, Sydney
+	        #statTimeZone.Bias := #UTC_1000_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_1000_NAME;
+	      #UTC_1030: // (UTC +10:30) Australia: Lord Howe Island
+	        #statTimeZone.Bias := #UTC_1030_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_1030_NAME;
+	      #UTC_1100: // (UTC +11:00) Vladivostok, Magadan, Solomon Is., New Caledonia
+	        #statTimeZone.Bias := #UTC_1100_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_1100_NAME;
+	      #UTC_1200: // (UTC +12:00) Auckland, Wellington
+	        #statTimeZone.Bias := #UTC_1200_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_1200_NAME;
+	      #UTC_1245: // (UTC +12:45) Chatham Islands
+	        #statTimeZone.Bias := #UTC_1245_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_1245_NAME;
+	      #UTC_1300: // (UTC +13:00) Tonga, Samoa, Kiribati (Phoenix isl.)
+	        #statTimeZone.Bias := #UTC_1300_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_1300_NAME;
+	      #UTC_1400: // (UTC +13:00) Kiribati (Line isl.)
+	        #statTimeZone.Bias := #UTC_1400_BIAS;
+	        #statTimeZone.TimeZoneName := #UTC_1400_NAME;
+	      ELSE  // Error handling - wronge time zone parmater
+	        #statStatus := #ERR_WRONG_TIMEZONE;
+	        #subFunctionStatus := INT_TO_WORD(#timeZone);
+	        #statFBState := #FB_STATE_NO_PROCESSING;
+	    END_CASE;
+	    
+	    // Select daylight saving time on/off
+	    IF #isDaylightSavingTime THEN
+	      #statTimeZone.DaylightBias := #DAYLIGHT_BIAS_ON;
+	    ELSE
+	      #statTimeZone.DaylightBias := #DAYLIGHT_BIAS_OFF;
+	    END_IF;
+	    
+	    // Initialize functionality: call subsidiary FBs with FALSE
+	    #instSetTimeZone(REQ      := FALSE,
+	                     TimeZone := #statTimeZone,
+	                     DONE     => #tempSetTimeZoneDone,
+	                     BUSY     => #tempSetTimeZoneBusy,
+	                     ERROR    => #tempSetTimeZoneError,
+	                     STATUS   => #tempSetTimeZoneStatus);
+	    
+	  ELSIF (#statStatus = #STATUS_FIRST_CALL) THEN
+	    #statStatus := #STATUS_SUBSEQUENT_CALL;
+	  END_IF;
+	  
+	  // Edge detection 'execute' input
+	  #statExecuteOld := #tempExecute;
+	END_REGION TRIGGERING
+	
+	IF (#statStatus = #STATUS_NO_CALL) THEN // Nothing to do -> End here to reduce "system load"
+	  RETURN;
+	END_IF;
+	
+	REGION STATE_MACHINE
+	  CASE #statFBState OF // State machine of FB
+	    #FB_STATE_NO_PROCESSING: // No processing active (Note: this state must always be present and left empty)
+	      REGION No processing
+	        ;
+	      END_REGION
+	      
+	    #FB_STATE_SET_TIME:
+	      REGION Set time
+	        IF #isLocalTime THEN
+	          #tempResultSetTime := INT_TO_WORD(WR_LOC_T(LOCTIME := #systemTime, DST := #isDaylightSavingTime));
+	          
+	          // In case of error - set error output an quit
+	          IF #tempResultSetTime.%X15 = TRUE THEN
+	            #statStatus := #ERR_SET_TIME_LOCAL;
+	            #statSubFunctionStatus := #tempResultSetTime;
+	          ELSE
+	            #statFBState := #FB_STATE_SET_TIMEZONE;
+	          END_IF;
+	          
+	        ELSE
+	          #tempResultSetTime := INT_TO_WORD(WR_SYS_T(#systemTime));
+	          
+	          // In case of error - set error output an quit
+	          IF #tempResultSetTime.%X15 = TRUE THEN
+	            #statStatus := #ERR_SET_TIME_UTC;
+	            #statSubFunctionStatus := #tempResultSetTime;
+	          ELSE
+	            #statFBState := #FB_STATE_SET_TIMEZONE;
+	          END_IF;
+	        END_IF;
+	      END_REGION
+	      
+	    #FB_STATE_SET_TIMEZONE:
+	      REGION Set timezone
+	        // Set time zone by calling the system function
+	        #instSetTimeZone(REQ      := TRUE,
+	                         TimeZone := #statTimeZone,
+	                         DONE     => #tempSetTimeZoneDone,
+	                         BUSY     => #tempSetTimeZoneBusy,
+	                         ERROR    => #tempSetTimeZoneError,
+	                         STATUS   => #tempSetTimeZoneStatus);
+	        
+	        // If operation is done
+	        IF #instSetTimeZone.DONE = TRUE THEN
+	          // Reset function call
+	          #instSetTimeZone(REQ      := FALSE,
+	                           TimeZone := #statTimeZone,
+	                           DONE     => #tempSetTimeZoneDone,
+	                           BUSY     => #tempSetTimeZoneBusy,
+	                           ERROR    => #tempSetTimeZoneError,
+	                           STATUS   => #tempSetTimeZoneStatus);
+	          // Next state
+	          #statStatus := #STATUS_EXECUTION_FINISHED_NO_ERROR;
+	        END_IF;
+	        
+	        // If operation is done
+	        IF #instSetTimeZone.ERROR = TRUE THEN
+	          // Set error message
+	          #statStatus := #ERR_SET_TIMEZONE;
+	          #statSubFunctionStatus := #instSetTimeZone.STATUS;
+	          
+	          // Reset function call
+	          #instSetTimeZone(REQ      := FALSE,
+	                           TimeZone := #statTimeZone,
+	                           DONE     => #tempSetTimeZoneDone,
+	                           BUSY     => #tempSetTimeZoneBusy,
+	                           ERROR    => #tempSetTimeZoneError,
+	                           STATUS   => #tempSetTimeZoneStatus);
+	        END_IF;
+	      END_REGION
+	      
+	    ELSE // Undefined state in state machine reached
+	      #statStatus := #ERR_UNDEFINED_STATE;
+	  END_CASE;
+	END_REGION STATE_MACHINE
+	
+	REGION OUTPUTS
+	  // Write outputs
+	  IF (#statStatus = #STATUS_EXECUTION_FINISHED_NO_ERROR) AND (#statDone = FALSE) THEN // Execution finished without errors
+	    #statDone := TRUE;
+	    #statBusy := FALSE;
+	    #statError := FALSE;
+	    // Execution aborted --> set state no processing
+	    #statFBState := #FB_STATE_NO_PROCESSING;
+	    
+	  ELSIF (#statStatus.%X15 = TRUE) AND (#statError = FALSE) THEN // Error occurred (#statStatus is 16#8000 to 16#FFFF)
+	    #statDone := FALSE;
+	    #statBusy := FALSE;
+	    #statError := TRUE;
+	    // Execution aborted --> set state no processing
+	    #statFBState := #FB_STATE_NO_PROCESSING;
+	    
+	  ELSIF (#tempExecute = FALSE) AND ((#statDone = TRUE) OR (#statError = TRUE)) THEN // Reset outputs
+	    #statDone := FALSE;
+	    #statBusy := FALSE;
+	    #statError := FALSE;
+	    #statStatus := #STATUS_NO_CALL;
+	  END_IF;
+	  
+	  // Write static values to outputs
+	  #done := #statDone;
+	  #busy := #statBusy;
+	  #error := #statError;
+	  #status := #statStatus;
+	  #subFunctionStatus := #statSubFunctionStatus;
+	  // Output the last set time zone
+	  #lastSetTimeZone := #statTimeZone.TimeZoneName;
+	  
+	  // ENO is not used, forced to TRUE
+	  ENO := TRUE;
+	END_REGION OUTPUTS
+	
+END_FUNCTION_BLOCK

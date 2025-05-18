@@ -1,0 +1,87 @@
+FUNCTION "LGF_AverageAndDeviation" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_AverageAndDeviation
+   VAR_INPUT 
+      variableArray : Array[*] of LReal;
+   END_VAR
+
+   VAR_OUTPUT 
+      arithmeticAverage : LReal;
+      standardDeviation : LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempLowerBound : Int;
+      tempUpperBound : Int;
+      tempNumberOfElements : Int;
+      tempSizeCounter : Int;
+      tempArithmeticAverage : LReal;
+      tempStandardDeviation : LReal;
+   END_VAR
+
+   VAR CONSTANT 
+      NUMBER_OF_ELEMENTS_CORRECTION : Int := 1;
+      DIMENSION_ONE : UDInt := 1;
+      ZERO : LReal := 0.0;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_AverageAndDeviation
+	  // Comment/Function: This function calculates the arithmetic average and the
+	  //                   standard deviation of a array of numbers
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - no error handling, ENO forced to true
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Checking number of lower and upper bound
+	  #tempLowerBound := DINT_TO_INT(LOWER_BOUND(ARR := #variableArray, DIM := #DIMENSION_ONE));
+	  #tempUpperBound := DINT_TO_INT(UPPER_BOUND(ARR := #variableArray, DIM := #DIMENSION_ONE));
+	  
+	  // Upper - Lower bound gives the number of elements. +1 should be added for correct calculation.
+	  #tempNumberOfElements := #tempUpperBound - #tempLowerBound + #NUMBER_OF_ELEMENTS_CORRECTION;
+	END_REGION
+	
+	REGION Calculation of the arithmetic average
+	  #tempArithmeticAverage := #ZERO;
+	  FOR #tempSizeCounter := #tempLowerBound TO #tempUpperBound DO
+	    #tempArithmeticAverage += #variableArray[#tempSizeCounter];
+	  END_FOR;
+	  
+	  #tempArithmeticAverage /= DINT_TO_REAL(#tempNumberOfElements);
+	END_REGION
+	
+	REGION Calculation of the standard deviation
+	  #tempStandardDeviation := #ZERO;
+	  FOR #tempSizeCounter := #tempLowerBound TO #tempUpperBound DO
+	    #tempStandardDeviation += SQR((#variableArray[#tempSizeCounter] - #tempArithmeticAverage));
+	  END_FOR;
+	  
+	  #tempStandardDeviation := SQRT(#tempStandardDeviation / DINT_TO_REAL(#tempNumberOfElements));
+	END_REGION
+	
+	REGION Writting to outputs
+	  #arithmeticAverage := #tempArithmeticAverage;
+	  #standardDeviation := #tempStandardDeviation;
+	
+	  // ENO mechanism is not used - forced to true
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

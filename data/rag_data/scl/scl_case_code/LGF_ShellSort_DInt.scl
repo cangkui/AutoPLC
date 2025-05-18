@@ -1,0 +1,146 @@
+FUNCTION_BLOCK "LGF_ShellSort_DInt"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_ShellSort_DInt
+   VAR_INPUT 
+      sortDirection : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      "array" : Array[*] of DInt;
+   END_VAR
+
+   VAR 
+      tempArray { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[1..#MAX_ARRAY_ELEMENTS] of DInt;
+   END_VAR
+
+   VAR_TEMP 
+      tempLowerLimit : DInt;
+      tempUpperLimit : DInt;
+      tempNoOfElements : DInt;
+      tempGap : DInt;
+      tempLoopIndex : DInt;
+      tempExchangeIndex : DInt;
+      tempExchangeVariable : DInt;
+      tempArrayOffset : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ARRAY_FIRST_DIMENSION : UInt := 1;
+      ARRAY_START_INDEX : UInt := 1;
+      SINGLE_ARRAY_ELEMENT : DInt := 1;
+      GAP_INIT : Int := 1;
+      GAP_THRESHOLD : Int := 1;
+      GAP_RATIO : DInt := 3;
+      INCREMENT : Int := 1;
+      ELEMENTS_COUNT_CORRECTION : DInt := 1;
+      MAX_ARRAY_ELEMENTS : Int := 1000;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_NO_ARRAY : Word := 16#8200;
+      ERR_TOO_MANY_ELEMENTS : Word := 16#8201;
+   END_VAR
+
+
+BEGIN
+
+	REGION Special description
+	  // Space note: If you wish to reduce the space of this block, you may reduce the
+	  // size OF the tempArray<Type> TO one just big enough FOR your specific purpose
+	  // It is not recommended to increase the size significantly.
+	END_REGION
+	
+	REGION Initialization and input data processing
+	  // Input array size calculation
+	  #tempLowerLimit := LOWER_BOUND(ARR := #array, DIM := #ARRAY_FIRST_DIMENSION);
+	  #tempUpperLimit := UPPER_BOUND(ARR := #array, DIM := #ARRAY_FIRST_DIMENSION);
+	  
+	  // Array elements calculation
+	  // (for example: 6 - 2 = 4; but real number of elements is 5)
+	  #tempNoOfElements := #tempUpperLimit - #tempLowerLimit + #ELEMENTS_COUNT_CORRECTION;
+	  
+	  // Shift array index to range 1..MAX_ARRAY_ELEMENTS
+	  #tempArrayOffset := - #tempLowerLimit + #ARRAY_START_INDEX;
+	  
+	  // Check whether the array contains less than the maximum possible amount of elements
+	  IF #tempNoOfElements > #MAX_ARRAY_ELEMENTS THEN
+	    #error := true;
+	    #status := #ERR_TOO_MANY_ELEMENTS;
+	    RETURN;
+	  ELSIF #tempNoOfElements <= #SINGLE_ARRAY_ELEMENT THEN
+	    // If there are 0 elements in the array, set status to "Error: Parameter is an empty array"
+	    #error := true;
+	    #status := #ERR_NO_ARRAY;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Sorting
+	  // Read the elements of the incoming array and write into the local array
+	  FOR #tempLoopIndex := #tempLowerLimit TO #tempUpperLimit DO
+	    #tempArray[#tempLoopIndex + #tempArrayOffset] := #array[#tempLoopIndex];
+	  END_FOR;
+	  
+	  REGION Shell sort algorithm
+	    #tempGap := #GAP_INIT;
+	    
+	    // Evaluation of the maximal gap size
+	    REPEAT
+	      #tempGap := (#GAP_RATIO * #tempGap) + #INCREMENT;
+	    UNTIL #tempGap > #tempNoOfElements END_REPEAT;
+	    
+	    REPEAT
+	      #tempGap := #tempGap / #GAP_RATIO;
+	      
+	      FOR #tempLoopIndex := #tempGap + #INCREMENT TO #tempNoOfElements DO
+	        #tempExchangeVariable := #tempArray[#tempLoopIndex];
+	        #tempExchangeIndex := #tempLoopIndex;
+	        
+	        // sort descending 
+	        IF #sortDirection THEN
+	          WHILE ((#tempArray[#tempExchangeIndex - #tempGap] < #tempExchangeVariable)) DO
+	            #tempArray[#tempExchangeIndex] := #tempArray[#tempExchangeIndex - #tempGap];
+	            #tempExchangeIndex := #tempExchangeIndex - #tempGap;
+	            
+	            IF (#tempExchangeIndex <= #tempGap) THEN
+	              EXIT;
+	            END_IF;
+	          END_WHILE;
+	          
+	          // sort ascending
+	        ELSE
+	          WHILE ((#tempArray[#tempExchangeIndex - #tempGap] > #tempExchangeVariable)) DO
+	            #tempArray[#tempExchangeIndex] := #tempArray[#tempExchangeIndex - #tempGap];
+	            #tempExchangeIndex := #tempExchangeIndex - #tempGap;
+	            
+	            IF (#tempExchangeIndex <= #tempGap) THEN
+	              EXIT;
+	            END_IF;
+	          END_WHILE;
+	        END_IF;
+	        
+	        #tempArray[#tempExchangeIndex] := #tempExchangeVariable;
+	      END_FOR;
+	      
+	    UNTIL #tempGap <= #GAP_THRESHOLD END_REPEAT;
+	  END_REGION
+	  
+	  // Write the elements of the local array back to the inOut array
+	  FOR #tempLoopIndex := #tempLowerLimit TO #tempUpperLimit DO
+	    #array[#tempLoopIndex] := #tempArray[#tempLoopIndex + #tempArrayOffset];
+	  END_FOR;
+	  
+	  // Set "No error" status
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

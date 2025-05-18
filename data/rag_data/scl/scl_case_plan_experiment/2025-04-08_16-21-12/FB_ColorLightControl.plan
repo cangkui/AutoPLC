@@ -1,0 +1,61 @@
+### 算法流程描述（基于需求分析和代码实现）
+
+#### 1. **需求理解**
+- **功能目标**：通过按钮触发循环切换3个指示灯（绿、红、黄）的状态序列，共5种状态，循环执行。
+- **输入**：`controlButton`（布尔型，脉冲信号，上升沿触发）。
+- **输出**：`greenLight`、`redLight`、`yellowLight`（布尔型，分别控制对应灯的亮灭）。
+
+#### 2. **状态定义**
+| 触发次数（`lightState`） | 绿灯（`greenLight`） | 红灯（`redLight`） | 黄灯（`yellowLight`） |
+|------------------------|---------------------|-------------------|----------------------|
+| 1                      | ON                  | OFF               | OFF                  |
+| 2                      | OFF                 | ON                | OFF                  |
+| 3                      | OFF                 | OFF               | ON                   |
+| 4                      | ON                  | ON                | ON                   |
+| 5                      | OFF                 | OFF               | OFF                  |
+| ≥6（循环）              | 回到状态1            |                   |                      |
+
+#### 3. **核心逻辑流程**
+1. **边缘检测**：
+   - 检测`controlButton`的上升沿（从`0→1`），确保每次按钮按下仅触发一次状态切换。
+   - 使用`lastControlButtonState`存储上一次按钮状态，通过比较当前状态与历史状态实现边缘检测。
+
+2. **状态切换**：
+   - 每次检测到上升沿时，`lightState`自增1。
+   - 当`lightState > 5`时，重置为1，实现循环。
+
+3. **输出控制**：
+   - 根据`lightState`的当前值，通过`CASE`语句直接设置3个灯的布尔输出值。
+
+#### 4. **代码优化建议**
+- **初始状态处理**：当前代码中`lightState`初始值为0，但首次触发后会变为1（绿灯亮）。若需初始全灭，可初始化`lightState := 5`。
+- **状态机扩展性**：若未来需增加状态（如闪烁模式），可改用枚举类型（如`(S_OFF, S_GREEN, S_RED, S_YELLOW, S_ALL)`）提升可读性。
+- **输入验证**：可添加对`controlButton`的防抖处理（如延时确认信号稳定性）。
+
+#### 5. **调整后的伪代码流程**
+```plaintext
+BEGIN
+    // 边缘检测
+    IF (controlButton为TRUE) AND (lastControlButtonState为FALSE) THEN
+        lightState := lightState + 1;
+        IF lightState > 5 THEN
+            lightState := 1;
+        END_IF;
+    END_IF;
+    lastControlButtonState := controlButton;
+
+    // 状态输出
+    CASE lightState OF
+        1: 绿灯亮，其他灭；
+        2: 红灯亮，其他灭；
+        3: 黄灯亮，其他灭；
+        4: 全亮；
+        5: 全灭；
+    END_CASE;
+END
+```
+
+#### 6. **关键点总结**
+- **循环控制**：通过`lightState`的递增和复位实现5状态循环。
+- **边缘检测**：确保每次按钮按下仅触发一次动作。
+- **直接输出**：`CASE`语句直接映射状态到输出，无需额外输出处理区域。

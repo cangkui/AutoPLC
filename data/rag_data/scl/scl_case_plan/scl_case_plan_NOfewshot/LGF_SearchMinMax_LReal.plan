@@ -1,0 +1,29 @@
+
+
+### 算法流程描述（基于需求及代码调整）
+
+1. **数组边界验证**
+   - 获取数组`values`的一维下界`tempArrayLowerBound`和上界`tempArrayUpperBound`。
+   - 若数组为空（上下界不合法），需抛出错误或特殊处理（代码中未显式处理，但实际通过`ENO := TRUE`忽略错误）。
+
+2. **初始化极值及索引**
+   - 将数组第一个元素的值同时赋给`tempMinValue`和`tempMaxValue`。
+   - **关键调整**：显式设置初始索引`tempArrayIndexMin`和`tempArrayIndexMax`为第一个元素的索引`tempArrayLowerBound`（避免未初始化问题）。
+
+3. **遍历数组搜索极值**
+   - **循环范围**：从第二个元素（`tempArrayLowerBound + 1`）到最后一个元素（`tempArrayUpperBound`）。
+   - **逐元素比较**：
+     - 若当前元素`tempActValue < tempMinValue`：
+       - 更新`tempMinValue`为当前值。
+       - 更新`tempArrayIndexMin`为当前索引。
+     - **否则**若当前元素`tempActValue > tempMaxValue`：
+       - 更新`tempMaxValue`为当前值。
+       - 更新`tempArrayIndexMax`为当前索引。
+
+4. **输出结果**
+   - 将最终`tempMinValue`和`tempMaxValue`写入`minValue`/`maxValue`。
+   - 将对应的索引`tempArrayIndexMin`/`tempArrayIndexMax`写入`minValueIndex`/`maxValueIndex`。
+
+### 与示例代码的关键差异说明
+- **索引初始化修复**：示例代码未显式初始化索引变量，可能导致当第一个元素为极值时索引错误。调整后的流程强制初始化索引为第一个元素的索引，确保逻辑正确性。
+- **边界处理**：代码默认假设数组非空且有效，实际应用中需结合具体场景补充异常处理。

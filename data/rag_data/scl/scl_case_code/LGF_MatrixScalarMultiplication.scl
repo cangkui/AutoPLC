@@ -1,0 +1,99 @@
+FUNCTION "LGF_MatrixScalarMultiplication" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_MatrixScalarMultiplication
+   VAR_INPUT 
+      scalar : LReal;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      matrixInput : Array[*, *] of LReal;
+      matrixResult : Array[*, *] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempMatrixInLowerBoundRows : DInt;
+      tempMatrixInLowerBoundColumns : DInt;
+      tempMatrixInUpperBoundRows : DInt;
+      tempMatrixInUpperBoundColumns : DInt;
+      tempResultMatrixLowerBoundRows : DInt;
+      tempResultMatrixLowerBoundColumns : DInt;
+      tempResultMatrixUpperBoundRows : DInt;
+      tempResultMatrixUpperBoundColumns : DInt;
+      tempRowIndex : DInt;
+      tempColumIndex : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ROWS : UInt := 1;
+      COLUMNS : UInt := 2;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_MATRICES_LOWER_BOUND_ROWS_DONT_MATCH : Word := 16#8201;
+      ERR_MATRICES_UPPER_BOUND_ROWS_DONT_MATCH : Word := 16#8202;
+      ERR_MATRICES_LOWER_BOUND_COLUMNS_DONT_MATCH : Word := 16#8203;
+      ERR_MATRICES_UPPER_BOUND_COLUMNS_DONT_MATCH : Word := 16#8204;
+   END_VAR
+
+
+BEGIN
+	
+	REGION Getting matrices size
+	  //Determine the size of the matrices
+	  // Lower bound rows
+	  #tempMatrixInLowerBoundRows := LOWER_BOUND(ARR := #matrixInput, DIM := #ROWS);
+	  #tempResultMatrixLowerBoundRows := LOWER_BOUND(ARR := #matrixResult, DIM := #ROWS);
+	  // Lower bound columns
+	  #tempMatrixInLowerBoundColumns := LOWER_BOUND(ARR := #matrixInput, DIM := #COLUMNS);
+	  #tempResultMatrixLowerBoundColumns := LOWER_BOUND(ARR := #matrixResult, DIM := #COLUMNS);
+	  
+	  // Upper bound rows
+	  #tempMatrixInUpperBoundRows := UPPER_BOUND(ARR := #matrixInput, DIM := #ROWS);
+	  #tempResultMatrixUpperBoundRows := UPPER_BOUND(ARR := #matrixResult, DIM := #ROWS);
+	  // Upper bound columns
+	  #tempMatrixInUpperBoundColumns := UPPER_BOUND(ARR := #matrixInput, DIM := #COLUMNS);
+	  #tempResultMatrixUpperBoundColumns := UPPER_BOUND(ARR := #matrixResult, DIM := #COLUMNS);
+	END_REGION
+	
+	REGION Error evaluation of matrices dimentions
+	  // Result matrix must have the same number of rows as matrix 1 and the same number of columns as the matrix 2.
+	  IF (#tempMatrixInLowerBoundRows <> #tempResultMatrixLowerBoundRows) THEN
+	    #error := true;
+	    #status := #ERR_MATRICES_LOWER_BOUND_ROWS_DONT_MATCH;
+	    RETURN;
+	  ELSIF (#tempMatrixInUpperBoundRows <> #tempResultMatrixUpperBoundRows) THEN
+	    #error := true;
+	    #status := #ERR_MATRICES_UPPER_BOUND_ROWS_DONT_MATCH;
+	    RETURN;
+	  ELSIF (#tempMatrixInLowerBoundColumns <> #tempResultMatrixLowerBoundColumns) THEN
+	    #error := true;
+	    #status := #ERR_MATRICES_LOWER_BOUND_COLUMNS_DONT_MATCH;
+	    RETURN;
+	  ELSIF (#tempMatrixInUpperBoundColumns <> #tempResultMatrixUpperBoundColumns) THEN
+	    #error := true;
+	    #status := #ERR_MATRICES_UPPER_BOUND_COLUMNS_DONT_MATCH;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Multiplication
+	  //Multiplies each row with each column
+	  FOR #tempRowIndex := #tempMatrixInLowerBoundRows TO #tempMatrixInUpperBoundRows DO
+	    FOR #tempColumIndex := #tempMatrixInLowerBoundColumns TO #tempMatrixInUpperBoundColumns DO
+	      // result is input matrix element multiplied with the scalar
+	      #matrixResult[#tempRowIndex, #tempColumIndex] *= #scalar;
+	    END_FOR;
+	  END_FOR;
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

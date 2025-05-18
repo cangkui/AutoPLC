@@ -1,0 +1,137 @@
+FUNCTION_BLOCK "LGF_DifferenceQuotientFB"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_DifferenceQuotientFB
+   VAR_INPUT 
+      enable : Bool;
+      insert : Bool;
+      value : LReal;
+      deltaT : LReal;
+   END_VAR
+
+   VAR_OUTPUT 
+      derivatedValue { ExternalWritable := 'False'} : LReal;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+   END_VAR
+
+   VAR 
+      statValues { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[0..#MINIMUM_NUMBER_OF_VALUES] of LReal;
+      statCount { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statDerivatedValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statEnableOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statInsertOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : LReal := 0.0;
+      MINIMUM_NUMBER_OF_VALUES : UDInt := 4;
+      INCREMENT_VALUE : Int := 1;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_FIRST_CALL : Word := 16#7001;
+      STATUS_SUBSEQUENT_CALL : Word := 16#7002;
+      STATUS_NOT_ENOUGH_VALUES : Word := 16#7010;
+      ERR_DELTA_T : Word := 16#8200;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2018
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_DifferenceQuotientFB
+	  // Comment/Function: This function block differentiates a signal
+	  //                   Magic numbers that are part of mathematics formula are
+	  //                   left without constants.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled, forced to true - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //----------|------------|------------------------|----------------------------
+	  // Version  | Date       | Expert in charge       | Changes applied
+	  //----------|------------|------------------------|----------------------------
+	  // 01.00.00 | 23.11.2018 | Siemens Industry Online Support
+	  //                       | First released version
+	  // 01.00.01 | 04.11.2019 | Simatic Systems Support
+	  //                       | Code reworked.
+	  //                       | Regions, comments and constants are added
+	  // 03.00.00 | 23.04.2020 | Simatic Systems Support
+	  //                       | Set version to V3.0.0, harmonize the version of the whole library
+	  // 03.00.01 | 06.04.2021 | Simatic Systems Support
+	  //                       | Insert documentation
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Check function block call 
+	  // // Check if FB is triggered - rising edge on enable
+	  IF #enable AND NOT #statEnableOld THEN
+	    // Reset 
+	    #statCount := 0;
+	    #statValues[0] := #ZERO;
+	    #statValues[1] := #ZERO;
+	    #statValues[2] := #ZERO;
+	    #statValues[3] := #ZERO;
+	    #statValues[4] := #ZERO;
+	    
+	    // Set status for first call
+	    #statStatus := #STATUS_FIRST_CALL;
+	    
+	    // enabled after edge trigger
+	  ELSIF #enable AND #statEnableOld THEN
+	    REGION Values inserting and smoothing calculation
+	      // positive edge of insert detected 
+	      IF #insert AND NOT #statInsertOld THEN
+	        // copy new value
+	        #statValues[0] := #statValues[1]; // -> n-2
+	        #statValues[1] := #statValues[2]; // -> n-1
+	        #statValues[2] := #statValues[3]; // -> n
+	        #statValues[3] := #statValues[4]; // -> n+1
+	        #statValues[4] := #value; // -> n+2
+	        
+	        // Check if the minimum needed insered values is reached
+	        // Increase the count of added values
+	        IF #statCount <= #MINIMUM_NUMBER_OF_VALUES THEN
+	          #statCount += #INCREMENT_VALUE;
+	          #statStatus := #STATUS_NOT_ENOUGH_VALUES;
+	          
+	          // DeltaT cannot be zero, devision by zero not possible.
+	        ELSIF #deltaT = #ZERO THEN
+	          #statStatus := #ERR_DELTA_T;
+	        ELSE
+	          // calculate derivate value 
+	          // keep the "Magic Numbers" as they are part of the Math equation and would extent the formular in a unreadable way
+	          // ẏ(n)=1/12deltaT*(y(n-2)-8y(n-1)+8y(n+1)-y(n+2))
+	          #statDerivatedValue := (1.0 / (12.0 * #deltaT)) * (#statValues[0] - 8 * #statValues[1] + 8 * #statValues[3] - #statValues[4]);
+	          #statStatus := #STATUS_SUBSEQUENT_CALL;
+	        END_IF;
+	      END_IF;
+	    END_REGION
+	  ELSE
+	    #statDerivatedValue := #ZERO;
+	    #statStatus := #STATUS_NO_CALL;
+	  END_IF;
+	  
+	  // store previous values for edge dedection
+	  #statEnableOld := #enable;
+	  #statInsertOld := #insert;
+	END_REGION
+	
+	REGION Writting to outputs
+	  #error := #statStatus.%X15;
+	  #status := #statStatus;
+	  #derivatedValue := #statDerivatedValue;
+	  
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

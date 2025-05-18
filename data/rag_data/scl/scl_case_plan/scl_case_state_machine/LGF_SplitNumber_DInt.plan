@@ -1,0 +1,25 @@
+这是一个数据处理任务，算法流程如下：
+
+1. 输入验证阶段：
+   - 检查输入整数InputNumber是否为负数或IthDigit是否为非正数
+   - 如果任一条件满足，设置错误标志error为TRUE，状态码status为16#8001，并立即返回
+
+2. 初始化阶段：
+   - 初始化临时变量tempNumber为输入值InputNumber
+   - 初始化错误标志error为FALSE
+   - 设置状态码status为16#8000表示正常状态
+
+3. 数字分离处理阶段：
+   - 通过循环将tempNumber除以10，循环次数为IthDigit次
+   - 这样会将数字右移IthDigit位，使目标位变为个位数
+
+4. 结果提取阶段：
+   - 检查处理后的tempNumber是否为0（表示原始数字不足IthDigit位）
+   - 如果是0，则输出Number_i为0
+   - 否则，取tempNumber对10取模得到个位数作为输出Number_i
+
+5. 输出阶段：
+   - 返回Number_i作为结果
+   - 同时返回error和status状态信息
+
+该算法通过数学运算实现数字位提取，避免了字符串转换，提高了执行效率。对于边界情况（如数字位数不足）有明确处理逻辑。

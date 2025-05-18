@@ -1,0 +1,91 @@
+### 算法流程描述：DTL 转 ISO 8601 日期字符串
+
+#### **1. 功能概述**
+该函数 `LGF_DTLToString_ISO` 用于将 `DTL`（日期时间）数据类型转换为符合 **ISO 8601** 标准的字符串格式（如 `YYYY-MM-DD HH:MM:SS.NNNNNNNNN`），并允许自定义日期部分的分隔符（如 `/` 或 `.`）。
+
+#### **2. 输入/输出**
+- **输入参数**：
+  - `date`（DTL 类型）：待转换的日期时间数据。
+  - `separator`（Char 类型）：用于分隔年、月、日的字符（如 `-`、`/` 或 `.`）。
+- **返回值**：
+  - `String` 类型：转换后的 ISO 8601 格式字符串。
+
+#### **3. 主要逻辑**
+1. **初始化**：
+   - 清空临时字符串 `tempString`，用于存储转换后的结果。
+
+2. **DTL 数据转换**：
+   - 使用 `VAL_STRG` 函数将 `DTL` 的各个字段（年、月、日、时、分、秒、纳秒）转换为字符串，并按照 ISO 8601 格式的固定位置填充到 `tempString` 中。
+   - 转换时确保：
+     - 年（`YEAR`）占 4 位（`YYYY`）。
+     - 月、日、时、分、秒（`MONTH`、`DAY`、`HOUR`、`MINUTE`、`SECOND`）占 2 位（`MM`、`DD` 等）。
+     - 纳秒（`NANOSECOND`）占 9 位（`.NNNNNNNNN`）。
+
+3. **分隔符处理**：
+   - 如果 `separator` 为空，则使用默认分隔符 `-`（ISO 8601 标准）。
+   - 否则，使用用户指定的 `separator` 分隔年、月、日。
+   - 时间部分的分隔符固定为 `:`（如 `HH:MM:SS`）。
+   - 秒与纳秒之间的分隔符固定为 `.`（如 `SS.NNNNNNNNN`）。
+
+4. **前导零修正**：
+   - 检查月、日、时、分、秒、纳秒的字符串表示，如果某一位是空格（由于 `VAL_STRG` 转换时未补零），则替换为 `0`。
+   - 例如：
+     - `" 1"`（月份）→ `"01"`
+     - `" 5"`（小时）→ `"05"`
+
+5. **输出结果**：
+   - 将最终生成的 `tempString` 赋值给函数返回值 `LGF_DTLToString_ISO`。
+
+#### **4. 关键点**
+- **固定位置填充**：ISO 8601 格式要求严格的字段顺序和位数，因此代码中使用了常量（如 `CONVERT_START_POSITION_YEAR`）来确保字符串的每个部分位于正确的位置。
+- **边缘情况处理**：
+  - 处理用户未指定分隔符的情况（默认 `-`）。
+  - 处理前导零缺失的问题（如 `1` 月 → `01`）。
+- **性能优化**：
+  - 使用 `VAL_STRG` 直接填充字符串，避免多次拼接操作。
+  - 使用循环修正纳秒部分的前导零（`FOR` 循环处理 9 位纳秒）。
+
+#### **5. 伪代码流程**
+```plaintext
+FUNCTION LGF_DTLToString_ISO(date: DTL, separator: Char) -> String:
+    tempString = ""
+    
+    // 转换年、月、日、时、分、秒、纳秒到字符串
+    tempString = VAL_STRG(date.YEAR,   pos=1,  size=4)  // YYYY
+    tempString = VAL_STRG(date.MONTH,  pos=6,  size=2)  // MM
+    tempString = VAL_STRG(date.DAY,    pos=9,  size=2)  // DD
+    tempString = VAL_STRG(date.HOUR,   pos=12, size=2)  // HH
+    tempString = VAL_STRG(date.MINUTE, pos=15, size=2)  // MM
+    tempString = VAL_STRG(date.SECOND, pos=18, size=2)  // SS
+    tempString = VAL_STRG(date.NANOSECOND, pos=21, size=9)  // .NNNNNNNNN
+
+    // 设置分隔符
+    IF separator == '':
+        tempString[5] = '-'  // YYYY-MM
+        tempString[8] = '-'  // MM-DD
+    ELSE:
+        tempString[5] = separator
+        tempString[8] = separator
+    
+    tempString[14] = ':'  // HH:MM
+    tempString[17] = ':'  // MM:SS
+    tempString[20] = '.'  // SS.NNNNNNNNN
+
+    // 修正前导零
+    FOR each field in [MONTH, DAY, HOUR, MINUTE, SECOND]:
+        IF tempString[field_start_pos] == ' ':
+            tempString[field_start_pos] = '0'
+    
+    FOR i FROM 0 TO 8:  // 纳秒部分
+        IF tempString[21 + i] == ' ':
+            tempString[21 + i] = '0'
+        ELSE:
+            BREAK
+    
+    RETURN tempString
+```
+
+#### **6. 调整建议**
+- 如果需求仅要求 `YYYY-MM-DD` 格式（不含时间部分），可以移除时、分、秒、纳秒的转换逻辑。
+- 可以增加对无效 `separator` 的检查（如非字母数字字符）。
+- 可扩展支持其他日期格式（如 `DD/MM/YYYY`）。

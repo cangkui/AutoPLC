@@ -1,0 +1,90 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块`LGF_DifferenceQuotientFB`用于对等时间间隔采样的信号进行数值微分计算。主要功能包括：
+- 通过`enable`激活功能块。
+- 通过`insert`信号的上升沿采集输入值`value`。
+- 当采集到5个值后，使用五点微分公式计算微分值`derivatedValue`。
+- 提供错误检测和状态反馈。
+
+#### 2. **输入参数**
+- `enable`：激活功能块（布尔型）。
+- `insert`：上升沿时采集`value`（布尔型）。
+- `value`：待微分的信号值（双精度浮点型）。
+- `deltaT`：采样时间间隔（双精度浮点型，必须非零）。
+
+#### 3. **输出参数**
+- `derivatedValue`：计算得到的微分值（双精度浮点型）。
+- `error`：错误标志（布尔型）。
+- `status`：状态码（字型），用于指示当前状态或错误。
+
+#### 4. **内部变量**
+- `statValues`：数组，存储最近5个采样值。
+- `statCount`：计数器，记录已采集的值的数量。
+- `statDerivatedValue`：临时存储计算得到的微分值。
+- `statStatus`：临时存储状态码。
+- `statEnableOld`和`statInsertOld`：用于检测`enable`和`insert`的上升沿。
+
+#### 5. **常量**
+- `MINIMUM_NUMBER_OF_VALUES`：最小采样值数量（5）。
+- 状态码常量（如`STATUS_NO_CALL`、`ERR_DELTA_T`等）。
+
+#### 6. **算法流程**
+1. **初始化检查**：
+   - 检测`enable`的上升沿，初始化`statValues`数组和`statCount`。
+   - 设置状态为`STATUS_FIRST_CALL`。
+
+2. **数据采集**：
+   - 检测`insert`的上升沿，将新值`value`存入`statValues`数组（滑动窗口更新）。
+   - 更新计数器`statCount`。
+
+3. **微分计算条件检查**：
+   - 如果`statCount`小于5，设置状态为`STATUS_NOT_ENOUGH_VALUES`。
+   - 如果`deltaT`为零，设置状态为`ERR_DELTA_T`。
+
+4. **微分计算**：
+   - 使用五点微分公式计算微分值：
+     \[
+     \dot{y}(n) = \frac{1}{12 \Delta T} \left( y(n-2) - 8y(n-1) + 8y(n+1) - y(n+2) \right)
+     \]
+   - 设置状态为`STATUS_SUBSEQUENT_CALL`。
+
+5. **输出更新**：
+   - 将`statDerivatedValue`赋给`derivatedValue`。
+   - 根据`statStatus`设置`error`和`status`。
+
+6. **边缘检测更新**：
+   - 更新`statEnableOld`和`statInsertOld`以用于下一次边缘检测。
+
+#### 7. **错误处理**
+- 如果`enable`为假，重置`derivatedValue`为零，状态为`STATUS_NO_CALL`。
+- 如果`deltaT`为零，设置错误状态`ERR_DELTA_T`。
+
+#### 8. **状态码说明**
+- `16#7000`：功能块未激活。
+- `16#7001`：首次调用。
+- `16#7002`：后续调用，正常处理中。
+- `16#7010`：采样值不足。
+- `16#8200`：`deltaT`为零错误。
+
+### 代码流程调整建议
+1. **边缘检测优化**：
+   - 确保`enable`和`insert`的上升沿检测逻辑清晰，避免重复触发。
+
+2. **滑动窗口更新**：
+   - 使用数组滑动窗口更新采样值，确保最新值始终在`statValues[4]`。
+
+3. **微分公式实现**：
+   - 直接实现五点微分公式，避免引入不必要的中间变量。
+
+4. **状态管理**：
+   - 在每次状态变更时明确更新`statStatus`，确保状态码准确反映当前情况。
+
+5. **错误标志设置**：
+   - 根据`statStatus`的最高位（如`%X15`）设置`error`标志，简化错误检测逻辑。
+
+6. **常量使用**：
+   - 使用预定义的常量（如`STATUS_NO_CALL`）提高代码可读性。
+
+### 总结
+该功能块通过滑动窗口采集数据，使用五点微分公式计算信号微分值，并通过状态码和错误标志提供运行反馈。核心逻辑包括数据采集、微分计算和状态管理，适用于实时信号处理场景。

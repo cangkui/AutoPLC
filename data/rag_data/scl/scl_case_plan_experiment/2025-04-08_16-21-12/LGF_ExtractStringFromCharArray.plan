@@ -1,0 +1,58 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_ExtractStringFromCharArray` 用于从一个字符数组（或字节数组）中提取一个字符串，该字符串由给定的 `textBefore` 和 `textAfter` 界定。提取的字符串是 `textBefore` 之后、`textAfter` 之前的内容。
+
+#### 2. **输入输出**
+- **输入参数**：
+  - `textBefore`：字符串，表示要提取的字符串的前置文本。
+  - `textAfter`：字符串，表示要提取的字符串的后置文本。
+  - `searchIn`（IN_OUT）：`Variant` 类型，表示输入的字符数组或字节数组。
+- **输出参数**：
+  - `extractedString`：提取出的字符串。
+  - `status`：操作状态码。
+- **返回值**：
+  - 状态码（`Word` 类型），表示函数的执行状态。
+
+#### 3. **状态码**
+- `16#0000` (`STATUS_TEXT_FOUND`)：成功找到并提取字符串。
+- `16#8200` (`ERR_NO_ARRAY`)：输入 `searchIn` 不是数组或元素类型不是 `CHAR` 或 `BYTE`。
+- `16#9001` (`WARNING_ONLY_START`)：只找到 `textBefore`，未找到 `textAfter`。
+- `16#9002` (`WARNING_NOTHING_FOUND`)：未找到 `textBefore` 和 `textAfter`。
+
+#### 4. **算法步骤**
+1. **初始化**：
+   - 初始化临时变量（如 `tempPosTextBefore`、`tempPosTextAfter` 等）。
+   - 检查输入 `searchIn` 是否为有效的字符数组或字节数组。如果不是，返回错误码 `ERR_NO_ARRAY`。
+   - 获取数组的长度 `tempNumElements`。
+
+2. **搜索 `textBefore`**：
+   - 从数组的起始位置开始，将数组内容转换为字符串 `tempString`。
+   - 在 `tempString` 中搜索 `textBefore`。
+   - 如果找到 `textBefore`，记录其位置 `tempPosTextBefore`，并更新搜索起始位置为 `textBefore` 的结束位置。
+
+3. **搜索 `textAfter`**：
+   - 从 `textBefore` 的结束位置开始，将后续数组内容转换为字符串 `tempString`。
+   - 在 `tempString` 中搜索 `textAfter`。
+   - 如果找到 `textAfter`，提取 `textBefore` 和 `textAfter` 之间的内容作为 `extractedString`，并返回状态码 `STATUS_TEXT_FOUND`。
+   - 如果未找到 `textAfter`，将 `textBefore` 之后的所有内容作为 `extractedString`，并返回状态码 `WARNING_ONLY_START`。
+
+4. **循环搜索**：
+   - 如果未找到 `textBefore`，调整搜索起始位置（跳过已搜索的部分），继续搜索。
+   - 重复上述步骤，直到搜索完整个数组。
+
+5. **终止条件**：
+   - 如果搜索完整个数组仍未找到 `textBefore`，返回状态码 `WARNING_NOTHING_FOUND`。
+
+#### 5. **关键逻辑**
+- **边缘检测**：确保 `textBefore` 和 `textAfter` 不会被截断（通过调整搜索窗口）。
+- **字符串转换**：将数组内容分段转换为字符串，避免一次性处理过大数据。
+- **状态管理**：根据搜索结果返回不同的状态码，便于调用者处理不同情况。
+
+#### 6. **代码调整建议**
+- **输入验证**：可以增加对 `textBefore` 和 `textAfter` 长度的检查，避免空字符串或无意义输入。
+- **性能优化**：如果数组很大，可以优化搜索步长，减少不必要的字符串转换。
+- **错误处理**：增加对数组越界的保护逻辑，避免因无效位置导致运行时错误。
+
+### 总结
+该函数的核心是通过分段搜索和字符串匹配，从数组中提取目标字符串。算法设计注重鲁棒性和状态管理，能够处理多种边界情况。后续实现时需注意输入验证和性能优化。

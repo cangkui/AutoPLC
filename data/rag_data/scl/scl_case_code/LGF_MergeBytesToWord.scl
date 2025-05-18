@@ -1,0 +1,30 @@
+FUNCTION "LGF_MergeBytesToWord" : Word
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_MergeBytesToWord
+   VAR_INPUT 
+      byte1 : Byte;
+      byte0 : Byte;
+   END_VAR
+
+   VAR_TEMP 
+      tempWord : Word;
+   END_VAR
+
+
+BEGIN
+	
+	REGION MERGE
+	  // set the bytes by slice access
+	  #tempWord.%B1 := #byte1;
+	  #tempWord.%B0 := #byte0;
+	END_REGION
+	
+	REGION OUTPUT
+	  #LGF_MergeBytesToWord := #tempWord;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

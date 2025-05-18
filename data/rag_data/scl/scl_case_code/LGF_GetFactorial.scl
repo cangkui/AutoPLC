@@ -1,0 +1,111 @@
+FUNCTION "LGF_GetFactorial" : DInt
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_GetFactorial
+   VAR_INPUT 
+      naturalNumber : Int;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempFactorial : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      FACTORIAL_OF_ZERO : Int := 1;
+      FACTORIAL_OF_ONE : Int := 1;
+      FACTORIAL_OF_TWO : Int := 2;
+      FACTORIAL_OF_THREE : Int := 6;
+      FACTORIAL_OF_FOUR : Int := 24;
+      FACTORIAL_OF_FIVE : Int := 120;
+      FACTORIAL_OF_SIX : Int := 720;
+      FACTORIAL_OF_SEVEN : Int := 5040;
+      FACTORIAL_OF_EIGHT : DInt := 40320;
+      FACTORIAL_OF_NINE : DInt := 362880;
+      FACTORIAL_OF_TEN : DInt := 3628800;
+      FACTORIAL_OF_ELEVEN : DInt := 39916800;
+      FACTORIAL_OF_TWELVE : DInt := 479001600;
+      DEFAULT_ZERO : DInt;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_WRONG_VALUE_RANGE : Word := 16#8101;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // Siemens AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_GetFactorial
+	  // Comment/Function: Outputs the value equal to the factorial N! of a natural number between 0 and 12
+	  //                   Factorial of 12 is the maximum value fits into a DInt type
+	  //                   MAGIC numbers are okay as they stay for the number/case itself
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  //                   Case of, MAGIC numbers are okay as they stay for the number/case itself
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //----------------------------------------------------------------------------- 
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Caluclation of factorial
+	  //Validation check. Function is working with natural number between 0 and 12.
+	  // N! = 1*2*3*....*N;
+	  CASE #naturalNumber OF
+	    0:
+	      #tempFactorial := #FACTORIAL_OF_ZERO;
+	    1:
+	      #tempFactorial := #FACTORIAL_OF_ONE;
+	    2:
+	      #tempFactorial := #FACTORIAL_OF_TWO;
+	    3:
+	      #tempFactorial := #FACTORIAL_OF_THREE;
+	    4:
+	      #tempFactorial := #FACTORIAL_OF_FOUR;
+	    5:
+	      #tempFactorial := #FACTORIAL_OF_FIVE;
+	    6:
+	      #tempFactorial := #FACTORIAL_OF_SIX;
+	    7:
+	      #tempFactorial := #FACTORIAL_OF_SEVEN;
+	    8:
+	      #tempFactorial := #FACTORIAL_OF_EIGHT;
+	    9:
+	      #tempFactorial := #FACTORIAL_OF_NINE;
+	    10:
+	      #tempFactorial := #FACTORIAL_OF_TEN;
+	    11:
+	      #tempFactorial := #FACTORIAL_OF_ELEVEN;
+	    12:
+	      #tempFactorial := #FACTORIAL_OF_TWELVE;
+	    ELSE
+	      //Assigning error message when input is outside of working range
+	      #LGF_GetFactorial := #DEFAULT_ZERO;
+	      #error := TRUE;
+	      #status := #ERR_WRONG_VALUE_RANGE;
+	      RETURN;
+	  END_CASE;
+	END_REGION
+	
+	REGION Writing output  
+	  #LGF_GetFactorial := #tempFactorial;
+	  
+	  #error := FALSE;
+	  #status := #STATUS_NO_ERROR;
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

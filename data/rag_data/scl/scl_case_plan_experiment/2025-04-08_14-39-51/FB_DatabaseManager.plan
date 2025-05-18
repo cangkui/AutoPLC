@@ -1,0 +1,99 @@
+
+
+### 算法流程描述（基于需求与代码调整）
+
+#### 核心逻辑
+1. **初始化与常量定义**
+   - 定义数据库最大容量 `DATABASE_SIZE = 20`
+   - 状态码常量：
+     - `STATUS_OK = 0x0000`
+     - `STATUS_INVALID_DATA_LENGTH = 0x8001`
+     - `STATUS_INSUFFICIENT_SPACE = 0x8002`
+
+2. **复位操作**
+   - **触发条件**：`resetTrigger` 为 `TRUE`
+   - **行为**：
+     - 清空数据库数组（所有字节置0）
+     - 重置写入指针 `statLastItemIndex = 0`
+     - 清除错误状态 `error = FALSE`，状态码 `status = STATUS_OK`
+
+3. **数据存储操作**
+   - **触发条件**：`storeTrigger` 为 `TRUE` 且未触发复位
+   - **验证阶段**：
+     - 检查数据长度有效性：
+       ```python
+       if dataInput[0] <= 0 or dataInput[0] > 5:
+           error = TRUE
+           status = STATUS_INVALID_DATA_LENGTH
+       ```
+     - 检查剩余空间：
+       ```python
+       elif remainingSpace < dataInput[0]:
+           error = TRUE
+           status = STATUS_INSUFFICIENT_SPACE
+       ```
+   - **数据写入阶段**（无错误时）：
+     - 从 `dataInput[1]` 开始，按 `dataInput[0]` 的长度提取数据
+     - **循环复制**到数据库尾部：
+       ```python
+       for i in 1 to dataInput[0]:
+           database[statLastItemIndex + i] = dataInput[i]
+       ```
+     - 更新写入指针：
+       ```python
+       statLastItemIndex += dataInput[0]
+       ```
+
+4. **空间计算**
+   - 始终实时更新：
+     ```python
+     usedSpace = statLastItemIndex
+     remainingSpace = DATABASE_SIZE - usedSpace
+     ```
+
+#### 代码调整点
+1. **索引对齐问题**（关键）
+   - 原代码中 `statLastItemIndex` 初始值为0，但数据库数组从索引1开始
+   - **修正逻辑**：存储数据时从 `statLastItemIndex + 1` 开始写入，避免越界
+     ```python
+     # 原代码中的潜在错误点
+     database[statLastItemIndex] → database[statLastItemIndex + 1]
+     ```
+
+2. **错误状态自动复位**
+   - 在每次处理 `storeTrigger` 前强制清除旧错误状态：
+     ```python
+     error = FALSE
+     status = STATUS_OK
+     ```
+
+3. **数据输入范围保护**
+   - 增加对输入数组索引的边界检查：
+     ```python
+     if dataInput[0] > 5:  # 输入数组最大有效索引为5
+         error = TRUE
+         status = STATUS_INVALID_DATA_LENGTH
+     ```
+
+### 流程伪代码
+```plaintext
+当 resetTrigger 激活时:
+    清空 database 数组
+    重置写入指针和错误状态
+
+当 storeTrigger 激活且未复位时:
+    获取数据长度 length = dataInput[0]
+    
+    if length 非法:
+        设置错误码 0x8001
+    elif 剩余空间 < length:
+        设置错误码 0x8002
+    else:
+        从 dataInput[1] 到 dataInput[length] 复制数据到 database 尾部
+        更新写入指针和空间统计
+
+始终输出:
+    usedSpace = 当前写入位置
+    remainingSpace = 总容量 - usedSpace
+    error 和 status 实时状态
+```

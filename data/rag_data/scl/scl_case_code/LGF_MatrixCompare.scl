@@ -1,0 +1,109 @@
+FUNCTION "LGF_MatrixCompare" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_MatrixCompare
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      matrix1 : Array[*, *] of LReal;
+      matrix2 : Array[*, *] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempMatrix1LowerBoundRows : DInt;
+      tempMatrix1LowerBoundColumns : DInt;
+      tempMatrix1UpperBoundRows : DInt;
+      tempMatrix1UpperBoundColumns : DInt;
+      tempMatrix2LowerBoundRows : DInt;
+      tempMatrix2LowerBoundColumns : DInt;
+      tempMatrix2UpperBoundRows : DInt;
+      tempMatrix2UpperBoundColumns : DInt;
+      tempCounterRows : DInt;
+      tempCounterColumns : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ROWS : UInt := 1;
+      COLUMNS : UInt := 2;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS : Word := 16#8200;
+      ERR_MATR1_LOWBOUND_COLUMNS_MATR2_LOWBOUND_COLUMNS : Word := 16#8201;
+      ERR_MATR1_UPPBOUND_ROWS_MATR2_UPPBOUND_ROWS : Word := 16#8202;
+      ERR_MATR1_UPPBOUND_COLUMNS_MATR2_UPPBOUND_COLUMNS : Word := 16#8203;
+   END_VAR
+
+
+BEGIN
+	
+	REGION Getting matrices size
+	  //Determine the size of the matrices
+	  // Lower bound rows
+	  #tempMatrix1LowerBoundRows := LOWER_BOUND(ARR := #matrix1, DIM := #ROWS);
+	  #tempMatrix2LowerBoundRows := LOWER_BOUND(ARR := #matrix2, DIM := #ROWS);
+	  // Lower bound columns
+	  #tempMatrix1LowerBoundColumns := LOWER_BOUND(ARR := #matrix1, DIM := #COLUMNS);
+	  #tempMatrix2LowerBoundColumns := LOWER_BOUND(ARR := #matrix2, DIM := #COLUMNS);
+	  
+	  // Upper bound rows
+	  #tempMatrix1UpperBoundRows := UPPER_BOUND(ARR := #matrix1, DIM := #ROWS);
+	  #tempMatrix2UpperBoundRows := UPPER_BOUND(ARR := #matrix2, DIM := #ROWS);
+	  // Upper bound columns
+	  #tempMatrix1UpperBoundColumns := UPPER_BOUND(ARR := #matrix1, DIM := #COLUMNS);
+	  #tempMatrix2UpperBoundColumns := UPPER_BOUND(ARR := #matrix2, DIM := #COLUMNS);
+	END_REGION
+	
+	REGION Error evaluation of matrixes dimentions
+	  //Check the lower bound of the matrices
+	  IF (#tempMatrix1LowerBoundRows <> #tempMatrix2LowerBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS;
+	    #LGF_MatrixCompare := false;
+	    RETURN;
+	  ELSIF (#tempMatrix1LowerBoundColumns <> #tempMatrix2LowerBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_COLUMNS_MATR2_LOWBOUND_COLUMNS;
+	    #LGF_MatrixCompare := false;
+	    RETURN;
+	  END_IF;
+	  //Check the upper bound of the matrices
+	  IF (#tempMatrix1UpperBoundRows <> #tempMatrix2UpperBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_ROWS_MATR2_UPPBOUND_ROWS;
+	    #LGF_MatrixCompare := false;
+	    RETURN;
+	  ELSIF (#tempMatrix1UpperBoundColumns <> #tempMatrix2UpperBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_COLUMNS_MATR2_UPPBOUND_COLUMNS;
+	    #LGF_MatrixCompare := false;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Comparison of the matices
+	  FOR #tempCounterRows := #tempMatrix1LowerBoundRows TO #tempMatrix1UpperBoundRows DO
+	    FOR #tempCounterColumns := #tempMatrix1LowerBoundColumns TO #tempMatrix1UpperBoundColumns DO
+	      //Each element must be equal to the corresponding element from the other matrix
+	      IF #matrix1[#tempCounterRows, #tempCounterColumns] <> #matrix2[#tempCounterRows, #tempCounterColumns] THEN
+	        // elelmts do not match, return false 
+	        #LGF_MatrixCompare := false;
+	        #error := false;
+	        #status := #STATUS_NO_ERROR;
+	        RETURN;
+	      END_IF;
+	    END_FOR;
+	  END_FOR;
+	  
+	  // loop runs trough all array places, all are identical
+	  #LGF_MatrixCompare := true;
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

@@ -1,0 +1,67 @@
+# LGF_DataLogC 算法流程分析
+
+## 任务类型判断
+这是一个过程控制任务，具有明确的状态转换逻辑，用于实现数据记录功能。
+
+## 状态分析
+该功能块包含以下主要状态：
+1. NO_PROCESSING - 空闲状态
+2. DL_OPEN - 打开数据日志文件
+3. DL_CREATE - 创建新数据日志文件
+4. DL_WAIT_FOR_TRIGGER - 等待触发信号
+5. DL_WAIT_FOR_WRITE_CYCLE - 等待写入周期
+6. DL_WRITE - 写入数据记录
+7. DL_CLEAR - 清除日志内容
+8. DL_DELETE - 删除日志文件
+9. DISABLING - 禁用功能块
+10. DISABLING_COMPLETED - 禁用完成
+
+## 状态转移事件
+1. 启用功能块时从NO_PROCESSING转移到DL_OPEN状态
+2. 文件不存在时从DL_OPEN转移到DL_CREATE状态
+3. 创建成功后根据配置转移到DL_WAIT_FOR_TRIGGER或DL_WRITE状态
+4. 触发信号到来时从DL_WAIT_FOR_TRIGGER转移到DL_WRITE状态
+5. 定时周期到达时从DL_WAIT_FOR_WRITE_CYCLE转移到DL_WRITE状态
+6. 写入完成后根据配置返回等待状态或进入NO_PROCESSING状态
+7. 清除/删除命令触发对应状态转移
+8. 禁用功能块时进入DISABLING状态
+
+## 主要算法流程
+
+1. **初始化阶段**：
+   - 检查enable信号的上升沿
+   - 初始化内部变量和状态
+   - 根据参数配置设置日志属性
+   - 进入DL_OPEN状态尝试打开日志文件
+
+2. **文件操作阶段**：
+   - 如果文件不存在，进入DL_CREATE状态创建新文件
+   - 根据参数配置决定日志模式(定时或触发)
+   - 设置相应的等待状态(DL_WAIT_FOR_TRIGGER或DL_WAIT_FOR_WRITE_CYCLE)
+
+3. **数据记录阶段**：
+   - 在触发模式下，检测triggerLogEntry信号的上升沿
+   - 在定时模式下，使用定时器等待间隔时间
+   - 满足条件后进入DL_WRITE状态写入数据
+   - 更新记录计数和状态标志
+
+4. **日志管理阶段**：
+   - 检测clearLog/deleteLog命令的上升沿
+   - 执行相应的清除或删除操作
+   - 更新内部状态和计数器
+
+5. **禁用阶段**：
+   - 检测enable信号的下降沿
+   - 进入DISABLING状态关闭日志文件
+   - 完成清理后进入DISABLING_COMPLETED状态
+   - 重置所有输出和状态标志
+
+6. **错误处理**：
+   - 捕获各操作阶段的错误
+   - 设置相应的错误状态和诊断信息
+   - 根据错误类型决定是否可自动恢复
+
+## 特殊处理逻辑
+- 环形缓冲区模式处理：当达到最大记录数时，根据enableRingBuffer参数决定是覆盖旧记录还是停止记录
+- 记录数统计：维护noOfEntries计数器，在清除/删除操作时重置
+- 边缘检测：对关键输入信号(triggerLogEntry, clearLog, deleteLog)进行边缘检测处理

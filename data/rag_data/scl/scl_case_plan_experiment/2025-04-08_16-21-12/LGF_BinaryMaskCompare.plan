@@ -1,0 +1,48 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_BinaryMaskCompare` 用于比较两个 DWord（32位）二进制值 `source` 和 `compare`，通过给定的 `mask` 进行掩码过滤。只有当掩码指定的位在两个输入值中相等时，函数返回 `TRUE`。
+
+#### 2. **输入参数**
+- `source`：源值（DWord），需要比较的原始数据。
+- `compare`：比较值（DWord），用于与 `source` 比较的目标数据。
+- `mask`：掩码（DWord），指定哪些位需要比较（掩码为 `1` 的位参与比较，`0` 的位忽略）。
+
+#### 3. **输出参数**
+- 返回值（Bool）：如果掩码过滤后的 `source` 和 `compare` 的对应位完全相等，则返回 `TRUE`，否则返回 `FALSE`。
+
+#### 4. **算法逻辑**
+1. **掩码过滤**：
+   - 对 `source` 和 `compare` 分别与 `mask` 进行按位与（`AND`）操作，提取掩码指定的位。
+     - `source_masked = source AND mask`
+     - `compare_masked = compare AND mask`
+2. **异或比较**：
+   - 对掩码过滤后的 `source_masked` 和 `compare_masked` 进行按位异或（`XOR`）操作。
+     - `diff = source_masked XOR compare_masked`
+   - 如果 `diff` 的结果为 `0`（即所有位均为 `0`），说明掩码指定的位在两个输入值中完全相等。
+3. **结果判断**：
+   - 如果 `diff = 0`，返回 `TRUE`；否则返回 `FALSE`。
+
+#### 5. **代码实现逻辑**
+- 直接使用一行逻辑表达式完成掩码过滤和比较：
+  ```scala
+  #LGF_BinaryMaskCompare := (((#source AND #mask) XOR (#compare AND #mask)) = #ALL_BITS_ARE_FALSE);
+  ```
+  - `#ALL_BITS_ARE_FALSE` 是一个常量，值为 `0`（`16#00000000`），用于判断异或结果是否为全 `0`。
+- `ENO`（使能输出）被强制设置为 `TRUE`，表示函数执行成功（无错误）。
+
+#### 6. **调整建议**
+- **输入验证**：可以添加对 `mask` 的默认值处理（如代码中已通过 `S7_PredefinedAssignment` 设置默认值为 `16#FFFFFFFF`）。
+- **性能优化**：当前实现已非常高效，直接使用位运算，无需进一步优化。
+- **扩展性**：如果需要支持其他数据类型（如 Word、Byte），可以重载函数或使用通用模板。
+
+#### 7. **示例**
+- 输入：
+  - `source = 16#A5A5A5A5`
+  - `compare = 16#A5A50000`
+  - `mask = 16#FFFF0000`
+- 计算：
+  - `source AND mask = 16#A5A50000`
+  - `compare AND mask = 16#A5A50000`
+  - 异或结果：`16#00000000`
+- 返回值：`TRUE`（掩码指定的高 16 位相等）。

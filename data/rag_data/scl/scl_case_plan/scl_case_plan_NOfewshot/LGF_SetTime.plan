@@ -1,0 +1,49 @@
+
+
+以下是针对LGF_SetTime功能块的算法思维链描述，突出核心逻辑和状态迁移：
+
+1. **触发检测**
+   - 检测execute上升沿触发执行
+   - 初始化状态机：busy=TRUE，done=FALSE，error=FALSE
+   - 验证输入时区有效性（-1200到+1400范围）
+
+2. **时区配置阶段**
+   - 通过CASE结构匹配预定义时区模板
+   - 设置UTC偏移量（Bias）和时区显示名称
+   - 非法时区值→立即报错（ERR_WRONG_TIMEZONE）
+   - 根据isDaylightSavingTime设置夏令时偏移量（+60或+0分钟）
+
+3. **时间设置阶段**
+   - 分支选择：
+     * isLocalTime=TRUE → 调用WR_LOC_T设置本地时间
+     * isLocalTime=FALSE → 调用WR_SYS_T设置UTC时间
+   - 错误检测：检查系统函数返回状态高位
+   - 失败→设置对应错误码（ERR_SET_TIME_LOCAL/UTC）
+
+4. **时区应用阶段**
+   - 调用SET_TIMEZONE功能块
+   - 监控子功能块状态：
+     * DONE=TRUE → 完成时区设置
+     * ERROR=TRUE → 记录子模块错误（ERR_SET_TIMEZONE）
+
+5. **状态闭环控制**
+   - 成功流程：STATUS_NO_CALL→FIRST→SUBSEQUENT→FINISHED
+   - 错误处理：立即冻结状态机，传递底层错误代码
+   - 执行完毕自动复位busy信号，保持done/error状态直到execute下降沿
+
+6. **输出管理**
+   - 实时映射内部状态到输出管脚
+   - 维护lastSetTimeZone显示最新生效时区
+   - execute信号下降沿复位所有输出状态
+
+关键状态迁移路径：
+``` 
+待命 → 参数校验 → 时间设置 → 时区设置 → 完成
+               ↖          ↖          ↖
+               错误终止     错误终止    错误终止
+```
+
+特殊处理逻辑：
+- 夏令时偏移量硬编码为固定值（60分钟）
+- 时区名称采用预定义字符串模板（UTC ±HH:MM）
+- 严格区分本地时间与UTC时间的底层系统调用

@@ -1,0 +1,257 @@
+FUNCTION_BLOCK "LGF_ReadPnInterfaceParameter"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Industry Support'
+FAMILY : LGF
+NAME : LGF_ReadPnInterfaceParameter
+   VAR_INPUT 
+      execute : Bool;
+      hardwareId : HW_ANY;
+   END_VAR
+
+   VAR_OUTPUT 
+      done { ExternalWritable := 'False'} : Bool;
+      busy { ExternalWritable := 'False'} : Bool;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : DWord := #STATUS_NO_CALL;
+      address {InstructionName := 'IP_V4'; LibVersion := '1.0'; ExternalWritable := 'False'} : IP_V4;
+      subnetMask {InstructionName := 'IP_V4'; LibVersion := '1.0'; ExternalWritable := 'False'} : IP_V4;
+      standardGateway {InstructionName := 'IP_V4'; LibVersion := '1.0'; ExternalWritable := 'False'} : IP_V4;
+      macAddress { ExternalWritable := 'False'} : Array[0..5] of Byte;
+      pnName { ExternalWritable := 'False'} : String;
+   END_VAR
+
+   VAR 
+      statExecuteOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statDone { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statBusy { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statError { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DWord := #STATUS_NO_CALL;
+      statFBState { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DInt := #FB_STATE_NO_PROCESSING;
+      statHardwareId { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : HW_ANY;
+      instRedRec {InstructionName := 'RDREC'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : RDREC;
+      statPdInterfaceData { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Struct
+         BlockType { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : UInt;
+         BlockLength { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : UInt;
+         BlockVersionHigh { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : USInt;
+         BlockVersionLow { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : USInt;
+         Data { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[0..301] of Byte;
+      END_STRUCT;
+   END_VAR
+
+   VAR_TEMP 
+      tempExecute : Bool;
+      tempIndex : USInt;
+   END_VAR
+
+   VAR CONSTANT 
+      REC_PDINTERFACE_REAL : DInt := 16#8080;
+      REC_PDINTERFACE_LENGHT : UInt := 300;
+      FB_STATE_NO_PROCESSING : DInt := 0;
+      FB_STATE_READ_RECORD : DInt := 1;
+      FB_STATE_PROCESS_RECORD : DInt := 2;
+      STATUS_EXECUTION_FINISHED : Word := 16#0000;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_FIRST_CALL : Word := 16#7001;
+      STATUS_SUBSEQUENT_CALL : Word := 16#7002;
+      ERR_UNDEFINED_STATE : Word := 16#9000;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright 2021
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_ReadPnInterfaceParameter
+	  // Function:         The function block provides Interface parameter like the IP Address settings, MAC Address and the PN Name.
+	  // Library:          LGF
+	  // Author:           Siemens Industry Support
+	  // Tested with:      CPU 1516-3 PN/DP
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     --
+	  // Requirements:     S7-1200/1500
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION DESCRIPTION
+	(/**/)
+	END_REGION DESCRIPTION
+	
+	REGION TRIGGERING
+	  #tempExecute := #execute; // Work with temporary value / create process image
+	  IF (#tempExecute = TRUE) AND (#statExecuteOld = FALSE) // Check if FB is triggered
+	    // TODO(optional): delete next line and comment line if FB shall finish current job before new job can be started with rising edge of execute
+	    AND (#statStatus = #STATUS_NO_CALL)
+	  THEN // First call; initialize FB
+	    #statDone := FALSE;
+	    #statBusy := TRUE;
+	    #statError := FALSE;
+	    #statStatus := #STATUS_FIRST_CALL;
+	    // State machine - start processing
+	    #statFBState := #FB_STATE_READ_RECORD;
+	    
+	    // Init ariables
+	    #statHardwareId := #hardwareId;
+	    // PNN Name
+	    #pnName := '';
+	    // MAC-Address data
+	    #macAddress[0] := 16#00;
+	    #macAddress[1] := 16#00;
+	    #macAddress[2] := 16#00;
+	    #macAddress[3] := 16#00;
+	    #macAddress[4] := 16#00;
+	    #macAddress[5] := 16#00;
+	    // IP-Address data
+	    #address.ADDR[1] := 16#00;
+	    #address.ADDR[2] := 16#00;
+	    #address.ADDR[3] := 16#00;
+	    #address.ADDR[4] := 16#00;
+	    // Subnetmask data
+	    #subnetMask.ADDR[1] := 16#00;
+	    #subnetMask.ADDR[2] := 16#00;
+	    #subnetMask.ADDR[3] := 16#00;
+	    #subnetMask.ADDR[4] := 16#00;
+	    // Copy Standard Gateway data
+	    #standardGateway.ADDR[1] := 16#00;
+	    #standardGateway.ADDR[2] := 16#00;
+	    #standardGateway.ADDR[3] := 16#00;
+	    #standardGateway.ADDR[4] := 16#00;
+	    
+	    // Initialize functionality: call subsidiary FBs with FALSE
+	    #instRedRec(REQ    := FALSE,
+	                ID     := #statHardwareId, //Interface to be questioned [HW_ID]
+	                INDEX  := #REC_PDINTERFACE_REAL,
+	                MLEN   := #REC_PDINTERFACE_LENGHT,
+	                RECORD := #statPdInterfaceData);
+	    
+	  ELSIF (#statStatus = #STATUS_FIRST_CALL) THEN
+	    #statStatus := #STATUS_SUBSEQUENT_CALL;
+	  END_IF;
+	  
+	  // Edge detection 'execute' input
+	  #statExecuteOld := #tempExecute;
+	END_REGION TRIGGERING
+	
+	IF (#statStatus = #STATUS_NO_CALL) THEN // Nothing to do -> End here to reduce "system load"
+	  RETURN;
+	END_IF;
+	
+	REGION STATE MACHINE
+	  CASE #statFBState OF // State machine of FB
+	    #FB_STATE_NO_PROCESSING:
+	      REGION No Processing
+	        ; // No processing active (Note: this state must always be present and left empty)
+	      END_REGION No Processing
+	      
+	    #FB_STATE_READ_RECORD:
+	      REGION Processing Read Record
+	        #instRedRec(REQ    := TRUE,
+	                    ID     := #statHardwareId, //Interface to be questioned [HW_ID]
+	                    INDEX  := #REC_PDINTERFACE_REAL,
+	                    MLEN   := #REC_PDINTERFACE_LENGHT,
+	                    RECORD := #statPdInterfaceData);
+	        
+	        IF (#instRedRec.VALID = TRUE) THEN
+	          #statFBState := #FB_STATE_PROCESS_RECORD;
+	          
+	        ELSIF (#instRedRec.ERROR = TRUE) THEN // Error occurred in subsidiary FB
+	          #statStatus := #instRedRec.STATUS; // Set status of read record
+	        END_IF;
+	      END_REGION Processing Read Record
+	      
+	    #FB_STATE_PROCESS_RECORD:
+	      REGION Processing Process the DataRecord
+	        // Get PN-interface Name. String starts at an odd address within the array
+	        Chars_TO_Strg(Chars  := #statPdInterfaceData.Data,
+	                      pChars := 1,
+	                      Cnt    := BYTE_TO_UINT(#statPdInterfaceData.Data[0]),
+	                      Strg   => #pnName);
+	        
+	        // Calculate start address of IP-address data. Blockdata is padded to make it Unsigned32 aligned!
+	        // When reading is valid, then calculate the offset of the MAC address inside the array
+	        #tempIndex := BYTE_TO_USINT(#statPdInterfaceData.Data[0]) + (4 - ((BYTE_TO_USINT(#statPdInterfaceData.Data[0]) + 2) MOD 4));
+	        
+	        // Copy MAC-Address data
+	        #macAddress[0] := #statPdInterfaceData.Data[#tempIndex + 0];
+	        #macAddress[1] := #statPdInterfaceData.Data[#tempIndex + 1];
+	        #macAddress[2] := #statPdInterfaceData.Data[#tempIndex + 2];
+	        #macAddress[3] := #statPdInterfaceData.Data[#tempIndex + 3];
+	        #macAddress[4] := #statPdInterfaceData.Data[#tempIndex + 4];
+	        #macAddress[5] := #statPdInterfaceData.Data[#tempIndex + 5];
+	        
+	        // Copy IP-Address data
+	        #address.ADDR[1] := #statPdInterfaceData.Data[#tempIndex + 8 + 0];
+	        #address.ADDR[2] := #statPdInterfaceData.Data[#tempIndex + 8 + 1];
+	        #address.ADDR[3] := #statPdInterfaceData.Data[#tempIndex + 8 + 2];
+	        #address.ADDR[4] := #statPdInterfaceData.Data[#tempIndex + 8 + 3];
+	        
+	        // Copy Subnetmask data
+	        #subnetMask.ADDR[1] := #statPdInterfaceData.Data[#tempIndex + 12 + 0];
+	        #subnetMask.ADDR[2] := #statPdInterfaceData.Data[#tempIndex + 12 + 1];
+	        #subnetMask.ADDR[3] := #statPdInterfaceData.Data[#tempIndex + 12 + 2];
+	        #subnetMask.ADDR[4] := #statPdInterfaceData.Data[#tempIndex + 12 + 3];
+	        
+	        // Copy Standard Gateway data
+	        #standardGateway.ADDR[1] := #statPdInterfaceData.Data[#tempIndex + 16 + 0];
+	        #standardGateway.ADDR[2] := #statPdInterfaceData.Data[#tempIndex + 16 + 1];
+	        #standardGateway.ADDR[3] := #statPdInterfaceData.Data[#tempIndex + 16 + 2];
+	        #standardGateway.ADDR[4] := #statPdInterfaceData.Data[#tempIndex + 16 + 3];
+	        
+	        // Reset Read record
+	        #instRedRec(REQ    := FALSE,
+	                    ID     := #statHardwareId, //Interface to be questioned [HW_ID]
+	                    INDEX  := #REC_PDINTERFACE_REAL,
+	                    MLEN   := #REC_PDINTERFACE_LENGHT,
+	                    RECORD := #statPdInterfaceData);
+	        
+	        #statStatus := #STATUS_EXECUTION_FINISHED;
+	      END_REGION Processing Process the DataRecord
+	      
+	    ELSE // Undefined state in state machine reached
+	      REGION Undefined state
+	        #statStatus := #ERR_UNDEFINED_STATE;
+	      END_REGION Undefined state
+	  END_CASE;
+	END_REGION STATE MACHINE
+	
+	REGION OUTPUTS
+	  // Write outputs
+	  IF (#statStatus = #STATUS_EXECUTION_FINISHED) AND (#statDone = FALSE) THEN // Execution finished without errors
+	    REGION Execution finished
+	      #statDone := TRUE;
+	      #statBusy := FALSE;
+	      #statError := FALSE;
+	      // execution aborted --> set state no processing
+	      #statFBState := #FB_STATE_NO_PROCESSING;
+	    END_REGION Execution finished
+	    
+	  ELSIF (#statStatus.%X15 = TRUE) AND (#statError = FALSE) THEN // Error occurred (#statStatus is 16#8000 to 16#FFFF)
+	    REGION Error occured
+	      #statDone := FALSE;
+	      #statBusy := FALSE;
+	      #statError := TRUE;
+	      // execution aborted --> set state no processing
+	      #statFBState := #FB_STATE_NO_PROCESSING;
+	    END_REGION Error occured
+	    
+	  ELSIF (#tempExecute = FALSE) AND ((#statDone = TRUE) OR (#statError = TRUE)) THEN // Reset outputs
+	    REGION Execute reseted
+	      #statDone := FALSE;
+	      #statBusy := FALSE;
+	      #statError := FALSE;
+	      #statStatus := #STATUS_NO_CALL;
+	    END_REGION Execute reseted
+	  END_IF;
+	  
+	  REGION Write static values to outputs
+	    #done := #statDone;
+	    #busy := #statBusy;
+	    #error := #statError;
+	    #status := #statStatus;
+	    // if ENO mechanism is not used / not wanted replace the following line by --> ENO := TRUE;
+	    ENO := NOT #statError;
+	  END_REGION Write static values to outputs
+	END_REGION OUTPUTS
+	
+END_FUNCTION_BLOCK

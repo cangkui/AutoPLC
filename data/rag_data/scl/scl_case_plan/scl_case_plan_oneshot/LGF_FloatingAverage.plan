@@ -1,0 +1,71 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_FloatingAverage` 用于计算输入 `value` 的滑动算术平均值（Moving Average）。支持两种触发模式：
+- **循环执行模式** (`cyclicExecution = TRUE`)：每个周期自动计算。
+- **触发模式** (`cyclicExecution = FALSE`)：仅在 `trigger` 信号的上升沿时计算。
+
+#### 2. **输入参数**
+- `cyclicExecution`：布尔值，决定是否循环执行计算。
+- `trigger`：布尔值，触发信号（仅在非循环模式下有效）。
+- `value`：`LReal` 类型，输入的需要计算平均值的数据。
+- `windowSize`：整数，滑动窗口的大小（1 到 100）。
+- `reset`：布尔值，重置功能块内部状态。
+
+#### 3. **输出参数**
+- `average`：`LReal` 类型，计算得到的滑动平均值。
+- `windowSizeReached`：布尔值，表示窗口是否已填满。
+- `error`：布尔值，表示是否发生错误。
+- `status`：`Word` 类型，功能块的状态码。
+
+#### 4. **内部变量**
+- `statValues`：数组，存储窗口内的数据。
+- `statValuesSum`：`LReal` 类型，窗口内数据的累加和。
+- `statArithmeticAverage`：`LReal` 类型，当前计算的平均值。
+- `statWindowSizeOld`：整数，记录上一次的窗口大小（用于检测窗口大小是否变化）。
+- `statCounter`：整数，记录当前已存储的数据数量。
+- `statwindowSizeReached`：布尔值，内部标记窗口是否已填满。
+- `statTriggerOld`：布尔值，用于检测 `trigger` 信号的上升沿。
+
+#### 5. **算法流程**
+1. **初始化与输入处理**
+   - 检测 `trigger` 信号的上升沿。
+   - 如果 `reset` 为 `TRUE` 或 `windowSize` 发生变化：
+     - 重置内部状态（计数器、累加和、平均值等）。
+     - 如果 `windowSize` 不在有效范围内（1 到 100），设置错误状态并返回。
+   
+2. **滑动平均值计算**
+   - 如果处于循环模式或检测到 `trigger` 上升沿：
+     - 计算当前数据在窗口中的索引（`statCounter MOD windowSize`）。
+     - **窗口未填满时**：
+       - 将新数据加入累加和 `statValuesSum`。
+       - 将新数据存入 `statValues` 数组。
+       - 更新计数器 `statCounter`。
+       - 计算当前平均值 `statArithmeticAverage = statValuesSum / statCounter`。
+     - **窗口已填满时**：
+       - 标记 `statwindowSizeReached` 为 `TRUE`。
+       - 更新累加和：`statValuesSum += (新数据 - 被替换的旧数据)`。
+       - 替换 `statValues` 数组中的旧数据。
+       - 计算当前平均值 `statArithmeticAverage = statValuesSum / windowSize`。
+       - 更新计数器 `statCounter`（处理模运算边界情况）。
+
+3. **输出更新**
+   - 将 `statArithmeticAverage` 输出到 `average`。
+   - 将 `statwindowSizeReached` 输出到 `windowSizeReached`。
+   - 设置 `error` 和 `status` 为无错误状态。
+
+#### 6. **边界条件与错误处理**
+- 如果 `windowSize` 无效（≤0 或 >100），设置 `error = TRUE` 并返回错误状态码 `ERR_WRONG_WINDOW_SIZE`。
+- 重置时清空所有内部状态。
+
+#### 7. **优化点**
+- 使用模运算 (`MOD`) 实现滑动窗口的循环存储，避免频繁移动数据。
+- 累加和动态更新，减少重复计算。
+
+### 代码调整建议
+1. **初始化逻辑**：
+   - 在 `reset` 或 `windowSize` 变化时，直接清空数组 `statValues`（代码中未显式清空，但实际不影响逻辑）。
+2. **错误处理**：
+   - 可以增加更多错误状态码（如输入数据无效等）。
+3. **性能优化**：
+   - 如果 `windowSize` 较大（如 100），可以验证数组访问的性能影响。

@@ -1,0 +1,58 @@
+
+
+### 算法流程描述
+
+#### 核心处理流程
+```python
+def LGF_RandomRange_DInt(minValue, maxValue):
+    # 输入验证阶段
+    if minValue > maxValue:
+        return error=True, status=0x8200, value=0
+    
+    # 时间种子获取阶段
+    time_status, nanoseconds = RD_SYS_T()
+    if time_status != 0:
+        return error=True, status=0x8600, value=0
+    
+    # 随机数生成阶段
+    random_seed = swap_bytes(nanoseconds)  # 字节逆序处理
+    normalized = random_seed / MAX_UDINT   # 归一化到[0.0,1.0]
+    scaled_value = normalized * (maxValue - minValue) + minValue
+    
+    return error=False, status=0x0000, value=round(scaled_value)
+```
+
+#### 流程调整说明
+1. **输入验证强化**：
+   - 新增`minValue == maxValue`边界情况处理（原代码未明确处理，当相等时会返回固定值）
+   - 增加负值范围支持（原代码逻辑已隐含支持）
+
+2. **随机源优化**：
+   - 使用系统时间的**纳秒级精度**（`tempTime.NANOSECOND`）
+   - 通过**字节逆序**（B0↔B3, B1↔B2）打破时间递增性
+   - 使用MAX_UDINT(4294967295)进行归一化
+
+3. **错误处理机制**：
+   ```mermaid
+   graph TD
+   A[开始] --> B{输入校验}
+   B -->|min>max| C[ERR_MAX_LESS_MIN]
+   B -->|校验通过| D[读取系统时间]
+   D --> E{时间读取成功?}
+   E -->|失败| F[ERR_RD_SYS_T]
+   E -->|成功| G[生成随机数]
+   G --> H[返回计算结果]
+   ```
+
+4. **数据类型转换链**：
+   ```
+   DInt纳秒 → UDInt → DWord字节重组 → 实数运算 → 缩放回DInt
+   ```
+
+#### 关键设计决策
+1. **系统时间依赖**：基于西门子PLC确定性执行特性，采用操作系统级真随机源（RD_SYS_T）
+2. **字节级混淆**：通过交换DWORD的字节顺序（B0-B3互换）增强随机性
+3. **跨类型运算**：采用REAL中间类型处理大范围数值，避免DInt溢出
+4. **错误状态分离**：通过status/subfunctionStatus区分主/子函数错误
+
+该流程保持原代码核心逻辑，但通过流程图的显式化呈现和边界条件补充，可更好地指导不同平台上的代码移植实现。

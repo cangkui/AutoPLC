@@ -1,0 +1,68 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于在UDInt（无符号双整型）数组中查找最大值、最小值及其对应的索引位置。主要流程包括：
+- 获取数组边界
+- 初始化最大值和最小值
+- 遍历数组进行比较
+- 输出结果
+
+#### 2. **变量定义**
+- **输入/输出参数**：
+  - `values`：待搜索的UDInt数组（IN_OUT参数）
+- **输出参数**：
+  - `minValue`：数组中的最小值
+  - `minValueIndex`：最小值的索引
+  - `maxValue`：数组中的最大值
+  - `maxValueIndex`：最大值的索引
+- **临时变量**：
+  - `tempArrayLowerBound`/`tempArrayUpperBound`：数组的上下界
+  - `tempCounter`：循环计数器
+  - `tempArrayIndexMax`/`tempArrayIndexMin`：临时存储最大/最小值的索引
+  - `tempActValue`：当前遍历的数组元素值
+  - `tempMinValue`/`tempMaxValue`：临时存储最小/最大值
+- **常量**：
+  - `START_FROM_SECOND_ELEMENT`：从第二个元素开始遍历（初始值设为1）
+  - `DIMENSION_ONE`：数组维度（固定为1）
+
+#### 3. **算法步骤**
+1. **输入验证与初始化**
+   - 使用`LOWER_BOUND`和`UPPER_BOUND`获取数组的索引范围。
+   - 将数组的第一个元素同时初始化为临时最小值和最大值：
+     ```plaintext
+     tempMinValue = values[tempArrayLowerBound]
+     tempMaxValue = values[tempArrayLowerBound]
+     ```
+
+2. **遍历数组**
+   - 从第二个元素开始循环（`tempCounter = tempArrayLowerBound + 1`）：
+     - 读取当前元素值`tempActValue`。
+     - **最小值检查**：
+       - 如果`tempActValue < tempMinValue`，更新`tempMinValue`和`tempArrayIndexMin`。
+     - **最大值检查**：
+       - 如果`tempActValue > tempMaxValue`，更新`tempMaxValue`和`tempArrayIndexMax`。
+
+3. **输出结果**
+   - 将临时变量中的结果赋值给输出参数：
+     ```plaintext
+     minValue = values[tempArrayIndexMin]
+     maxValue = values[tempArrayIndexMax]
+     minValueIndex = tempArrayIndexMin
+     maxValueIndex = tempArrayIndexMax
+     ```
+   - 设置`ENO = TRUE`表示无错误。
+
+#### 4. **边界与异常处理**
+- **空数组**：若数组为空（`tempArrayLowerBound > tempArrayUpperBound`），需额外处理（当前代码未显式处理，但实际不会进入循环）。
+- **单元素数组**：初始值即最终结果，循环不会执行。
+- **索引初始化**：代码中未显式初始化`tempArrayIndexMin`和`tempArrayIndexMax`，但首次比较时会自动覆盖。
+
+#### 5. **优化与调整建议**
+- **初始索引设置**：建议显式初始化`tempArrayIndexMin`和`tempArrayIndexMax`为`tempArrayLowerBound`，避免逻辑依赖。
+- **常量命名**：`START_FROM_SECOND_ELEMENT`可改为`INITIAL_OFFSET`更通用。
+- **并行比较**：当前使用`ELSIF`可能漏检同时为最大/最小值的情况，但实际因UDInt的互异性不影响结果。
+
+### 代码流程调整说明
+- **输入验证**：显式检查数组非空（可添加`IF`判断）。
+- **索引初始化**：在初始化`tempMinValue`和`tempMaxValue`时同步初始化索引变量。
+- **循环逻辑**：保留现有结构，确保遍历效率（时间复杂度O(n)）。

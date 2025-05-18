@@ -1,0 +1,110 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个功能块 `LGF_FileRead` 用于从 PLC 内存卡的 `UserFiles` 文件夹中读取文件数据，支持二进制或序列化数据流。主要功能包括：
+- 通过 `execute` 触发读取操作（上升沿触发）。
+- 支持文件数据长度匹配检查（`dataLengthMustMatch`）。
+- 提供状态输出（`done`、`busy`、`error`、`status`）。
+- 支持多种数据格式（`Variant` 或 `Byte` 数组）。
+
+#### 2. **核心逻辑**
+采用状态机模式，分为以下状态：
+1. **初始化状态（`FB_STATE_INIT`）**：
+   - 验证文件路径是否以 `UserFiles/` 开头。
+   - 检查缓冲区边界（`bufferByteArray` 的下界必须为 0）。
+   - 验证输入数据格式（`Variant` 或 `Byte` 数组）：
+     - 如果是 `Byte` 数组，直接检查缓冲区大小是否足够。
+     - 如果是其他类型，尝试序列化到缓冲区。
+   - 初始化文件读取操作（`FileReadC` 实例）。
+
+2. **文件读取状态（`FB_STATE_FILE_READ`）**：
+   - 调用 `FileReadC` 读取文件数据到缓冲区。
+   - 检查文件长度是否匹配 `dataLengthMustMatch` 要求：
+     - 如果文件长度大于或小于预期，报错。
+   - 读取成功后进入参数处理状态。
+
+3. **参数处理状态（`FB_STATE_PARAMETER_TO_INTERFACE`）**：
+   - 如果输入数据是 `Byte` 数组，直接复制缓冲区数据到输出。
+   - 否则，反序列化缓冲区数据到 `Variant` 输出。
+   - 完成后标记状态为 `STATUS_EXECUTION_FINISHED`。
+
+4. **错误处理**：
+   - 任何状态出错时，设置 `error` 和 `status`，并停止执行。
+   - 错误码包括文件路径错误、缓冲区不足、序列化失败等。
+
+#### 3. **输入输出处理**
+- **输入**：
+  - `execute`：上升沿触发读取。
+  - `dataLengthMustMatch`：强制文件长度匹配。
+  - `fileName`：文件路径（必须包含 `UserFiles/` 前缀）。
+- **输出**：
+  - `done`：操作完成。
+  - `busy`：操作进行中。
+  - `error`：操作出错。
+  - `status`：详细状态码。
+  - `dataLength`：读取的数据长度。
+- **输入输出**：
+  - `bufferByteArray`：缓冲区（`Byte` 数组）。
+  - `data`：读取的数据（`Variant` 或 `Byte` 数组）。
+
+#### 4. **状态机流程**
+```plaintext
+触发条件：execute 上升沿
+   |
+   v
+FB_STATE_INIT
+   |--> 验证文件路径
+   |--> 检查缓冲区
+   |--> 初始化 FileReadC
+   |
+   v
+FB_STATE_FILE_READ
+   |--> 读取文件到缓冲区
+   |--> 检查文件长度
+   |
+   v
+FB_STATE_PARAMETER_TO_INTERFACE
+   |--> 复制或反序列化数据
+   |
+   v
+STATUS_EXECUTION_FINISHED
+```
+
+#### 5. **错误处理流程**
+- 任何状态出错时：
+  - 设置 `error = TRUE`。
+  - 记录错误码到 `status` 和 `diagnostics`。
+  - 跳转到 `FB_STATE_NO_PROCESSING`。
+
+#### 6. **关键调整点**
+1. **文件路径验证**：
+   - 必须严格匹配 `UserFiles/` 前缀。
+   - 不匹配时立即报错（`ERR_FILE_PATH`）。
+
+2. **缓冲区检查**：
+   - 缓冲区下界必须为 0（`ERR_BUFFER_LOWERBOUND`）。
+   - 缓冲区大小必须足够（`ERR_BUFFER_ARRAY_TO_SMALL_TO_COPY`）。
+
+3. **数据格式处理**：
+   - `Byte` 数组：直接内存复制。
+   - 其他类型：先序列化/反序列化。
+
+4. **文件长度检查**：
+   - 如果 `dataLengthMustMatch = TRUE`，文件长度必须完全匹配数据长度。
+
+### 代码生成指导
+1. **状态机实现**：
+   - 使用 `CASE` 语句实现多状态切换。
+   - 每个状态完成后设置 `tempExitStateLoop` 控制循环。
+
+2. **边缘检测**：
+   - 通过 `execute` 和 `executePrevious` 检测上升沿。
+
+3. **诊断信息**：
+   - 使用 `diagnostics` 结构记录错误详情（状态码、子状态、错误位置）。
+
+4. **异步支持**：
+   - 通过 `statAsynchronusMode` 控制是否允许单周期多状态切换。
+
+5. **输出更新**：
+   - 仅在状态机完成后更新 `done`、`busy`、`error`。

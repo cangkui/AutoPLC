@@ -1,0 +1,81 @@
+### 算法流程描述
+
+#### 1. 功能概述
+该功能块用于持续记录输入值的历史最大值和最小值，并在需要时通过复位信号重置记录。
+
+#### 2. 变量定义
+- **输入变量**：
+  - `value` (LReal)：待比较的输入值
+  - `reset` (Bool)：复位信号（TRUE时重置历史记录）
+  
+- **输出变量**：
+  - `minValue` (LReal)：记录的最小值
+  - `maxValue` (LReal)：记录的最大值
+  
+- **内部变量**：
+  - `statStoreMinValue` (LReal)：存储当前最小值（初始值为`LREAL_MAX`）
+  - `statStoreMaxValue` (LReal)：存储当前最大值（初始值为`LREAL_MIN`）
+  
+- **常量**：
+  - `LREAL_MAX`：LReal类型的最大值（初始值设为IEEE 754双精度浮点数的最大值）
+  - `LREAL_MIN`：LReal类型的最小值（初始值设为IEEE 754双精度浮点数的最小值）
+
+#### 3. 主逻辑流程
+1. **初始化**：
+   - 首次调用时，`statStoreMinValue`初始化为`LREAL_MAX`，`statStoreMaxValue`初始化为`LREAL_MIN`。
+   - 这种初始化确保第一个输入值一定会更新最小值和最大值。
+
+2. **比较逻辑**：
+   - **最小值更新**：如果当前输入`value`小于`statStoreMinValue`，则更新`statStoreMinValue`。
+   - **最大值更新**：如果当前输入`value`大于`statStoreMaxValue`，则更新`statStoreMaxValue`。
+
+3. **复位逻辑**：
+   - 当`reset`信号为TRUE时：
+     - 将`statStoreMinValue`重置为`LREAL_MAX`。
+     - 将`statStoreMaxValue`重置为`LREAL_MIN`。
+   - 复位后，下一次输入值将作为新的初始值记录。
+
+4. **输出更新**：
+   - 每次调用结束时，将`statStoreMinValue`和`statStoreMaxValue`分别赋给输出变量`minValue`和`maxValue`。
+
+#### 4. 异常处理
+- 无显式错误处理（ENO始终为TRUE），因为输入值范围由PLC系统自动处理，且比较操作不会引发异常。
+
+#### 5. 代码调整建议
+- **优化初始化**：若需支持空值或无效输入，可增加对`value`的合法性检查（如NaN或Infinity）。
+- **复位扩展**：可增加复位时的回调逻辑（如记录复位事件的时间戳）。
+- **输出保护**：当前输出变量标记为`ExternalWritable := 'False'`，防止外部篡改，符合设计预期。
+
+### 调整后的伪代码流程
+```plaintext
+FUNCTION_BLOCK LGF_StoreMinMax
+    // 输入
+    value: LReal
+    reset: Bool
+
+    // 输出
+    minValue: LReal
+    maxValue: LReal
+
+    // 内部状态
+    statStoreMinValue := LREAL_MAX
+    statStoreMaxValue := LREAL_MIN
+
+    // 主逻辑
+    IF reset THEN
+        statStoreMinValue := LREAL_MAX
+        statStoreMaxValue := LREAL_MIN
+    ELSE
+        IF value < statStoreMinValue THEN
+            statStoreMinValue := value
+        END_IF
+        IF value > statStoreMaxValue THEN
+            statStoreMaxValue := value
+        END_IF
+    END_IF
+
+    // 输出
+    minValue := statStoreMinValue
+    maxValue := statStoreMaxValue
+END_FUNCTION_BLOCK
+```

@@ -1,0 +1,106 @@
+{
+    "title": "GPS-based Sunrise and Sunset Time Determination",
+    "name": "LGF_AstroClock",
+    "description": "This function calculates the times of sunrise and sunset based on the local time for a specific place on Earth.",
+    "type": "FUNCTION_BLOCK",
+    "input": [
+        {
+            "name": "enable",
+            "type": "Bool",
+            "description": "TRUE: Activates the functionality of the FB"
+        },
+        {
+            "name": "positionGps",
+            "type": "LGF_typeGPS_DD",
+            "description": "GPS position to calculate the time of sunrise and sunset"
+        },
+        {
+            "name": "offsetSunrise",
+            "type": "Time",
+            "description": "Offset to sunrise (added to sunrise time, considered at `isDaytime`, negative time allowed)"
+        },
+        {
+            "name": "positionGps",
+            "type": "Time",
+            "description": "Offset to sunset (added to sunset time, considered at `isDaytime`, negative time allowed)"
+        }
+    ],
+    "output": [
+        {
+            "name": "valid",
+            "type": "Bool",
+            "description": "TRUE: Valid set of output values available at the FB"
+        },
+        {
+            "name": "busy",
+            "type": "Bool",
+            "description": "TRUE: FB is active and new output values can be expected"
+        },
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "FALSE: No error / TRUE: An error occurred during the execution of the FB"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "16#0000-16#7FFF: Status of the FB / 16#8000-16#FFFF: Error identification"
+        },
+        {
+            "name": "subFunctionStatus",
+            "type": "Word",
+            "description": "Status or return value of called FB's, FC's and system blocks"
+        },
+        {
+            "name": "actualLocalTime",
+            "type": "DTL",
+            "description": "Current time (local time)"
+        },
+        {
+            "name": "sunriseTime",
+            "type": "DTL",
+            "description": "Sunrise time (localtime)"
+        },
+        {
+            "name": "sunsetTime",
+            "type": "DTL",
+            "description": "Sunset time (localtime)"
+        },
+        {
+            "name": "isDaytime",
+            "type": "Bool",
+            "description": "TRUE: If the local time of the controller is between \u201csunrise\u201d and \u201csunset\u201d"
+        }
+    ],
+    "in/out": [],
+    "return_value": [],
+    "status_codes": {
+        "16#0000": "STATUS_EXECUTION_FINISHED_NO_ERROR",
+        "16#7000": "STATUS_NO_CALL",
+        "16#7001": "STATUS_IN_OPERATION",
+        "16#8204": "ERR_LATITUDE_VALUE",
+        "16#8205": "ERR_LONGITUDE_VALUE",
+        "16#8601": "ERR_RD_SYS_T",
+        "16#8602": "ERR_RD_LOC_T"
+    },
+    "user_defined_types": [
+        {
+            "name": "LGF_typeGPS_DD",
+            "description": "Datatype for GPS Coordinates in decimal degrees. For a whole GPS Data set.",
+            "member": [
+                {
+                    "name": "latitude",
+                    "type": "Real",
+                    "default": "0.0",
+                    "description": "Degrees latitude with decimal places (Unit: degree decimal), North = positive; South = negative) valid value range [-90.00000..90.00000] "
+                },
+                {
+                    "name": "longitude",
+                    "type": "Real",
+                    "default": "0.0",
+                    "description": "Degrees longitude with decimal places (Unit: degree decimal), East = positive; West = negative) valid value range [-180.00000..180.00000] "
+                }
+            ]
+        }
+    ]
+}

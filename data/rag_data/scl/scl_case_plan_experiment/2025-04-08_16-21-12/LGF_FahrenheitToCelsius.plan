@@ -1,0 +1,56 @@
+### 算法流程描述（华氏度转摄氏度转换器）
+
+#### 1. **功能概述**
+- 该函数 `LGF_FahrenheitToCelsius` 用于将华氏温度（°F）转换为摄氏温度（°C）。
+- 转换公式：  
+  \[
+  °C = \frac{°F - 32}{1.8}
+  \]
+
+#### 2. **输入/输出定义**
+- **输入**：
+  - `value`（`Real` 类型）：待转换的华氏温度值。
+- **输出**：
+  - 返回值（`Real` 类型）：转换后的摄氏温度值。
+
+#### 3. **变量定义**
+- **临时变量**：
+  - `tempCelsiusTemperature`（`Real` 类型）：存储中间计算结果。
+- **常量**：
+  - `TEMPERATURE_GAIN`（`Real` 类型，值为 `1.8`）：华氏转摄氏的比例因子。
+  - `TEMPERATURE_OFFSET`（`Real` 类型，值为 `32.0`）：华氏转摄氏的偏移量。
+
+#### 4. **算法流程**
+1. **初始化**：
+   - 检查输入 `value` 是否有效（如果输入为无效值，可设置默认值或返回错误，但当前代码未处理）。
+2. **转换计算**：
+   - 使用公式计算摄氏温度：
+     \[
+     \text{tempCelsiusTemperature} = \frac{\text{value} - \text{TEMPERATURE\_OFFSET}}{\text{TEMPERATURE\_GAIN}}
+     \]
+3. **输出结果**：
+   - 将计算结果 `tempCelsiusTemperature` 赋值给函数返回值 `LGF_FahrenheitToCelsius`。
+   - 设置 `ENO`（使能输出）为 `TRUE`，表示函数执行成功（无错误处理）。
+
+#### 5. **代码调整建议**
+- **错误处理**：
+  - 当前代码未处理无效输入（如 `value` 为 `NaN` 或超出合理范围）。可以增加输入验证逻辑，例如：
+    ```scl
+    IF NOT IS_NAN(#value) THEN
+        #tempCelsiusTemperature := (#value - #TEMPERATURE_OFFSET) / #TEMPERATURE_GAIN;
+        ENO := TRUE;
+    ELSE
+        ENO := FALSE; // 输入无效
+    END_IF;
+    ```
+- **常量优化**：
+  - 如果 `TEMPERATURE_GAIN` 和 `TEMPERATURE_OFFSET` 是固定值，可以直接硬编码在公式中，无需定义为常量（但定义为常量更易读）。
+- **性能优化**：
+  - 如果函数调用频繁，可以省略临时变量 `tempCelsiusTemperature`，直接赋值给返回值：
+    ```scl
+    #LGF_FahrenheitToCelsius := (#value - 32.0) / 1.8;
+    ```
+
+#### 6. **总结**
+- 核心逻辑是简单的数学运算，重点在于输入输出的定义和常量管理。
+- 当前代码简洁高效，适合嵌入式或实时系统使用。若需要更健壮的实现，可增加输入验证和错误处理。

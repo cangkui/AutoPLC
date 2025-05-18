@@ -1,0 +1,67 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_CalcCRC8Advanced` 用于计算给定数据流的 CRC-8 校验值，支持以下高级特性：
+- 可配置的生成多项式（`mask`）
+- 初始值（`initValue`）
+- 最终异或值（`finalXorValue`）
+- 输入字节位反转（`reflectInput`）
+- 结果位反转（`reflectResult`）
+- 动态数据流长度（`noOfElements`）
+
+#### 2. **输入输出定义**
+- **输入参数**：
+  - `initValue`：CRC 计算的初始值（默认 `0x00`）
+  - `mask`：生成多项式（默认 `0x00`）
+  - `finalXorValue`：最终异或值（默认 `0x00`）
+  - `reflectInput`：是否反转输入字节的位顺序（默认 `FALSE`）
+  - `reflectResult`：是否反转结果字节的位顺序（默认 `FALSE`）
+  - `noOfElements`：参与计算的数据流长度（默认 `0`，表示使用整个数组）
+- **输出参数**：
+  - `error`：错误标志（`TRUE` 表示计算失败）
+  - `status`：状态码（`0x0000` 表示成功，`0x8400` 表示 `noOfElements` 超出数组范围）
+- **输入/输出参数**：
+  - `array`：待计算的数据流（字节数组）
+- **返回值**：计算得到的 CRC-8 校验值（`Byte` 类型）
+
+#### 3. **算法流程**
+1. **初始化**：
+   - 设置 `tempCRC` 为 `initValue`。
+   - 计算数组的上下界（`tempLowerLimit` 和 `tempUpperLimit`）。
+   - 检查 `noOfElements` 是否合法：
+     - 如果 `noOfElements > 0`，检查是否超出数组范围。若超出，设置错误标志并返回。
+     - 否则，调整 `tempUpperLimit` 为 `tempLowerLimit + noOfElements - 1`。
+
+2. **CRC 计算**：
+   - 遍历数组中的每个字节（`tempIndexArray` 从 `tempLowerLimit` 到 `tempUpperLimit`）：
+     - 如果 `reflectInput` 为 `TRUE`，反转当前字节的位顺序（`%X0` ↔ `%X7`，`%X1` ↔ `%X6`，依此类推）。
+     - 将当前字节与 `tempCRC` 异或（`tempCRC := tempCRC XOR tempInput`）。
+     - 对 `tempCRC` 进行 8 次位处理（`tempIndexCRC` 从 `0` 到 `7`）：
+       - 检查最高位（`%X7`）是否为 `1`：
+         - 若为 `1`，左移一位后与 `mask` 异或（`tempCRC := SHL(tempCRC, 1) XOR mask`）。
+         - 若为 `0`，仅左移一位（`tempCRC := SHL(tempCRC, 1)`）。
+
+3. **结果处理**：
+   - 如果 `reflectResult` 为 `TRUE`，反转 `tempCRC` 的位顺序。
+   - 将结果与 `finalXorValue` 异或，得到最终 CRC 值。
+   - 设置状态码（`status := STATUS_NO_ERROR`）和错误标志（`error := FALSE`）。
+
+#### 4. **错误处理**
+- 如果 `noOfElements` 超出数组范围：
+  - 设置 `status := ERR_NO_OF_ELEMENTS`。
+  - 设置 `error := TRUE`。
+  - 返回初始 `tempCRC` 值。
+
+#### 5. **优化与常量**
+- 使用常量定义（如 `SHIFT_ONE_BIT`、`CRC_LOOP_LOWER_LIMIT`）提高代码可读性。
+- 通过临时变量（如 `tempInvCRC`）减少重复计算。
+
+### 代码流程调整建议
+1. **输入验证**：
+   - 增加对 `mask` 和 `finalXorValue` 的默认值检查（如是否为有效的 CRC-8 多项式）。
+2. **性能优化**：
+   - 如果 `reflectInput` 和 `reflectResult` 均为 `FALSE`，可以跳过位反转步骤。
+3. **扩展性**：
+   - 支持更多错误状态（如空数组、无效多项式等）。
+4. **注释与文档**：
+   - 在关键步骤（如位反转、异或操作）添加注释，便于维护。

@@ -1,0 +1,28 @@
+
+
+### SCL算法流程描述
+
+1. **确定数组有效范围**
+   - 获取数组第一维的`LOWER_BOUND`和`UPPER_BOUND`
+   - 若数组长度为0，默认处理逻辑不触发（假设输入合法性由调用方保证）
+
+2. **初始化极值基准**
+   - 将数组首元素同时设为初始`tempMinValue`和`tempMaxValue`
+   - 记录初始索引`tempArrayIndexMin = tempArrayIndexMax = tempArrayLowerBound`
+
+3. **单次遍历极值检测**
+   - 从数组第二个元素开始循环（`tempCounter = lower+1`）
+   - 每次迭代：
+     * 缓存当前元素值`tempActValue`
+     * **最小值优先检测**：若当前值小于临时最小值，则更新`tempMinValue`和`tempArrayIndexMin`
+     * **最大值次优检测**：否则若当前值大于临时最大值，则更新`tempMaxValue`和`tempArrayIndexMax`
+
+4. **结果回写机制**
+   - 最终通过原始数组访问输出极值（确保数据一致性）
+   - 索引直接映射临时变量值
+   - 强制设置ENO为True（符合需求文档中禁用错误处理的要求）
+
+### ⚠️ 关键实现细节
+- **内存优化**：采用`S7_Optimized_Access`标志，启用连续内存块访问
+- **维度约束**：通过`DIMENSION_ONE`常量硬编码处理一维数组
+- **比较顺序**：优先处理最小值分支，确保在相同极值情况下记录首个出现位置的语义

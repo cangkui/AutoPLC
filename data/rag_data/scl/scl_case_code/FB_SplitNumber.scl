@@ -1,0 +1,67 @@
+FUNCTION_BLOCK "FB_SplitNumber"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    InputNumber : Int; 
+END_VAR
+
+VAR_OUTPUT
+    Thousands : Byte; 
+    Hundreds : Byte; 
+    Tens : Byte; 
+    Ones : Byte; 
+    Min : Byte; 
+    error : Bool; 
+    status : Word; 
+END_VAR
+
+VAR CONSTANT
+    STATUS_OK : Word := 16#0000;
+    STATUS_ERROR_CODE : Word := 16#8001;
+END_VAR
+
+VAR_TEMP
+    tempMin : Byte;
+END_VAR
+
+BEGIN
+    REGION Validation OF INPUT and OUTPUT 
+        IF #InputNumber < 0 OR #InputNumber >= 10000 THEN
+            #error := TRUE;
+            #status := #STATUS_ERROR_CODE;
+            RETURN;
+        ELSE
+            #error := FALSE;
+            #status := #STATUS_OK;
+        END_IF;
+    END_REGION
+
+    REGION Number separation
+        #Thousands := #InputNumber / 1000;
+        #Hundreds := (#InputNumber MOD 1000) / 100;
+        #Tens := (#InputNumber MOD 100) / 10;
+        #Ones := #InputNumber MOD 10;
+    END_REGION
+
+    REGION Find minimum non-zero digit
+        #tempMin := 255; 
+        IF #Thousands <> 0 AND #Thousands < #tempMin THEN
+            #tempMin := #Thousands;
+        END_IF;
+        IF #Hundreds <> 0 AND #Hundreds < #tempMin THEN
+            #tempMin := #Hundreds;
+        END_IF;
+        IF #Tens <> 0 AND #Tens < #tempMin THEN
+            #tempMin := #Tens;
+        END_IF;
+        IF #Ones <> 0 AND #Ones < #tempMin THEN
+            #tempMin := #Ones;
+        END_IF;
+        IF #InputNumber = 0 THEN
+            #tempMin := 0;
+        END_IF;
+    END_REGION
+
+    REGION Writting TO outputs
+        #Min := #tempMin;
+    END_REGION
+END_FUNCTION_BLOCK

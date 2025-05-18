@@ -1,0 +1,48 @@
+FUNCTION_BLOCK "LGF_SplitNumber_DInt"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT 
+	InputNumber : DInt;
+	IthDigit : Int;
+END_VAR
+
+VAR_OUTPUT 
+	Number_i : Byte;
+	error : Bool;
+	status : Word;
+END_VAR
+
+VAR_TEMP 
+	tempNumber : Int;
+	"counter" : Int;
+END_VAR
+
+VAR CONSTANT 
+	CONST_STATUS_OK : Word := 16#8000;
+	CONST_STATUS_ERROR_CODE : Word := 16#8001;
+END_VAR
+
+BEGIN
+	REGION initialization
+		#counter = 1;
+		#tempNumber := #InputNumber;
+	    #error := FALSE;
+	    #status := #CONST_STATUS_OK;
+	END_REGION
+	REGION Validation OF inputs and outputs 
+	    IF #InputNumber < 0 OR IthDigit < 0 THEN
+	        #error := TRUE;
+	        #status := #CONST_STATUS_ERROR_CODE;
+			RETURN;
+	    END_IF;
+	END_REGION
+	REGION Number separation
+		FOR #counter TO IthDigit BY 1 DO
+			#tempNumber := #tempNumber / 10;
+		END_FOR;
+		IF #tempNumber = 0 THEN
+			#Number_i := 0;
+		ELSE
+			#Number_i := #tempNumber MOD 10;
+		END_IF;
+	END_REGION
+END_FUNCTION_BLOCK

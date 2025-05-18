@@ -1,0 +1,43 @@
+### 算法流程描述
+
+#### 1. 变量定义
+- **输入变量**：InputValue（原始测量值，浮点数）
+- **输出变量**：
+  - LinearizedValue（线性化后的值，浮点数）
+  - Error（错误状态，布尔值）
+  - Status（状态码，字）
+- **常量定义**：
+  - 各区间的最小和最大值（MIN_VALUE_1, MAX_VALUE_1等）
+  - 各线性化范围的最小和最大值（MIN_LINEAR_1, MAX_LINEAR_1等）
+  - 错误状态码（ERROR_STATUS）
+
+#### 2. 初始化
+- 初始化Error为FALSE，Status为0。
+
+#### 3. 输入验证
+- 检查InputValue是否在有效范围内（1200 ≤ InputValue ≤ 7000）。
+  - 如果超出范围，设置Error为TRUE，Status为错误状态码（16#8001）。
+  - 如果InputValue小于1200，LinearizedValue设为150（MIN_LINEAR_1）。
+  - 如果InputValue大于7000，LinearizedValue设为720（MAX_LINEAR_3）。
+
+#### 4. 线性化逻辑
+- **区间1（1200 ≤ InputValue ≤ 3600）**：
+  - 使用线性插值公式将InputValue映射到150~240范围。
+  - 公式：`LinearizedValue = MIN_LINEAR_1 + ((InputValue - MIN_VALUE_1) / (MAX_VALUE_1 - MIN_VALUE_1)) * (MAX_LINEAR_1 - MIN_LINEAR_1)`
+  
+- **区间2（3600 < InputValue ≤ 4800）**：
+  - 使用线性插值公式将InputValue映射到240~560范围。
+  - 公式：`LinearizedValue = MIN_LINEAR_2 + ((InputValue - MIN_VALUE_2) / (MAX_VALUE_2 - MIN_VALUE_2)) * (MAX_LINEAR_2 - MIN_LINEAR_2)`
+  
+- **区间3（4800 < InputValue ≤ 7000）**：
+  - 使用线性插值公式将InputValue映射到560~720范围。
+  - 公式：`LinearizedValue = MIN_LINEAR_3 + ((InputValue - MIN_VALUE_3) / (MAX_VALUE_3 - MIN_VALUE_3)) * (MAX_LINEAR_3 - MIN_LINEAR_3)`
+
+#### 5. 输出写入
+- 将计算得到的LinearizedValue、Error和Status写入输出变量。
+
+### 迁移适用性
+1. **区间定义**：可以通过修改常量定义来适应不同的输入和输出范围。
+2. **线性化公式**：通用的线性插值方法，适用于任何需要将输入值映射到输出范围的情况。
+3. **错误处理**：通过Error和Status提供统一的错误反馈机制，便于系统集成和调试。
+4. **模块化设计**：功能块化设计便于复用，适用于需要多次线性化转换的场景。

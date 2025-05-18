@@ -1,0 +1,30 @@
+{
+    "title": "Floating-point Number Interval Linearization Conversion",
+    "description": "In some automated control systems, it may be necessary to convert a measured physical quantity (such as temperature, pressure, etc.) into another linearized or standardized value for the processing or display of control algorithms. For example, a physical quantity measured by a sensor may vary within a specific non-linear range, but the control system requires a linearized value for calculations.\nControl requirements:\nSystem needs to receive a floating-point number as input, representing the original measured value.\nBased on the size of the input value, it is converted to different linear ranges, and the linearized value after conversion is output.\nWhen the input value is between 1200 and 3600, it is converted to the range of 150 to 240.\nWhen the input value is between 3600 and 4800, it is converted to the range of 240 to 560.\nWhen the input value is between 4800 and 7000, it is converted to the range of 560 to 720.\nIf the input value is less than 1200 or greater than 7000, the converted value should be the linearized value corresponding to 1200 or 7000, and an error status error=1, status=16#8001 is output.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_LinearizeValue",
+    "input": [
+        {
+            "name": "InputValue",
+            "type": "Real",
+            "description": "Floating-point input, original measured value"
+        }
+    ],
+    "output": [
+        {
+            "name": "LinearizedValue",
+            "type": "Real",
+            "description": "Linearized value after conversion"
+        },
+        {
+            "name": "Error",
+            "type": "Bool",
+            "description": "Error status indicator\nFALSE: No error occurred\nTRUE: An error occurred during execution"
+        },
+        {
+            "name": "Status",
+            "type": "Word",
+            "description": "Status code"
+        }
+    ]
+ }

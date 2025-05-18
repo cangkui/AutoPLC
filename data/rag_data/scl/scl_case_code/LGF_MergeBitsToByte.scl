@@ -1,0 +1,41 @@
+FUNCTION "LGF_MergeBitsToByte" : Byte
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_MergeBitsToByte
+   VAR_INPUT 
+      bit7 : Bool;
+      bit6 : Bool;
+      bit5 : Bool;
+      bit4 : Bool;
+      bit3 : Bool;
+      bit2 : Bool;
+      bit1 : Bool;
+      bit0 : Bool;
+   END_VAR
+
+   VAR_TEMP 
+      tempByte : Byte;
+   END_VAR
+
+
+BEGIN
+	REGION MERGE
+	  // set the bits by slice access
+	  #tempByte.%X7 := #bit7;
+	  #tempByte.%X6 := #bit6;
+	  #tempByte.%X5 := #bit5;
+	  #tempByte.%X4 := #bit4;
+	  #tempByte.%X3 := #bit3;
+	  #tempByte.%X2 := #bit2;
+	  #tempByte.%X1 := #bit1;
+	  #tempByte.%X0 := #bit0;
+	END_REGION
+	
+	REGION OUTPUT
+	  #LGF_MergeBitsToByte := #tempByte;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

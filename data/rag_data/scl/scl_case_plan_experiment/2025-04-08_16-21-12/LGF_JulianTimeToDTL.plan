@@ -1,0 +1,83 @@
+# 算法流程描述：Julian Date 到 DTL 时间转换
+
+## 功能概述
+该函数将儒略日期(Julian Date)或简化儒略日期(Modified Julian Date)转换为DTL(日期时间)格式，基于UTC时间计算。
+
+## 输入输出
+- **输入**:
+  - `julianDate`: LReal类型，待转换的儒略日期
+  - `isModifiedDate`: Bool类型，标识是否为简化儒略日期
+- **输出**:
+  - `error`: Bool类型，标识是否发生错误
+  - `status`: Word类型，状态码
+- **返回值**: DTL类型，转换后的日期时间
+
+## 主要处理逻辑
+
+1. **预处理阶段**:
+   - 检查输入是否为简化儒略日期，如果是则转换为标准儒略日期
+   - 计算临时变量`tempJulianDate`的值
+
+2. **转换为Unix时间戳**:
+   - 使用公式将儒略日期转换为Unix时间戳(秒数)
+   - 公式: `(tempJulianDate - OFFSET_JULIAN_DATE_TO_UNIX) * SEC_PER_DAY`
+
+3. **时间有效性检查**:
+   - 检查转换后的时间是否早于1990年1月1日
+   - 如果早于该日期，返回错误状态和默认值
+   - 如果正好是该日期，返回警告状态和默认值
+
+4. **日期时间转换**:
+   - 计算日期部分: 从Unix时间戳中提取天数
+   - 计算时间部分: 分解为小时、分钟和秒
+   - 构建完整的DTL结构
+
+5. **输出处理**:
+   - 设置返回值
+   - 设置错误标志和状态码
+   - 确保ENO机制可用
+
+## 关键算法步骤
+
+1. **儒略日期转换**:
+   ```
+   IF isModifiedDate THEN
+     tempJulianDate = julianDate + OFFSET_MODIFIED_JULIAN_DATE_TO_JULIAN_DATE
+   ELSE
+     tempJulianDate = julianDate
+   END_IF
+   ```
+
+2. **Unix时间戳计算**:
+   ```
+   tempUnixTime = (tempJulianDate - OFFSET_JULIAN_DATE_TO_UNIX) * SEC_PER_DAY
+   ```
+
+3. **时间有效性验证**:
+   ```
+   IF tempUnixTime < DELTA_1970_1990 THEN
+     返回错误状态
+   ELSIF tempUnixTime = DELTA_1970_1990 THEN
+     返回警告状态
+   END_IF
+   ```
+
+4. **日期时间分解**:
+   ```
+   tempDate = (tempUnixTime - DELTA_1970_1990) / SEC_PER_DAY
+   tempTime = tempUnixTime - DELTA_1970_1990 - (tempDate * SEC_PER_DAY)
+   
+   HOUR = tempTime / SEC_PER_HOUR
+   MINUTE = (tempTime MOD SEC_PER_HOUR) / SEC_PER_MINUTE
+   SECOND = tempTime MOD SEC_PER_MINUTE
+   ```
+
+## 错误处理
+- 使用预定义的错误代码和警告代码
+- 对于无效时间返回默认值(DTL#1990-01-01-00:00:00)
+- 通过error和status变量提供执行状态信息
+
+## 常量定义
+- 定义了多个转换所需的常量值，包括时间偏移量和时间单位转换因子
+
+该算法实现了从儒略日期到工业标准日期时间格式的精确转换，同时提供了完善的错误处理机制。

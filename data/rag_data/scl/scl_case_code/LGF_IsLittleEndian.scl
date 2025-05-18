@@ -1,0 +1,44 @@
+FUNCTION "LGF_IsLittleEndian" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Industry Support'
+FAMILY : LGF
+NAME : LGF_IsLittleEndian
+   VAR_TEMP 
+      tempSixteenBits : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      BIT_PATTERN_ONE : Word := 16#0001;
+      MOVE_BIT_POS : UDInt := 15;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright 2021
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_IsLittleEndian
+	  // Function:         The function detects the endianness of the executing system.
+	  // Library:          LGF
+	  // Author:           Siemens Industry Support
+	  // Tested with:      CPU 1516-3 PN/DP
+	  // Engineering:      TIA Portal V17
+	  // Restrictions:     --
+	  // Requirements:     S7-1200/1500
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION Info
+	(/**/)
+	END_REGION
+	
+	REGION Process
+	  // We prepare the bit pattern
+	  #tempSixteenBits := SHL(IN := #BIT_PATTERN_ONE, N := #MOVE_BIT_POS);
+	  #LGF_IsLittleEndian := #tempSixteenBits.%B0 = B#16#00;
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

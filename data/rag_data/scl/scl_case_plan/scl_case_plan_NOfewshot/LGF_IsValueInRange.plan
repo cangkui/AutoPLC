@@ -1,0 +1,30 @@
+
+
+### 算法流程思维链总结
+
+1. **参数初始化**
+   - 根据`setpoint`和`range`计算上下限：
+     - **高限** = `setpoint + 0.5 * |range|`
+     - **低限** = `setpoint - 0.5 * |range|`
+   - 通过`ABS(range)`确保范围计算与`range`正负无关。
+
+2. **错误检测**
+   - 若计算过程中发生错误（例如输入参数非法导致系统自动置`ENO`为`false`）：
+     - 设置`error = TRUE`，状态码为`ERR_RANGE_LIMIT_VALUES`。
+     - 所有输出标志（`overHighLimit`/`belowLowLimit`）置`false`，函数返回`false`。
+
+3. **范围判断逻辑**
+   - **超上限**：若`value > 高限` → `overHighLimit = TRUE`。
+   - **超下限**：若`value < 低限` → `belowLowLimit = TRUE`。
+   - **返回值**：当既不超上限也不超下限时返回`TRUE`，否则`FALSE`。
+
+4. **正常状态处理**
+   - 若未检测到错误，设置`error = FALSE`，状态码为`STATUS_NO_ERROR`。
+   - 显式置`ENO = TRUE`（尽管注释说明不使用`ENO`机制）。
+
+---
+
+### 代码流程关键调整点
+- **错误触发条件**：依赖系统隐式错误（如数值溢出）触发`ENO = false`，而非显式参数校验。
+- **范围计算优化**：通过`0.5 * |range|`将输入`range`统一转换为对称区间，避免方向性歧义。
+- **输出覆盖性**：错误状态下主动清空`overHighLimit`/`belowLowLimit`输出，防止误报。

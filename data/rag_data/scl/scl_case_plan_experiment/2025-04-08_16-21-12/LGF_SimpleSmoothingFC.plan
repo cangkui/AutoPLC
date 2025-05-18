@@ -1,0 +1,82 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_SimpleSmoothingFC` 用于计算输入数组 `values` 的线性平滑值，并将结果存储在输出数组 `smoothedValues` 中。平滑算法采用简单的移动平均方法，即每个平滑值由当前值及其前后两个值的平均值计算得出。
+
+#### 2. **输入输出定义**
+- **输入/输出参数**：
+  - `values`：输入数组，包含待平滑的原始数据（类型：`Array[*] of LReal`）。
+  - `smoothedValues`：输出数组，存储平滑后的数据（类型：`Array[*] of LReal`）。
+- **输出参数**：
+  - `error`：布尔值，表示函数执行过程中是否发生错误（`FALSE`：无错误；`TRUE`：有错误）。
+  - `status`：状态码，表示函数执行的具体状态（如成功或错误类型）。
+
+#### 3. **错误处理**
+- **错误类型**：
+  - `ERR_ARRAY_DIFFERENT`（状态码 `16#8401`）：输入和输出数组的大小不一致。
+  - `ERR_NOT_ENOUGH_VALUES`（状态码 `16#8400`）：输入数组的元素数量不足（少于 `MINIMUM_ARRAY_ELEMENTS`，即 3）。
+- **错误处理逻辑**：
+  1. 检查输入和输出数组的维度是否一致。如果不一致，设置 `error` 为 `TRUE`，`status` 为 `ERR_ARRAY_DIFFERENT`，并立即返回。
+  2. 检查输入数组的元素数量是否足够（至少 3 个）。如果不足，设置 `error` 为 `TRUE`，`status` 为 `ERR_NOT_ENOUGH_VALUES`，并立即返回。
+
+#### 4. **平滑计算逻辑**
+- **平滑公式**：
+  每个平滑值 `smoothedValues[i]` 的计算公式为：
+  \[
+  \text{smoothedValues}[i] = \frac{\text{values}[i-1] + \text{values}[i] + \text{values}[i+1]}{3}
+  \]
+- **计算范围**：
+  - 从输入数组的第二个元素（索引 `tempLowerBound + 1`）到倒数第二个元素（索引 `tempUpperBound - 1`）。
+  - 边界元素（第一个和最后一个）不参与平滑计算，因为缺少前驱或后继值。
+
+#### 5. **执行流程**
+1. **初始化**：
+   - 获取输入和输出数组的上下界（`tempLowerBound`、`tempUpperBound`、`tempLowerBoundOut`、`tempUpperBoundOut`）。
+   - 计算输入和输出数组的元素数量（`tempNumberOfElements`、`tempNumberOfElementsOut`）。
+2. **错误检查**：
+   - 检查数组大小是否一致。
+   - 检查输入数组是否至少有 3 个元素。
+3. **平滑计算**：
+   - 使用 `FOR` 循环遍历输入数组的中间部分（从第二个元素到倒数第二个元素）。
+   - 对每个元素，计算其与前驱和后继元素的平均值，并存储到 `smoothedValues` 中。
+4. **状态设置**：
+   - 如果没有错误，设置 `error` 为 `FALSE`，`status` 为 `STATUS_FINISHED_NO_ERROR`。
+   - 强制 `ENO` 为 `TRUE`（表示函数执行完成）。
+
+#### 6. **注意事项**
+- **边界处理**：平滑计算不适用于数组的第一个和最后一个元素，因为它们缺少前驱或后继值。
+- **性能优化**：使用临时变量存储数组的上下界和元素数量，避免重复计算。
+- **状态码**：通过 `status` 提供详细的执行状态信息，便于调试和错误追踪。
+
+### 代码调整建议
+1. **边界元素处理**：
+   - 如果需要对边界元素进行平滑处理，可以扩展逻辑（例如使用镜像填充或零填充）。
+2. **动态平滑窗口**：
+   - 当前固定使用 3 个值的窗口（`NUMBER_OF_VALUES := 3`）。可以扩展为支持动态窗口大小。
+3. **状态码扩展**：
+   - 可以增加更多状态码，例如 `ERR_INVALID_VALUE`（输入值无效）或 `ERR_CALCULATION_FAILED`（计算失败）。
+4. **注释完善**：
+   - 在关键逻辑处增加注释，说明平滑公式和边界处理的逻辑。
+
+### 示例调用
+```scl
+VAR
+  inputValues : ARRAY[1..5] OF LReal := [1.0, 2.0, 3.0, 4.0, 5.0];
+  outputValues : ARRAY[1..5] OF LReal;
+  hasError : Bool;
+  funcStatus : Word;
+END_VAR
+
+"LGF_SimpleSmoothingFC"(
+  values := inputValues,
+  smoothedValues := outputValues,
+  error := hasError,
+  status := funcStatus
+);
+```
+**输出**：
+- `outputValues` 的中间部分（索引 2 到 4）将被平滑：
+  - `outputValues[2] = (1.0 + 2.0 + 3.0) / 3 = 2.0`
+  - `outputValues[3] = (2.0 + 3.0 + 4.0) / 3 = 3.0`
+  - `outputValues[4] = (3.0 + 4.0 + 5.0) / 3 = 4.0`
+- `error` 为 `FALSE`，`status` 为 `STATUS_FINISHED_NO_ERROR`。

@@ -1,0 +1,64 @@
+
+
+### 矩阵减法算法思维链
+
+#### 核心逻辑流程
+1. **维度边界获取**
+   - 获取三个矩阵的`行/列下界`和`行/列上界`：
+     ```plaintext
+     matrix1_low_row = LOWER_BOUND(matrix1, ROWS)
+     matrix2_low_row = LOWER_BOUND(matrix2, ROWS)
+     result_low_row = LOWER_BOUND(matrixResult, ROWS)
+     ...（同理获取列下界和所有上界）
+     ```
+
+2. **错误条件检测**
+   - 优先检查行维度：
+     ```plaintext
+     IF matrix1行下界 ≠ matrix2行下界 → ERR_MATR1_LOWBOUND_ROWS_MATR2 (8200)
+     IF matrix1行下界 ≠ result行下界 → ERR_MATR1_LOWBOUND_ROWS_RESMATR (8201)
+     ```
+   - 接着检查列维度：
+     ```plaintext
+     IF matrix1列下界 ≠ matrix2列下界 → ERR_MATR1_LOWBOUND_COLUMNS_MATR2 (8202)
+     IF matrix1列下界 ≠ result列下界 → ERR_MATR1_LOWBOUND_COLUMNS_RESMATR (8203)
+     ```
+   - 最后验证上界匹配性：
+     ```plaintext
+     matrix1行上界 ≠ matrix2行上界 → ERR_MATR1_UPPBOUND_ROWS_MATR2 (8204)
+     matrix1行上界 ≠ result行上界 → ERR_MATR1_UPPBOUND_ROWS_RESMATR (8205)
+     ...（列上界同理）
+     ```
+
+3. **矩阵运算执行**
+   - 双重循环遍历元素：
+     ```plaintext
+     FOR row FROM matrix1_low_row TO matrix1_upper_row:
+       FOR col FROM matrix1_low_col TO matrix1_upper_col:
+         result[row][col] = matrix1[row][col] - matrix2[row][col]
+     ```
+
+4. **状态反馈**
+   - 成功时设置：
+     ```plaintext
+     error = FALSE
+     status = 16#0000
+     ```
+
+#### 关键设计特征
+1. **维度优先原则**  
+严格按`行下界→行上界→列下界→列上界`顺序检测，确保错误立即返回
+
+2. **边界完整验证**  
+同时验证输入矩阵之间、输入与输出矩阵的维度匹配性（矩阵运算三要素一致性）
+
+3. **双索引遍历**  
+采用行列双重循环结构，保证任意二维矩阵形态（非零起始索引）的正确访问
+
+4. **状态机模式**  
+错误发生时立即退出流程，避免无效运算
+
+#### 调用注意事项
+- 必须保证三个矩阵的**维度完全一致**（包括上下界）
+- 错误状态码包含维度类型（行/列）和边界类型（LOW/UPP）信息
+- ENO机制被显式禁用，需通过error/status参数获取执行状态

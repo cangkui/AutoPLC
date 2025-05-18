@@ -1,0 +1,110 @@
+FUNCTION "LGF_GetCalendarDay" : DInt
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_GetCalendarDay
+	VAR_INPUT 
+		"date" : DTL;
+	END_VAR
+
+	VAR_OUTPUT 
+		error : Bool;
+		status : Word;
+	END_VAR
+
+	VAR_TEMP 
+		isLeapYear : Bool;
+		daysAccumulated : Int;
+		tempIndex : Int;
+		Year : Int;
+		Month : Int;
+		Day : Int;
+		tempDate : DTL;
+	END_VAR
+
+	VAR 
+		DAYS_IN_MONTH : Array[1..12] of Int := [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	END_VAR
+
+	VAR CONSTANT 
+		STATUS_NO_ERROR : Word := 16#0000;
+		ERR_LIM_DATE : Word := 16#8201;
+		JANUARY : Int := 1;
+		FEBRUARY : Int := 2;
+		MARCH : Int := 3;
+		APRIL : Int := 4;
+		MAY : Int := 5;
+		JUNE : Int := 6;
+		JULY : Int := 7;
+		AUGUST : Int := 8;
+		SEPTEMBER : Int := 9;
+		OCTOBER : Int := 10;
+		NOVEMBER : Int := 11;
+		DECEMBER : Int := 12;
+	END_VAR
+	
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_GetCalendarDay
+	  // Comment/Function: This function calculates for a date the passed days since 1st January.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO disabled - error handling done with error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION INITIALISATION
+	  #tempDate := #date;
+	  #daysAccumulated := 0;
+	END_REGION
+	
+	REGION COUNT DAYS
+	  // Check #date
+	  // adding zero forces the PLC to update the tag and eno check
+		#tempDate := #tempDate + #TIME_ZERO_FORCE_UPDATE;
+		IF ENO = FALSE THEN
+			#error := TRUE;
+			#status := #ERR_LIM_DATE; // wrong date, set status to be ERR_LIM_DATE
+			#LGF_GetCalendarDay := #daysAccumulated; 
+			RETURN;
+		END_IF;
+		
+		// get year,month,day from DTL data
+		#Year := #tempDate.YEAR;
+		#Month :=  #tempDate.MONTH;
+		#Day := #tempDate.DAY;
+		// check if this year is leap year using this method
+		#isLeapYear := ((#Year MOD 4 = 0) AND (#Year MOD 100 <> 0)) OR (#Year MOD 400 = 0);
+		
+		//if leap year, 29 days in FEBRUARY
+		IF #isLeapYear THEN
+			#DAYS_IN_MONTH[#FEBRUARY] := 29;
+		ELSE
+			#DAYS_IN_MONTH[#FEBRUARY] := 28;
+		END_IF;
+
+		FOR #tempIndex := #JANUARY TO #Month - 1 BY 1 DO
+			#daysAccumulated += #DAYS_IN_MONTH[#tempIndex];
+		END_FOR;
+
+		#daysAccumulated := #daysAccumulated + #Day;
+
+		END_IF;	  
+	END_REGION
+	
+	REGION OUTPUTS
+	  #error := FALSE;
+	  #status := #STATUS_NO_ERROR;
+	  #LGF_GetCalendarDay := #daysAccumulated;
+	  // ENO is not used, forced to TRUE
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

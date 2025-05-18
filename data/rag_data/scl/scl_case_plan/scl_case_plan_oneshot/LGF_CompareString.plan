@@ -1,0 +1,61 @@
+### 算法流程描述
+
+#### 1. 功能概述
+该函数用于比较两个字符串，并返回一个整数表示比较结果：
+- 返回 `-1`：左侧字符串 (`left`) 小于右侧字符串 (`right`)
+- 返回 `0`：两个字符串相等
+- 返回 `1`：左侧字符串 (`left`) 大于右侧字符串 (`right`)
+
+#### 2. 输入/输出定义
+- **输入参数**（VAR_IN_OUT）：
+  - `left`：要比较的第一个字符串
+  - `right`：要比较的第二个字符串
+- **返回值**（函数返回值）：
+  - 类型：`SInt`（短整型）
+  - 可能值：`-1`, `0`, `1`
+
+#### 3. 内部变量
+- `tempResult`：临时存储比较结果的变量（`SInt` 类型）
+- 常量定义（用于提高代码可读性）：
+  - `RETURN_STRINGS_ARE_EQUAL`：`0`
+  - `RETURN_STRING_LEFT_LESS_THAN_RIGHT`：`-1`
+  - `RETURN_STRING_LEFT_GREATER_THAN_RIGHT`：`1`
+
+#### 4. 算法逻辑
+1. **字符串比较**：
+   - 使用 PLC 内置的字符串比较运算符 `<` 和 `>` 进行比较。
+   - 如果 `left < right`，则设置 `tempResult = -1`。
+   - 如果 `left > right`，则设置 `tempResult = 1`。
+   - 否则（即 `left == right`），设置 `tempResult = 0`。
+
+2. **返回结果**：
+   - 将 `tempResult` 赋值给函数返回值 `LGF_CompareString`。
+   - 设置 `ENO = FALSE`（表示函数执行完成，但未提供额外的错误状态信息）。
+
+#### 5. 代码调整建议
+- **错误处理**：当前代码未处理可能的错误情况（例如空字符串或无效输入）。可以增加输入验证逻辑。
+- **性能优化**：如果字符串较长，可以考虑逐字符比较以提高效率（但 PLC 的字符串比较通常已优化）。
+- **可读性**：常量定义清晰，逻辑简单，适合直接使用。
+
+#### 6. 伪代码描述
+```
+FUNCTION LGF_CompareString : SInt
+INPUT:
+    left: String
+    right: String
+OUTPUT:
+    Return: SInt (-1, 0, 1)
+
+BEGIN
+    IF left < right THEN
+        Return = -1
+    ELSE IF left > right THEN
+        Return = 1
+    ELSE
+        Return = 0
+    END IF
+END FUNCTION
+```
+
+#### 7. 总结
+该函数是一个典型的字符串比较工具，逻辑简单直接，适合嵌入到更大的 PLC 程序中。如果需要扩展功能（如不区分大小写或支持多语言字符），可以进一步修改比较逻辑。

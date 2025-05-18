@@ -1,0 +1,265 @@
+FUNCTION_BLOCK "LGF_LIFO"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Industry_Support
+FAMILY : LGF
+NAME : LGF_LIFO
+   VAR_INPUT 
+      push : Bool := false;
+      pop : Bool := false;
+      peek : Bool := false;
+      reset : Bool;
+      clear : Bool;
+      initialItem : Variant;
+   END_VAR
+
+   VAR_OUTPUT 
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word;
+      subFunctionStatus { ExternalWritable := 'False'} : Word;
+      elementCount { ExternalWritable := 'False'} : DInt;
+      isEmpty { ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR_IN_OUT 
+      item : Variant;
+      buffer : Variant;
+   END_VAR
+
+   VAR 
+      statEdgesMem { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Struct
+         push { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         pop { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         peek { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+         clear { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      END_STRUCT;
+      statLastItemIndex { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int := -1;
+   END_VAR
+
+   VAR_TEMP 
+      tempEdges : Struct
+         push : Bool;
+         pop : Bool;
+         peek : Bool;
+         clear : Bool;
+      END_STRUCT;
+      tempInternalError : Int;
+      tempBufferSize : UDInt;
+      tempSizeCounter : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      BUFFER_IS_EMPTY : Int := -1;
+      NO_INTERNAL_ERROR : Int := 0;
+      BUFFER_INITIALIZED : Int := -1;
+      EMPTY_INITIALIZED : Int := 0;
+      INDEX_BEGINNING : Int := 0;
+      COUNT_ELEMENTS : UDInt := 1;
+      INCREMENT : Int := 1;
+      BUFFER_SIZE_CORRECTION : UDInt := 1;
+      COUNTER_LOWER_LIMIT : Int := 0;
+      ZERO_ELEMENTS : DInt := 0;
+      STATUS_NO_ERROR : Word := 16#0000;
+      STATUS_NO_CURRENT_JOBS : Word := 16#7000;
+      ERR_BUFFER_EMPTY : Word := 16#8001;
+      ERR_BUFFER_FULL : Word := 16#8002;
+      ERR_NO_ARRAY : Word := 16#8200;
+      ERR_WRONG_TYPE_ITEM : Word := 16#8201;
+      ERR_WRONG_TYPE_INITIAL_ITEM : Word := 16#8202;
+      ERR_CLEAR_BUFFER : Word := 16#8610;
+      ERR_RETURN_LAST_ENTRY : Word := 16#8611;
+      ERR_POP_REPLACE_ITEM_BY_INIT_VALUE : Word := 16#8612;
+      ERR_WRITE_ENTRY : Word := 16#8613;
+   END_VAR
+
+
+BEGIN
+	
+	REGION Block execution control
+	  // collect edges
+	  #tempEdges.push := #push AND NOT #statEdgesMem.push;
+	  #tempEdges.pop := #pop AND NOT #statEdgesMem.pop;
+	  #tempEdges.peek := #peek AND NOT #statEdgesMem.peek;
+	  #tempEdges.clear := #clear AND NOT #statEdgesMem.clear;
+	  // store values for edge detection
+	  #statEdgesMem.push := #push;
+	  #statEdgesMem.pop := #pop;
+	  #statEdgesMem.peek := #peek;
+	  #statEdgesMem.clear := #clear;
+	  
+	  // This program code section is only executed if no trigger input is active
+	  IF NOT (#push OR #pop OR #peek OR #reset OR #clear) THEN
+	    // If an error occurred during program execution,
+	    // the status "No Current Job" is used 16#7000 afterwarts wehn the triggers are reseted
+	    #error := false;
+	    #status := #STATUS_NO_CURRENT_JOBS;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    // the program processing OF the FB is terminated
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Validation of inputs
+	  // check whether the ring #buffer is an ARRAY.
+	  // IF so, the number OF the ARRAY elements is read out.
+	  // IF it is NOT an ARRAY, the program execution is terminated at this point
+	  IF IS_ARRAY(#buffer) THEN
+	    #tempBufferSize := CountOfElements(#buffer);
+	  ELSE
+	    #error := TRUE;
+	    #status := #ERR_NO_ARRAY;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // check whether the data type OF the ARRAY elements matches
+	  // the data type OF the entry (#item). IF the data types DO NOT match,
+	  // the program execution is terminated at this point
+	  IF (TypeOf(#item) <> TypeOfElements(#buffer)) THEN
+	    #error := TRUE;
+	    #status := #ERR_WRONG_TYPE_ITEM;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // check whether the initial value OF the ring #buffer
+	  // matches the entry (tag #item). IF the data types DO NOT match,
+	  // the program execution is terminated at this point
+	  IF (TypeOf(#item) <> TypeOf(#initialItem)) THEN
+	    #error := TRUE;
+	    #status := #ERR_WRONG_TYPE_INITIAL_ITEM;
+	    #subFunctionStatus := #STATUS_NO_ERROR;
+	    RETURN;
+	  END_IF;
+	  
+	  // If resetBuffer is "TRUE", the buffer counters are reset
+	  IF #reset THEN
+	    #statLastItemIndex := #BUFFER_INITIALIZED;
+	    #elementCount := #EMPTY_INITIALIZED;
+	    #isEmpty := true;
+	    RETURN;
+	  END_IF;
+	  
+	  // If clearBuffer has rising edge, the buffer is initialized by initial values
+	  IF #tempEdges.clear THEN
+	    FOR #tempSizeCounter := #COUNTER_LOWER_LIMIT TO UDINT_TO_INT(#tempBufferSize - #BUFFER_SIZE_CORRECTION) DO
+	      
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #initialItem,
+	                                             COUNT := #COUNT_ELEMENTS,
+	                                             SRC_INDEX := #INDEX_BEGINNING,
+	                                             DEST_INDEX := #tempSizeCounter,
+	                                             DEST => #buffer);
+	    END_FOR;
+	    
+	    // checks whether a local error has occurred.
+	    IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	      #error := true;
+	      #status := #ERR_CLEAR_BUFFER;
+	      #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	    END_IF;
+	    
+	    // reset counters
+	    #statLastItemIndex := #BUFFER_INITIALIZED;
+	    #elementCount := #EMPTY_INITIALIZED;
+	    #isEmpty := true;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION LIFO algorithm
+	  IF #tempEdges.pop OR #tempEdges.peek THEN
+	    REGION Pop or Peek
+	      // checks whether the ring #buffer is empty.
+	      // IF this is the CASE, program execution is terminated at this point
+	      IF (#statLastItemIndex <= #BUFFER_IS_EMPTY) THEN
+	        #error := TRUE;
+	        #status := #ERR_BUFFER_EMPTY;
+	        #subFunctionStatus := #STATUS_NO_ERROR;
+	        RETURN;
+	      END_IF;
+	      
+	      // returning the last entry of the ring buffer
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #buffer,
+	                                             COUNT := #COUNT_ELEMENTS,
+	                                             SRC_INDEX := #statLastItemIndex,
+	                                             DEST_INDEX := #INDEX_BEGINNING,
+	                                             DEST => #item);
+	      
+	      // checks whether a local error has occurred.
+	      IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	        #error := true;
+	        #status := #ERR_RETURN_LAST_ENTRY;
+	        #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	        RETURN;
+	      END_IF;
+	      
+	      REGION Pop
+	        // is POP - delete element in buffer
+	        // The value is initialized just if the "pop" input is triggered
+	        // If the "peek" input is triggered, stack is not changed
+	        IF #tempEdges.pop THEN
+	          #tempInternalError := MOVE_BLK_VARIANT(SRC := #initialItem,
+	                                                 COUNT := #COUNT_ELEMENTS,
+	                                                 SRC_INDEX := #INDEX_BEGINNING,
+	                                                 DEST_INDEX := #statLastItemIndex,
+	                                                 DEST => #buffer);
+	          
+	          // This program code section checks whether a local error has occurred.
+	          IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	            #error := true;
+	            #status := #ERR_POP_REPLACE_ITEM_BY_INIT_VALUE;
+	            #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	            RETURN;
+	          END_IF;
+	          
+	          // This program code section decrements the index by 1 for reading and writing.
+	          #statLastItemIndex -= #INCREMENT;
+	        END_IF;
+	      END_REGION Pop
+	    END_REGION Pop or Peek
+	    
+	  ELSIF #tempEdges.push THEN
+	    REGION Push
+	      // this program code section checks whether the ring #buffer is full.
+	      // IF this is the CASE, program execution is terminated at this point
+	      IF ((#statLastItemIndex + #INCREMENT) >= #tempBufferSize) THEN
+	        #error := TRUE;
+	        #status := #ERR_BUFFER_FULL;
+	        #subFunctionStatus := #STATUS_NO_ERROR;
+	        RETURN;
+	      END_IF;
+	      
+	      // This program code section writes the entry to the ring buffer.   
+	      #tempInternalError := MOVE_BLK_VARIANT(SRC := #item,
+	                                             COUNT := #COUNT_ELEMENTS,
+	                                             SRC_INDEX := #INDEX_BEGINNING,
+	                                             DEST_INDEX := #statLastItemIndex + #INCREMENT,
+	                                             DEST => #buffer);
+	      
+	      // This program code section checks whether a local error has occurred.
+	      IF (#tempInternalError <> #NO_INTERNAL_ERROR) THEN
+	        #error := true;
+	        #status := #ERR_WRITE_ENTRY;
+	        #subFunctionStatus := INT_TO_WORD(#tempInternalError);
+	        RETURN;
+	      ELSE
+	        // This program code section increments the index by 1 for reading and writing.        
+	        #statLastItemIndex += #INCREMENT;
+	      END_IF;
+	    END_REGION Push
+	  END_IF;
+	END_REGION
+	
+	REGION Writing to outputs
+	  // indexing starts with zero, therefor the count is allways one more than the last item index
+	  #elementCount := #statLastItemIndex + #INCREMENT;
+	  #isEmpty := #statLastItemIndex < #ZERO_ELEMENTS;
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  #subFunctionStatus := #STATUS_NO_ERROR;
+	  // no error handling by ENO needed
+	  ENO := TRUE;
+	END_REGION
+	
+	
+END_FUNCTION_BLOCK

@@ -1,0 +1,55 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+   - 该函数名为 `LGF_MergeBitsToWord`，用于将 16 个布尔变量（`bit0` 到 `bit15`）合并为一个 16 位的 Word 变量。
+   - 输入：16 个布尔变量，分别代表 Word 的每一位（`bit0` 是最低位 LSB，`bit15` 是最高位 MSB）。
+   - 输出：一个 Word 类型的变量，其每一位的值由对应的输入布尔变量决定。
+
+#### 2. **变量定义**
+   - **输入变量**：16 个布尔变量（`bit0` 到 `bit15`）。
+   - **临时变量**：一个 Word 类型的变量 `tempWord`，用于暂存合并后的结果。
+   - **返回值**：函数返回 `tempWord` 的值。
+
+#### 3. **主逻辑**
+   - **位合并**：
+     1. 将每个输入布尔变量的值赋给 `tempWord` 的对应位。
+        - `bit15` → `tempWord.%X15`（最高位）
+        - `bit14` → `tempWord.%X14`
+        - ...
+        - `bit0` → `tempWord.%X0`（最低位）
+   - **输出**：
+     1. 将 `tempWord` 的值赋给函数的返回值 `LGF_MergeBitsToWord`。
+     2. 设置 `ENO`（Enable Output）为 `TRUE`，表示函数执行成功。
+
+#### 4. **代码调整建议**
+   - **优化输入参数**：如果输入参数较多（如 16 个），可以考虑使用数组或结构体来简化参数传递。
+   - **错误处理**：虽然当前需求没有提到错误处理，但可以增加对输入参数的验证（如检查是否为布尔值）。
+   - **注释**：可以增加注释说明每位对应的输入变量，便于后续维护。
+
+#### 5. **伪代码描述**
+```plaintext
+FUNCTION LGF_MergeBitsToWord : Word
+    INPUT:
+        bit15: Bool
+        bit14: Bool
+        ...
+        bit0: Bool
+    TEMP:
+        tempWord: Word
+    BEGIN
+        // 合并位
+        tempWord.%X15 := bit15
+        tempWord.%X14 := bit14
+        ...
+        tempWord.%X0 := bit0
+
+        // 输出
+        LGF_MergeBitsToWord := tempWord
+        ENO := TRUE
+    END
+```
+
+#### 6. **总结**
+   - 该函数的核心逻辑是通过逐位赋值将 16 个布尔变量合并为一个 Word。
+   - 代码结构清晰，直接映射了需求描述的功能。
+   - 可以根据实际需求进一步优化输入参数的形式或增加错误处理逻辑。

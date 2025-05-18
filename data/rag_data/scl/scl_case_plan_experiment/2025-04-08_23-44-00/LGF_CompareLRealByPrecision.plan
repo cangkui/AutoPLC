@@ -1,0 +1,65 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数用于比较两个浮点数（LReal类型）是否在给定的精度范围内近似相等。由于浮点数在计算机中的表示存在精度问题，直接比较可能会因为微小的舍入误差而导致错误结果。因此，该函数通过引入一个用户定义的精度参数来实现近似比较。
+
+#### 2. **输入参数**
+- `valueA`：第一个待比较的浮点数。
+- `valueB`：第二个待比较的浮点数。
+- `precision`：比较的精度范围，通常是一个很小的正数（如 `1.0E-6`）。
+
+#### 3. **输出/返回值**
+- 返回值为布尔类型：
+  - `TRUE`：表示 `valueA` 和 `valueB` 在给定的精度范围内近似相等。
+  - `FALSE`：表示不相等。
+
+#### 4. **核心逻辑**
+函数的比较逻辑基于以下三种情况：
+1. **`valueA` 为零的情况**：
+   - 检查 `valueB` 的绝对值是否小于等于 `precision`。
+   - 如果是，则认为两者近似相等（返回 `TRUE`）。
+   - 公式：`ABS(#valueB) <= #precision`。
+
+2. **`valueB` 为零的情况**：
+   - 检查 `valueA` 的绝对值是否小于等于 `precision`。
+   - 如果是，则认为两者近似相等（返回 `TRUE`）。
+   - 公式：`ABS(#valueA) <= #precision`。
+
+3. **一般情况（`valueA` 和 `valueB` 均不为零）**：
+   - 计算 `valueA` 和 `valueB` 的绝对差值。
+   - 检查该差值是否小于等于 `precision` 乘以 `valueA` 的绝对值。
+   - 如果是，则认为两者近似相等（返回 `TRUE`）。
+   - 公式：`ABS(#valueA - #valueB) <= (#precision * ABS(#valueA))`。
+
+#### 5. **特殊处理**
+- 如果 `valueA` 和 `valueB` 均为零，函数会直接返回 `TRUE`（因为 `ABS(0.0) <= precision` 恒成立）。
+- 如果 `precision` 为零，函数会退化为精确比较（即 `valueA == valueB`）。
+
+#### 6. **其他说明**
+- 该函数不处理错误情况（如 `precision` 为负数），调用者需确保输入合法。
+- `ENO`（使能输出）被强制设置为 `TRUE`，表示函数始终正常执行。
+
+#### 7. **伪代码逻辑**
+```plaintext
+IF (valueA == 0.0 AND ABS(valueB) <= precision) THEN
+    RETURN TRUE
+ELSE IF (valueB == 0.0 AND ABS(valueA) <= precision) THEN
+    RETURN TRUE
+ELSE IF (ABS(valueA - valueB) <= (precision * ABS(valueA))) THEN
+    RETURN TRUE
+ELSE
+    RETURN FALSE
+END_IF
+```
+
+#### 8. **适用场景**
+- 适用于需要容忍微小浮点误差的场景，如：
+  - 传感器数据比较。
+  - 数学计算结果的验证。
+  - 控制系统中对浮点信号的阈值判断。
+
+#### 9. **扩展性建议**
+- 如果需要更灵活的比较方式，可以增加以下功能：
+  - 支持动态调整比较方向（如基于 `valueB` 的绝对值计算）。
+  - 支持对称比较（如 `ABS(valueA - valueB) <= (precision * MAX(ABS(valueA), ABS(valueB)))`）。
+  - 增加对 `precision` 的合法性检查（如确保其为正数）。

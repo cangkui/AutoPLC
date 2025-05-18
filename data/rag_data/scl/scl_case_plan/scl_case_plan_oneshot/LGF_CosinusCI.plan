@@ -1,0 +1,95 @@
+### 算法流程描述：余弦信号发生器（LGF_CosinusCI）
+
+#### **1. 功能概述**
+该功能块用于生成一个余弦信号波形，基于调用它的循环中断OB（组织块）的时间间隔。主要功能包括：
+- 根据输入的参数（幅值、偏移、周期、相位偏移）生成余弦信号
+- 支持复位功能
+- 提供错误检测和状态反馈
+
+#### **2. 输入参数**
+| 参数名 | 类型 | 描述 | 默认值 |
+|--------|------|------|--------|
+| `amplitude` | Real | 余弦信号的幅值 | 1.0 |
+| `offset` | Real | 信号的直流偏移量 | 0.0 |
+| `periode` | UDInt | 信号的周期（毫秒） | 1000 |
+| `phaseShift` | Real | 相位偏移（弧度） | 0.0 |
+| `callOB` | OB_CYCLIC | 调用的循环中断OB | - |
+| `reset` | Bool | 复位信号，用于重置计数器 | FALSE |
+
+#### **3. 输出参数**
+| 参数名 | 类型 | 描述 |
+|--------|------|------|
+| `value` | Real | 当前余弦信号值 |
+| `error` | Bool | 错误标志（TRUE = 错误） |
+| `status` | Word | 状态码（16#0000-16#7FFF: 正常；16#8000-16#FFFF: 错误） |
+| `subFunctionStatus` | Word | 子函数状态码 |
+
+#### **4. 内部变量**
+| 变量名 | 类型 | 描述 |
+|--------|------|------|
+| `statRad` | Real | 当前弧度值 |
+| `statPhaseShift` | Real | 相位偏移（弧度） |
+| `statCounter` | UDInt | 时间计数器（毫秒） |
+
+#### **5. 算法流程**
+1. **获取采样时间**
+   - 使用 `QRY_CINT` 函数查询循环中断OB的周期时间。
+   - 错误处理：
+     - 如果 `QRY_CINT` 返回错误，设置 `error = TRUE`，并返回错误码。
+     - 如果OB不可用，设置 `error = TRUE`，并返回 `ERR_OB_UNAVAILABLE`。
+
+2. **复位处理**
+   - 如果 `reset = TRUE`，则重置计数器 `statCounter = 0`，并输出 `value = 0`。
+
+3. **正常计算流程**
+   - **更新计数器**：
+     - 每次调用时，计数器 `statCounter` 增加 `tempCycleTime / 1000`（转换为秒）。
+     - 使用模运算 (`MOD`) 确保计数器在周期范围内。
+   - **计算弧度值**：
+     - `statRad = (statCounter * 2π) / periode`
+     - `statPhaseShift = (phaseShift * 2π) / periode`
+   - **计算余弦信号值**：
+     - `value = COS(statRad + statPhaseShift) * amplitude + offset`
+
+4. **状态和错误处理**
+   - 如果没有错误，设置：
+     - `error = FALSE`
+     - `status = STATUS_FINISHED_NO_ERROR (16#0000)`
+     - `subFunctionStatus = SUB_STATUS_NO_ERROR (16#0000)`
+
+#### **6. 关键数学公式**
+- **余弦信号计算**：
+  \[
+  \text{value} = A \cdot \cos\left(\frac{2\pi \cdot t}{T} + \phi\right) + \text{offset}
+  \]
+  其中：
+  - \(A\) = `amplitude`
+  - \(T\) = `periode`
+  - \(\phi\) = `phaseShift`
+  - \(t\) = `statCounter`
+
+#### **7. 代码优化建议**
+- **边缘情况处理**：
+  - 如果 `periode = 0`，应增加错误检测，避免除零错误。
+- **性能优化**：
+  - 可以预计算 `2π / periode` 以减少重复计算。
+- **可读性改进**：
+  - 使用注释明确每个计算步骤的物理意义（如“转换为弧度”）。
+
+#### **8. 状态码定义**
+| 状态码 | 描述 |
+|--------|------|
+| `16#0000` | 无错误，运行正常 |
+| `16#8600` | OB不可用错误 |
+| `16#8601` | `QRY_CINT` 查询错误 |
+
+---
+
+### **总结**
+该功能块的核心逻辑是：
+1. **获取时间基准**（通过 `QRY_CINT`）。
+2. **更新计数器**，并限制在周期范围内。
+3. **计算余弦值**，叠加幅值、偏移和相位。
+4. **处理错误和状态**，确保鲁棒性。
+
+适用于需要周期性信号生成的场景（如模拟测试、控制信号生成）。

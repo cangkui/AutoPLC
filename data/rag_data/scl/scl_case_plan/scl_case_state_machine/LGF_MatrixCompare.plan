@@ -1,0 +1,41 @@
+这是一个数据处理任务，算法流程如下：
+
+1. 矩阵维度检查阶段：
+   1.1 获取矩阵1的行和列的下界和上界
+   1.2 获取矩阵2的行和列的下界和上界
+   1.3 检查矩阵1和矩阵2的行下界是否相等，如果不相等：
+       - 设置error为TRUE
+       - 设置status为ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS
+       - 返回FALSE
+   1.4 检查矩阵1和矩阵2的列下界是否相等，如果不相等：
+       - 设置error为TRUE
+       - 设置status为ERR_MATR1_LOWBOUND_COLUMNS_MATR2_LOWBOUND_COLUMNS
+       - 返回FALSE
+   1.5 检查矩阵1和矩阵2的行上界是否相等，如果不相等：
+       - 设置error为TRUE
+       - 设置status为ERR_MATR1_UPPBOUND_ROWS_MATR2_UPPBOUND_ROWS
+       - 返回FALSE
+   1.6 检查矩阵1和矩阵2的列上界是否相等，如果不相等：
+       - 设置error为TRUE
+       - 设置status为ERR_MATR1_UPPBOUND_COLUMNS_MATR2_UPPBOUND_COLUMNS
+       - 返回FALSE
+
+2. 矩阵元素比较阶段：
+   2.1 遍历矩阵的所有行：
+       2.1.1 遍历矩阵的所有列：
+             2.1.1.1 比较矩阵1和矩阵2当前行列位置的元素值
+             2.1.1.2 如果元素值不相等：
+                     - 设置error为FALSE
+                     - 设置status为STATUS_NO_ERROR
+                     - 返回FALSE
+
+3. 成功完成比较：
+   - 设置error为FALSE
+   - 设置status为STATUS_NO_ERROR
+   - 返回TRUE
+
+注意点：
+- 所有维度检查都通过后才进行元素比较
+- 任何维度不匹配都会立即返回错误
+- 元素比较时发现不匹配立即返回
+- 只有所有元素都匹配才返回TRUE

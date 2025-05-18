@@ -1,0 +1,192 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_DataLogC` 是一个独立的数据记录器，用于管理数据日志的创建、打开、写入、清除和删除操作。它支持以下功能：
+- 通过触发信号或时间间隔自动记录数据。
+- 支持环形缓冲区模式（覆盖旧数据）或固定大小模式（达到最大条目后停止）。
+- 提供错误状态和诊断信息。
+- 支持日志文件的清除和删除。
+
+#### 2. **输入参数**
+- `enable`：启用功能块。
+- `name`：日志名称（也用作文件名）。
+- `triggerLogEntry`：上升沿触发一次数据记录（仅在 `parameter.isLoggingByInterval = FALSE` 时有效）。
+- `clearLog`：上升沿触发清除日志文件。
+- `deleteLog`：上升沿触发删除日志文件（如果存在）。
+- `parameter`：配置参数（UDT `LGF_typeDataLogParameter`），包括：
+  - `header`：日志标题（字段名称，逗号分隔）。
+  - `maxNumberOfEntries`：最大日志条目数。
+  - `timestampFormat`：时间戳格式。
+  - `clearOnOpen`：打开时是否清除日志。
+  - `deleteFile`：删除日志时是否同时删除文件。
+  - `enableRingBuffer`：是否启用环形缓冲区模式。
+  - `loggingByInterval`：是否按时间间隔记录。
+  - `loggingInterval`：自动记录的时间间隔。
+
+#### 3. **输出参数**
+- `valid`：输出值有效。
+- `busy`：功能块正在运行。
+- `error`：发生错误。
+- `status`：功能块状态（状态码）。
+- `writeEntryDone`：数据记录完成。
+- `clearLogDone`：日志清除完成。
+- `deleteLogDone`：日志删除完成。
+- `lastEntryReached`：达到最大条目数。
+- `noOfEntries`：当前日志条目数。
+- `diagnostics`：诊断信息（UDT `LGF_typeDiagnostics`）。
+
+#### 4. **内部变量**
+- `statDataLogCommands`：存储日志命令的临时参数。
+- `instIntervalTimer`：用于时间间隔记录的定时器。
+- `instDataLogCreate`、`instDataLogOpen`、`instDataLogClose`、`instDataLogWrite`、`instDataLogClear`、`instDataLogDelete`：日志操作的实例。
+- `statInternal`：内部状态和诊断信息。
+- `statMainState`：主状态机状态。
+
+#### 5. **状态机设计**
+功能块的核心是一个状态机，状态包括：
+- `FB_STATE_NO_PROCESSING`：无操作。
+- `FB_STATE_DL_OPEN`：打开日志文件。
+- `FB_STATE_DL_CREATE`：创建日志文件。
+- `FB_STATE_DL_WAIT_FOR_TRIGGER`：等待触发信号。
+- `FB_STATE_DL_WAIT_FOR_WRITE_CYCLE`：等待时间间隔。
+- `FB_STATE_DL_WRITE`：写入数据。
+- `FB_STATE_DL_CLEAR`：清除日志。
+- `FB_STATE_DL_CLEAR_DONE`：清除完成。
+- `FB_STATE_DL_DELETE`：删除日志。
+- `FB_STATE_DL_DELETE_DONE`：删除完成。
+- `FB_STATE_DISABLING`：禁用功能块（关闭日志）。
+- `FB_STATE_DISABLING_COMPLETED`：禁用完成。
+
+#### 6. **主逻辑流程**
+1. **初始化**：
+   - 检查 `enable` 信号的上升沿，初始化功能块。
+   - 根据 `parameter` 配置日志参数。
+   - 如果 `clearOnOpen` 为真，清除日志条目计数器。
+
+2. **日志操作**：
+   - 如果 `loggingByInterval` 为真，启动定时器并按间隔记录数据。
+   - 否则，等待 `triggerLogEntry` 的上升沿触发记录。
+
+3. **写入数据**：
+   - 调用 `instDataLogWrite` 写入数据。
+   - 如果达到最大条目数且未启用环形缓冲区，停止记录。
+
+4. **清除/删除日志**：
+   - 根据 `clearLog` 或 `deleteLog` 的上升沿触发清除或删除操作。
+
+5. **错误处理**：
+   - 捕获并记录操作中的错误（如文件打开失败、写入失败等）。
+   - 通过 `diagnostics` 输出错误详情。
+
+6. **禁用功能块**：
+   - 当 `enable` 为假时，关闭日志文件并清理资源。
+
+#### 7. **边缘检测**
+- 检测 `triggerLogEntry`、`clearLog`、`deleteLog` 的上升沿，避免重复触发。
+
+#### 8. **输出更新**
+- 根据内部状态更新输出信号（如 `valid`、`busy`、`error` 等）。
+- 在操作完成时（如写入、清除、删除）设置相应的完成标志。
+
+### 代码调整建议
+1. **状态机优化**：
+   - 确保状态转换逻辑清晰，避免遗漏状态。
+   - 在错误处理中，明确状态回退或恢复机制。
+
+2. **边缘检测**：
+   - 使用 `lastControlButtonState` 类似的变量检测 `triggerLogEntry`、`clearLog`、`deleteLog` 的上升沿。
+
+3. **日志参数验证**：
+   - 在初始化时验证 `parameter` 的合理性（如 `maxNumberOfEntries` 是否为正数）。
+
+4. **环形缓冲区处理**：
+   - 在 `FB_STATE_DL_WRITE` 中，明确环形缓冲区的覆盖逻辑。
+
+5. **诊断信息**：
+   - 在关键操作（如文件打开、写入）失败时，填充 `diagnostics` 的详细信息。
+
+6. **资源释放**：
+   - 在禁用功能块时，确保所有实例（如 `instDataLogClose`）被正确释放。
+
+### 示例伪代码
+```plaintext
+IF enable上升沿 THEN
+    初始化日志参数
+    根据parameter配置日志
+    IF clearOnOpen THEN
+        清除日志计数器
+    END_IF
+    打开或创建日志文件
+END_IF
+
+IF enable为真 THEN
+    CASE 当前状态 OF
+        FB_STATE_DL_OPEN:
+            尝试打开日志文件
+            IF 成功 THEN
+                根据loggingByInterval跳转到写入或等待触发状态
+            ELSE IF 文件不存在 THEN
+                跳转到创建状态
+            ELSE
+                记录错误
+            END_IF
+
+        FB_STATE_DL_CREATE:
+            创建日志文件
+            IF 成功 THEN
+                根据loggingByInterval跳转到写入或等待触发状态
+            ELSE
+                记录错误
+            END_IF
+
+        FB_STATE_DL_WAIT_FOR_TRIGGER:
+            IF triggerLogEntry上升沿 THEN
+                跳转到写入状态
+            END_IF
+
+        FB_STATE_DL_WAIT_FOR_WRITE_CYCLE:
+            IF 定时器到达间隔 THEN
+                跳转到写入状态
+            END_IF
+
+        FB_STATE_DL_WRITE:
+            写入数据
+            IF 成功 THEN
+                更新计数器
+                IF 达到最大条目数且非环形缓冲区 THEN
+                    停止记录
+                ELSE
+                    跳转到等待状态
+                END_IF
+            ELSE
+                记录错误
+            END_IF
+
+        FB_STATE_DL_CLEAR:
+            清除日志
+            IF 成功 THEN
+                跳转到清除完成状态
+            ELSE
+                记录错误
+            END_IF
+
+        FB_STATE_DL_DELETE:
+            删除日志
+            IF 成功 THEN
+                跳转到删除完成状态
+            ELSE
+                记录错误
+            END_IF
+    END_CASE
+END_IF
+
+IF enable下降沿 THEN
+    关闭日志文件
+    清理资源
+END_IF
+
+更新输出信号和诊断信息
+```
+
+### 总结
+该功能块通过状态机实现数据日志的全生命周期管理，支持触发式和时间间隔式记录，并提供丰富的错误处理和诊断信息。开发者需重点关注状态机的完整性和错误处理的鲁棒性。

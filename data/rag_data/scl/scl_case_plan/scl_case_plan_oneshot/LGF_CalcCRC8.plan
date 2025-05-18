@@ -1,0 +1,84 @@
+### **CRC-8计算函数（LGF_CalcCRC8）算法流程描述**
+
+#### **1. 功能概述**
+该函数用于计算给定数据流的 **CRC-8** 校验值，采用 **8位生成多项式（mask）** 进行循环冗余校验（CRC）。  
+- **输入参数**：
+  - `initValue`：CRC计算的初始值（默认 `0x00`）。
+  - `mask`：生成多项式（默认 `0x00`）。
+  - `noOfElements`：参与CRC计算的数组元素数量（若为0，则计算整个数组）。
+- **输出参数**：
+  - `error`：错误标志（`TRUE`表示计算失败）。
+  - `status`：状态码（`0x0000`表示成功，`0x8400`表示数组越界）。
+- **输入/输出参数**：
+  - `array`：待计算CRC的数据流（字节数组）。
+- **返回值**：
+  - 计算得到的 **CRC-8校验值（Byte）**。
+
+---
+
+#### **2. 算法流程**
+##### **(1) 初始化阶段**
+1. **设置初始CRC值**：
+   - `tempCRC := initValue`（初始值）。
+2. **计算数组边界**：
+   - `tempLowerLimit := LOWER_BOUND(array)`（数组下限）。
+   - `tempUpperLimit := UPPER_BOUND(array)`（数组上限）。
+3. **检查`noOfElements`参数**：
+   - 若 `noOfElements > 0`，检查是否超出数组范围：
+     - 若 `noOfElements > (tempUpperLimit - tempLowerLimit + 1)`，则报错（`ERR_NO_OF_ELEMENTS`）。
+     - 否则，调整 `tempUpperLimit` 以仅计算指定数量的元素。
+   - 若 `noOfElements = 0`，则计算整个数组。
+
+##### **(2) CRC计算阶段**
+1. **遍历数组元素**：
+   - 对每个元素 `array[tempIndexArray]`，执行：
+     - **异或运算**：`tempCRC := tempCRC XOR array[tempIndexArray]`。
+2. **逐位CRC计算（8次循环）**：
+   - 检查当前 `tempCRC` 的最高位（MSB）是否为 `1`：
+     - **若为 `1`**：
+       - 左移1位，并与 `mask` 进行异或运算：
+         ```scl
+         tempCRC := SHL(tempCRC, 1) XOR mask
+         ```
+     - **若为 `0`**：
+       - 仅左移1位：
+         ```scl
+         tempCRC := SHL(tempCRC, 1)
+         ```
+
+##### **(3) 结果输出阶段**
+1. **返回CRC值**：
+   - `LGF_CalcCRC8 := tempCRC`。
+2. **设置状态标志**：
+   - `status := STATUS_NO_ERROR`（成功）。
+   - `error := FALSE`。
+   - `ENO := TRUE`（函数执行成功）。
+
+---
+
+#### **3. 关键逻辑调整**
+- **错误处理优化**：
+  - 若 `noOfElements` 超出数组范围，立即返回错误状态，避免无效计算。
+- **循环边界优化**：
+  - 使用 `LOWER_BOUND` 和 `UPPER_BOUND` 动态获取数组范围，提高灵活性。
+- **位运算优化**：
+  - 通过 `SHL` 和 `XOR` 实现高效的CRC-8计算，符合标准算法流程。
+
+---
+
+#### **4. 代码生成指导**
+- **输入验证**：
+  - 确保 `noOfElements` 不超过数组实际长度。
+- **循环结构**：
+  - 外层循环遍历数组，内层循环处理每个字节的8位CRC计算。
+- **状态码映射**：
+  - 使用预定义的常量（如 `STATUS_NO_ERROR`）提高可读性。
+
+---
+
+### **总结**
+该算法通过 **动态数组边界检查** 和 **位运算优化**，实现了高效的CRC-8计算。核心逻辑包括：
+1. **初始化CRC值**。
+2. **遍历数据流并逐字节异或**。
+3. **逐位左移并与生成多项式异或**。
+4. **返回最终CRC值及状态信息**。

@@ -1,0 +1,40 @@
+FUNCTION "LGF_IsParityOdd" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_SIMATIC_Systems_Support
+FAMILY : LGF
+NAME : LGF_IsParityOdd
+   VAR_INPUT 
+      doubleWord : DWord;
+   END_VAR
+
+   VAR_TEMP 
+      tempDword : DWord;
+   END_VAR
+
+   VAR CONSTANT 
+      SHIFT_ONE_BIT : USInt := 1;
+      SHIFT_TWO_BIT : USInt := 2;
+      SHIFT_TO_RESULT : USInt := 28;
+      MASK_FOR_RESULT : DWord := 16#11111111;
+   END_VAR
+
+
+BEGIN
+
+	REGION Logic
+	  #tempDword := #doubleWord; // 32-bit word
+	  #tempDword := #tempDword XOR SHR(IN := #tempDword, N := #SHIFT_ONE_BIT);
+	  #tempDword := #tempDword XOR SHR(IN := #tempDword, N := #SHIFT_TWO_BIT);
+	  
+	  #tempDword := UDINT_TO_DWORD(DWORD_TO_UDINT(#tempDword AND #MASK_FOR_RESULT) * DWORD_TO_UDINT(#MASK_FOR_RESULT));
+	  
+	  #tempDword := SHR(IN := #tempDword, N := #SHIFT_TO_RESULT);
+	  
+	  // result is stored in LSB
+	  #LGF_IsParityOdd := #tempDword.%X0;
+	  
+	  // eno not needed, no error possible
+	  ENO := FALSE;
+	END_REGION
+	
+END_FUNCTION

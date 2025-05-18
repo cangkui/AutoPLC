@@ -1,0 +1,40 @@
+{
+    "title": "Calculate the Day of the Year",
+    "description": "In some automated systems, it may be necessary to calculate the day of the year based on the current date. This can be used for tracking production cycles, maintenance schedules, or other situations that require date information.\nControl Requirements:\nThe system needs to receive date input, including year, month, and day.\nBased on the input date, calculate and output the day of the year.\nConsidering that the number of days in February may vary each year (28 days in a leap year, 29 days in a non-leap year), the system needs to be able to identify leap years and calculate accordingly.\nThe output result should be an integer representing the day of the year.\nIf the input date is invalid (such as February 30th, April 31st, etc.), the system should output an error status and error code.\nNotes:\n1. The input year (Year) must be between 1000 and 3000 (inclusive), otherwise output an error status with error=true and an error code status=16#8001. If the input month (Month) is invalid, output an error status with error=true and an error code status=16#8002. If the input day (Day) is invalid, output an error status with error=true and an error code status=16#8003.\n2. The result of the calculation is output through DayOfYear.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_CalculateDayOfYear",
+    "input": [
+        {
+            "name": "Year",
+            "type": "Int",
+            "description": "Year input"
+        },
+        {
+            "name": "Month",
+            "type": "Int",
+            "description": "Month input"
+        },
+        {
+            "name": "Day",
+            "type": "Int",
+            "description": "Day input"
+        }
+    ],
+    "output": [
+        {
+            "name": "DayOfYear",
+            "type": "Int",
+            "description": "Output the day of the year"
+        },
+        {
+            "name": "error",
+            "type": "Bool",
+            "description": "Error status indicator\nFALSE: No error occurred\nTRUE: An error occurred during execution"
+        },
+        {
+            "name": "status",
+            "type": "Word",
+            "description": "Status code"
+        }
+    ]
+ }

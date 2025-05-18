@@ -1,0 +1,109 @@
+FUNCTION "LGF_MatrixTranspose" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_MatrixTranspose
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      matrix : Array[*, *] of LReal;
+      matrixTranspose : Array[*, *] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempMatrix1LowerBoundRows : DInt;
+      tempMatrix1LowerBoundColumns : DInt;
+      tempMatrix1UpperBoundRows : DInt;
+      tempMatrix1UpperBoundColumns : DInt;
+      tempResultMatrixLowerBoundRows : DInt;
+      tempResultMatrixLowerBoundColumns : DInt;
+      tempResultMatrixUpperBoundRows : DInt;
+      tempResultMatrixUpperBoundColumns : DInt;
+      tempCounterRow : DInt;
+      tempCounterColumn : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ROWS : UInt := 1;
+      COLUMNS : UInt := 2;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_MATR1_LOWBOUND_ROWS_RESMATR_LOWBOUND_COLUMNS : Word := 16#8200;
+      ERR_MATR1_LOWBOUND_COLUMNS_RESMATR_LOWBOUND_ROWS : Word := 16#8201;
+      ERR_MATR1_UPPBOUND_ROWS_RESMATR_UPPBOUND_COLUMNS : Word := 16#8202;
+      ERR_MATR1_UPPBOUND_COLUMNS_RESMATR_UPPBOUND_ROWS : Word := 16#8203;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_MatrixTranspose
+	  // Comment/Function: Caluclates the transposed matrix of the input matrix
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=================================================================================
+	END_REGION Block info header
+	
+	REGION Determine the size of the matrices
+	  // Lower bound rows
+	  #tempMatrix1LowerBoundRows := LOWER_BOUND(ARR := #matrix, DIM := #ROWS);
+	  #tempResultMatrixLowerBoundRows := LOWER_BOUND(ARR := #matrixTranspose, DIM := #ROWS);
+	  // Lower bound columns
+	  #tempMatrix1LowerBoundColumns := LOWER_BOUND(ARR := #matrix, DIM := #COLUMNS);
+	  #tempResultMatrixLowerBoundColumns := LOWER_BOUND(ARR := #matrixTranspose, DIM := #COLUMNS);
+	  // Upper bound rows
+	  #tempMatrix1UpperBoundRows := UPPER_BOUND(ARR := #matrix, DIM := #ROWS);
+	  #tempResultMatrixUpperBoundRows := UPPER_BOUND(ARR := #matrixTranspose, DIM := #ROWS);
+	  // Upper bound columns
+	  #tempMatrix1UpperBoundColumns := UPPER_BOUND(ARR := #matrix, DIM := #COLUMNS);
+	  #tempResultMatrixUpperBoundColumns := UPPER_BOUND(ARR := #matrixTranspose, DIM := #COLUMNS);
+	END_REGION
+	
+	REGION Error validation
+	  // Input matrix lower bound rows must be equal to output matrix lower bound columns.
+	  IF (#tempMatrix1LowerBoundRows <> #tempResultMatrixLowerBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_ROWS_RESMATR_LOWBOUND_COLUMNS;
+	    RETURN;
+	    // Input matrix lower bound columns must be equal to output matrix lower bound rows. 
+	  ELSIF (#tempMatrix1LowerBoundColumns <> #tempResultMatrixLowerBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_COLUMNS_RESMATR_LOWBOUND_ROWS;
+	    RETURN;
+	    // Input matrix upper bound rows must be equal to output matrix upper bound columns
+	  ELSIF (#tempMatrix1UpperBoundRows <> #tempResultMatrixUpperBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_ROWS_RESMATR_UPPBOUND_COLUMNS;
+	    RETURN;
+	    // Input matrix upper bound columns must be equal to output matrix upper bound rows.
+	  ELSIF (#tempMatrix1UpperBoundColumns <> #tempResultMatrixUpperBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_COLUMNS_RESMATR_UPPBOUND_ROWS;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculation of the transposed matrix
+	  FOR #tempCounterRow := #tempMatrix1LowerBoundRows TO #tempMatrix1UpperBoundRows DO
+	    FOR #tempCounterColumn := #tempMatrix1LowerBoundColumns TO #tempMatrix1UpperBoundColumns DO
+	      #matrixTranspose[#tempCounterColumn, #tempCounterRow] := #matrix[#tempCounterRow, #tempCounterColumn];
+	    END_FOR;
+	  END_FOR;
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  //Set ENO to true
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

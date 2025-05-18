@@ -1,0 +1,49 @@
+FUNCTION "LGF_StringToInt" : DInt
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_StringToInt
+   VAR_INPUT 
+      value : String;
+   END_VAR
+
+   VAR_TEMP 
+      tempDoubleInteger : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      CONVERT_FORMAT_TO_INTEGER : Word := 16#0000;
+      CONVERT_START_POSITION : UInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_StringToInt
+	  // Comment/Function: This function converts a string to an integer value
+	  //                   Vice versa of the LGF_IntToString - wrapper of the system function VAL_STRG.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO handling done by STRG_VAL
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION Block info header
+	
+	REGION CONVERSION
+	  STRG_VAL(IN     := #value,
+	           FORMAT := #CONVERT_FORMAT_TO_INTEGER,
+	           P      := #CONVERT_START_POSITION,
+	           OUT    => #tempDoubleInteger);
+	END_REGION
+	
+	REGION OUTPUT
+	  #LGF_StringToInt := #tempDoubleInteger;
+	END_REGION
+	
+END_FUNCTION

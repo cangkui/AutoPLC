@@ -1,0 +1,84 @@
+﻿FUNCTION_BLOCK "LightsControl"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      button1 : Bool;
+      button2 : Bool;
+      button3 : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      greenLight : Bool;
+      redLight : Bool;
+      yellowLight : Bool;
+   END_VAR
+
+   VAR 
+      CycleStep : Int := 0;
+      ManModeTimer1 : TON_TIME;
+      ManModeTimer2 : TON_TIME;
+      AutoModeTimer : TON_TIME;
+   END_VAR
+
+
+BEGIN
+	    IF #button1 = FALSE THEN
+	        #ManModeTimer1(IN := #ManModeTimer2.Q,
+	                       PT := t#1s);
+	        #ManModeTimer2(IN := NOT #ManModeTimer1.Q,
+	                       PT := t#1s);
+	        IF #button2 AND NOT #button3 THEN
+	            #greenLight := TRUE;
+	            #redLight := #ManModeTimer2.Q;
+	            #yellowLight := FALSE;
+	        ELSIF NOT #button2 AND #button3 THEN
+	            #redLight := TRUE;
+	            #yellowLight := #ManModeTimer2.Q;
+	            #greenLight := FALSE;
+	        ELSIF #button2 AND #button3 THEN
+	            #yellowLight := TRUE;
+	            #greenLight := #ManModeTimer2.Q;
+	            #redLight := FALSE;
+	        ELSE
+	            #greenLight := FALSE;
+	            #redLight := FALSE;
+	            #yellowLight := FALSE;
+	        END_IF;
+	        
+	    ELSE
+	        #AutoModeTimer(IN := TRUE,
+	                       PT := T#1s);
+	        CASE #CycleStep OF
+	            0:
+	                #greenLight := TRUE;
+	                #redLight := FALSE;
+	                #yellowLight := FALSE;
+	                IF #AutoModeTimer.Q THEN
+	                    #CycleStep := 1;
+	                    #AutoModeTimer(IN := FALSE,
+	                                   PT := T#1s);
+	                END_IF;
+	            1:
+	                #greenLight := FALSE;
+	                #redLight := TRUE;
+	                #yellowLight := FALSE;
+	                
+	                IF #AutoModeTimer.Q THEN
+	                    #CycleStep := 2;
+	                    #AutoModeTimer(IN := FALSE,
+	                                   PT := T#1s);
+	                END_IF;
+	            2:
+	                #greenLight := FALSE;
+	                #redLight := FALSE;
+	                #yellowLight := TRUE;
+	                
+	                IF #AutoModeTimer.Q THEN
+	                    #CycleStep := 0;
+	                    #AutoModeTimer(IN := FALSE,
+	                                   PT := T#1s);
+	                END_IF;
+	        END_CASE;
+	    END_IF;
+END_FUNCTION_BLOCK
+

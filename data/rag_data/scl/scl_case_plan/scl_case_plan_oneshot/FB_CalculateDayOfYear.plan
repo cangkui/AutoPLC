@@ -1,0 +1,111 @@
+### 算法流程描述
+
+#### 1. **输入验证**
+   - **年份验证**：检查输入的年份是否在1000到3000之间。如果不在范围内，设置错误标志和错误代码（16#8001），并立即返回。
+   - **月份验证**：检查输入的月份是否在1到12之间。如果无效，设置错误标志和错误代码（16#8002），并立即返回。
+   - **闰年判断**：根据闰年规则（能被4整除但不能被100整除，或能被400整除）判断是否为闰年，并调整2月份的天数（28或29天）。
+   - **日期验证**：检查输入的日期是否在对应月份的有效天数范围内。如果无效，设置错误标志和错误代码（16#8003），并立即返回。
+
+#### 2. **计算一年中的第几天**
+   - **初始化**：创建一个数组`DAYS_IN_MONTHS`，存储每个月的天数（2月初始为28天）。
+   - **闰年调整**：如果是闰年，将2月的天数改为29天。
+   - **累加天数**：
+     1. 遍历从1月到当前月份的前一个月，累加每个月的天数。
+     2. 将当前月份的日期加到累加结果中，得到一年中的第几天。
+
+#### 3. **输出结果**
+   - **正常输出**：将计算出的`DayOfYear`输出，并设置错误标志为`FALSE`，状态码为`16#0000`。
+   - **错误输出**：如果任何输入验证失败，设置错误标志为`TRUE`，并输出对应的错误代码（16#8001、16#8002或16#8003）。
+
+---
+
+### 代码流程调整建议
+
+1. **输入验证顺序优化**：
+   - 先验证年份，再验证月份，最后验证日期。因为月份和日期的有效性依赖于年份（闰年）和月份（天数）。
+
+2. **闰年判断逻辑**：
+   - 使用逻辑表达式`((Year MOD 4 = 0) AND (Year MOD 100 <> 0)) OR (Year MOD 400 = 0)`判断闰年，确保准确性。
+
+3. **日期验证**：
+   - 在验证日期时，直接引用`DAYS_IN_MONTHS[Month]`作为最大天数，避免硬编码。
+
+4. **计算效率**：
+   - 使用循环累加前几个月的天数，代码简洁且易于维护。如果性能要求极高，可以用查表法替代循环。
+
+5. **错误处理**：
+   - 每次验证失败后立即返回，避免不必要的计算。错误代码和标志清晰区分不同错误类型。
+
+6. **常量定义**：
+   - 使用常量（如`STATUS_OK`、`ERR_INVALID_YEAR`等）提高代码可读性。
+
+---
+
+### 伪代码描述
+
+```plaintext
+FUNCTION_BLOCK FB_CalculateDayOfYear
+    INPUT: Year, Month, Day
+    OUTPUT: DayOfYear, error, status
+
+    CONSTANTS:
+        STATUS_OK = 16#0000
+        ERR_INVALID_YEAR = 16#8001
+        ERR_INVALID_MONTH = 16#8002
+        ERR_INVALID_DAY = 16#8003
+
+    VARIABLES:
+        DAYS_IN_MONTHS = [31, 28, 31, 30, ..., 31]  // 初始2月=28天
+        isLeapYear: Bool
+        tempDayOfYear: Int
+
+    BEGIN
+        // 1. 验证年份
+        IF Year < 1000 OR Year > 3000 THEN
+            error := TRUE
+            status := ERR_INVALID_YEAR
+            RETURN
+        END_IF
+
+        // 2. 验证月份
+        IF Month < 1 OR Month > 12 THEN
+            error := TRUE
+            status := ERR_INVALID_MONTH
+            RETURN
+        END_IF
+
+        // 3. 判断闰年并调整2月天数
+        isLeapYear := ((Year MOD 4 = 0) AND (Year MOD 100 <> 0)) OR (Year MOD 400 = 0)
+        IF isLeapYear THEN
+            DAYS_IN_MONTHS[2] := 29
+        END_IF
+
+        // 4. 验证日期
+        IF Day < 1 OR Day > DAYS_IN_MONTHS[Month] THEN
+            error := TRUE
+            status := ERR_INVALID_DAY
+            RETURN
+        END_IF
+
+        // 5. 计算一年中的第几天
+        tempDayOfYear := 0
+        FOR i := 1 TO Month - 1 DO
+            tempDayOfYear += DAYS_IN_MONTHS[i]
+        END_FOR
+        tempDayOfYear += Day
+
+        // 6. 输出结果
+        DayOfYear := tempDayOfYear
+        error := FALSE
+        status := STATUS_OK
+    END
+END_FUNCTION_BLOCK
+```
+
+---
+
+### 关键点总结
+- **输入验证优先**：确保所有输入合法后再进行计算。
+- **闰年处理**：动态调整2月天数。
+- **错误代码清晰**：区分年份、月份、日期的无效输入。
+- **循环累加**：通用性强，适合任意月份和日期。

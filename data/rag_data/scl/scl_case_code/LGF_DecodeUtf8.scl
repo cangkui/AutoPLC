@@ -1,0 +1,162 @@
+FUNCTION "LGF_DecodeUtf8" : Word
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : 'Siemens Online Support'
+FAMILY : LGF
+NAME : LGF_DecodeUtf8
+   VAR_INPUT 
+      byteStream : Array[*] of Byte;
+      startPos : DInt;
+      count : UInt;
+   END_VAR
+
+   VAR_IN_OUT 
+      decodedString : WString;
+   END_VAR
+
+   VAR_TEMP 
+      tempString : WString;
+      tempStatus : Word;
+      tempCodepoint : DWord;
+      tempPos : DInt;
+      tempLowerBound : DInt;
+      tempUpperBound : DInt;
+      tempMaxLen : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      FOLLOW_BYTE : Byte := 2#10000000;
+      START_BYTE_TWO : Byte := 2#11000000;
+      START_BYTE_THREE : Byte := 2#11100000;
+      START_BYTE_FOUR : Byte := 2#11110000;
+      NUM_NET_BITS : USInt := 6;
+      REPLACEMENT_CHAR : Word := 16#003F;
+      MAX_CODEPOINT : Word := 16#D7FF;
+      STATUS_NO_ERROR : Word := 16#0000;
+      WARN_UNSUPPORTED_CHAR : Word := 16#7FFD;
+      WARN_STREAM_EXCEEDS_MAX_LEN : Word := 16#7FFE;
+      ERR_START_POS_OUTSIDE : Word := 16#8201;
+      ERR_COUNT_EXCEEDS_BOUNDS : Word := 16#8202;
+      ERR_COUNT_EXCEEDS_MAX_LEN : Word := 16#8203;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright 2021
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_DecodeUtf8
+	  // Function:         Decodes a UTF-8 encoded byte stream into a WString
+	  // Library:          LGF
+	  // Author:           Siemens Industry Online Support
+	  // Tested with:      CPU 1516-3 PN/DP
+	  // Engineering:      TIA Portal V16
+	  // Restrictions:     --
+	  // Requirements:     S7-1200/1500
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION INITIALISATION
+	  #tempString := WString#'';
+	  #tempPos := #startPos;
+	  #tempLowerBound := LOWER_BOUND(ARR := #byteStream, DIM := 1);
+	  #tempUpperBound := UPPER_BOUND(ARR := #byteStream, DIM := 1);
+	  #tempMaxLen := MAX_LEN(#decodedString);
+	  #tempStatus := #STATUS_NO_ERROR;
+	  
+	  // Check parameters
+	  IF #startPos < #tempLowerBound OR #startPos > #tempUpperBound THEN
+	    #tempStatus := #ERR_START_POS_OUTSIDE;
+	  ELSIF #startPos + #count > #tempUpperBound THEN
+	    #tempStatus := #ERR_COUNT_EXCEEDS_BOUNDS;
+	  ELSIF #count > #tempMaxLen THEN
+	    #tempStatus := #ERR_COUNT_EXCEEDS_MAX_LEN;
+	  END_IF;
+	END_REGION
+	
+	REGION PROGRAM LOGIC
+	  IF #tempStatus = 0 THEN // No error
+	    REPEAT
+	      // Check length of decoded string
+	      IF LEN(#tempString) >= #tempMaxLen THEN // Max. length reached and more data to decode
+	        #tempStatus := #WARN_STREAM_EXCEEDS_MAX_LEN; // Output warning and exit loop
+	        EXIT;
+	      END_IF;
+	      
+	      IF #byteStream[#tempPos].%X7 = FALSE THEN // Character is encoded in 1 byte
+	        IF #byteStream[#tempPos] <> 16#00 THEN // Character is not NUL
+	          #tempCodepoint := #byteStream[#tempPos];
+	          #tempPos += 1;
+	        ELSE
+	          EXIT; // End of stream found, exit loop
+	        END_IF;
+	        
+	      ELSIF #tempPos = #tempUpperBound THEN // Character is last byte in byte stream but not encoded in 1 byte
+	        #tempCodepoint := #REPLACEMENT_CHAR;
+	        #tempPos += 1;
+	        #tempStatus := #WARN_UNSUPPORTED_CHAR;
+	        
+	      ELSIF (#byteStream[#tempPos] AND #START_BYTE_FOUR) = #START_BYTE_FOUR THEN // Character is encoded in 4 bytes
+	        // #tempCodepoint := #bytestream[#tempPos] AND NOT #START_BYTE_FOUR; // Mask start byte
+	        
+	        // FOR #tempPos := #tempPos + 1 TO #tempPos + 3 DO // Next byte and two more
+	        //   #tempCodepoint := SHL(IN := #tempCodepoint, N := #NUM_NET_BITS); // Make space for follow byte
+	        //   #tempCodepoint := #tempCodepoint OR (#bytestream[#tempPos] AND NOT #FOLLOW_BYTE); // Add follow byte
+	        // END_FOR;
+	        
+	        #tempCodepoint := #REPLACEMENT_CHAR; // WChar only supports codepoints <= 16#D7FF
+	        #tempPos += 4;
+	        #tempStatus := #WARN_UNSUPPORTED_CHAR;
+	        
+	      ELSIF (#byteStream[#tempPos] AND #START_BYTE_THREE) = #START_BYTE_THREE THEN // Character is encoded in 3 bytes
+	        #tempCodepoint := #byteStream[#tempPos] AND NOT #START_BYTE_THREE; // Mask start byte
+	        
+	        FOR #tempPos := #tempPos + 1 TO #tempPos + 2 DO // Next byte and one more
+	          #tempCodepoint := SHL(IN := #tempCodepoint, N := #NUM_NET_BITS); // Make space for follow byte
+	          #tempCodepoint := #tempCodepoint OR (#byteStream[#tempPos] AND NOT #FOLLOW_BYTE); // Add follow byte
+	        END_FOR;
+	        
+	        // Check compatibility, WChar only supports codepoints <= 16#D7FF
+	        IF #tempCodepoint > #MAX_CODEPOINT THEN
+	          #tempCodepoint := #REPLACEMENT_CHAR;
+	          #tempStatus := #WARN_UNSUPPORTED_CHAR;
+	        END_IF;
+	        
+	      ELSIF (#byteStream[#tempPos] AND #START_BYTE_TWO) = #START_BYTE_TWO THEN // Character is encoded in 2 bytes
+	        #tempCodepoint := #byteStream[#tempPos] AND NOT #START_BYTE_TWO; // Mask start byte
+	        #tempCodepoint := SHL(IN := #tempCodepoint, N := #NUM_NET_BITS); // Make space for follow byte
+	        #tempCodepoint := #tempCodepoint OR (#byteStream[#tempPos + 1] AND NOT #FOLLOW_BYTE); // Add follow byte
+	        #tempPos += 2;
+	        
+	      ELSIF (#byteStream[#tempPos] AND #FOLLOW_BYTE) = #FOLLOW_BYTE THEN // Character starts with follow byte
+	        #tempPos += 1; // Ignore unexpected follow bytes
+	        CONTINUE;
+	        
+	      ELSE // Unsupported character
+	        #tempCodepoint := #REPLACEMENT_CHAR;
+	        #tempPos += 1;
+	        #tempStatus := #WARN_UNSUPPORTED_CHAR;
+	      END_IF;
+	      
+	      // Concatenate decoded characters
+	      #tempString := CONCAT(IN1 := #tempString, IN2 := DWORD_TO_WCHAR(#tempCodepoint));
+	      
+	    UNTIL ((#count <> 0 AND LEN(#tempString) >= #count) OR #tempPos > #tempUpperBound) END_REPEAT;
+	  END_IF;
+	END_REGION
+	
+	REGION OUTPUTS
+	  // Write application specific temp values to outputs
+	  IF #tempStatus.%X15 = TRUE THEN // An error occured
+	    #decodedString := WString#'';
+	  ELSE // Successful or with warning
+	    #decodedString := #tempString;
+	  END_IF;
+	  
+	  // Write status
+	  ENO := #tempStatus.%X15;
+	  #LGF_DecodeUtf8 := #tempStatus;
+	END_REGION
+	
+END_FUNCTION

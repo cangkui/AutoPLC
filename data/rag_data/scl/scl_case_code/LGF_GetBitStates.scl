@@ -1,0 +1,96 @@
+FUNCTION_BLOCK "LGF_GetBitStates"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Simatic_Systems_Support
+FAMILY : LGF
+NAME : LGF_CountBitStates
+   VAR_INPUT 
+      value : DWord;
+   END_VAR
+
+   VAR_OUTPUT 
+      hasChanged { ExternalWritable := 'False'} : Bool;
+      hasRisingEdges { ExternalWritable := 'False'} : Bool;
+      risingBits { ExternalWritable := 'False'} : DWord;
+      noOfRisingBits { ExternalWritable := 'False'} : USInt;
+      hasFallingEdges { ExternalWritable := 'False'} : Bool;
+      fallingBits { ExternalWritable := 'False'} : DWord;
+      noOfFallingBits { ExternalWritable := 'False'} : USInt;
+   END_VAR
+
+   VAR 
+      statPreviousValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : DWord;
+   END_VAR
+
+   VAR_TEMP 
+      tempRisingResult : DWord;
+      tempNoRisingBits : DWord;
+      tempFallingResult : DWord;
+      tempNoFallingBits : DWord;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO_EDGES : DWord;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2018
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_GetBitStates
+	  // Comment/Function: Check DWord for edges, falling as well as rising.  
+	  //                   Returns the number of edges, DWords with edge bits and a bool if edge(s) exists.
+	  //                   https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Simatic Systems Support
+	  // Tested with:      1516F FW2.8 / S7-PLCSIM Advanced V3.0
+	  // Engineering:      TIA Portal V16 Update 4
+	  // Restrictions:     ENO not in use, set to true, no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	(/**/)
+	END_REGION DESCRIPTION
+	
+	REGION PROGRAM LOGIC
+	  // Get edges from input DWord and DWord from previous cycle
+	  #tempRisingResult := #value AND NOT #statPreviousValue;
+	  #tempFallingResult := NOT #value AND #statPreviousValue;
+	  
+	  // Store value for next cycle
+	  #statPreviousValue := #value;
+	  
+	  // Copy edge result into work variable for counting the number of rising edges
+	  #tempNoRisingBits := #tempRisingResult;
+	  // Count number of rising edges, algorythm descriped from: https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+	  #tempNoRisingBits := UDINT_TO_DWORD(DWORD_TO_UDINT(#tempNoRisingBits) - DWORD_TO_UDINT(SHR(IN := #tempNoRisingBits, N := 1) AND 16#55555555));
+	  #tempNoRisingBits := UDINT_TO_DWORD(DWORD_TO_UDINT(#tempNoRisingBits & 16#33333333) + DWORD_TO_UDINT(SHR(IN := #tempNoRisingBits, N := 2) AND 16#33333333));
+	  #tempNoRisingBits := SHR(IN := UDINT_TO_DWORD(DWORD_TO_UDINT(UDINT_TO_DWORD(DWORD_TO_UDINT(#tempNoRisingBits) + DWORD_TO_UDINT(SHR(IN := #tempNoRisingBits, N := 4))) AND 16#0F0F0F0F) * DWORD_TO_UDINT(16#01010101)), N := 24);
+	  
+	  // Copy edges result into work variable for counting the number of falling edges
+	  #tempNoFallingBits := #tempFallingResult;
+	  // Count number of falling edges, algorythm descriped from: https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+	  #tempNoFallingBits := UDINT_TO_DWORD(DWORD_TO_UDINT(#tempNoFallingBits) - DWORD_TO_UDINT(SHR(IN := #tempNoFallingBits, N := 1) AND 16#55555555));
+	  #tempNoFallingBits := UDINT_TO_DWORD(DWORD_TO_UDINT(#tempNoFallingBits & 16#33333333) + DWORD_TO_UDINT(SHR(IN := #tempNoFallingBits, N := 2) AND 16#33333333));
+	  #tempNoFallingBits := SHR(IN := UDINT_TO_DWORD(DWORD_TO_UDINT(UDINT_TO_DWORD(DWORD_TO_UDINT(#tempNoFallingBits) + DWORD_TO_UDINT(SHR(IN := #tempNoFallingBits, N := 4))) AND 16#0F0F0F0F) * DWORD_TO_UDINT(16#01010101)), N := 24);
+	END_REGION PROGRAM LOGIC
+	
+	REGION OUTPUTS
+	  #hasChanged := (#tempRisingResult > #ZERO_EDGES) OR (#tempFallingResult > #ZERO_EDGES);
+	  #hasRisingEdges := #tempRisingResult > #ZERO_EDGES;
+	  #risingBits := #tempRisingResult;
+	  #noOfRisingBits := DWORD_TO_USINT(#tempNoRisingBits);
+	  
+	  #hasFallingEdges := #tempFallingResult > #ZERO_EDGES;
+	  #fallingBits := #tempFallingResult;
+	  #noOfFallingBits := DWORD_TO_USINT(#tempNoFallingBits);
+	  
+	  // ENO not needed, no error evaluation needed
+	  ENO := FALSE;
+	END_REGION OUTPUTS
+	
+END_FUNCTION_BLOCK

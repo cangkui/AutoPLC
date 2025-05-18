@@ -1,0 +1,47 @@
+### 算法流程描述
+
+#### 1. 功能概述
+该函数用于统计一个DWord类型变量中设置为1（TRUE）和0（FALSE）的位数，并输出统计结果。
+
+#### 2. 输入参数
+- `value`：待统计的DWord类型变量。
+- `numberOfBits`：指定需要统计的位数（例如，DWord为32位，Word为16位，Byte为8位）。
+
+#### 3. 输出参数
+- `countBitsFalse`：统计值为0（FALSE）的位数。
+- `countBitsTrue`：统计值为1（TRUE）的位数。
+
+#### 4. 算法逻辑
+1. **初始化计数器**：
+   - 将`countBitsFalse`和`countBitsTrue`初始化为0。
+   - 将输入值`value`复制到一个临时变量`tempBinaryValues`中，用于后续的位操作。
+
+2. **遍历每一位**：
+   - 使用循环从第1位遍历到第`numberOfBits`位。
+   - 在每次循环中：
+     - 检查当前最低位（`tempBinaryValues.%X0`）是否为1：
+       - 如果是1，则`countBitsTrue`加1。
+       - 如果是0，则`countBitsFalse`加1。
+     - 将`tempBinaryValues`右移一位（`SHR`指令），以便检查下一位。
+
+3. **输出结果**：
+   - 将临时计数器`tempCountBitsFalse`和`tempCountBitsTrue`的值赋给输出参数`countBitsFalse`和`countBitsTrue`。
+
+4. **错误处理**：
+   - 无特殊错误处理，函数执行成功时`ENO`设为`TRUE`。
+
+#### 5. 关键点
+- **位操作**：通过右移操作逐位检查输入值的每一位。
+- **循环控制**：循环次数由`numberOfBits`决定，确保只统计指定的位数。
+- **临时变量**：使用临时变量避免直接修改输入值，确保函数的安全性。
+
+#### 6. 扩展性
+- 该算法适用于任意位数的统计（如Byte、Word、DWord），只需调整`numberOfBits`的值即可。
+- 如果需要支持更多数据类型（如LWord），可以扩展输入参数的类型和位数。
+
+#### 7. 性能考虑
+- 循环次数与`numberOfBits`成正比，对于固定位数的数据类型（如DWord），可以优化为固定次数的循环。
+- 使用位操作（右移）和直接位访问（`%X0`）是高效的实现方式。
+
+### 总结
+该算法通过逐位检查和右移操作，高效地统计了输入值中1和0的位数，适用于多种数据类型的位统计需求。逻辑清晰，易于理解和扩展。

@@ -1,0 +1,77 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_GetBitStates` 用于检测一个 DWord（32位）输入值的上升沿和下降沿，并返回以下信息：
+- 输入值是否发生变化（`hasChanged`）
+- 是否存在上升沿（`hasRisingEdges`）
+- 上升沿的位掩码（`risingBits`）
+- 上升沿的数量（`noOfRisingBits`）
+- 是否存在下降沿（`hasFallingEdges`）
+- 下降沿的位掩码（`fallingBits`）
+- 下降沿的数量（`noOfFallingBits`）
+
+#### 2. **核心逻辑**
+1. **边缘检测**：
+   - **上升沿检测**：当前值（`value`）为 1 且上一次的值（`statPreviousValue`）为 0 的位。
+     - 计算方式：`risingBits = value AND (NOT statPreviousValue)`
+   - **下降沿检测**：当前值（`value`）为 0 且上一次的值（`statPreviousValue`）为 1 的位。
+     - 计算方式：`fallingBits = (NOT value) AND statPreviousValue`
+
+2. **统计边缘数量**：
+   - 使用位操作算法（参考 [Stanford Bit Twiddling Hacks](https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel)）统计 `risingBits` 和 `fallingBits` 中 1 的位数。
+   - 算法步骤：
+     1. 初步分组和掩码：
+        - 将每两位分为一组，统计每组中 1 的个数。
+        - 掩码：`0x55555555`（二进制：`0101...0101`）
+     2. 进一步分组和掩码：
+        - 将每四位分为一组，统计每组中 1 的个数。
+        - 掩码：`0x33333333`（二进制：`0011...0011`）
+     3. 合并和乘法：
+        - 将每八位分为一组，通过乘法将高位的统计结果累加到低位。
+        - 掩码：`0x0F0F0F0F`（二进制：`00001111...00001111`）
+        - 乘法：`0x01010101`（将高位的统计结果累加到最低字节）
+     4. 右移提取结果：
+        - 右移 24 位，提取最低字节的统计结果。
+
+3. **输出结果**：
+   - `hasChanged`：`risingBits` 或 `fallingBits` 不为 0。
+   - `hasRisingEdges`：`risingBits` 不为 0。
+   - `hasFallingEdges`：`fallingBits` 不为 0。
+   - 其他输出直接传递中间计算结果。
+
+#### 3. **变量说明**
+- **输入**：
+  - `value`：待检测的 DWord 值。
+- **输出**：
+  - `hasChanged`：输入值是否发生变化。
+  - `hasRisingEdges`：是否存在上升沿。
+  - `risingBits`：上升沿的位掩码。
+  - `noOfRisingBits`：上升沿的数量。
+  - `hasFallingEdges`：是否存在下降沿。
+  - `fallingBits`：下降沿的位掩码。
+  - `noOfFallingBits`：下降沿的数量。
+- **内部变量**：
+  - `statPreviousValue`：存储上一次的输入值。
+  - `tempRisingResult`：临时存储上升沿掩码。
+  - `tempNoRisingBits`：临时存储上升沿数量。
+  - `tempFallingResult`：临时存储下降沿掩码。
+  - `tempNoFallingBits`：临时存储下降沿数量。
+
+#### 4. **代码流程**
+1. **边缘检测**：
+   - 计算 `risingBits` 和 `fallingBits`。
+2. **存储历史值**：
+   - 更新 `statPreviousValue` 为当前 `value`。
+3. **统计边缘数量**：
+   - 对 `risingBits` 和 `fallingBits` 分别调用位统计算法。
+4. **设置输出**：
+   - 根据中间结果设置所有输出值。
+
+#### 5. **调整建议**
+- **性能优化**：
+  - 如果 PLC 平台支持原生指令（如 `POPCNT`），可以直接调用硬件指令统计位数，避免复杂的位操作。
+- **可读性优化**：
+  - 将位统计算法封装为单独的函数或子程序，避免重复代码。
+- **扩展性**：
+  - 可以增加对输入值的校验（如是否为有效的 DWord）。
+  - 支持更多输出选项（如边缘的具体位置列表）。

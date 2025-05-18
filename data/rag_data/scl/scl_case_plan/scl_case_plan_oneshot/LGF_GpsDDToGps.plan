@@ -1,0 +1,86 @@
+### 算法流程描述（GPS-DD 转 GPS-DMS 转换器）
+
+#### **1. 功能概述**
+该函数 `LGF_GpsDDToGps` 用于将 **GPS 十进制度数（DD）** 转换为 **度分秒（DMS）** 格式，并附带方向（N/S/E/W）。  
+- **输入**：`gps`（`LGF_typeGPS_DD` 类型，包含 `latitude` 和 `longitude` 的十进制度数）。  
+- **输出**：
+  - `error`（`Bool`）：转换过程中是否发生错误。
+  - `status`（`Word`）：状态码，标识可能的错误类型（如纬度/经度超限）。
+- **返回值**：转换后的 `LGF_typeGPS` 结构（包含 DMS 格式的经纬度）。
+
+---
+
+#### **2. 主要逻辑流程**
+1. **初始化**
+   - 复制输入数据到临时变量 `tempGPS_DD`。
+   - 初始化状态码 `tempStatus` 为 `STATUS_EXECUTION_FINISHED_NO_ERROR`（无错误）。
+
+2. **纬度转换（Latitude）**
+   - **方向判定**：
+     - 若 `latitude ≥ 0`，方向为 `'N'`（北纬）；否则为 `'S'`（南纬），并取绝对值。
+   - **十进制转 DMS**：
+     1. **度（Degrees）**：直接取整数部分（`REAL_TO_UINT`）。
+     2. **分（Minutes）**：小数部分 × 60，取整数。
+     3. **秒（Seconds）**：剩余小数部分 × 60，取整数。
+   - **有效性检查**：
+     - 若 `degrees > 90` 或 `minutes/seconds > 59`，标记错误 `ERR_LATITUDE_VALUE`。
+
+3. **经度转换（Longitude）**
+   - **方向判定**：
+     - 若 `longitude ≥ 0`，方向为 `'E'`（东经）；否则为 `'W'`（西经），并取绝对值。
+   - **十进制转 DMS**：
+     - 类似纬度转换，但最大值检查为 `degrees ≤ 180`。
+   - **有效性检查**：
+     - 若 `degrees > 180` 或 `minutes/seconds > 59`，标记错误 `ERR_LONGITUDE_VALUE`。
+
+4. **错误处理**
+   - 如果状态码的 `%X15` 位（最高位）为 `TRUE`（表示错误），将输出经纬度清零。
+   - 否则保留转换结果，状态码设为无错误。
+
+5. **输出处理**
+   - 将临时结果 `tempGPS` 赋给返回值。
+   - 设置 `error` 和 `status` 输出参数。
+   - 强制 `ENO` 为 `TRUE`（不启用标准错误机制）。
+
+---
+
+#### **3. 关键算法细节**
+- **浮点数处理**：使用 `FRAC` 函数获取小数部分，避免累积误差。
+- **边界检查**：
+  - 纬度范围：`0° ≤ latitude ≤ 90°`。
+  - 经度范围：`0° ≤ longitude ≤ 180°`。
+  - 分/秒范围：`0 ≤ minutes/seconds ≤ 59`。
+- **错误码**：
+  - `16#8201`：纬度无效。
+  - `16#8203`：经度无效。
+
+---
+
+#### **4. 代码优化建议**
+1. **输入验证**：在函数开始时检查输入是否为有效浮点数（如 `NaN` 或无穷大）。
+2. **常量命名**：使用更具描述性的常量名（如 `MAX_LATITUDE_DEGREES` 替代 `DEGREE_90`）。
+3. **模块化**：将经纬度转换逻辑提取为单独的子函数，减少重复代码。
+4. **性能优化**：避免多次计算 `FRAC`，可合并部分运算。
+
+---
+
+#### **5. 示例调用**
+```scl
+VAR
+  gpsDD : LGF_typeGPS_DD := (latitude := 48.8584, longitude := 2.2945);
+  gpsDMS : LGF_typeGPS;
+  hasError : Bool;
+  statusCode : Word;
+END_VAR
+
+gpsDMS := LGF_GpsDDToGps(gps := gpsDD, error => hasError, status => statusCode);
+```
+**输出**：  
+- `gpsDMS.latitude` = `('N', 48, 51, 30)`  
+- `gpsDMS.longitude` = `('E', 2, 17, 40)`  
+- `hasError` = `FALSE`  
+- `statusCode` = `16#0000`  
+
+--- 
+
+通过上述流程，函数能够高效、可靠地完成 GPS 坐标格式转换，并处理可能的输入错误。

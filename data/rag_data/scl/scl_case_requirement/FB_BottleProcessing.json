@@ -1,0 +1,65 @@
+{
+    "title": "Automated Filling Line Control",
+    "description": "An automated filling line responsible for cleaning, filling, capping, and packaging bottles. Each step of the production line is controlled by PLC and triggered by signals from sensors and operators.\nControl requirements:\nWhen the sensor bottleSensor detects a bottle, it triggers the start of the cleaning pump and continues to work.\nAfter cleaning is completed, the operator operates the button cleaningConfirmButton to trigger the cleaning completion signal, automatically starting the filling valve for filling.\nAfter filling is completed, the operator operates the button fillingConfirmButton to trigger the filling completion signal, automatically starting the capping machine for capping.\nAfter capping is completed, the operator operates the button cappingConfirmButton to trigger the capping completion signal, starting the packing machine for packaging.\nAfter packaging is completed, the operator operates the button packingConfirmButton to trigger the packaging completion signal, lighting up the packaging completion indicator light.\nAfter the operator picks up the packaged bottle, they press the confirmation button finishedButton to reset the indicator light and prepare for the next bottle's production cycle.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_BottleProcessing",
+    "input": [
+        {
+            "name": "bottleSensor",
+            "type": "Bool",
+            "description": "The bottle reaches the sensor, triggering a signal when a bottle is detected"
+        },
+        {
+            "name": "cleaningConfirmButton",
+            "type": "Bool",
+            "description": "Operator confirmation button, used to confirm the completion of the cleaning process"
+        },
+        {
+            "name": "fillingConfirmButton",
+            "type": "Bool",
+            "description": "Operator confirmation button, used to confirm the completion of the filling process"
+        },
+        {
+            "name": "cappingConfirmButton",
+            "type": "Bool",
+            "description": "Operator confirmation button, used to confirm the completion of the capping process"
+        },
+        {
+            "name": "packingConfirmButton",
+            "type": "Bool",
+            "description": "Operator confirmation button, used to confirm the completion of the packaging process"
+        },
+        {
+            "name": "finishedButton",
+            "type": "Bool",
+            "description": "Operator confirmation button, used to confirm that the bottle has been picked up"
+        }
+    ],
+    "output": [
+        {
+            "name": "Pump_Motor",
+            "type": "Bool",
+            "description": "Control output for the operation of the cleaning pump motor"
+        },
+        {
+            "name": "Filling_Valve",
+            "type": "Bool",
+            "description": "Control output for the operation of the filling valve"
+        },
+        {
+            "name": "Capping_Machine",
+            "type": "Bool",
+            "description": "Control output for the operation of the capping machine"
+        },
+        {
+            "name": "Packing_Machine",
+            "type": "Bool",
+            "description": "Control output for the operation of the packing machine"
+        },
+        {
+            "name": "Completion_Light",
+            "type": "Bool",
+            "description": "Indicator light for packaging completion"
+        }
+    ]
+}

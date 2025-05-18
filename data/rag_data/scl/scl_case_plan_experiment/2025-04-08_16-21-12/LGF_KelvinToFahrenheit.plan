@@ -1,0 +1,41 @@
+# 温度转换功能分析：开尔文转华氏度
+
+## 功能概述
+这个函数名为"LGF_KelvinToFahrenheit"，用于将开尔文温度值转换为华氏温度值。
+
+## 变量定义
+- 输入变量：`value` (Real类型，表示开尔文温度)
+- 临时变量：`tempFahrenheitTemperature` (Real类型，存储转换后的华氏温度)
+- 常量：
+  - `TEMPERATURE_GAIN` = 1.8 (温度转换系数)
+  - `TEMPERATURE_OFFSET_KELVIN` = 273.15 (开尔文与摄氏度的偏移量)
+  - `TEMPERATURE_OFFSET` = 32.0 (华氏度与摄氏度的偏移量)
+
+## 算法流程
+1. **转换公式**：
+   - 首先将开尔文温度转换为摄氏度：`value - TEMPERATURE_OFFSET_KELVIN`
+   - 然后将摄氏度转换为华氏度：`(摄氏度值 * TEMPERATURE_GAIN) + TEMPERATURE_OFFSET`
+   - 合并公式：`((value - 273.15) × 1.8) + 32`
+
+2. **执行流程**：
+   - 在CONVERT区域执行温度转换计算
+   - 在OUTPUTS区域将结果赋值给函数返回值
+   - 设置ENO为TRUE表示无错误
+
+## 代码结构
+1. **BLOCK INFO HEADER区域**：
+   - 包含函数的基本信息和版权声明
+   - 说明函数用途、测试环境、工程要求等
+
+2. **CONVERT区域**：
+   - 核心转换逻辑
+   - 使用定义的常量进行计算
+
+3. **OUTPUTS区域**：
+   - 将计算结果赋值给函数返回值
+   - 设置ENO状态
+
+## 调整建议
+- 可以添加输入有效性检查(如开尔文温度不能低于绝对零度)
+- 考虑添加错误处理机制(虽然当前需求说明不需要)
+- 可以增加注释说明转换公式的数学原理

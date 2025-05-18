@@ -1,0 +1,124 @@
+FUNCTION "LGF_MatrixAddition" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_MatrixAddition
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_IN_OUT 
+      matrix1 : Array[*, *] of LReal;
+      matrix2 : Array[*, *] of LReal;
+      matrixResult : Array[*, *] of LReal;
+   END_VAR
+
+   VAR_TEMP 
+      tempMatrix1LowerBoundRows : DInt;
+      tempMatrix1LowerBoundColumns : DInt;
+      tempMatrix1UpperBoundRows : DInt;
+      tempMatrix1UpperBoundColumns : DInt;
+      tempMatrix2LowerBoundRows : DInt;
+      tempMatrix2LowerBoundColumns : DInt;
+      tempMatrix2UpperBoundRows : DInt;
+      tempMatrix2UpperBoundColumns : DInt;
+      tempResultMatrixLowerBoundRows : DInt;
+      tempResultMatrixLowerBoundColumns : DInt;
+      tempResultMatrixUpperBoundRows : DInt;
+      tempResultMatrixUpperBoundColumns : DInt;
+      tempCounterRows : DInt;
+      tempCounterColumns : DInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ROWS : UInt := 1;
+      COLUMNS : UInt := 2;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS : Word := 16#8200;
+      ERR_MATR1_LOWBOUND_ROWS_RESMATR_LOWBOUND_ROWS : Word := 16#8201;
+      ERR_MATR1_LOWBOUND_COLUMNS_MATR2_LOWBOUND_COLUMNS : Word := 16#8202;
+      ERR_MATR1_LOWBOUND_COLUMNS_RESMATR_LOWBOUND_COLUMNS : Word := 16#8203;
+      ERR_MATR1_UPPBOUND_ROWS_MATR2_UPPBOUND_ROWS : Word := 16#8204;
+      ERR_MATR1_UPPBOUND_ROWS_RESMATR_UPPBOUND_ROWS : Word := 16#8205;
+      ERR_MATR1_UPPBOUND_COLUMNS_MATR2_UPPBOUND_COLUMNS : Word := 16#8206;
+      ERR_MATR1_UPPBOUND_COLUMNS_RESMATR_UPPBOUND_COLUMNS : Word := 16#8207;
+   END_VAR
+
+
+BEGIN
+	
+	REGION Getting matrices size
+	  //Determine the size of the matrices
+	  // Lower bound rows
+	  #tempMatrix1LowerBoundRows := LOWER_BOUND(ARR := #matrix1, DIM := #ROWS);
+	  #tempMatrix2LowerBoundRows := LOWER_BOUND(ARR := #matrix2, DIM := #ROWS);
+	  #tempResultMatrixLowerBoundRows := LOWER_BOUND(ARR := #matrixResult, DIM := #ROWS);
+	  // Lower bound columns
+	  #tempMatrix1LowerBoundColumns := LOWER_BOUND(ARR := #matrix1, DIM := #COLUMNS);
+	  #tempMatrix2LowerBoundColumns := LOWER_BOUND(ARR := #matrix2, DIM := #COLUMNS);
+	  #tempResultMatrixLowerBoundColumns := LOWER_BOUND(ARR := #matrixResult, DIM := #COLUMNS);
+	  
+	  // Upper bound rows
+	  #tempMatrix1UpperBoundRows := UPPER_BOUND(ARR := #matrix1, DIM := #ROWS);
+	  #tempMatrix2UpperBoundRows := UPPER_BOUND(ARR := #matrix2, DIM := #ROWS);
+	  #tempResultMatrixUpperBoundRows := UPPER_BOUND(ARR := #matrixResult, DIM := #ROWS);
+	  // Upper bound columns
+	  #tempMatrix1UpperBoundColumns := UPPER_BOUND(ARR := #matrix1, DIM := #COLUMNS);
+	  #tempMatrix2UpperBoundColumns := UPPER_BOUND(ARR := #matrix2, DIM := #COLUMNS);
+	  #tempResultMatrixUpperBoundColumns := UPPER_BOUND(ARR := #matrixResult, DIM := #COLUMNS);
+	END_REGION
+	
+	REGION Error evaluation of matrixes dimentions
+	  //Check the lower bound of all matrices
+	  IF (#tempMatrix1LowerBoundRows <> #tempMatrix2LowerBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_ROWS_MATR2_LOWBOUND_ROWS;
+	    RETURN;
+	  ELSIF (#tempMatrix1LowerBoundRows <> #tempResultMatrixLowerBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_ROWS_RESMATR_LOWBOUND_ROWS;
+	    RETURN;
+	  ELSIF (#tempMatrix1LowerBoundColumns <> #tempMatrix2LowerBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_COLUMNS_MATR2_LOWBOUND_COLUMNS;
+	    RETURN;
+	  ELSIF (#tempMatrix1LowerBoundColumns <> #tempResultMatrixLowerBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_LOWBOUND_COLUMNS_RESMATR_LOWBOUND_COLUMNS;
+	    RETURN;
+	  END_IF;
+	  //Check the upper bound of all matrices
+	  IF (#tempMatrix1UpperBoundRows <> #tempMatrix2UpperBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_ROWS_MATR2_UPPBOUND_ROWS;
+	    RETURN;
+	  ELSIF (#tempMatrix1UpperBoundRows <> #tempResultMatrixUpperBoundRows) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_ROWS_RESMATR_UPPBOUND_ROWS;
+	    RETURN;
+	  ELSIF (#tempMatrix1UpperBoundColumns <> #tempMatrix2UpperBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_COLUMNS_MATR2_UPPBOUND_COLUMNS;
+	    RETURN;
+	  ELSIF (#tempMatrix1UpperBoundColumns <> #tempResultMatrixUpperBoundColumns) THEN
+	    #error := TRUE;
+	    #status := #ERR_MATR1_UPPBOUND_COLUMNS_RESMATR_UPPBOUND_COLUMNS;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Addition of the matrices and writting to output
+	  FOR #tempCounterRows := #tempMatrix1LowerBoundRows TO #tempMatrix1UpperBoundRows DO
+	    FOR #tempCounterColumns := #tempMatrix1LowerBoundColumns TO #tempMatrix1UpperBoundColumns DO
+	      #matrixResult[#tempCounterRows, #tempCounterColumns] := #matrix1[#tempCounterRows, #tempCounterColumns] + #matrix2[#tempCounterRows, #tempCounterColumns];
+	    END_FOR;
+	  END_FOR;
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

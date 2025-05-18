@@ -1,0 +1,70 @@
+{
+    "title": "Automated Production Line Control",
+    "description": "A simple automated production line consists of three workstations: Workstation A, Workstation B, and Workstation C. The product needs to go through these three stations in sequence to be considered fully completed. There is a motor in the production line that is responsible for moving the product from one workstation to the next. The sequence of the line is from Workstation A to Workstation B, and then to Workstation C. Each workstation has a sensor (used to detect if the product has arrived) and a button (used to trigger the signal that the station's processing is complete).\nControl requirements:\n1. Mode Switching: The mode switch (Mode) is used to switch between manual and automatic modes of the production line.\n2. Manual Mode: In manual mode, the forward rotation button (ForwardButton) controls the forward rotation of the motor, and the reverse rotation button (ReverseButton) controls the reverse rotation of the motor. Forward and reverse rotation operations need to be interlocked and cannot be performed simultaneously.\n3. Automatic Mode:\n   - When the product arrives at Workstation A, SensorA detects the product, and after the operator triggers the processing complete signal via ButtonA, the motor starts forward rotation to move the product to Workstation B.\n   - When the product arrives at Workstation B, SensorB detects the product, the motor stops, and after the operator triggers the processing complete signal via ButtonB, the motor starts forward rotation to move the product to Workstation C.\n   - When the product arrives at Workstation C, SensorC detects the product, the motor stops, and after the operator triggers the processing complete signal via ButtonC, the completion indicator light (CompletionLight) turns on, indicating that the product processing is complete. When the product is taken away, i.e., SensorC no longer detects the product, the completion indicator light (CompletionLight) turns off.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FB_ProductionLineControl",
+    "input": [
+        {
+            "name": "Mode",
+            "type": "Bool",
+            "description": "Used to switch the production line between manual and automatic modes, 0=manual mode, 1=automatic mode"
+        },
+        {
+            "name": "ForwardButton",
+            "type": "Bool",
+            "description": "Forward rotation button"
+        },
+        {
+            "name": "ReverseButton",
+            "type": "Bool",
+            "description": "Reverse rotation button"
+        },
+        {
+            "name": "SensorA",
+            "type": "Bool",
+            "description": "Sensor A"
+        },
+        {
+            "name": "SensorB",
+            "type": "Bool",
+            "description": "Sensor B"
+        },
+        {
+            "name": "SensorC",
+            "type": "Bool",
+            "description": "Sensor C"
+        },
+        {
+            "name": "ButtonA",
+            "type": "Bool",
+            "description": "Button A"
+        },
+        {
+            "name": "ButtonB",
+            "type": "Bool",
+            "description": "Button B"
+        },
+        {
+            "name": "ButtonC",
+            "type": "Bool",
+            "description": "Button C"
+        }
+    ],
+    "output": [
+        {
+            "name": "MotorForward",
+            "type": "Bool",
+            "description": "Motor forward rotation output"
+        },
+        {
+            "name": "MotorReverse",
+            "type": "Bool",
+            "description": "Motor reverse rotation output"
+        },
+        {
+            "name": "CompletionLight",
+            "type": "Bool",
+            "description": "Indicator light for product processing completion"
+        }
+    ]
+ }

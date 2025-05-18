@@ -1,0 +1,88 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个函数 `LGF_SearchMinMax_DInt` 用于在一个 `DInt` 类型的数组中查找最小值和最大值，并返回它们的值和索引。
+
+#### 2. **输入/输出定义**
+- **输入/输出参数**：
+  - `values`（IN_OUT）：待搜索的 `DInt` 数组。
+- **输出参数**：
+  - `minValue`：数组中的最小值。
+  - `minValueIndex`：最小值的索引。
+  - `maxValue`：数组中的最大值。
+  - `maxValueIndex`：最大值的索引。
+
+#### 3. **临时变量定义**
+- `tempArrayLowerBound`：数组的下界。
+- `tempArrayUpperBound`：数组的上界。
+- `tempCounter`：循环计数器。
+- `tempArrayIndexMax`：临时存储最大值索引。
+- `tempArrayIndexMin`：临时存储最小值索引。
+- `tempActValue`：当前处理的数组元素值。
+- `tempMinValue`：临时存储最小值。
+- `tempMaxValue`：临时存储最大值。
+
+#### 4. **常量定义**
+- `START_FROM_SECOND_ELEMENT`：从第二个元素开始搜索（值为1）。
+- `DIMENSION_ONE`：数组的维度（值为1）。
+
+#### 5. **算法流程**
+1. **初始化**：
+   - 获取数组的上下界：
+     ```plaintext
+     tempArrayLowerBound = LOWER_BOUND(values, DIMENSION_ONE)
+     tempArrayUpperBound = UPPER_BOUND(values, DIMENSION_ONE)
+     ```
+   - 将数组的第一个元素作为初始的最小值和最大值：
+     ```plaintext
+     tempMinValue = values[tempArrayLowerBound]
+     tempMaxValue = values[tempArrayLowerBound]
+     tempArrayIndexMin = tempArrayLowerBound
+     tempArrayIndexMax = tempArrayLowerBound
+     ```
+
+2. **搜索最小值和最大值**：
+   - 从数组的第二个元素开始遍历：
+     ```plaintext
+     FOR tempCounter = (tempArrayLowerBound + START_FROM_SECOND_ELEMENT) TO tempArrayUpperBound DO
+     ```
+   - 获取当前元素的值：
+     ```plaintext
+     tempActValue = values[tempCounter]
+     ```
+   - 检查是否为最小值：
+     ```plaintext
+     IF tempActValue < tempMinValue THEN
+         tempMinValue = tempActValue
+         tempArrayIndexMin = tempCounter
+     ```
+   - 检查是否为最大值：
+     ```plaintext
+     ELSIF tempActValue > tempMaxValue THEN
+         tempMaxValue = tempActValue
+         tempArrayIndexMax = tempCounter
+     END_IF
+     ```
+
+3. **输出结果**：
+   - 将找到的最小值和最大值及其索引赋值给输出参数：
+     ```plaintext
+     minValue = values[tempArrayIndexMin]
+     maxValue = values[tempArrayIndexMax]
+     minValueIndex = tempArrayIndexMin
+     maxValueIndex = tempArrayIndexMax
+     ```
+
+4. **错误处理**：
+   - 由于使用了整个数组，且没有复杂的错误条件，因此 `ENO` 直接设置为 `TRUE`。
+
+#### 6. **优化和调整**
+- **边缘情况处理**：
+  - 如果数组为空或只有一个元素，代码仍然可以正确处理（初始值即为唯一元素的值和索引）。
+- **性能优化**：
+  - 通过一次遍历同时查找最小值和最大值，减少了遍历次数。
+- **可读性**：
+  - 使用有意义的变量名和注释，便于理解和维护。
+
+### 总结
+该算法通过一次遍历数组，高效地找到了最小值和最大值及其索引。代码结构清晰，逻辑严谨，适用于大多数实际应用场景。

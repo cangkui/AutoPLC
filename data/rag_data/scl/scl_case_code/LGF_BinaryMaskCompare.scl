@@ -1,0 +1,24 @@
+FUNCTION "LGF_BinaryMaskCompare" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Simatic_Systems_Support
+FAMILY : LGF
+NAME : LGF_BinaryMaskCompare
+   VAR_INPUT 
+      source : DWord;
+      compare : DWord;
+      mask { S7_PredefinedAssignment := '16#FFFFFFFF'; S7_HiddenAssignment := 'Show'; S7_ShowAssignmentIfParamsNotIdentical := 'false'} : DWord;
+   END_VAR
+
+   VAR CONSTANT 
+      ALL_BITS_ARE_FALSE : DWord := 16#00000000;
+   END_VAR
+
+
+BEGIN
+	//Mask Compare Equal DWord
+	#LGF_BinaryMaskCompare := (((#source AND #mask) XOR (#compare AND #mask)) = #ALL_BITS_ARE_FALSE);
+	
+	// ENO is not used, forced to TRUE
+	ENO := TRUE;
+	
+END_FUNCTION

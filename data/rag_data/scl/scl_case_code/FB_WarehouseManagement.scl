@@ -1,0 +1,83 @@
+
+FUNCTION_BLOCK "FB_WarehouseManagement"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    requestIn : Bool; 
+    requestOut : Bool; 
+END_VAR
+
+VAR_OUTPUT
+    productNum : Int; 
+    libFreeNum : Int; 
+    error : Bool; 
+    status : Word; 
+END_VAR
+
+VAR_IN_OUT
+    library : ARRAY[1..9] OF Bool; 
+END_VAR
+
+VAR
+    statLastItemIndex : Int; 
+END_VAR
+VAR CONSTANT
+    STATUS_OK : WORD := 16#0000;
+    STATUS_ALL_OCCUPIED : WORD := 16#8001;
+    STATUS_ALL_EMPTY : WORD := 16#8002;
+END_VAR
+VAR_TEMP
+    tempIndex : Int;
+    tempError : Bool;
+    tempStatus : Word;
+END_VAR
+
+BEGIN
+    REGION Validation OF INPUT and OUTPUT 
+        
+    END_REGION
+
+    REGION Calculate
+        #productNum := 0;
+        #libFreeNum := 9;
+        FOR #tempIndex := 1 TO 9 DO
+            IF #library[#tempIndex] THEN
+                #productNum += 1;
+                #libFreeNum -= 1;
+            END_IF;
+        END_FOR;
+        #error := FALSE;
+        #status := #STATUS_OK;
+    END_REGION
+
+    REGION Main Logic
+        IF #requestIn THEN
+            FOR #tempIndex := 9 TO 1 BY -1 DO
+                IF NOT #library[#tempIndex] THEN
+                    #library[#tempIndex] := TRUE;
+                    #productNum += 1;
+                    #libFreeNum -= 1;
+                    RETURN;
+                END_IF;
+            END_FOR;
+            #error := TRUE;
+            #status := #STATUS_ALL_OCCUPIED;
+        ELSIF #requestOut THEN
+            FOR #tempIndex := 1 TO 9 DO
+                IF #library[#tempIndex] THEN
+                    #library[#tempIndex] := FALSE;
+                    #productNum -= 1;
+                    #libFreeNum += 1;
+                    RETURN;
+                END_IF;
+            END_FOR;
+            #error := TRUE;
+            #status := #STATUS_ALL_EMPTY;
+        END_IF;
+    END_REGION
+
+    REGION Writting TO outputs
+        
+    END_REGION
+END_FUNCTION_BLOCK
+
+

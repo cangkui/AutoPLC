@@ -1,0 +1,59 @@
+FUNCTION "LGF_BitCount" : Void
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : SiemensSIMATICSystemsSupport
+FAMILY : LGF
+NAME : LGF_BitCount
+   VAR_INPUT 
+      value : DWord;
+      numberOfBits : USInt;
+   END_VAR
+
+   VAR_OUTPUT 
+      countBitsFalse : USInt;
+      countBitsTrue : USInt;
+   END_VAR
+
+   VAR_TEMP 
+      tempBinaryValues : DWord;
+      tempLoopIndex : DInt;
+      tempCountBitsTrue : USInt;
+      tempCountBitsFalse : USInt;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : USInt := 0;
+      INCREMENT : USInt := 1;
+      SHIFT_ON_BIT_RIGHT : USInt := 1;
+      START_INDEX : DInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION Logic
+	  // init counter tags
+	  #tempCountBitsFalse := #ZERO;
+	  #tempCountBitsTrue := #ZERO;
+	  #tempBinaryValues := #value;
+	  
+	  // iterate over input tag
+	  FOR #tempLoopIndex := #START_INDEX TO USINT_TO_DINT(#numberOfBits) DO
+	    // check if bit is true or false
+	    IF #tempBinaryValues.%X0 THEN
+	      #tempCountBitsTrue += #INCREMENT;
+	    ELSE
+	      #tempCountBitsFalse += #INCREMENT;
+	    END_IF;
+	    
+	    // shift input tag one to the right
+	    #tempBinaryValues := SHR(IN := #tempBinaryValues, N := #SHIFT_ON_BIT_RIGHT);
+	  END_FOR;
+	  
+	  // set output values
+	  #countBitsFalse := #tempCountBitsFalse;
+	  #countBitsTrue := #tempCountBitsTrue;
+	  
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

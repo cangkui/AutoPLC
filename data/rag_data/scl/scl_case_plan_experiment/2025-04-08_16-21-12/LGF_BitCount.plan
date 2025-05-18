@@ -1,0 +1,70 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+这个函数 `LGF_BitCount` 用于统计一个 `DWord` 类型变量中设置为 `TRUE`（1）和 `FALSE`（0）的位数，并将统计结果输出。输入参数包括：
+- `value`：待统计的 `DWord` 变量。
+- `numberOfBits`：指定要统计的位数（例如，`DWord` 是 32 位，`Word` 是 16 位，`Byte` 是 8 位）。
+
+输出参数包括：
+- `countBitsFalse`：统计 `FALSE`（0）的位数。
+- `countBitsTrue`：统计 `TRUE`（1）的位数。
+
+#### 2. **核心逻辑**
+1. **初始化计数器**：
+   - 初始化 `tempCountBitsTrue` 和 `tempCountBitsFalse` 为 0。
+   - 将输入 `value` 复制到临时变量 `tempBinaryValues` 中，避免直接修改输入值。
+
+2. **循环遍历每一位**：
+   - 使用 `FOR` 循环从第 1 位遍历到第 `numberOfBits` 位。
+   - 在每次循环中：
+     - 检查当前最低位（`%X0`）是 `TRUE` 还是 `FALSE`。
+     - 如果是 `TRUE`，则 `tempCountBitsTrue` 加 1；否则 `tempCountBitsFalse` 加 1。
+     - 使用 `SHR`（逻辑右移）将 `tempBinaryValues` 右移 1 位，以便检查下一位。
+
+3. **输出结果**：
+   - 将临时计数器的值赋给输出变量 `countBitsTrue` 和 `countBitsFalse`。
+
+4. **错误处理**：
+   - 无显式错误处理，`ENO` 直接设置为 `TRUE`。
+
+#### 3. **关键点**
+- **位操作**：通过 `%X0` 访问最低位，并通过 `SHR` 右移实现逐位检查。
+- **循环控制**：`FOR` 循环的终止条件是 `numberOfBits`，确保只检查指定的位数。
+- **临时变量**：使用临时变量避免直接修改输入，同时提高代码可读性。
+
+#### 4. **优化建议**
+- **输入验证**：可以添加对 `numberOfBits` 的验证（例如，不超过 32），避免无效输入导致逻辑错误。
+- **常量定义**：使用常量（如 `ZERO`、`INCREMENT`）提高代码可维护性。
+- **性能**：对于固定位数（如 `DWord` 总是 32 位），可以硬编码循环次数，减少运行时计算。
+
+#### 5. **伪代码描述**
+```
+FUNCTION LGF_BitCount
+    INPUT: value (DWord), numberOfBits (USInt)
+    OUTPUT: countBitsFalse (USInt), countBitsTrue (USInt)
+
+    // Initialize counters
+    countTrue = 0
+    countFalse = 0
+    tempValue = value
+
+    // Loop through each bit
+    FOR i FROM 1 TO numberOfBits
+        IF tempValue.%X0 == 1 THEN
+            countTrue += 1
+        ELSE
+            countFalse += 1
+        END_IF
+        tempValue = SHR(tempValue, 1) // Shift right by 1 bit
+    END_FOR
+
+    // Set outputs
+    countBitsFalse = countFalse
+    countBitsTrue = countTrue
+    ENO = TRUE
+END_FUNCTION
+```
+
+#### 6. **代码调整建议**
+- 如果 `numberOfBits` 可能为 0，可以添加保护逻辑（如默认值 32）。
+- 可以扩展支持其他数据类型（如 `Byte`、`Word`），通过 `numberOfBits` 灵活控制。

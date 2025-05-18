@@ -1,0 +1,58 @@
+### 算法流程描述：Word Endianness Adjuster (LGF_SwapBlockWord)
+
+#### 1. **功能概述**
+该函数用于调整多字节数据（Word类型）的字节序（endianness），即交换每个Word中高字节和低字节的位置。该功能不关心当前系统的字节序，而是统一进行字节交换操作。
+
+#### 2. **输入输出**
+- **输入/输出参数**：
+  - `data`：一个可变长度的Word数组，存储待调整字节序的数据。函数直接修改该数组的内容。
+- **返回值**：无（Void）。
+
+#### 3. **核心逻辑**
+1. **初始化**：
+   - 获取数组的起始索引（`LOWER_BOUND`）和结束索引（`UPPER_BOUND`）。
+   - 初始化临时变量：
+     - `tempSwapIndex`：当前处理的数组索引，初始值为数组的起始索引。
+     - `tempUpperIndex`：数组的结束索引，用于终止循环。
+     - `tempSwapValue`：临时存储当前Word的值，用于字节交换。
+
+2. **遍历数组**：
+   - 使用`WHILE`循环从起始索引遍历到结束索引。
+   - 对每个Word执行以下操作：
+     - 读取当前Word的值到`tempSwapValue`。
+     - 交换字节顺序：
+       - 将原Word的低字节（`%B0`）赋值为`tempSwapValue`的高字节（`%B1`）。
+       - 将原Word的高字节（`%B1`）赋值为`tempSwapValue`的低字节（`%B0`）。
+     - 移动到下一个数组元素（`tempSwapIndex += 1`）。
+
+3. **终止条件**：
+   - 当`tempSwapIndex`达到`tempUpperIndex`时，退出循环。
+
+#### 4. **优化点**
+- **减少系统调用**：在循环外预先计算数组的上下界，避免在每次循环中重复调用`LOWER_BOUND`和`UPPER_BOUND`。
+- **直接修改输入**：通过`VAR_IN_OUT`参数直接修改输入数组，无需额外内存分配。
+
+#### 5. **边界情况**
+- 空数组：如果数组为空（`LOWER_BOUND > UPPER_BOUND`），循环不会执行。
+- 单元素数组：循环会执行一次，交换其字节序。
+
+#### 6. **伪代码描述**
+```
+FUNCTION LGF_SwapBlockWord(data: Array[*] of Word) -> Void
+    // 初始化索引
+    tempSwapIndex = LOWER_BOUND(data, 1)
+    tempUpperIndex = UPPER_BOUND(data, 1)
+
+    // 遍历数组并交换字节序
+    WHILE tempSwapIndex < tempUpperIndex DO
+        tempSwapValue = data[tempSwapIndex]
+        data[tempSwapIndex].%B0 = tempSwapValue.%B1  // 低字节 <- 高字节
+        data[tempSwapIndex].%B1 = tempSwapValue.%B0  // 高字节 <- 低字节
+        tempSwapIndex += 1
+    END_WHILE
+END_FUNCTION
+```
+
+#### 7. **调整建议**
+- 如果需要对其他数据类型（如DWord）进行字节序调整，可以扩展函数支持多类型。
+- 可以增加状态码或返回值，指示是否成功执行（尽管当前需求未要求）。

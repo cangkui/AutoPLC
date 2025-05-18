@@ -1,0 +1,60 @@
+FUNCTION "LGF_NthRoot" : LReal
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_NthRoot
+   VAR_INPUT 
+      value : LReal;
+      root : LReal;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : LReal := 0.0;
+      ONE : LReal := 1.0;
+      STATUS_NO_ERROR : Word := 16#0000;
+      ERR_NEG_VAR : Word := 16#8200;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_NthRoot
+	  // Comment/Function: This function extracts the n-th root of a given value
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION
+	
+	REGION Validation
+	  // Check if the variable value is negative 
+	  IF #value < #ZERO THEN
+	    #error := true;
+	    #status := #ERR_NEG_VAR;
+	    #LGF_NthRoot := #ZERO;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculation of the n-th root
+	  #LGF_NthRoot := #value ** (#ONE / #root);
+	  
+	  #error := false;
+	  #status := #STATUS_NO_ERROR;
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

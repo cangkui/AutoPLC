@@ -1,0 +1,119 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_Histogram_LReal` 用于计算输入数据集的直方图，包括频率分布和类中心值。主要功能包括：
+- 对输入数据进行排序。
+- 计算每个类的频率（绝对和相对）。
+- 计算类中心和类宽度。
+- 输出直方图相关数据（频率、类中心、轴范围等）。
+
+#### 2. **输入输出定义**
+- **输入**：
+  - `execute`：触发计算的脉冲信号（上升沿触发）。
+  - `numberOfClasses`：直方图的类数。
+  - `values`：输入数据集（动态数组）。
+- **输出**：
+  - `error`：错误标志。
+  - `status`：功能块状态码。
+  - `subfunctionStatus`：子功能块状态码。
+  - `histValues`：直方图数据（相对频率和类中心）。
+  - `axis`：直方图轴范围（最小值、最大值、频率范围）。
+  - `classWidth`：类宽度。
+
+#### 3. **内部变量**
+- `statArray`：临时存储排序后的数据。
+- `statMin`/`statMax`：数据集的最小/最大值。
+- `statWidth`：类宽度。
+- `statHistFrequencyAbs`/`statHistFrequencyRel`：绝对/相对频率。
+- `statHistMiddleOfClass`：类中心值。
+- `instShellSort`：排序功能块实例。
+
+#### 4. **算法流程**
+1. **触发检测**：
+   - 检测 `execute` 的上升沿，开始计算。
+   - 重置内部状态和计数器。
+
+2. **输入验证**：
+   - 检查 `numberOfClasses` 是否在有效范围内（1-15）。
+
+3. **数据预处理**：
+   - 使用 `LGF_ShellSort_LReal` 对输入数据排序。
+   - 计算数据集的最小值 `statMin` 和最大值 `statMax`。
+
+4. **直方图计算**：
+   - **类宽度计算**：
+     ```plaintext
+     statWidth = (statMax - statMin) / numberOfClasses
+     ```
+   - **频率统计**：
+     - 遍历排序后的数据，统计每个类的数据点数量。
+     - 计算绝对频率 `statHistFrequencyAbs` 和相对频率 `statHistFrequencyRel`。
+   - **类中心计算**：
+     ```plaintext
+     statHistMiddleOfClass[i] = statMin + (i * statWidth) + statWidth / 2
+     ```
+
+5. **输出生成**：
+   - 填充 `histValues`（相对频率和类中心）。
+   - 设置 `axis`（最小值、最大值、频率范围）。
+   - 输出 `classWidth`。
+
+6. **错误处理**：
+   - 如果排序失败或输入无效，设置 `error` 和 `status`。
+
+#### 5. **状态码**
+- `16#0000`：成功完成。
+- `16#7000`：未调用。
+- `16#7001`：首次调用。
+- `16#8600`：排序错误。
+- `16#9101`：无效类数。
+
+#### 6. **代码调整建议**
+- **优化排序**：如果数据量很大，可以优化排序算法或增加并行处理。
+- **动态类数**：支持更大范围的类数（需调整 `CLASSES_COUNTER_UP_LIMIT`）。
+- **边界处理**：明确最后一个类的边界条件（避免数据遗漏）。
+
+#### 7. **伪代码示例**
+```plaintext
+IF execute AND NOT statExecuteOld THEN
+    // 初始化
+    statStatus = STATUS_FIRST_CALL
+    // 验证输入
+    IF numberOfClasses < 1 OR numberOfClasses > 15 THEN
+        statStatus = ERR_WRONG_NO_CLASSES
+    ELSE
+        // 排序数据
+        instShellSort(array := values)
+        IF instShellSort.error THEN
+            statStatus = ERR_SHELL_SORT
+        ELSE
+            // 计算最小/最大值
+            statMin = values[LOWER_BOUND(values)]
+            statMax = values[UPPER_BOUND(values)]
+            // 计算类宽度
+            statWidth = (statMax - statMin) / numberOfClasses
+            // 统计频率
+            FOR i = 0 TO numberOfClasses - 1 DO
+                bound = statMin + (i + 1) * statWidth
+                count = 0
+                WHILE values[index] < bound AND index < length(values) DO
+                    count += 1
+                    index += 1
+                END_WHILE
+                statHistFrequencyAbs[i] = count
+                statHistFrequencyRel[i] = count / totalElements * 100
+                statHistMiddleOfClass[i] = statMin + i * statWidth + statWidth / 2
+            END_FOR
+            // 输出
+            histValues[0, *] = statHistFrequencyRel
+            histValues[1, *] = statHistMiddleOfClass
+            axis = [statMin, statMax, 0, max(statHistFrequencyAbs)]
+            classWidth = statWidth
+            statStatus = STATUS_EXECUTION_FINISHED
+        END_IF
+    END_IF
+END_IF
+```
+
+#### 8. **总结**
+该功能块通过排序和分箱统计实现直方图计算，适用于数据分析场景。核心逻辑清晰，但需注意输入验证和边界条件处理。

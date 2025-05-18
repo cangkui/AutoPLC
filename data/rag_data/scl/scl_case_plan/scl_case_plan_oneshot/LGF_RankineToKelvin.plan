@@ -1,0 +1,82 @@
+### 算法流程描述（Rankine 转 Kelvin 温度转换）
+
+#### **1. 功能概述**
+- 该函数 `LGF_RankineToKelvin` 用于将温度值从 **°Rankine（兰金温标）** 转换为 **°Kelvin（开尔文温标）**。
+- 转换公式：  
+  \[
+  T_K = \frac{5}{9} \times T_R
+  \]
+  其中：
+  - \( T_K \) = 开尔文温度
+  - \( T_R \) = 兰金温度
+
+#### **2. 变量定义**
+| 变量类型 | 变量名 | 数据类型 | 描述 |
+|----------|--------|----------|------|
+| **输入** | `value` | `Real` | 待转换的兰金温度值 |
+| **临时变量** | `tempKelvinTemperature` | `Real` | 存储转换后的开尔文温度 |
+| **常量** | `TEMPERATURE_GAIN_NUMERATOR` | `Real` | 转换公式的分子（5.0） |
+| **常量** | `TEMPERATURE_GAIN_DENOMINATOR` | `Real` | 转换公式的分母（9.0） |
+| **返回值** | `LGF_RankineToKelvin` | `Real` | 转换后的开尔文温度 |
+
+#### **3. 算法流程**
+1. **输入验证（可选）**  
+   - 检查输入 `value` 是否为有效数值（如非负数），但代码示例中未实现错误处理。
+   
+2. **温度转换计算**  
+   - 使用公式 \( T_K = \frac{5}{9} \times T_R \) 计算开尔文温度：
+     ```scl
+     tempKelvinTemperature := (TEMPERATURE_GAIN_NUMERATOR / TEMPERATURE_GAIN_DENOMINATOR) * value;
+     ```
+
+3. **输出结果**  
+   - 将计算结果赋值给函数返回值：
+     ```scl
+     LGF_RankineToKelvin := tempKelvinTemperature;
+     ```
+   - 设置 `ENO = TRUE`（表示无错误）。
+
+#### **4. 代码优化建议**
+- **错误处理**（可选）：  
+  如果输入 `value` 可能为非法值（如负数），可增加检查逻辑并设置 `ENO = FALSE`。
+  ```scl
+  IF value < 0.0 THEN
+      ENO := FALSE; // 输入无效
+  ELSE
+      // 正常计算
+      ENO := TRUE;
+  END_IF;
+  ```
+
+- **常量优化**：  
+  常量 `TEMPERATURE_GAIN_NUMERATOR` 和 `TEMPERATURE_GAIN_DENOMINATOR` 可直接替换为 `5.0/9.0`，但使用常量更易维护。
+
+#### **5. 代码结构**
+```scl
+FUNCTION "LGF_RankineToKelvin" : Real
+VAR_INPUT
+    value : Real; // 输入：兰金温度
+END_VAR
+
+VAR_TEMP
+    tempKelvinTemperature : Real; // 临时存储开尔文温度
+END_VAR
+
+VAR CONSTANT
+    TEMPERATURE_GAIN_NUMERATOR : Real := 5.0; // 分子
+    TEMPERATURE_GAIN_DENOMINATOR : Real := 9.0; // 分母
+END_VAR
+
+BEGIN
+    // 计算转换
+    tempKelvinTemperature := (TEMPERATURE_GAIN_NUMERATOR / TEMPERATURE_GAIN_DENOMINATOR) * value;
+    
+    // 返回结果
+    LGF_RankineToKelvin := tempKelvinTemperature;
+    ENO := TRUE; // 无错误
+END_FUNCTION
+```
+
+#### **6. 总结**
+- 该函数直接实现兰金到开尔文的线性转换，逻辑简单。
+- 若需扩展，可增加输入验证或单位换算的通用化处理（如支持其他温标）。

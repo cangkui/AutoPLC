@@ -1,0 +1,85 @@
+FUNCTION_BLOCK "LGF_PulseRelay"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_PulseRelay
+   VAR_INPUT 
+      trigger : Bool;
+      set : Bool;
+      reset : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      out { ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR 
+      statTriggerOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool := false;
+      statSetOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool := false;
+      statResetOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool := false;
+      statOut { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool := false;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_PulseRelay
+	  // Comment/Function: Pulse relay, Surge relay, Toggle-Flip-Flop, Frequency divider
+	  //                   Reset is leading / prior to Set or Trigger
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO not in use, set to true, no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION PROGRAM LOGIC
+	  REGION toggle output
+	    // Scan for rising edge "trigger"  - toggle static Output
+	    IF #trigger AND NOT #statTriggerOld THEN
+	      // toggle static output memory
+	      #statOut := NOT #statOut;
+	    END_IF;
+	    // store trigger input for edge dedection
+	    #statTriggerOld := #trigger;
+	  END_REGION
+	  
+	  REGION set output
+	    // Scan for rising edge "set" - static Output: set
+	    IF #set AND NOT #statSetOld THEN
+	      // set static output memory
+	      #statOut := TRUE;
+	    END_IF;
+	    // store set input for edge dedection
+	    #statSetOld := #set;
+	  END_REGION
+	  
+	  REGION reset output    
+	    // Scan for rising edge "reset" - static Output: reset
+	    IF #reset AND NOT #statResetOld THEN
+	      // store trigger input for edge dedection
+	      #statOut := FALSE;
+	    END_IF;
+	    // store reset input for edge dedection
+	    #statResetOld := #reset;
+	  END_REGION
+	END_REGION
+	
+	REGION OUTPUTS
+	  // write the Output value
+	  #out := #statOut;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

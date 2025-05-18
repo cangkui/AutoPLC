@@ -1,0 +1,28 @@
+这是一个数据处理任务，算法流程如下：
+
+1. 输入处理：
+   - 接收16位二进制数InputWord作为输入
+
+2. 数据分解：
+   - 使用位掩码和移位操作将InputWord分解为4个4位二进制数：
+     a. Byte0 = InputWord的低4位（使用16#000F掩码）
+     b. Byte1 = InputWord右移4位后的低4位
+     c. Byte2 = InputWord右移8位后的低4位
+     d. Byte3 = InputWord右移12位后的低4位
+
+3. 非零字节平均值计算：
+   - 初始化计数器count和累加器sum为0
+   - 依次检查每个字节：
+     a. 如果Byte0非零，将其值加到sum，count加1
+     b. 如果Byte1非零，将其值加到sum，count加1
+     c. 如果Byte2非零，将其值加到sum，count加1
+     d. 如果Byte3非零，将其值加到sum，count加1
+   - 计算平均值：
+     a. 如果count>0，将sum转换为实数后除以count得到average
+     b. 否则average设为0
+
+4. 输出处理：
+   - 输出分解后的4个字节(Byte0-Byte3)
+   - 输出计算得到的平均值average
+
+这个算法流程实现了将16位二进制数分解为4个4位二进制数，并计算非零字节平均值的功能，完全符合需求描述。

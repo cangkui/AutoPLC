@@ -1,0 +1,61 @@
+
+
+### 算法流程描述（调整后）
+
+1. **输入参数处理**：
+   - 接收三个输入参数：
+     - `value`：待操作的原始DWORD值
+     - `bitNo`：要设置的位号（0~31）
+     - `setTo`：目标状态（TRUE=置位，FALSE=复位）
+
+2. **位号有效性处理**：
+   - 使用 `bitNo MOD 32` 将bitNo限制在0~31范围内（DWORD最多32位）
+
+3. **掩码生成**：
+   - 创建基础掩码：`TRUE_BOOL_BIT = 0x00000001`（仅最低位为1的DWORD）
+   - 通过移位操作生成目标位掩码：
+     ```pseudocode
+     mask = SHL(TRUE_BOOL_BIT, bitNo)
+     ```
+
+4. **置位/复位逻辑分支**：
+   - **当setTo=TRUE时**：
+     - 使用`OR`操作合并原始值和掩码：
+       ```pseudocode
+       return_value = value OR mask
+       ```
+     该操作将指定位置1，其他位保持原值
+
+   - **当setTo=FALSE时**：
+     - 使用`XOR`反转全1常量`BINARY_ONES`与掩码生成反掩码：
+       ```pseudocode
+       inverse_mask = BINARY_ONES XOR mask
+       ```
+     - 使用`AND`操作应用反掩码：
+       ```pseudocode
+       return_value = value AND inverse_mask
+       ```
+     该操作将指定位置0，其他位保持原值
+
+5. **返回处理结果**：
+   - 将计算后的DWORD值作为函数返回值
+
+### 关键调整点说明
+
+1. **位号处理优化**：
+   - 原代码使用`bitNo MOD 32`取代显式的范围检查，确保bitNo始终有效
+   - （注：对于负数bitNo，需注意PLC平台对MOD运算符的处理差异）
+
+2. **硬件级操作优化**：
+   - 使用位运算代替条件判断，提高执行效率
+   - 全1常量`BINARY_ONES = 0xFFFFFFFF`用于快速生成反掩码
+
+3. **掩码生成策略**：
+   - `SHL`操作直接生成目标位掩码，比循环移位更高效
+   - 复用`TRUE_BOOL_BIT`作为基础掩码，减少常量定义
+
+4. **错误处理策略**：
+   - 无显式错误处理（如bitNo超限处理），通过取模运算隐式处理
+   - 未使用ENO（功能块错误输出），符合需求中"no error handling"的要求
+
+该流程可直接映射到支持位操作的PLC平台（如S7-1200/1500），且兼容Word/Byte类型（通过类型转换实现）。

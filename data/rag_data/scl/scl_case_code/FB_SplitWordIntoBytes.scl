@@ -1,0 +1,60 @@
+FUNCTION_BLOCK "FB_SplitWordIntoBytes"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    InputWord : Word; 
+END_VAR
+
+VAR_OUTPUT
+    Byte0 : Byte; 
+    Byte1 : Byte; 
+    Byte2 : Byte; 
+    Byte3 : Byte; 
+    average : Real; 
+END_VAR
+
+VAR_TEMP
+    tempByte : Int;
+    count : Int := 0;
+    sum : Int := 0;
+END_VAR
+
+BEGIN
+    REGION Validation OF INPUT and OUTPUT 
+        
+    END_REGION
+
+    REGION Split Word into Bytes
+        #Byte0 := #InputWord AND 16#000F;
+        #Byte1 := SHR(IN := #InputWord, N := 4) AND 16#000F;
+        #Byte2 := SHR(IN := #InputWord, N := 8) AND 16#000F;
+        #Byte3 := SHR(IN := #InputWord, N := 12) AND 16#000F;
+    END_REGION
+
+    REGION Calculate Average
+        IF #Byte0 <> 0 THEN
+	        #sum += #Byte0;
+	        #count += 1;
+	    END_IF;
+	    IF #Byte1 <> 0 THEN
+	        #sum += #Byte1;
+	        #count += 1;
+	    END_IF;
+	    IF #Byte2 <> 0 THEN
+	        #sum += #Byte2;
+	        #count += 1;
+	    END_IF;
+	    IF #Byte3 <> 0 THEN
+	        #sum += #Byte3;
+	        #count += 1;
+	    END_IF;
+        IF #count > 0 THEN
+            #average := INT_TO_REAL(#sum) / #count;
+        ELSE
+            #average := 0;
+        END_IF;
+    END_REGION
+
+    REGION Writting TO outputs
+        
+    END_REGION
+END_FUNCTION_BLOCK

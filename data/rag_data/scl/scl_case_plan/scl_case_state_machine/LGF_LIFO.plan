@@ -1,0 +1,47 @@
+这是一个数据处理任务，主要实现LIFO(后进先出)缓冲区的管理功能。以下是算法流程分析：
+
+1. 输入边沿检测
+- 检测push/pop/peek/clear信号的上升沿
+- 存储当前信号状态用于下次边沿检测
+
+2. 输入验证
+- 检查buffer是否为数组类型
+- 验证item与buffer元素类型是否匹配
+- 验证item与initialItem类型是否匹配
+
+3. 缓冲区管理
+3.1 重置操作(reset信号为真时)
+- 重置lastItemIndex为初始值(-1)
+- 设置elementCount为0
+- 设置isEmpty为true
+
+3.2 清空操作(clear信号上升沿)
+- 用initialItem填充整个buffer数组
+- 重置lastItemIndex为初始值(-1)
+- 设置elementCount为0
+- 设置isEmpty为true
+
+4. LIFO核心算法
+4.1 Pop/Peek操作
+- 检查缓冲区是否为空
+- 将最后一项复制到输出item
+- 如果是Pop操作：
+  - 用initialItem替换缓冲区中的该项
+  - 递减lastItemIndex
+
+4.2 Push操作
+- 检查缓冲区是否已满
+- 将item写入缓冲区下一个位置
+- 递增lastItemIndex
+
+5. 输出更新
+- 计算当前元素数量(elementCount = lastItemIndex + 1)
+- 更新isEmpty状态(lastItemIndex < 0)
+- 设置状态和错误标志
+
+6. 错误处理
+- 类型不匹配时设置相应错误码
+- 缓冲区空/满时设置相应错误码
+- 操作失败时设置相应错误码
+
+该算法严格遵循LIFO原则，通过维护lastItemIndex来跟踪缓冲区状态，确保后进先出的数据访问顺序。所有操作都包含必要的边界检查和错误处理机制。

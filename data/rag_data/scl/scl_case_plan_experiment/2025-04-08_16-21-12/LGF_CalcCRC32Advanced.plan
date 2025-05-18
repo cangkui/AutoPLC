@@ -1,0 +1,126 @@
+### 算法流程描述（基于自然语言需求和代码实现）
+
+#### **1. 功能概述**
+该函数 `LGF_CalcCRC32Advanced` 实现了一个高级的 **CRC-32 校验计算**，支持以下特性：
+- 可配置的 **生成多项式（mask）** 和 **初始值（initValue）**。
+- 支持 **输入字节位反转（reflectInput）** 和 **结果位反转（reflectResult）**。
+- 可选的 **最终异或值（finalXorValue）** 用于结果调整。
+- 动态数组输入（`array`），支持指定计算长度（`noOfElements`）。
+- 错误状态检测（如 `noOfElements` 超出数组范围时返回错误）。
+
+---
+
+#### **2. 核心算法流程**
+以下是 CRC-32 计算的步骤分解：
+
+##### **(1) 初始化**
+- 设置初始 CRC 值：`tempCRC := initValue`。
+- 计算输入数组的上下限：
+  ```plaintext
+  tempLowerLimit = LOWER_BOUND(array)
+  tempUpperLimit = UPPER_BOUND(array)
+  ```
+- 检查 `noOfElements` 是否合法：
+  - 若 `noOfElements > 0` 且超过数组实际长度，返回错误 `ERR_NO_OF_ELEMENTS`。
+  - 否则，调整 `tempUpperLimit` 为 `tempLowerLimit + noOfElements - 1`。
+
+##### **(2) 逐字节处理输入数据**
+对数组中的每个字节 `array[tempIndexArray]`：
+- **位反转（可选）**：  
+  若 `reflectInput = TRUE`，反转字节的比特顺序（如 `%X0` ↔ `%X7`）。
+- **合并到 CRC 寄存器**：  
+  将当前字节左移 24 位后与 `tempCRC` 异或：
+  ```plaintext
+  tempCRC := tempCRC XOR (BYTE_TO_DWORD(tempInput) << 24)
+  ```
+
+##### **(3) CRC 多项式除法（核心计算）**
+对每个字节进行 **8 次比特处理**（`tempIndexCRC = 0 TO 7`）：
+1. **检查最高位（MSB）**：  
+   - 若 `tempCRC.%X31 = 1`，执行 **带多项式除法的左移**：
+     ```plaintext
+     tempCRC := (tempCRC << 1) XOR mask
+     ```
+   - 否则，仅执行左移：
+     ```plaintext
+     tempCRC := tempCRC << 1
+     ```
+
+##### **(4) 结果后处理**
+- **位反转（可选）**：  
+  若 `reflectResult = TRUE`，反转 `tempCRC` 的 32 位比特顺序。
+- **最终异或**：  
+  将结果与 `finalXorValue` 异或：
+  ```plaintext
+  RETURN_VALUE := tempCRC XOR finalXorValue
+  ```
+
+##### **(5) 状态输出**
+- 成功时：
+  ```plaintext
+  error = FALSE, status = STATUS_NO_ERROR
+  ```
+- 错误时（如 `noOfElements` 越界）：
+  ```plaintext
+  error = TRUE, status = ERR_NO_OF_ELEMENTS
+  ```
+
+---
+
+#### **3. 关键调整点**
+1. **输入验证**：  
+   - 确保 `noOfElements` 不超过数组实际长度，否则立即返回错误。
+2. **位反转优化**：  
+   - 使用逐比特赋值实现反转（如 `tempInput.%X7 := array[tempIndexArray].%X0`），避免复杂循环。
+3. **多项式除法**：  
+   - 通过检查 MSB 决定是否异或 `mask`，模拟多项式除法。
+4. **性能考虑**：  
+   - 使用 `DWord` 类型和位操作（如 `SHL`）提升计算效率。
+
+---
+
+#### **4. 伪代码表示**
+```plaintext
+FUNCTION LGF_CalcCRC32Advanced:
+    // 初始化
+    tempCRC = initValue
+    lower = LOWER_BOUND(array)
+    upper = UPPER_BOUND(array)
+    
+    // 检查 noOfElements
+    IF noOfElements > 0 AND noOfElements > (upper - lower + 1):
+        RETURN ERROR (ERR_NO_OF_ELEMENTS)
+    ELSE IF noOfElements > 0:
+        upper = lower + noOfElements - 1
+    
+    // 逐字节处理
+    FOR i = lower TO upper:
+        IF reflectInput:
+            tempInput = REVERSE_BITS(array[i])
+        ELSE:
+            tempInput = array[i]
+        
+        tempCRC = tempCRC XOR (tempInput << 24)
+        
+        // 8次比特处理
+        FOR j = 0 TO 7:
+            IF tempCRC.MSB == 1:
+                tempCRC = (tempCRC << 1) XOR mask
+            ELSE:
+                tempCRC = tempCRC << 1
+    
+    // 结果处理
+    IF reflectResult:
+        result = REVERSE_BITS(tempCRC) XOR finalXorValue
+    ELSE:
+        result = tempCRC XOR finalXorValue
+    
+    RETURN result (STATUS_NO_ERROR)
+```
+
+---
+
+#### **5. 注意事项**
+- **输入数组**：需确保 `array` 是连续的字节数组。
+- **默认值**：`initValue`、`mask` 等参数有默认值（如 `0x00`），但通常需显式指定（如 CRC-32 常用 `0x04C11DB7`）。
+- **位序问题**：反转操作可能影响兼容性（如与标准 CRC-32 对比时需确认位序是否匹配）。

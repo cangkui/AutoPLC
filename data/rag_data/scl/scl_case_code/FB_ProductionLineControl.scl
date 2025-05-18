@@ -1,0 +1,84 @@
+FUNCTION_BLOCK "FB_ProductionLineControl"
+{ S7_Optimized_Access := 'TRUE' }
+VAR_INPUT
+    Mode : Bool; 
+    ForwardButton : Bool; 
+    ReverseButton : Bool; 
+    SensorA : Bool; 
+    SensorB : Bool; 
+    SensorC : Bool; 
+    ButtonA : Bool; 
+    ButtonB : Bool; 
+    ButtonC : Bool; 
+END_VAR
+
+VAR_OUTPUT
+    MotorForward : Bool; 
+    MotorReverse : Bool; 
+    CompletionLight : Bool; 
+END_VAR
+
+VAR
+    currentState : Int := 0; 
+END_VAR
+
+VAR CONSTANT
+    STATE_A : Int := 0;
+    STATE_B : Int := 1;
+    STATE_C : Int := 2;
+    STATE_D : Int := 3;
+END_VAR
+
+VAR_TEMP
+    tempMotorForward : Bool;
+    tempMotorReverse : Bool;
+    tempCompletionLight : Bool;
+END_VAR
+
+BEGIN
+    REGION Validation OF INPUT and OUTPUT 
+        
+    END_REGION
+
+    REGION Main Logic
+        IF #Mode = FALSE THEN
+            #currentState := #STATE_A; // reset currentState 
+            #tempMotorForward := #ForwardButton AND NOT #ReverseButton;
+            #tempMotorReverse := #ReverseButton AND NOT #ForwardButton;
+        ELSE 
+            CASE #currentState OF
+                #STATE_A:
+                    IF #SensorA AND #ButtonA THEN
+                        #currentState := #STATE_B;
+                        #tempMotorForward := TRUE;
+                    END_IF;
+                #STATE_B:
+                    IF #SensorB AND #ButtonB THEN
+                        #currentState := #STATE_C;
+                        #tempMotorForward := TRUE;
+                    END_IF;
+                #STATE_C:
+                    IF #SensorC AND #ButtonC THEN
+                        #currentState := #STATE_D;
+                        #tempCompletionLight := TRUE;
+                    END_IF;
+                #STATE_D:
+                    IF NOT #SensorC THEN
+                        #currentState := #STATE_A;
+                        #tempCompletionLight := FALSE;
+                    ELSE
+                        #tempCompletionLight := TRUE;
+                    END_IF;
+            END_CASE;
+            #tempMotorReverse := FALSE;
+        END_IF;
+    END_REGION
+
+    REGION Writting TO outputs
+        #MotorForward := #tempMotorForward;
+        #MotorReverse := #tempMotorReverse;
+        #CompletionLight := #tempCompletionLight;
+    END_REGION
+END_FUNCTION_BLOCK
+
+

@@ -1,0 +1,54 @@
+### 算法流程描述（DWord 拆分为 4 个 Byte）
+
+#### **1. 需求理解**
+- **功能目标**：将输入的 32 位 DWord 数据拆分为 4 个独立的 Byte（`byte0` ~ `byte3`），其中：
+  - `byte0` 是最低有效字节（LSB）
+  - `byte3` 是最高有效字节（MSB）
+- **输入**：`doubleWord`（32 位 DWord 数据）
+- **输出**：`byte0`、`byte1`、`byte2`、`byte3`（每个 8 位 Byte）
+
+#### **2. 设计思路**
+- **位操作策略**：
+  - 使用 **逻辑与（AND）** 和 **右移（SHR）** 操作提取每个字节。
+  - 掩码 `MASK = 16#FF`（即 `0xFF`）用于保留最低 8 位，屏蔽高位。
+- **步骤分解**：
+  1. **提取 `byte0`（LSB）**：
+     - 直接对 `doubleWord` 应用 `AND MASK`，保留最低 8 位。
+  2. **提取 `byte1`**：
+     - 将 `doubleWord` 右移 8 位，再应用 `AND MASK`。
+  3. **提取 `byte2`**：
+     - 将 `doubleWord` 右移 16 位，再应用 `AND MASK`。
+  4. **提取 `byte3`（MSB）**：
+     - 将 `doubleWord` 右移 24 位，再应用 `AND MASK`。
+
+#### **3. 代码实现逻辑**
+- **变量定义**：
+  - 输入：`doubleWord`（DWord）
+  - 输出：`byte0`、`byte1`、`byte2`、`byte3`（Byte）
+  - 常量：`MASK = 16#FF`（用于位掩码）
+- **主逻辑**：
+  ```plaintext
+  byte0 = doubleWord AND MASK;          // 直接取最低8位
+  byte1 = (doubleWord >> 8) AND MASK;   // 右移8位后取最低8位
+  byte2 = (doubleWord >> 16) AND MASK;  // 右移16位后取最低8位
+  byte3 = (doubleWord >> 24) AND MASK;  // 右移24位后取最低8位
+  ```
+- **错误处理**：
+  - 无需显式错误处理（ENO 直接设为 `TRUE`）。
+
+#### **4. 关键点说明**
+- **右移操作**：
+  - 每次右移 8 位的倍数，将目标字节移动到最低 8 位。
+- **掩码作用**：
+  - 确保只保留最低 8 位，避免高位干扰。
+- **优化**：
+  - 使用 `S7_Optimized_Access` 提升性能（适合 Siemens PLC 环境）。
+
+#### **5. 示例流程**
+假设输入 `doubleWord = 16#A1B2C3D4`：
+1. `byte0 = 16#A1B2C3D4 & 0xFF → 16#D4`
+2. `byte1 = (16#A1B2C3D4 >> 8) & 0xFF → 16#C3`
+3. `byte2 = (16#A1B2C3D4 >> 16) & 0xFF → 16#B2`
+4. `byte3 = (16#A1B2C3D4 >> 24) & 0xFF → 16#A1`
+
+输出结果：`[byte3=0xA1, byte2=0xB2, byte1=0xC3, byte0=0xD4]`。

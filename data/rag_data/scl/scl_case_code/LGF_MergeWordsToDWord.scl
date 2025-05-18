@@ -1,0 +1,45 @@
+FUNCTION "LGF_MergeWordsToDWord" : DWord
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_BitLogicOperations
+   VAR_INPUT 
+      word1 : Word;
+      word0 : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempDWord : DWord;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2018
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_MergeWordsToDWord
+	  // Comment/Function: This function merge 2 Word variables into one DWord variable.
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V14 / V14SP1
+	  // Restrictions:     ENO disabled - no error handling, no failure possible.
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION
+	
+	REGION MERGE
+	  // set the words by slice access
+	  #tempDWord.%W1 := #word1;
+	  #tempDWord.%W0 := #word0;
+	END_REGION
+	
+	REGION OUTPUT
+	  #LGF_MergeWordsToDWord := #tempDWord;
+	  // no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

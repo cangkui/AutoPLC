@@ -1,0 +1,65 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该函数 `LGF_IsValueInRange` 用于检查一个给定的值 `value` 是否在设定点 `setpoint` 的指定范围 `range` 内。范围的计算方式是以 `setpoint` 为中心，上下浮动 `range/2` 的距离。函数返回布尔值表示是否在范围内，同时提供额外的输出信号表示是否超出上限或下限，以及错误状态信息。
+
+#### 2. **输入参数**
+- `value` (LReal): 需要检查的值。
+- `setpoint` (LReal): 设定点，即范围的中间值。
+- `range` (LReal): 范围的宽度，实际范围是 `[setpoint - range/2, setpoint + range/2]`。
+
+#### 3. **输出参数**
+- `overHighLimit` (Bool): 如果 `value` 超过上限（`setpoint + range/2`），则为 `TRUE`。
+- `belowLowLimit` (Bool): 如果 `value` 低于下限（`setpoint - range/2`），则为 `TRUE`。
+- `error` (Bool): 如果执行过程中发生错误（如范围计算无效），则为 `TRUE`。
+- `status` (Word): 状态码，`16#0000` 表示无错误，`16#8401` 表示范围限制值错误。
+- 返回值 (Bool): 如果 `value` 在范围内，则为 `TRUE`。
+
+#### 4. **算法流程**
+1. **初始化与范围计算**
+   - 计算上限 `tempHighLimit`：`setpoint + (0.5 * ABS(range))`。
+   - 计算下限 `tempLowLimit`：`setpoint - (0.5 * ABS(range))`。
+   - 检查 `ENO` 是否有效（如果 `ENO` 为 `false`，表示范围计算可能无效，直接设置错误状态并返回）。
+
+2. **范围检查**
+   - 检查 `value` 是否超过上限：`value > tempHighLimit`，结果存入 `tempValueOverHighLimit`。
+   - 检查 `value` 是否低于下限：`value < tempLowLimit`，结果存入 `tempValueUnderLowLimit`。
+
+3. **输出结果**
+   - 返回值：`NOT (tempValueOverHighLimit OR tempValueUnderLowLimit)`。
+   - 设置 `overHighLimit` 和 `belowLowLimit` 为对应的检查结果。
+   - 设置 `error` 为 `FALSE`，`status` 为 `STATUS_NO_ERROR`（`16#0000`）。
+
+4. **错误处理**
+   - 如果范围计算无效（如 `ENO` 为 `false`），设置 `error` 为 `TRUE`，`status` 为 `ERR_RANGE_LIMIT_VALUES`（`16#8401`），并返回 `false`。
+
+#### 5. **代码调整建议**
+- **优化范围计算**：可以直接使用 `range` 的绝对值计算上下限，避免负数范围导致的问题。
+- **错误处理**：如果 `range` 为负数或无效值，可以提前检查并设置错误状态，而不是依赖 `ENO`。
+- **状态码扩展**：可以增加更多状态码，例如 `16#8402` 表示 `setpoint` 无效，`16#8403` 表示 `value` 无效等。
+
+#### 6. **伪代码描述**
+```
+FUNCTION LGF_IsValueInRange(value, setpoint, range) -> Bool
+    // 初始化
+    tempHighLimit := setpoint + (0.5 * ABS(range))
+    tempLowLimit := setpoint - (0.5 * ABS(range))
+
+    // 错误检查（可选）
+    IF range < 0 THEN
+        error := TRUE
+        status := ERR_RANGE_LIMIT_VALUES
+        RETURN FALSE
+    END_IF
+
+    // 范围检查
+    overHighLimit := value > tempHighLimit
+    belowLowLimit := value < tempLowLimit
+
+    // 返回值
+    RETURN NOT (overHighLimit OR belowLowLimit)
+END_FUNCTION
+```
+
+#### 7. **总结**
+该函数的核心逻辑是通过计算上下限并比较输入值是否在范围内。代码中通过临时变量存储中间结果，提高了可读性。错误处理部分可以进一步扩展，例如检查输入值的有效性或范围是否为负数。

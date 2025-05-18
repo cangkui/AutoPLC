@@ -1,0 +1,40 @@
+﻿{
+    "title": "Light Control Program",
+    "description": "Write a function block FB to implement a light control feature.\nA control panel has 3 indicator lights that are controlled by 3 button switches.\n\n1. Input parameters #button1~#button3 represent the 3 button switches, and output parameters #greenLight, #redLight, #yellowLight represent the indicator lights.\n2. When #button1=0, it indicates manual mode, and the indicator lights display different states based on the operation combination of #button2 and #button3:\n   - When both #button2 and #button3 are 0, all indicator lights are off (#greenLight, #redLight, #yellowLight are all 0).\n   - When #button2 is 1 and #button3 is 0, #greenLight is on, and #redLight blinks at a frequency of 0.5Hz, i.e., off for 1 second, on for 1 second.\n   - When #button2 is 0 and #button3 is 1, #redLight is on, and #yellowLight blinks at a frequency of 1Hz, i.e., off for 1 second, on for 1 second.\n   - When both #button2 and #button3 are 1, #yellowLight is on, and #greenLight blinks at a frequency of 1Hz, i.e., off for 1 second, on for 1 second.\n3. When #button1=1, it indicates automatic mode, and the indicator lights automatically cycle through the following sequence:\n   - First, #greenLight is on for 1 second.\n   - Then #greenLight is off, #redLight is on for 1 second.\n   - Then #redLight is off, #yellowLight is on for 1 second.\n   - Then it returns to the initial state where #greenLight is on for 1 second, and the cycle repeats.",
+    "type": "FUNCTION_BLOCK",
+    "name": "LightsControl",
+    "input": [
+        {
+            "name": "button1",
+            "type": "Bool",
+            "description": "Button 1"
+        },
+        {
+            "name": "button2",
+            "type": "Bool",
+            "description": "Button 2"
+        },
+        {
+            "name": "button3",
+            "type": "Bool",
+            "description": "Button 3"
+        }
+    ],
+    "output": [
+        {
+            "name": "greenLight",
+            "type": "Bool",
+            "description": "Green light"
+        },
+        {
+            "name": "redLight",
+            "type": "Bool",
+            "description": "Red light"
+        },
+        {
+            "name": "yellowLight",
+            "type": "Bool",
+            "description": "Yellow light"
+        }
+    ]
+}

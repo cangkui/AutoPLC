@@ -1,0 +1,145 @@
+FUNCTION_BLOCK "LGF_NonLinearInterpolation"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industries
+FAMILY : LGF
+NAME : LGF_NonLinearInterpolationCI
+   VAR_INPUT 
+      value : LReal;
+      defaultOutValue : LReal;
+      enDefaultOutValue : Bool;
+      track : Bool;
+      reset : Bool;
+   END_VAR
+
+   VAR_OUTPUT 
+      outputValue { ExternalWritable := 'False'} : LReal;
+   END_VAR
+
+   VAR_IN_OUT 
+      setpoints : Array[*] of "LGF_typeNonLinSetpoints";
+   END_VAR
+
+   VAR 
+      statIndex { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+   END_VAR
+
+   VAR_TEMP 
+      tempValue : LReal;
+      tempEndOfSearch : Bool;
+      tempInputValueStart : LReal;
+      tempInputValueEnd : LReal;
+      tempOutputValueStart : LReal;
+      tempOutputValueEnd : LReal;
+      tempFactor : LReal;
+      tempLowerBound : Int;
+      tempUpperBound : Int;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO : Int := 0;
+      SHIFT_STAT_INDEX_BY_ONE : Int := 1;
+      DIMENSION_ONE : UDInt := 1;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //=============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-----------------------------------------------------------------------------
+	  // Title:            LGF_NonLinearInterpolation
+	  // Comment/Function: Interpolates a charachteristic curve via pre-defined array of setpoints.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Initialization
+	  #tempValue := #value;
+	  //Call "LOWER_BOUND" and "UPPER_BOUND" for the setpoints
+	  #tempLowerBound := DINT_TO_INT(LOWER_BOUND(ARR := #setpoints, DIM := #DIMENSION_ONE));
+	  #tempUpperBound := DINT_TO_INT(UPPER_BOUND(ARR := #setpoints, DIM := #DIMENSION_ONE));
+	  
+	  //Check index value
+	  IF (#statIndex < #tempLowerBound) OR (#statIndex > #tempUpperBound) OR (#statIndex = #ZERO) THEN
+	    #statIndex := #tempLowerBound + #SHIFT_STAT_INDEX_BY_ONE;
+	  END_IF;
+	END_REGION
+	
+	REGION Different modes
+	  IF #enDefaultOutValue THEN
+	    //Set output value
+	    #outputValue := #defaultOutValue;
+	    RETURN;
+	  ELSIF #track THEN
+	    //Set output value
+	    #outputValue := #tempValue;
+	    RETURN;
+	  ELSIF #reset THEN
+	    //Preset search index of array
+	    #statIndex := #tempLowerBound + #SHIFT_STAT_INDEX_BY_ONE;
+	    #outputValue := #ZERO;
+	    RETURN;
+	  END_IF;
+	END_REGION
+	
+	REGION Calculated polynom output
+	  //Initialize search procedure
+	  #tempEndOfSearch := False;
+	  
+	  //Search procedure
+	  REPEAT
+	    //Preset input values of polygon
+	    #tempInputValueStart := #setpoints[#statIndex - #SHIFT_STAT_INDEX_BY_ONE].inputValue;
+	    #tempInputValueEnd := #setpoints[#statIndex].inputValue;
+	    
+	    //Check actual polynom
+	    IF (#tempValue > #tempInputValueStart) THEN
+	      IF (#tempValue > #tempInputValueEnd) THEN
+	        IF (#statIndex < #tempUpperBound) THEN
+	          #tempInputValueStart := #tempInputValueEnd;
+	          #statIndex := #statIndex + #SHIFT_STAT_INDEX_BY_ONE;
+	          #tempInputValueEnd := #setpoints[#statIndex].inputValue;
+	        ELSE
+	          #tempEndOfSearch := True;
+	        END_IF;
+	      ELSE
+	        #tempEndOfSearch := True;
+	      END_IF;
+	    ELSE
+	      IF (#statIndex > (#tempLowerBound + #SHIFT_STAT_INDEX_BY_ONE)) THEN
+	        #statIndex := #statIndex - #SHIFT_STAT_INDEX_BY_ONE;
+	        #tempInputValueEnd := #tempInputValueStart;
+	        // #tempInputValueStart := #setpoints.Point[#statIndex - 1].InputValue;
+	        #tempInputValueStart := #setpoints[#statIndex].inputValue;
+	      ELSE
+	        #tempEndOfSearch := True;
+	      END_IF;
+	    END_IF;
+	  UNTIL (#tempEndOfSearch = True) END_REPEAT;
+	  
+	  // Set output values of polygon
+	  #tempOutputValueStart := #setpoints[#statIndex - #SHIFT_STAT_INDEX_BY_ONE].outputValue;
+	  #tempOutputValueEnd := #setpoints[#statIndex].outputValue;
+	  // Calculate gradient of straight line
+	  #tempFactor := (#tempOutputValueEnd - #tempOutputValueStart) / (#tempInputValueEnd - #tempInputValueStart);
+	END_REGION
+	
+	REGION Writting to outputs
+	  // Calculate output value
+	  #outputValue := (#tempFactor * #tempValue) + (#tempOutputValueStart - (#tempFactor * #tempInputValueStart));
+	  
+	  // ENO mechanism is not used
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

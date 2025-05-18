@@ -1,0 +1,128 @@
+FUNCTION_BLOCK "LGF_CountBooleanEdges"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Simatic_Systems_Support
+FAMILY : LGF
+NAME : LGF_CountBooleanEdges
+   VAR_INPUT 
+      trigger : Bool;
+      monitorTime : Time := T#1s;
+   END_VAR
+
+   VAR_OUTPUT 
+      single { ExternalWritable := 'False'} : Bool;
+      double { ExternalWritable := 'False'} : Bool;
+      long { ExternalWritable := 'False'} : Bool;
+      severalEdges { ExternalWritable := 'False'} : Bool;
+      noOfEdges { ExternalWritable := 'False'} : USInt;
+   END_VAR
+
+   VAR 
+      instTimer {InstructionName := 'IEC_TIMER'; LibVersion := '1.0'; ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'; S7_SetPoint := 'False'} : IEC_TIMER;
+      statTriggerPrevious { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statTimeElapsedFlag { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statTriggerCounter { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : USInt;
+   END_VAR
+
+   VAR_TEMP 
+      tempTriggerEdge : Bool;
+      tempSingle : Bool;
+      tempDouble : Bool;
+      tempLong : Bool;
+      tempSeveralEdges : Bool;
+      tempNoOfEdges : USInt;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS / (c)Copyright (2021)
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_CountBooleanEdges
+	  // Comment/Function: This function evaluates a input signal for diffrent states in a certain amount of time.
+	  //                   The states are:
+	  //                   * One edge and input present over thw whole monitoring time
+	  //                   * Single edge
+	  //                   * Double edge
+	  //                   * N-Edges in between the monitoring time
+	  //                   The Output signal is present for at least on cycle after the monitoring time hase expired, or as long as the input `trigger` remains `TRUE`
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Simatic Systems Support
+	  // Tested with:      1516F FW2.8 / S7-PLCSIM Advanced V3.0
+	  // Engineering:      TIA Portal V16 Update 4
+	  // Restrictions:     ENO not in use, set to true, no error handling
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	(/**/)
+	END_REGION DESCRIPTION
+	
+	REGION INITIALISATION  
+	  // Initialize functionality
+	  // Edge detection
+	  #tempTriggerEdge := #trigger AND NOT #statTriggerPrevious;
+	  #statTriggerPrevious := #trigger;
+	END_REGION INITIALISATION  
+	
+	REGION PROGRAM LOGIC
+	  // Trigger edge dedected
+	  // Start the monitoring time and/or just increment edge counter
+	  IF #tempTriggerEdge THEN
+	    // Call timer
+	    #instTimer.TP(IN := TRUE,
+	                  PT := #monitorTime);
+	    
+	    // Each edge increments the counter
+	    #statTriggerCounter += 1;
+	  END_IF;
+	  
+	  // Monitoring time ist elapsed / over and we dedected at least on edge
+	  IF NOT #instTimer.Q THEN
+	    // Reset contition if trigger is reseted
+	    //And time elapsed flag is true
+	    IF NOT #trigger AND #statTimeElapsedFlag THEN
+	      // If no action is required, reset Outputs
+	      #tempLong :=
+	      #tempSingle :=
+	      #tempDouble :=
+	      #tempSeveralEdges := FALSE;
+	      // Reset edge counters
+	      #tempNoOfEdges :=
+	      #statTriggerCounter := 0;
+	      #statTimeElapsedFlag := FALSE;
+	      // Reset timer
+	      #instTimer.TP(IN := FALSE,
+	                    PT := #monitorTime);
+	      
+	    ELSIF (#statTriggerCounter <> 0) THEN
+	      IF #trigger AND #statTriggerCounter = 1 THEN
+	        #tempLong := TRUE;
+	      ELSIF #statTriggerCounter = 1 THEN
+	        #tempSingle := TRUE;
+	      ELSIF #statTriggerCounter = 2 THEN
+	        #tempDouble := TRUE;
+	      ELSE
+	        #tempSeveralEdges := TRUE;
+	      END_IF;
+	      #tempNoOfEdges := #statTriggerCounter;
+	      #statTimeElapsedFlag := TRUE;
+	    END_IF;
+	  END_IF;
+	END_REGION PROGRAM LOGIC
+	
+	REGION OUTPUTS
+	  // Write application specific temp values to outputs
+	  #single := #tempSingle;
+	  #double := #tempDouble;
+	  #long := #tempLong;
+	  #severalEdges := #tempSeveralEdges;
+	  #noOfEdges := #tempNoOfEdges;
+	  
+	  // ENO is not used, forced to TRUE
+	  ENO := TRUE;
+	END_REGION OUTPUTS
+	
+END_FUNCTION_BLOCK

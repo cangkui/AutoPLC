@@ -1,0 +1,48 @@
+FUNCTION "LGF_CompareLRealByPrecision" : Bool
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_CompareLRealByPrecision
+   VAR_INPUT 
+      valueA : LReal;
+      valueB : LReal;
+      precision : LReal;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2019
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_CompareLRealByPrecision
+	  // Comment/Function: This function checks floating point numbers for equality
+	  //                   Using a given precision by parameter
+	  // Library/Family:   LGF (Library General Functions)
+	  // Author:           Siemens Digital Industry
+	  // Tested with:      CPU1212C DC/DC/DC FW:V4.2
+	  // Engineering:      TIA Portal V15.1
+	  // Restrictions:     ENO is not used, forced to TRUE, no error handling needed
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //===============================================================================
+	END_REGION BLOCK INFO HEADER
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Approximation
+	  // the compare of fLoating point numbers is based on a given precison, for e.g. 1.0E-6
+	  // difference of the input values A and B has to be smaller than
+	  // the precision multiplied with one of the two given inputs
+	  #LGF_CompareLRealByPrecision := FALSE
+	  OR ((#valueA = 0.0) AND (ABS(#valueB) <= #precision))
+	  OR ((#valueB = 0.0) AND (ABS(#valueA) <= #precision))
+	  OR (ABS(#valueA - #valueB) <= (#precision * ABS(#valueA)));
+	  
+	  // ENO is not used, forced to TRUE, no error handling needed
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION

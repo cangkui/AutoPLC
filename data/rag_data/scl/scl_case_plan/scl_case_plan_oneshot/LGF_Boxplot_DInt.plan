@@ -1,0 +1,85 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_Boxplot_DInt` 用于计算一个整数数组的箱线图（Boxplot）统计信息，包括：
+- 最小值（min）、最大值（max）
+- 第一四分位数（Q25）、中位数（median）、第三四分位数（Q75）
+- 异常值（outlier）检测（上下界）
+- 数据偏度（skewness）
+
+#### 2. **输入输出**
+- **输入**：
+  - `execute`：触发计算的布尔信号（上升沿触发）
+  - `rangeOutlier`：异常值检测的参数（默认1.5）
+  - `values`：待计算的整数数组（IN_OUT参数）
+- **输出**：
+  - 箱线图统计值（min, max, Q25, median, Q75, outlierMin, outlierMax, skewness）
+  - 状态信息（error, status, subfunctionStatus）
+
+#### 3. **算法流程**
+1. **触发检测**：
+   - 检测 `execute` 的上升沿，开始计算。
+   - 如果 `execute` 为低电平，重置状态为 `STATUS_NO_CALL`。
+
+2. **输入验证**：
+   - 检查 `rangeOutlier` 是否合法（>1.0 或 =0）。
+   - 检查数组 `values` 的下界是否合法（≥0）。
+
+3. **数据排序**：
+   - 调用 `LGF_Shell_DInt` 对 `values` 进行排序（升序）。
+
+4. **计算统计量**：
+   - **元素数量**：计算数组长度 `statNumberOfElements`。
+   - **中位数（median）**：
+     - 如果元素数量为偶数：`median = (values[n/2] + values[n/2+1]) / 2`
+     - 如果元素数量为奇数：`median = values[(n+1)/2]`
+   - **第一四分位数（Q25）**：
+     - 计算位置 `k = (n + 3) / 4`，插值得到 Q25。
+   - **第三四分位数（Q75）**：
+     - 计算位置 `k = (3n + 1) / 4`，插值得到 Q75。
+
+5. **异常值检测**（仅当 `rangeOutlier ≠ 0`）：
+   - 计算四分位距 `IQR = Q75 - Q25`。
+   - 计算异常值边界：
+     - 下界：`Q25 - rangeOutlier * IQR`
+     - 上界：`Q75 + rangeOutlier * IQR`
+   - 遍历数组，统计超出边界的异常值比例：
+     - 下界异常值比例 `outlierMin`。
+     - 上界异常值比例 `outlierMax`。
+   - 更新非异常值的 `min` 和 `max`。
+
+6. **偏度计算**：
+   - `skewness = (Q25 + Q75 - 2 * median) / (Q75 - Q25)`
+
+7. **输出更新**：
+   - 将计算结果写入输出变量。
+   - 更新状态信息（`status`, `error`, `subfunctionStatus`）。
+
+#### 4. **状态码**
+- `16#0000`：计算完成（`STATUS_EXECUTION_FINISHED`）。
+- `16#7000`：未调用（`STATUS_NO_CALL`）。
+- `16#7001`：首次调用（`STATUS_FIRST_CALL`）。
+- `16#8200`：数组下界非法（`ERR_NEG_ARR_BOUND`）。
+- `16#8600`：排序错误（`ERR_SHELL_`）。
+- `16#9101`：`rangeOutlier` 参数非法（`ERR_RANGE_NOT_OK`）。
+
+#### 5. **代码调整建议**
+- **边缘检测**：使用 `execute` 的上升沿触发计算，避免重复计算。
+- **排序优化**：确保 `LGF_Shell_DInt` 的排序效率（Shell排序适合中等规模数据）。
+- **异常值检测**：如果 `rangeOutlier = 0`，跳过异常值检测逻辑。
+- **状态管理**：通过 `status` 和 `error` 明确反馈执行状态和错误信息。
+
+#### 6. **示例流程**
+1. 输入 `values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`，`rangeOutlier = 1.5`。
+2. 触发 `execute` 上升沿：
+   - 排序后数组：`[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`。
+   - 计算：
+     - Q25 = 3.25，median = 5.5，Q75 = 7.75。
+     - IQR = 4.5，异常值边界：下界=-3.5，上界=14.5。
+     - 无异常值，`outlierMin = 0%`，`outlierMax = 0%`。
+     - 偏度 `skewness = 0`。
+3. 输出：
+   - `min=1`，`max=10`，`q25=3.25`，`median=5.5`，`q75=7.75`。
+
+### 总结
+该功能块通过排序和插值计算箱线图统计量，支持异常值检测和偏度分析，适用于数据分布的可视化和分析场景。

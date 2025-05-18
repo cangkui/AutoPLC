@@ -1,0 +1,99 @@
+FUNCTION "LGF_ScaleLinear" : LReal
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry_Support
+FAMILY : LGF
+NAME : LGF_ScaleLinear
+   VAR_INPUT 
+      x : LReal;
+      x1 : LReal;
+      y1 : LReal;
+      x2 : LReal;
+      y2 : LReal;
+      yMin : LReal;
+      yMax : LReal;
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Bool;
+      status : Word;
+   END_VAR
+
+   VAR_TEMP 
+      tempY : LReal;
+      tempStatus : Word;
+   END_VAR
+
+   VAR CONSTANT 
+      STATUS_FINISHED_NO_ERROR : Word := 16#0000;
+      ERR_LOW_LIM_OVER_UP_LIM : Word := 16#8200;
+      WARN_Y_LIMITED_TO_YMIN : Word := 16#6001;
+      WARN_Y_LIMITED_TO_YMAX : Word := 16#6002;
+      PRECISION : LReal := 1.0E-06;
+   END_VAR
+
+
+BEGIN
+	REGION BLOCK INFO HEADER
+	  //===============================================================================
+	  // SIEMENS AG / (c)Copyright 2017
+	  //-------------------------------------------------------------------------------
+	  // Title:            LGF_ScaleLinear
+	  // Comment/Function: This function scales an input variable (`LReal`) via a linear straight-line equation.
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V14 Upd 1
+	  // Restrictions:     ENO mechanism is not used, Error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION INITIALISATION
+	  #tempY := 0.0;
+	  #tempStatus := #STATUS_FINISHED_NO_ERROR;
+	END_REGION
+	
+	REGION CONVERT
+	  // check if limits in a plausible range
+	  // --> higher limit has to be greater than lower limit
+	  IF (#yMin > #yMax) THEN
+	    #tempY := 0.0;
+	    #tempStatus := #ERR_LOW_LIM_OVER_UP_LIM;
+	    
+	  ELSE// no error, process scaling
+	    // Scale algorithm
+	    IF (ABS(#x1 - #x2) <= (#PRECISION * ABS(#x1))) THEN
+	      //The slope is approximately ZERO.
+	      //Special CASE, use a different equation, NOT "y = m*x+t", instead you use "x = y1"
+	      #tempY := #y1;
+	    ELSE
+	      // resolved equation --> F(x) = y = m*x+t, where m = slope/gradient, t = intercept
+	      #tempY := (#y2 - #y1) / (#x2 - #x1) * (#x - #x1) + #y1;
+	    END_IF;
+	    
+	    // Check if upper or lower limit is exceeded
+	    IF (#tempY < #yMin) THEN
+	      #tempY := #yMin;
+	      #tempStatus := #WARN_Y_LIMITED_TO_YMIN;  // set warning indicator
+	    ELSIF (#tempY > #yMax) THEN
+	      #tempY := #yMax;
+	      #tempStatus := #WARN_Y_LIMITED_TO_YMAX;  // set warning indicator
+	    END_IF;
+	  END_IF;
+	END_REGION
+	
+	REGION OUTPUTS  
+	  // set status and error output
+	  #status := #tempStatus;
+	  #error := #tempStatus.%X15;
+	  // set return value
+	  #LGF_ScaleLinear := #tempY;
+	  //ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+END_FUNCTION

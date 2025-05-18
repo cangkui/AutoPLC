@@ -1,0 +1,114 @@
+FUNCTION_BLOCK "LGF_SimpleSmoothingFB"
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : Siemens_Digital_Industry
+FAMILY : LGF
+NAME : LGF_SimpleSmoothingFB
+   VAR_INPUT 
+      enable : Bool;
+      insert : Bool;
+      value : LReal;
+   END_VAR
+
+   VAR_OUTPUT 
+      smoothedValue { ExternalWritable := 'False'} : LReal;
+      error { ExternalWritable := 'False'} : Bool;
+      status { ExternalWritable := 'False'} : Word := #STATUS_NO_CALL;
+   END_VAR
+
+   VAR 
+      statValues { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Array[0..#MINIMUM_NUMBER_OF_VALUES] of LReal;
+      statCount { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Int;
+      statSmoothedValue { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : LReal;
+      statStatus { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Word;
+      statEnableOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+      statInsertOld { ExternalAccessible := 'False'; ExternalVisible := 'False'; ExternalWritable := 'False'} : Bool;
+   END_VAR
+
+   VAR CONSTANT 
+      ZERO_REAL : Real := 0.0;
+      MINIMUM_NUMBER_OF_VALUES : UDInt := 2;
+      NUMBER_OF_VALUES : UDInt := 3;
+      INCREMENT_VALUE : Int := 1;
+      STATUS_NO_CALL : Word := 16#7000;
+      STATUS_FIRST_CALL : Word := 16#7001;
+      STATUS_SUBSEQUENT_CALL : Word := 16#7002;
+      STATUS_NOT_ENOUGH_VALUES : Word := 16#7010;
+   END_VAR
+
+
+BEGIN
+	REGION Block info header
+	  //============================================================================
+	  // SIEMENS AG / (c)Copyright 2018
+	  //----------------------------------------------------------------------------
+	  // Title:            LGF_SimpleSmoothingFB
+	  // Comment/Function: This function block calculates smoothed values of a variable
+	  // Library/Family:   LGF(Library General Functions)
+	  // Author:           Siemens Digital Industry Support
+	  // Tested with:      S7-PLCSIM Advanced V2.0 SP1
+	  // Engineering:      TIA Portal V15 Update 2
+	  // Restrictions:     ENO disabled, forced to true - error handling done by error and status
+	  // Requirements:     PLC (S7-1200 / S7-1500)
+	  //-------------------------------------------------------------------------------
+	  //=============================================================================
+	END_REGION Block info header
+	
+	REGION DESCRIPTION
+	  (/**/)
+	END_REGION DESCRIPTION
+	
+	REGION Check function block call
+	  // Check if FB is triggered - rising edge on enable
+	  IF #enable AND NOT #statEnableOld THEN
+	    // Reset static values
+	    #statCount := 0;
+	    #statValues[0] := #ZERO_REAL;
+	    #statValues[1] := #ZERO_REAL;
+	    #statValues[2] := #ZERO_REAL;
+	    
+	    //Set status for first call
+	    #statStatus := #STATUS_FIRST_CALL;
+	    
+	    // Enabled after edge trigger
+	  ELSIF #enable AND #statEnableOld THEN
+	    REGION Values inserting and smoothing calculation
+	      // positive edge of insert detected 
+	      IF #insert AND NOT #statInsertOld THEN
+	        
+	        // Copy new value
+	        #statValues[0] := #statValues[1];
+	        #statValues[1] := #statValues[2];
+	        #statValues[2] := #value;
+	        
+	        // Check if the minimum needed insered values is reached
+	        // Increase the count of added values
+	        IF #statCount <= #MINIMUM_NUMBER_OF_VALUES THEN
+	          #statCount += #INCREMENT_VALUE;
+	          #statStatus := #STATUS_NOT_ENOUGH_VALUES;
+	        ELSE
+	          // 3 values inserted, calculate smoothed value
+	          #statSmoothedValue := (#statValues[0] + #statValues[1] + #statValues[2]) / #NUMBER_OF_VALUES;
+	          #statStatus := #STATUS_SUBSEQUENT_CALL;
+	        END_IF;
+	      END_IF;
+	    END_REGION
+	  ELSE
+	    #statStatus := #STATUS_NO_CALL;
+	    #statSmoothedValue := #ZERO_REAL;
+	  END_IF;
+	  
+	  // Store previous values for edge dedection
+	  #statEnableOld := #enable;
+	  #statInsertOld := #insert;
+	END_REGION
+	
+	REGION Writting to outputs
+	  #error := #statStatus.%X15;
+	  #status := #statStatus;
+	  #smoothedValue := #statSmoothedValue;
+	  
+	  // ENO mechanism is not used - forced to true.
+	  ENO := TRUE;
+	END_REGION
+	
+END_FUNCTION_BLOCK

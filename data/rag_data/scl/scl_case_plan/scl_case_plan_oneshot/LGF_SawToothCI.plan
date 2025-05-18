@@ -1,0 +1,97 @@
+### 算法流程描述
+
+#### 1. **功能概述**
+该功能块 `LGF_SawToothCI` 用于生成一个锯齿波信号。锯齿波的形状由以下参数控制：
+- **振幅（amplitude）**：锯齿波的峰值幅度。
+- **偏移量（offset）**：锯齿波的垂直偏移。
+- **周期（periode）**：锯齿波的周期时间（毫秒）。
+- **相位偏移（phaseShift）**：锯齿波的相位偏移（毫秒）。
+- **调用OB（callOB）**：指定调用该功能块的循环中断OB。
+- **复位（reset）**：复位锯齿波信号。
+
+#### 2. **输入输出变量**
+- **输入变量**：
+  - `amplitude`：锯齿波的振幅（默认1.0）。
+  - `offset`：锯齿波的垂直偏移（默认0.0）。
+  - `periode`：锯齿波的周期时间（默认1000毫秒）。
+  - `phaseShift`：锯齿波的相位偏移（默认0.0）。
+  - `callOB`：调用该功能块的循环中断OB。
+  - `reset`：复位信号（布尔值）。
+  
+- **输出变量**：
+  - `value`：当前锯齿波的值。
+  - `error`：错误标志（TRUE表示错误）。
+  - `status`：状态码（16#0000表示无错误）。
+  - `subFunctionStatus`：子功能状态码。
+
+#### 3. **内部变量**
+- `statCounter`：状态计数器，用于跟踪锯齿波的当前相位。
+- 临时变量（`VAR_TEMP`）：
+  - `tempCycleTime`：循环中断OB的周期时间。
+  - `tempCyclePhase`：循环中断OB的相位。
+  - `tempCycleStatus`：循环中断OB的状态。
+  - `tempReadTimeStatus`：读取时间的返回状态。
+  - `tempValue`：临时存储锯齿波的计算值。
+  - `tempPhaseShift`：临时存储相位偏移。
+
+#### 4. **常量定义**
+- `SECOND_IN_MS`：1秒的毫秒数（1000）。
+- `ZERO`：零值（0）。
+- `SLOPE`：锯齿波的斜率（2.0）。
+- 状态码常量（如`STATUS_FINISHED_NO_ERROR`、`ERR_OB_UNAVAILABLE`等）。
+
+#### 5. **算法流程**
+1. **获取采样时间**：
+   - 使用 `QRY_CINT` 函数获取循环中断OB的周期时间、相位和状态。
+   - 如果 `QRY_CINT` 返回错误（`tempReadTimeStatus ≠ 0`），则设置错误标志和状态码，并返回。
+   - 如果循环中断OB不可用（`tempCycleStatus = QRY_CINT_OB_UNAVAILABLE`），则设置错误标志和状态码，并返回。
+
+2. **复位处理**：
+   - 如果 `reset` 为 TRUE，则重置 `statCounter` 和 `tempValue` 为0。
+
+3. **锯齿波计算**：
+   - 如果 `reset` 为 FALSE：
+     - 更新 `statCounter`：每次调用时增加 `tempCycleTime / SECOND_IN_MS`，并对 `periode` 取模。
+     - 计算相位偏移：`tempPhaseShift = (statCounter + phaseShift) MOD periode`。
+     - 计算锯齿波值：`tempValue = SLOPE * amplitude / periode * tempPhaseShift - amplitude`。
+
+4. **输出赋值**：
+   - 最终锯齿波值：`value = tempValue + offset`。
+   - 设置错误标志为 FALSE，状态码为 `STATUS_FINISHED_NO_ERROR`。
+   - 强制 `ENO` 为 TRUE（不使用 `ENO` 机制）。
+
+#### 6. **错误处理**
+- 如果 `QRY_CINT` 返回错误或循环中断OB不可用，则设置 `error` 为 TRUE，并填充相应的状态码。
+- 错误情况下，`value` 被设置为0。
+
+#### 7. **状态码**
+- `16#0000`：无错误。
+- `16#8600`：循环中断OB不可用。
+- `16#8601`：`QRY_CINT` 函数错误。
+
+### 代码调整建议
+1. **初始化**：
+   - 确保所有输入变量在未连接时有合理的默认值（如 `offset` 和 `phaseShift` 默认为0.0）。
+
+2. **错误处理**：
+   - 可以增加对输入参数的校验（如 `amplitude` 和 `periode` 是否为正数）。
+
+3. **性能优化**：
+   - 如果 `periode` 或 `phaseShift` 为常量，可以预先计算部分公式以减少运行时计算量。
+
+4. **注释**：
+   - 在关键计算步骤（如锯齿波公式）添加注释，说明数学原理。
+
+5. **测试用例**：
+   - 提供测试用例，验证不同参数组合下的锯齿波形状（如 `amplitude=2.0`、`offset=1.0`、`periode=500`）。
+
+### 示例测试用例
+- **输入**：
+  - `amplitude = 1.0`
+  - `offset = 0.0`
+  - `periode = 1000`
+  - `phaseShift = 0.0`
+  - `reset = FALSE`
+- **预期输出**：
+  - `value` 从 -1.0 线性增长到 1.0，周期为1秒。
+  - `error = FALSE`，`status = 16#0000`。
