@@ -57,6 +57,10 @@ class Config:
         return Path(self._config["environment"]["scl_plan"])
     
     @property
+    def SCL_CODE_DIR(self) -> str:
+        return self._config["environment"]["scl_code_dir"]
+    
+    @property
     def model(self) -> str:
         return self._config["model"]["name"]
     
@@ -128,6 +132,38 @@ class Config:
     @property
     def DEBUGGER_DISABLED(self) -> bool:
         return self._config["workflow"]["debugger_disabled"]
+
+    @property
+    def APIREC_DISABLED(self) -> bool:
+        return self._config["workflow"]["api_rec_disabled"]
     
+    @property
+    def AUTOLEARN_DISABLED(self) -> bool:
+        return self._config["workflow"]["auto_learn_disabled"]
+
+    @property
+    def IS_CODING_FEWSHOT(self) -> bool:
+        return self._config["workflow"]["is_coding_fewshot"]
+    
+    @property
+    def IS_RETRIEVE_FEWSHOT(self) -> bool:
+        return self._config["workflow"]["is_retrieve_fewshot"]
+    
+    @property
+    def IS_MODELING_FEWSHOT(self) -> bool:
+        return self._config["workflow"]["is_modeling_fewshot"]
+    
+    @property
+    def IS_DEBUGGER_FEWSHOT(self) -> bool:
+        return self._config["workflow"]["is_debugger_fewshot"]
+    
+    @property
+    def IS_APIREC_FEWSHOT(self) -> bool:
+        return self._config["workflow"]["is_api_rec_fewshot"]
+    
+    @property
+    def IS_AUTOLEARN_FEWSHOT(self) -> bool:
+        return self._config["workflow"]["is_auto_learn_fewshot"]
+
     def __repr__(self) -> str:
         return yaml.dump(self._config, sort_keys=False)

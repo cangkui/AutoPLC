@@ -34,7 +34,8 @@ class AutoDebugger():
         task: dict,
         scl_code: str,
         max_verify_count: int,
-        openai_client: OpenAIClient
+        openai_client: OpenAIClient,
+        load_few_shots: bool = True,
     ) -> str:
         """
         执行验证和改进过程。
@@ -48,6 +49,7 @@ class AutoDebugger():
         - scl_code: 需要编译和验证的SCL代码。
         - max_verify_count : 最大验证数量
         - openai_client : 用于调用的大模型客户端
+        - load_few_shots : 是否加载few-shot
 
         返回:
         - scl_code : 修复后的SCL代码
@@ -74,9 +76,11 @@ class AutoDebugger():
         verifier_messages = [{"role": "system", "content": verifier_system_prompt_with_data}]
 
         # TODO：few-shot未与openness对齐，暂时注释
-        # verifier_fewshots = cls.load_debug_shots()
-        # verifier_messages.extend(verifier_fewshots)
-    
+        if load_few_shots:
+            # verifier_fewshots = cls.load_debug_shots()
+            # verifier_messages.extend(verifier_fewshots)
+            pass
+
         # 尝试验证和修复代码，直到成功或达到最大尝试次数
         while verify_count < max_verify_count:
             debugging_process_data = {
@@ -96,20 +100,19 @@ class AutoDebugger():
                 error_list = []
                 # 首选IsDef为true的错误
                 for error in check_result.errors:
-                    if error["IsDef"]:
-                        print('IsDef >>> ',str(error))
-                        error_list.append(error)
+                    if error.error_type == "Data Section Error":
+                        print('[LOG] Data Section Error >>> ',str(error))
+                        error_list.append(error.to_dict())
                 # 如果没有IsDef为true的错误，则选择IsDef为false的错误
                 if not error_list:
                     for error in check_result.errors:
-                        if not error["IsDef"]:
-                            print('NOT IN DEF >>>> ',str(error))
-                            error_list.append(error)
+                        if not error.error_type == "Program Section Error":
+                            print('[LOG] Program Section Error >>>> ',str(error))
+                            error_list.append(error.to_dict())
                 error_log = '\n'.join([str(err) for err in error_list])
-                print(task['name'], 'Start Verification!')
-                print("[LOG] error_log is > " , error_log)
+                print('[LOG] ',task['name'], 'Start Verification!')
                 debugging_process_data["compiler"] = error_list
-                with open(syntax_output_file, "a+", encoding="uft8") as fp:
+                with open(syntax_output_file, "a+", encoding="utf-8") as fp:
                     fp.write(error_log)
                     fp.write('\n' + '='*20 + "\n")
             
@@ -208,33 +211,33 @@ class AutoDebugger():
         # 返回处理后的结果列表。
         return results
     
-    # def load_debug_shots(cls, SHOT_DATA_DIR:str):
-    #     """
-    #     Load and format code verification examples and algorithms into few-shot prompts and add them to the shots list.
+    @classmethod
+    def load_debug_shots(cls, SHOT_DATA_DIR:str):
+        """
+        [Deprecated] Load and format code verification examples and algorithms into few-shot prompts and add them to the shots list.
         
-    #     Parameters:
-    #     examples (List[dict]): A list of dictionaries, each containing a description and code example.
-    #     algorithms (List[str]): A list of algorithm descriptions corresponding to the examples.
-    #     """
-    #     SHOT_DATA_DIR = Config.SHOT_DATA_DIR
-    #     shot_prompt = verifier_shot_prompt
-    #     verifier_shots= []
+        parameters:
+        - SHOT_DATA_DIR (str): The directory path where the shot data is located.
+        """
+        SHOT_DATA_DIR = Config.SHOT_DATA_DIR
+        shot_prompt = verifier_instance_prompt
+        verifier_shots= []
         
-    #     # 读取验证器的Few-Shot示例
-    #     with open(f'{SHOT_DATA_DIR}/verifier_fewshot.txt','r') as fp:
-    #         verifier_fewshots = fp.read()
+        # 读取验证器的Few-Shot示例
+        with open(f'{SHOT_DATA_DIR}/verifier_fewshot.txt','r') as fp:
+            verifier_fewshots = fp.read()
     
-    #     verifier_fewshots = verifier_fewshots.split("=====")
-    #     for example in verifier_fewshots:
-    #         buggy_code, check_feedback, response_patch = example.split("&&&&&")
-    #         verifier_icl = shot_prompt.format(
-    #             static_analysis_results = check_feedback,
-    #             scl_code = buggy_code
-    #         )
-    #         verifier_shots.append({"role": "user", "content": verifier_icl})
-    #         verifier_shots.append({"role": "assistant", "content": response_patch})
+        verifier_fewshots = verifier_fewshots.split("=====")
+        for example in verifier_fewshots:
+            buggy_code, check_feedback, response_patch = example.split("&&&&&")
+            verifier_icl = shot_prompt.format(
+                static_analysis_results = check_feedback,
+                scl_code = buggy_code
+            )
+            verifier_shots.append({"role": "user", "content": verifier_icl})
+            verifier_shots.append({"role": "assistant", "content": response_patch})
     
-    #     return verifier_shots
+        return verifier_shots
 
 
 verifier_system_prompt = """

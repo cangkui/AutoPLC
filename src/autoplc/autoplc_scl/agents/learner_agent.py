@@ -1,9 +1,8 @@
 
 # TODO：实现一个从编码和debug过程中学习经验策略的agent
-from ast import List
 import json
 from autoplc_scl.agents.clients import OpenAIClient
-
+from typing import List, Dict, Tuple, Any, Optional
 
 class LearnAgent():
     """
@@ -41,7 +40,7 @@ class LearnAgent():
         return json_data
 
     @classmethod
-    def run_learn_from_coding(cls, task: dict, prediction_scl: str, groundtruth_scl: str, openai_client:OpenAIClient):
+    def run_learn_from_coding(cls, task: dict, prediction_scl: str, groundtruth_scl: str, openai_client:OpenAIClient) -> dict:
         """
         Summarize the differences and provide feedback based on the prediction and the groundtruth code.
         
@@ -77,7 +76,7 @@ class LearnAgent():
 
 
     @classmethod
-    def run_learn_from_debug(cls, task: dict, groundtruth_scl: str, debug_history: List[dict], openai_client:OpenAIClient):
+    def run_learn_from_debug(cls, task: dict, groundtruth_scl: str, debug_history: List[dict], openai_client:OpenAIClient) -> dict:
         """
         Summarize the common errors based on the current task's the debug history.
         

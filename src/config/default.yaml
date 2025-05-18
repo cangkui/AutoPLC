@@ -5,6 +5,7 @@ environment:
   log_dir: "{ROOTPATH}/logs"
   scl_plan: "{ROOTPATH}/data/rag_data/scl/scl_case_plan"
   instruction_dir: "{ROOTPATH}/data/rag_data/instructions"
+  scl_code_dir: "{ROOTPATH}/data/rag_data/scl/scl_case_code"
 
 # 模型配置
 model:
@@ -15,8 +16,8 @@ model:
 
 # 检索模型配置
 retrieve:
-  model: "glm-4-plus"
-  temperature: 0.15
+  model: "glm-4-airx"
+  temperature: 0.1
   top_p: 0.9
 
 # 模型器设置
@@ -47,5 +48,13 @@ instruction:
 # 工作流实验设置
 workflow:
   retrieve_disabled: false
-  modeling_disabled: True
+  modeling_disabled: false
   debugger_disabled: false
+  api_rec_disabled : false
+  auto_learn_disabled : false
+  is_coding_fewshot: true
+  is_retrieve_fewshot: false
+  is_modeling_fewshot: false
+  is_debugger_fewshot: false
+  is_api_rec_fewshot: false
+  is_auto_learn_fewshot: false
