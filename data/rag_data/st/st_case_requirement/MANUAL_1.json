@@ -1,0 +1,47 @@
+{
+    "title": "Manual Control Function Block",
+    "description": "MULTI_IN is a sensor interface that accepts up to 3 sensors to check for er￾rors, and depending on the input mode, an output value is calculated.\nMode Function\n0 MULTI_in = average of the inputs in_1.. 3\n1 MULTI_in = input in_1\n2 MULTI_in = input in_2\n3 MULTI_in = input in_3\n4 MULTI_in = Default Input \n5 MULTI_in = smallest value of the inputs in_1.. 3\n6 MULTI_in = largest value of the inputs in_1 .. 3\n7 MULTI_in = mean value of the inputs in_1..3\n>7 MULTI_in = 0\nRegardless of the mode input values that are greater than IN_MAX or less\nthan IN_MIN be ignored. If no calculation is possible as defned by mode,\nthe input Default is used as a output value. Multi_in is used when diferent\nsensors measures the same value and high security and reliability is requi￾red. A possible application is to measure the outside temperature at va￾rious points and the surveillance on cable or sensor failure.",
+    "type": "FUNCTION_BLOCK",
+    "name": "MANUAL_1",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input signal that determines the output state when manual control is not active."
+        },
+        {
+            "name": "MAN",
+            "type": "BOOL",
+            "description": "Manual control signal to enable manual operation."
+        },
+        {
+            "name": "M_I",
+            "type": "BOOL",
+            "description": "Immediate input signal that defines the output state when manual control is inactive."
+        },
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Set signal to transition the output state to TRUE."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to transition the output state to FALSE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal representing the current state controlled by the function block."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "Status code indicating the current state of the function block."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

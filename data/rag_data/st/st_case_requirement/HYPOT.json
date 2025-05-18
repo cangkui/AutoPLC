@@ -1,0 +1,24 @@
+{
+    "title": "Calculate the Hypotenuse",
+    "description": "HYPOT The Mortgage function calculates the hypotenuse of a right triangle, by\nthe theorem of Pythagoras.",
+    "type": "FUNCTION",
+    "name": "HYPOT",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The length of one side of the right triangle."
+        },
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The length of the other side of the right triangle."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated length of the hypotenuse."
+    }
+}

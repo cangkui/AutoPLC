@@ -1,0 +1,25 @@
+{
+    "title": "Leap Year Day Check",
+    "description": "LEAP_DAY function checks if the input date is a leap or a 29th Februa￾ry. The test is valid for the time window from 1970 to 2099. In the year\n2100 a leap year indicated although this is not one. However, since the\nrange of dates according to IEC61131-3 extends only to the year 2106 this\ncorrection will be omitted.",
+    "type": "FUNCTION",
+    "name": "LEAP_DAY",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The date to be checked for leap day."
+        }
+    ],
+    "output": [
+        {
+            "name": "LEAP_DAY",
+            "type": "BOOL",
+            "description": "A boolean value indicating whether the input date is a leap day."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns true if the date is February 29th, otherwise false."
+    }
+}

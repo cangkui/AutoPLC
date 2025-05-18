@@ -1,0 +1,19 @@
+{
+    "title": "Convert Kilometers per Hour to Meters per Second",
+    "description": "KMH_TO_MS converts value to a speed of kilomter per Hour in meters per\nsecond. KMH_TO_MS := KMH / 3.6",
+    "type": "FUNCTION",
+    "name": "KMH_TO_MS",
+    "input": [
+        {
+            "name": "kmh",
+            "type": "REAL",
+            "description": "The speed value in kilometers per hour to be converted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The equivalent speed value in meters per second after conversion."
+    }
+}

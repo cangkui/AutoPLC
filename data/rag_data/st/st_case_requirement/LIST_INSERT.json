@@ -1,0 +1,35 @@
+{
+    "title": "Insert into List Function",
+    "description": "LIST_INSERT puts an element at the position POS in a list. The list consists\nof Strings (elements) that begin with the separation character SEP. The\nfrst element of the list is at position 1. If a position greater than the last\nelement of the list is given, empty elements are added to the list until INS\nis at its normal position at the end of the list. If POS = 0, the new element\nwill be placed to the top of the list.",
+    "type": "FUNCTION",
+    "name": "LIST_INSERT",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The separator byte used to tokenize the list."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position in the list where the new string should be inserted."
+        },
+        {
+            "name": "INS",
+            "type": "STRING(LIST_LENGTH)",
+            "description": "The string that will be inserted into the list."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "LIST",
+            "type": "STRING(LIST_LENGTH)",
+            "description": "The list into which the string will be inserted."
+        }
+    ],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the string was successfully inserted, otherwise FALSE."
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "title": "RMP Next Function Block",
+    "description": "_RMP_NEXT follows at the output OUT to the input signal IN with the in TR\nand TF defned rising or falling fanks. Unlike RMP_SOFT the fank of\nRMP_NEXT runs until it underrun or overrun the endpoint and is therefore\nsuitable for control tasks. Changing the value of IN so a rising ramp with\nTR or a falling fank with TF starts at the output OUT until the value of OUT\nhas overrun or underrun the IN. The output then remains at this value. The\noutputs of UP and DN shows just whether a rising or a falling edge are\ncreated. The output DIR indicates the direction of change at IN, if IN is not\nchanged, the output remains at the last state. The lock time TL determi￾nes the delay time between the direction reversal.\nThe following graph shows the waveform at OUT when changing the input\nsignal at IN:",
+    "type": "FUNCTION_BLOCK",
+    "name": "_RMP_NEXT",
+    "input": [
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable/disable input, with initial value set to TRUE."
+        },
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "Current input value for the ramp control."
+        },
+        {
+            "name": "TR",
+            "type": "TIME",
+            "description": "Time duration for ramping state when moving upwards."
+        },
+        {
+            "name": "TF",
+            "type": "TIME",
+            "description": "Time duration for ramping state when moving downwards."
+        },
+        {
+            "name": "TL",
+            "type": "TIME",
+            "description": "Lock time duration for the ramp."
+        }
+    ],
+    "output": [
+        {
+            "name": "DIR",
+            "type": "BOOL",
+            "description": "Indicates the direction of ramping; upwards if TRUE."
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Output indicating if the ramp is moving upwards."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Output indicating if the ramp is moving downwards."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "OUT",
+            "type": "BYTE",
+            "description": "Current output value that can be modified by the function block."
+        }
+    ],
+    "return_value": null
+}

@@ -1,0 +1,52 @@
+{
+    "title": "4-bit Shift Register with Set, Reset, and Clock Functionality",
+    "description": "GRAY_TO_BYTE converts a Gray-coded value (IN) in a byte.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SHR_4E",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Input signal to set the shift register."
+        },
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "Data input for the shift register."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock input signal to trigger the shifting operation."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to reset the shift register outputs."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output representing the least significant bit of the shift register."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output representing the second least significant bit of the shift register."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output representing the second most significant bit of the shift register."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output representing the most significant bit of the shift register."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

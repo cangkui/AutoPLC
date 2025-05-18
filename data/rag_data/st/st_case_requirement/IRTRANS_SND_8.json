@@ -1,0 +1,52 @@
+{
+    "title": "IRTRANS_SND_8",
+    "description": "IRTRANS_SND_8 allows users to send remote control commands to the IR￾Trans. If IN_x is TRUE the specifed device and key code in setup is sent to\n\nthe IRTrans which outputs in turn as a real remote control commands. With\n\nT_REPEAT the repeat time for sending can be specifed . If IN_0 remains\n\nconstant to TRUE so always this key code sent repeated after the time\n\nT_REPEAT. If a change to a diferent IN_x occures this code will send imme￾diately and then again delayed with T_REPEAT, if it remains a long period\n\nof time. At output KEY the currently controlled KEY will be displayed. KEY\n\n= 0 means that no IN_x is active. The values 1-3 are the IN_0 - IN_7.\n\n45 Version 1.21\n\nChapter 7. Data Logger\n\n 7. Data Logger",
+    "type": "FUNCTION",
+    "name": "IRTRANS_SND_8",
+    "input": [
+        {
+            "name": "IN_0",
+            "type": "BOOL",
+            "description": "Input flag to send keycode x (TRUE = send keycode). This applies to IN_0 through IN_7."
+        },
+        {
+            "name": "T_REPEAT",
+            "type": "TIME",
+            "description": "Time interval for re-sending the key code when the respective input remains TRUE."
+        },
+        {
+            "name": "IP_C",
+            "type": "struct IP_CONTROL",
+            "description": "Data structure for parameterization.",
+            "fields": []
+        },
+        {
+            "name": "S_BUF",
+            "type": "struct NETWORK_BUFFER_SHORT",
+            "description": "Data structure for transmitting the key code.",
+            "fields": []
+        },
+        {
+            "name": "DEV_CODE",
+            "type": "STRING",
+            "description": "String representing the remote control name to be decoded."
+        },
+        {
+            "name": "KEY_CODE_0",
+            "type": "STRING",
+            "description": "Key code to be sent (for IN_0). This applies to KEY_CODE_0 through KEY_CODE_7."
+        }
+    ],
+    "output": [
+        {
+            "name": "KEY",
+            "type": "BYTE",
+            "description": "Output representing the currently active key codes. KEY = 0 means no inputs are active."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

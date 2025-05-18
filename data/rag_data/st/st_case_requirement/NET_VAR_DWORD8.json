@@ -1,0 +1,105 @@
+{
+    "title": "NET_VAR_DWORD8 Module",
+    "description": "NET_VAR_DWORD8 is used for bidirectional transmission of eight \n\nDWORD from the master to slave and vice versa. The signals DWORD IN1..8 are \n\ncollected and passed to the other side (control) on the same module at the same \n\nposition as OUT1..8 again.\n\nSimultaneously, the on the opposite side (other control) passed input datawords \n\npassed here as a OUT1..8 again.\n\nID parameter indicates the current identification number of the module instance. If the \n\nconfiguration of the master and the slave program is differently (incorrectly) that ID \n\nnumber is passed as a fault in the module NET_VAR_CONTROL.",
+    "type": "FUNCTION",
+    "name": "NET_VAR_DWORD8",
+    "input": [
+        {
+            "name": "X",
+            "type": "NET_VAR_DATA",
+            "description": "NET_VAR data structure for bidirectional data transmission"
+        },
+        {
+            "name": "IN1",
+            "type": "DWORD",
+            "description": "Input DWORD value 1"
+        },
+        {
+            "name": "IN2",
+            "type": "DWORD",
+            "description": "Input DWORD value 2"
+        },
+        {
+            "name": "IN3",
+            "type": "DWORD",
+            "description": "Input DWORD value 3"
+        },
+        {
+            "name": "IN4",
+            "type": "DWORD",
+            "description": "Input DWORD value 4"
+        },
+        {
+            "name": "IN5",
+            "type": "DWORD",
+            "description": "Input DWORD value 5"
+        },
+        {
+            "name": "IN6",
+            "type": "DWORD",
+            "description": "Input DWORD value 6"
+        },
+        {
+            "name": "IN7",
+            "type": "DWORD",
+            "description": "Input DWORD value 7"
+        },
+        {
+            "name": "IN8",
+            "type": "DWORD",
+            "description": "Input DWORD value 8"
+        },
+        {
+            "name": "ID",
+            "type": "BYTE",
+            "description": "Identification number of the module instance"
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT1",
+            "type": "DWORD",
+            "description": "Output DWORD value 1 corresponding to input IN1"
+        },
+        {
+            "name": "OUT2",
+            "type": "DWORD",
+            "description": "Output DWORD value 2 corresponding to input IN2"
+        },
+        {
+            "name": "OUT3",
+            "type": "DWORD",
+            "description": "Output DWORD value 3 corresponding to input IN3"
+        },
+        {
+            "name": "OUT4",
+            "type": "DWORD",
+            "description": "Output DWORD value 4 corresponding to input IN4"
+        },
+        {
+            "name": "OUT5",
+            "type": "DWORD",
+            "description": "Output DWORD value 5 corresponding to input IN5"
+        },
+        {
+            "name": "OUT6",
+            "type": "DWORD",
+            "description": "Output DWORD value 6 corresponding to input IN6"
+        },
+        {
+            "name": "OUT7",
+            "type": "DWORD",
+            "description": "Output DWORD value 7 corresponding to input IN7"
+        },
+        {
+            "name": "OUT8",
+            "type": "DWORD",
+            "description": "Output DWORD value 8 corresponding to input IN8"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value."
+    }
+}

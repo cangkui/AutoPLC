@@ -1,0 +1,20 @@
+{
+    "title": "Calculate the Absolute Value of a Complex Number",
+    "description": "CABS calculates the length of the vector of a complex number The absolu￾te value is also module or Magnitude mentioned.\nCABS = SQRT(X.RE² + X.IM²)",
+    "type": "FUNCTION",
+    "name": "CABS",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "A complex number whose absolute value is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The absolute value of the complex number X.",
+        "fields": []
+    }
+}

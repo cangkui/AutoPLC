@@ -1,0 +1,63 @@
+{
+    "title": "Scale Input Values with Offset",
+    "description": "DAYS_IN_YEAR function calculates the number of days in the current\nyear.",
+    "type": "FUNCTION",
+    "name": "SCALE_X2",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "BOOL",
+            "description": "First boolean selector for input selection."
+        },
+        {
+            "name": "IN2",
+            "type": "BOOL",
+            "description": "Second boolean selector for input selection."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Scaling factor applied to the selected inputs."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "Offset added to the result after scaling."
+        },
+        {
+            "name": "IN1_MIN",
+            "type": "REAL",
+            "description": "Minimum value for input 1 when selected."
+        },
+        {
+            "name": "IN1_MAX",
+            "type": "REAL",
+            "description": "Maximum value for input 1 when selected. Default is 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "IN2_MIN",
+            "type": "REAL",
+            "description": "Minimum value for input 2 when selected."
+        },
+        {
+            "name": "IN2_MAX",
+            "type": "REAL",
+            "description": "Maximum value for input 2 when selected. Default is 1000.0.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "SCALE_X2",
+            "type": "REAL",
+            "description": "The resultant value after scaling and applying the offset."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The final calculated value after processing the input parameters.",
+        "fields": []
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "title": "Function to Convert Frequency to Period Time",
+    "description": "F_TO_PT converts a frequency value of Hz in the corresponding period.",
+    "type": "FUNCTION",
+    "name": "F_TO_PT",
+    "input": [
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "The input frequency in Hertz."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "TIME",
+        "description": "The calculated period time corresponding to the given frequency.",
+        "fields": []
+    }
+}

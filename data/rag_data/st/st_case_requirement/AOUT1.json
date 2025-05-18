@@ -1,0 +1,50 @@
+{
+    "title": "AOUT1 Function Specification",
+    "description": "TONOF creates a ON delay T1 and an OFF delay T2\nThe rising edge of the input signal IN is delayed by T1 and the falling edge\nof IN is delayed by T2.",
+    "type": "FUNCTION",
+    "name": "AOUT1",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input real value that will be processed to compute the output."
+        },
+        {
+            "name": "Bit_0",
+            "type": "INT",
+            "description": "The starting bit position for the output value. This is a constant input."
+        },
+        {
+            "name": "Bit_N",
+            "type": "INT",
+            "description": "The ending bit position for the output value, defaulting to 31."
+        },
+        {
+            "name": "sign",
+            "type": "INT",
+            "description": "The sign bit indicator, defaulting to 255."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The minimum value that input is limited to."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The maximum value available, defaulting to 10.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "AOUT1",
+            "type": "DWORD",
+            "description": "The calculated DWORD output value based on the processed input."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Returns the calculated DWORD output value."
+    }
+}

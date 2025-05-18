@@ -1,0 +1,20 @@
+{
+    "title": "Floor Function Conversion",
+    "description": "CLICK_CNT determines the number of pulses within the unit time TC. at in￾put IN. A rising edge at IN will start an internal timer with time TC. During\nthe course of Timers the module counts the falling edges of IN and review￾es after the expiry of the time TC whether N pulses are within the time TC.\nJust when exactly N pluses within TC will happen, the output Q is set for a\nPLC cycle to TRUE. The module decodes also N = 0, which corresponds to\na rising edge but not falling edge within TC.",
+    "type": "FUNCTION",
+    "name": "FLOOR2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number which will be converted to a DINT by flooring."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "The floored integer value derived from the input real number.",
+        "fields": []
+    }
+}

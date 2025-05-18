@@ -1,0 +1,35 @@
+{
+    "title": "SW_RESetup - Intelligent Push Button Interface",
+    "description": "SW_RECONFIG is an intelligent push button interface, it can debounce the\n\ninput and automatically detects whether a break contact element or clo￾sing contact is connected to the input IN. If at input IN a break contact ele￾ment is detected, so the output Q is inverted. If a closing contact is\n\nconnected to the input IN, the module creates for each change of state of\n\n57 Version 1.00\n\nChapter 6. Electrical Engineering\n\nthe switch with a pulse with length TR. TD is the bounce time and TR the\n\nreconfguration time. If the input IN remains longer than the reconfgurati￾on time is, in a state, the output is FALSE, and will thus pass the next pul￾se at the input to an active high pulse. In the practical installation techni￾ques this may be a great advantage if some switches are somtimes are\n\nbreak contact elements and sometimes connected as closing contact.\n\nThe following chart illustrates the operation of the module:",
+    "type": "FUNCTION",
+    "name": "SW_RESetup",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Push button input"
+        },
+        {
+            "name": "TD",
+            "type": "TIME",
+            "description": "Debounce time for input"
+        },
+        {
+            "name": "TR",
+            "type": "TIME",
+            "description": "Reconfiguration time"
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

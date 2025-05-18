@@ -1,0 +1,62 @@
+{
+    "title": "Convert DateTime to Structured DateTime",
+    "description": "DT_TO_SDT converts a date value into a structured date day of type SDT.",
+    "type": "FUNCTION",
+    "name": "DT_TO_SDT",
+    "input": [
+        {
+            "name": "DTI",
+            "type": "TIME_DT",
+            "description": "The input DateTime value that needs to be converted into Structured DateTime."
+        }
+    ],
+    "output": [
+        {
+            "name": "DT_TO_SDT",
+            "type": "SDT",
+            "description": "The output Structured DateTime that contains the year, month, day, weekday, hour, minute, and second extracted from the input DateTime."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "SDT",
+        "description": "The return value is a Structured DateTime containing the detailed components of the input DateTime value.",
+        "fields": [
+            {
+                "name": "YEAR",
+                "type": "INT",
+                "description": "The year component extracted from the input DateTime."
+            },
+            {
+                "name": "MONTH",
+                "type": "INT",
+                "description": "The month component extracted from the input DateTime."
+            },
+            {
+                "name": "DAY",
+                "type": "INT",
+                "description": "The day component extracted from the input DateTime."
+            },
+            {
+                "name": "WEEKDAY",
+                "type": "INT",
+                "description": "The weekday component extracted from the input DateTime, representing the day of the week."
+            },
+            {
+                "name": "HOUR",
+                "type": "INT",
+                "description": "The hour component extracted from the input DateTime."
+            },
+            {
+                "name": "MINUTE",
+                "type": "INT",
+                "description": "The minute component extracted from the input DateTime."
+            },
+            {
+                "name": "SECOND",
+                "type": "INT",
+                "description": "The second component extracted from the input DateTime."
+            }
+        ]
+    }
+}

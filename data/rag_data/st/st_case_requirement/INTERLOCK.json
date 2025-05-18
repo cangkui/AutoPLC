@@ -1,0 +1,37 @@
+{
+    "title": "Interlock Function Block",
+    "description": "INTERLOCK has 2 inputs I1 and I2 which passes to each of the\noutputs Q1 and Q2. Q1 and Q2, however, are interlocked so that only one\noutput is set to TRUE. The time TL sets a dead time between the two out￾puts. An output can only be true if the other output was at least for the\ntime TL FALSE.\nI1 I2 Q1 Q2\n0 0 0 0\n0 1 0 1\n1 0 1 0\n1 1 0 0",
+    "type": "FUNCTION_BLOCK",
+    "name": "INTERLOCK",
+    "input": [
+        {
+            "name": "I1",
+            "type": "BOOL",
+            "description": "First input signal."
+        },
+        {
+            "name": "I2",
+            "type": "BOOL",
+            "description": "Second input signal."
+        },
+        {
+            "name": "TL",
+            "type": "TIME",
+            "description": "Time delay for the interlock mechanism."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal 1, reflects the state of I1 considering the delay of I2."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output signal 2, reflects the state of I2 considering the delay of I1."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

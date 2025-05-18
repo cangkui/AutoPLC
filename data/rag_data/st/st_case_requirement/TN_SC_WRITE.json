@@ -1,0 +1,36 @@
+{
+    "title": "TN_SC_WRITE Function Module",
+    "description": "TN_SC_WRITE passes the text Ist_STRING at the coordinates \n\nIin_Y, Iin_Y and the color of Iby_ATTR.\n\nIs specifed color code = 0, then the string is displayed without change the \n\nexisting old color information at he respective character positions.\n\n192 Version 1.21\n\nChapter 11. Telnet-Vision",
+    "type": "FUNCTION",
+    "name": "TN_SC_WRITE",
+    "input": [
+        {
+            "name": "Iin_Y",
+            "type": "INT",
+            "description": "Y coordinate"
+        },
+        {
+            "name": "Iin_X",
+            "type": "INT",
+            "description": "X coordinate"
+        },
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color code - font color"
+        },
+        {
+            "name": "Ist_STRING",
+            "type": "STRING",
+            "description": "Text to be displayed"
+        },
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen structure where the text will be written"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": null
+}

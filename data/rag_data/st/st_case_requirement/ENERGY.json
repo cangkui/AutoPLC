@@ -1,0 +1,42 @@
+{
+    "title": "Energy Calculation Function Block",
+    "description": "ENERGY in diferent, in practice common units of\nenergy. Normally, only the input to be converted is occupied and the re￾maining inputs remain free. However, if several inputs loaded with values,\nthe values of all inputs are converted accordingly and then summed.\n1 J = 1 Ws (Watt * Seconds) = 1 Nm (Newton * meters)\n1 C = 4,1868 J = 1,163 * 10 -3 Wh (watt * hours) \n1 Wh = 3,6 * 103 J = 860 C",
+    "type": "FUNCTION_BLOCK",
+    "name": "ENERGY",
+    "input": [
+        {
+            "name": "J",
+            "type": "REAL",
+            "description": "Energy in Joules."
+        },
+        {
+            "name": "C",
+            "type": "REAL",
+            "description": "Capacity in a specific energy unit."
+        },
+        {
+            "name": "Wh",
+            "type": "REAL",
+            "description": "Energy in watt-hours."
+        }
+    ],
+    "output": [
+        {
+            "name": "YJ",
+            "type": "REAL",
+            "description": "Calculated energy in Joules after conversion."
+        },
+        {
+            "name": "YC",
+            "type": "REAL",
+            "description": "Energy in a calculated unit based on YJ."
+        },
+        {
+            "name": "YWh",
+            "type": "REAL",
+            "description": "Converted energy from YJ to watt-hours."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

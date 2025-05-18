@@ -1,0 +1,54 @@
+{
+    "title": "Counting Block",
+    "description": "COUNT_BR is a byte count from 0 to MX and starts again at 0. The counter\ncan, using two edge-triggered inputs UP and DN, both forward and back￾ward counting. when reaching a fnal value 0 or MX it counts again at 0 or\nMX. The STEP input sets the increment value of the counter. With a TRUE\nat input SET the counter is set to present value at the IN input. A reset in￾put RST resets the counter at any time to 0.\nSET IN UP DN STEP RST CNT\nReset - - - - - 1 0\nSet 1 N - - - 0 N\nup 0 - ↑ 0 N 0 CNT + N\ndown 0 - 0 ↑ N 0 CNT - N\nIf the independent inputs UP and DN with CLK and a control input UP/DN\nshould be replaced, id can be done using two AND gates at the inputs:\nCOUNT_BR may work with individual step width at UP or Down command,\nit is important to note that the counter behaves as if it internally counts\nthe number of STEP steps forward or backward.",
+    "type": "FUNCTION_BLOCK",
+    "name": "COUNT_BR",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "A boolean input that, when true, sets the count to the input value."
+        },
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "A byte input representing the value to reset to when SET is activated."
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "A boolean input indicating an increment request for the count."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "A boolean input indicating a decrement request for the count."
+        },
+        {
+            "name": "STEP",
+            "type": "BYTE",
+            "description": "A byte parameter that defines the step size for increments and decrements. Defaults to 1.",
+            "fields": []
+        },
+        {
+            "name": "MX",
+            "type": "BYTE",
+            "description": "A byte parameter that sets the maximum limit for the count. Defaults to 255.",
+            "fields": []
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean input that, when true, resets the count to zero."
+        }
+    ],
+    "output": [
+        {
+            "name": "CNT",
+            "type": "BYTE",
+            "description": "The current count value after processing the inputs."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

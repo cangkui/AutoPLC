@@ -1,0 +1,91 @@
+{
+    "title": "Scale Function Implementation",
+    "description": "TC_S determines the last cycle time, that is the time since the last call of\nthe module has passed. The time will be delivered in seconds, but has an\naccuracy in microseconds. The module calls the function T_PLC_US().\nT_PLC_US () returns the internal PLC Timer in microseconds with a step\nwidth of 1000 microseconds. If a higher resolution is required the function\nT_PLC_US() has to be adjusted to the appropriate system.",
+    "type": "FUNCTION",
+    "name": "SCALE_B4",
+    "input": [
+        {
+            "name": "in1",
+            "type": "BYTE",
+            "description": "First input value to be scaled."
+        },
+        {
+            "name": "in2",
+            "type": "BYTE",
+            "description": "Second input value to be scaled."
+        },
+        {
+            "name": "in3",
+            "type": "BYTE",
+            "description": "Third input value to be scaled."
+        },
+        {
+            "name": "in4",
+            "type": "BYTE",
+            "description": "Fourth input value to be scaled."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Scaling factor to adjust the output."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "Offset value added to the final result."
+        },
+        {
+            "name": "in1_min",
+            "type": "REAL",
+            "description": "Minimum value for the first input."
+        },
+        {
+            "name": "in1_max",
+            "type": "REAL",
+            "description": "Maximum value for the first input. Defaults to 1000.0."
+        },
+        {
+            "name": "in2_min",
+            "type": "REAL",
+            "description": "Minimum value for the second input."
+        },
+        {
+            "name": "in2_max",
+            "type": "REAL",
+            "description": "Maximum value for the second input. Defaults to 1000.0."
+        },
+        {
+            "name": "in3_min",
+            "type": "REAL",
+            "description": "Minimum value for the third input."
+        },
+        {
+            "name": "in3_max",
+            "type": "REAL",
+            "description": "Maximum value for the third input. Defaults to 1000.0."
+        },
+        {
+            "name": "in4_min",
+            "type": "REAL",
+            "description": "Minimum value for the fourth input."
+        },
+        {
+            "name": "in4_max",
+            "type": "REAL",
+            "description": "Maximum value for the fourth input. Defaults to 1000.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "SCALE_B4",
+            "type": "REAL",
+            "description": "The scaled output value based on the provided inputs, minimums, maximums, scaling factor, and offset."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The final scaled and offset output value.",
+        "fields": []
+    }
+}

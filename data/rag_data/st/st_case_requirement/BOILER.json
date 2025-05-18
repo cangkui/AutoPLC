@@ -1,0 +1,112 @@
+{
+    "title": "BOILER Control Module",
+    "description": "BOILER is a Controllerfor bufers such as warm water bufer. With two se￾parate temperature sensor inputs also storage layers can be controlled.\n\nWith the setup variable T_LOWER_ENABLE the lower temperature sensor\n\ncan be switched on and of. When the input ENABLE = TRUE, the boiler is\n\nheated (HEAT = TRUE) until the preset temperature T_LOWER_MAX rea￾ches the lower area of the bufer and then turn of the heater, until the\n\nlower limit temperature of the upper region (T_UPPER_MIN) is reached. If\n\nT_LOWER_ENABLE is set to FALSE, the lower sensor is not evaluated and it\n\ncontrol the temperature between T_UPPER_MIN and T_UPPER_MAX at the\n\ntop. A PRESSURE-input protects the boiler and prevents the heating, if not\n\nenough water pressure in the boiler is present. If a pressure sensor is not\n\npresent, the input is unconnected. As further protection are the default va￾lues T_PROTECT_LOW (antifreeze) and T_PROTECT_HIGH are available and\n\nprevent the temperature in the bufer to not exceed an upper limit and\n\nalso a lower limit. If an error occurs, the output ERROR is set to TRUE, whi￾le a status byte is reported at output STATUS, which can be further evalua￾ted by modules such as ESR_COLLECT. By a rising edge at input BOOST\n\nthe bufer temperature is directly heated to T_UPPER_MAX (T_LOWER_ENA￾BLE = FALSE) or T_LOWER_MAX (T_LOWER_ENABLE = TRUE). BOOST can\n\nbe used to impairment heating up the boiler when ENABLE is set to FALSE.\n\nThe heating by BOOST is edge-triggered and leads during each rising edge\n\nat BOOST to exactly one heating process. Due to a rising edge on BOOST\n\nwhile ENABLE = TRUE the heating is started immediately until the maxi￾mum temperature is reached. The boiler will be loaded to provide maxi￾mum heat capacity. The inputs REQ_1 and REQ_2 serve any time to provi￾de a preset temperature (or T_REQUEST_1 T_REQUEST_2). REQ can be\n\nused for example to provide a higher temperature for legionella disinfecti￾on or for other purposes. The provision of the request temperatures is\n\nmade by measuring at the upper temperature sensor and with a 2-point\n\ncontrol whose hysteresis is set by T_REQUEST_HYS.\n\nStatus\n\n1 upper temperature sensor has exceeded the upper limit temperature\n\n2 upper temperature sensor has fallen below the lower limit temperature\n\n3 lower temperature sensor has exceeded the upper limit temperature\n\n4 lower temperature sensor has fallen below the lower limit temperature\n\n24 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\n5 Water pressure in the bufer is too small\n\n100 Standby\n\n101 BOOST recharge\n\n102 Standard recharge\n\n103 Recharge on Request Temperature 1\n\n104 Recharge on Request Temperature 2\n\nThe following",
+    "type": "FUNCTION",
+    "name": "BOILER_Control",
+    "input": [
+        {
+            "name": "T_UPPER",
+            "type": "REAL",
+            "description": "Input upper temperature sensor"
+        },
+        {
+            "name": "T_LOWER",
+            "type": "REAL",
+            "description": "Lower input temperature sensor"
+        },
+        {
+            "name": "PRESSURE",
+            "type": "REAL",
+            "description": "Input pressure sensor"
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Indicates hot water requirement"
+        },
+        {
+            "name": "REQ_1",
+            "type": "BOOL",
+            "description": "Input requirements for predefined temperature 1"
+        },
+        {
+            "name": "REQ_2",
+            "type": "BOOL",
+            "description": "Input requirements for predefined temperature 2"
+        },
+        {
+            "name": "BOOST",
+            "type": "BOOL",
+            "description": "Input requirement for immediate deployment"
+        }
+    ],
+    "output": [
+        {
+            "name": "HEAT",
+            "type": "BOOL",
+            "description": "Output loading circuit"
+        },
+        {
+            "name": "ERROR",
+            "type": "BOOL",
+            "description": "Error signal indicating operational issues"
+        },
+        {
+            "name": "STATUS",
+            "type": "Byte",
+            "description": "ESR compliant status output based on sensor readings and operational state"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "NONE",
+        "description": "This function does not return a value."
+    },
+    "setup": [
+        {
+            "name": "T_UPPER_MIN",
+            "type": "REAL",
+            "description": "Minimum temperature at the top, default is 50"
+        },
+        {
+            "name": "T_UPPER_MAX",
+            "type": "REAL",
+            "description": "Maximum temperature at the top, default is 60"
+        },
+        {
+            "name": "T_LOWER_ENABLE",
+            "type": "BOOL",
+            "description": "Indicates if lower temperature sensor exists (FALSE if not available)"
+        },
+        {
+            "name": "T_LOWER_MAX",
+            "type": "REAL",
+            "description": "Maximum temperature of bottom, default is 60"
+        },
+        {
+            "name": "T_REQUEST_1",
+            "type": "REAL",
+            "description": "Temperature requirement 1, default is 70"
+        },
+        {
+            "name": "T_REQUEST_2",
+            "type": "REAL",
+            "description": "Temperature requirement 2, default is 50"
+        },
+        {
+            "name": "T_REQUEST_HYS",
+            "type": "REAL",
+            "description": "Hysteresis control, default is 5"
+        },
+        {
+            "name": "T_PROTECT_HIGH",
+            "type": "REAL",
+            "description": "Upper limit temperature protection, default is 80"
+        },
+        {
+            "name": "T_PROTECT_LOW",
+            "type": "REAL",
+            "description": "Lower limit temperature protection, default is 10"
+        }
+    ]
+}

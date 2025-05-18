@@ -1,0 +1,31 @@
+{
+    "title": "Complex Conjugate Function",
+    "description": "CCON calculated the conjugation of a complex number\nCCON.RE = X.RE\nCCON.IM = -X.IM",
+    "type": "FUNCTION",
+    "name": "CCON",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "The input complex number for which the conjugate is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The complex conjugate of the input complex number.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the complex conjugate."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the complex conjugate, which is the negation of the input's imaginary part."
+            }
+        ]
+    }
+}

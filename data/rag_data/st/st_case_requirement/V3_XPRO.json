@@ -1,0 +1,41 @@
+{
+    "title": "Cross Product of Two Vectors",
+    "description": "EXPN calculates the exponential value of X^N for integer N. EXPN is espe￾cifcally written for PLC without Floating Point Unit and is about 30 times\nfaster than the IEC standard function EXPT(). Note the special case of the\n0^0 defned mathematically as a 1 and is not a 0. \nEXPN(10,-2) = 0.01 EXPN(1.5,2) = 2.25\nEXPN(0,0) = 1",
+    "type": "FUNCTION",
+    "name": "V3_XPRO",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The first input vector for the cross product operation."
+        },
+        {
+            "name": "B",
+            "type": "Vector_3",
+            "description": "The second input vector for the cross product operation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "vector_3",
+        "description": "The resulting vector that is the cross product of vectors A and B.",
+        "fields": [
+            {
+                "name": "X",
+                "type": "REAL",
+                "description": "The x-component of the resulting cross product vector."
+            },
+            {
+                "name": "Y",
+                "type": "REAL",
+                "description": "The y-component of the resulting cross product vector."
+            },
+            {
+                "name": "Z",
+                "type": "REAL",
+                "description": "The z-component of the resulting cross product vector."
+            }
+        ]
+    }
+}

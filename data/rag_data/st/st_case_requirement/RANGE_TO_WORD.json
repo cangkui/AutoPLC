@@ -1,0 +1,30 @@
+{
+    "title": "Range to Word Conversion",
+    "description": "RANGE_TO_WORD converts a REAL value to a WORD value. An input value\nof X corresponds to the value of LOW is converted it into an output value\nof 0 and an input value X that corresponds to HIGH is converted to an out￾put value of 65535. The X input is limited to the range from LOW to HIGH,\nan overfow of the output WORD therefore can not happen.",
+    "type": "FUNCTION",
+    "name": "RANGE_TO_WORD",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input real number that needs to be converted."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower limit for the range."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper limit for the range."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "The word representation of the normalized input value.",
+        "fields": []
+    }
+}

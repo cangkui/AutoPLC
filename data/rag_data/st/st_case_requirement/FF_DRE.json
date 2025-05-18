@@ -1,0 +1,37 @@
+{
+    "title": "Flip-Flop Dynamic Reset and Set",
+    "description": "FF_DRE is a edge-triggered D-Flip-Flop with Asynchronous Set and Reset\ninput. A rising edge at CLK stores the input D to output Q. A TRUE on the\nSET or RST input resets or clears the output Q at any time regardless of\nCLK. The reset input has priority over the input set. If both are active\n(TRUE) are reset is processed and SET is ignored.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FF_DRE",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Input to set the output Q to high."
+        },
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "Data input that determines the value of output Q when CLK is high."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock input that triggers the update of output Q on its rising edge."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Input to reset the output Q."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output that represents the state of the flip-flop."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

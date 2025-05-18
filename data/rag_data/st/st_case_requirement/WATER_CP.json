@@ -1,0 +1,25 @@
+{
+    "title": "Water Specific Heat Capacity Calculation",
+    "description": "WATER_CP calculates the specifc heat capacity of liquid water as a functi￾on of temperature at atmospheric pressure. The calculation is valid in the\n\ntemperature range from 0 to 100 degrees Celsius and is calculated in\n\njoules / (gram * kelvin). The temperature T is given in Celsius.",
+    "type": "FUNCTION",
+    "name": "WATER_CP",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Water temperature in °C"
+        }
+    ],
+    "output": [
+        {
+            "name": "SpecificHeatCapacity",
+            "type": "REAL",
+            "description": "Specific heat capacity at temperature T"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated specific heat capacity at temperature T"
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "title": "Decimal Rounding Function",
+    "description": "ROUND rounds the input value IN to N digits. Follows the last\ndigit a digit greater than 5 the last digit is rounded up. ROUND internally\nuses the standard function TRUNC() which converts the input value to an\nINTEGER type DINT. This may come as an overfow because DINT can store\nin maximum +/-2.14*10^9. The range of ROUND is therefore limited to +/-\n2.14 * 10^9.",
+    "type": "FUNCTION",
+    "name": "ROUND",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The real number to be rounded."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of decimal places to round to, limited between 0 and 8."
+        }
+    ],
+    "output": [
+        {
+            "name": "ROUND",
+            "type": "REAL",
+            "description": "The rounded real number."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the rounding operation.",
+        "fields": []
+    }
+}

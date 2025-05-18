@@ -1,0 +1,20 @@
+{
+    "title": "Hyperbolic Arctangent Function (ATANH)",
+    "description": "ATANH calculates the Arcus Hyperbolic tangent as follows:",
+    "type": "FUNCTION",
+    "name": "ATANH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number input for which the hyperbolic arctangent is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The hyperbolic arctangent of the input value X.",
+        "fields": []
+    }
+}

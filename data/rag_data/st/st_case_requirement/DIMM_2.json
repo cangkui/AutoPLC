@@ -1,0 +1,131 @@
+{
+    "title": "DIMM_2 Intelligent Dimmer Function Module",
+    "description": "DIMM_2 is an intelligent Dimmer for 2-button operation. The Dimmer can\n\nbe set via the setup variables. The time T_DEBOUNCE is used to debounce\n\nthe switch and is set by default to 10ms. A start limitation T_ON_MAX swit￾ches the output of when it is exceeded. The times T_DIMM_Start and\n\nT_DIMM set the timing cycle of the Dimmers . \n\nWith the inputs of SET and RST, the output Q can be switched on or of at\n\nany time. SET sets the output OUT to the predetermined value VAL, RST\n\nsets OUT to 0 if the setup variable RST_OUT is set to TRUE. RST switches\n\nD1 and D2 in addition to FALSE. SET and RST may be used for connection\n\nof Fire alarm systems or Alarm systems. In case of fre or burglary all the\n\nlights can be set to On with SET or switched to of with RST when exit of\n\nthe building. \n\nWhile switch on and of the last output value of the dimmer remains at the\n\noutput OUT, only a FALSE at output Q switches the light of and a TRUE at\n\nQ switch the lamp on again. While switching on by a short press the mpo￾dule limits the output OUT for a minimum MIN_ON and a maximum of at\n\nleast MAX_ON. If, for example, the dimmer set to 0 then the module is au￾tomatically set the output OUT to 50 and vice versa, the output OUT if it is\n\nhigher than MAX_ON is limited to MAX_ON. These parameters are to pre￾vent that after switching-on a very small value at the output OUT occures\n\nand despite active Q no light is switched on. By the parameter MIN_ON a\n\nminimum value of light is defned when switched on. Conversely, for ex￾ample: the light in the bedroom is prevented to apply full brightness im￾mediately. If the parameter SOFT_DIMM set to TRUE, the DIM starts at\n\npower on with a long button press every time at 0. In addition to the func￾tion of the dimmer, at the inputs I1 and I2 a doubleclick is decoded and\n\nputs the outputs of D1 resp. D2 for one cycle to TRUE. If the setup variable\n\nD?_TOGGLE is set to TRUE then the output D? is inverted by dou￾ble-clicking. The outputs D1 and D2 can be used to to switch additional\n\nconsumer or events with a double-click. An output of D? may be attributed\n\nto the SET input and the dimmer also be set to a predefned value defn￾ded by VAL using a double-click. If the setup variable DBL?_SET set to\n\nTRUE, so a corresponding double-click does not modify the associated out￾put D? but the value of the variable DBL?_POS is passed through to the\n\noutput OUT and the output Q is switched on if necessary. OUT is the value\n\nof the dimmer and is defned as an I/O variable external. This has the ad￾vantage that the value of the dimmer can be infuenced externally at any\n\ntime and can be reconstructed even after a power failure. OUT can be de￾fned if desired retentive and persistent.\n\nThe following table shows the operating status of the dimmer:\n\n51 Version 1.00\n\nChapter 6. Electrical Engineering\n\nI1 I2 SET RST Q D1 D2 OUT\n\nsingle - 0 0 1 - - LIMIT(MIN_ON,OUT,MAX_ON)\n\n- single 0 - -\n\ndouble - 0 0 TOG\n\nPULSE\n\n- double 0 0 TOG\n\nPULSE\n\nlong - 0 0 1 - dimm up\n\nstart from 1 if SOFT_DIMM = TRUE\n\n- long 1 dimm down and turn of at 0\n\n- - 1 0 ON - VAL\n\n- - 0 1 OFF OFF 0 wenn RST_OUT = TRUE",
+    "type": "FUNCTION",
+    "name": "DIMM_2",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Input for switching the output to VAL"
+        },
+        {
+            "name": "VAL",
+            "type": "BYTE",
+            "description": "Value for the SET operation"
+        },
+        {
+            "name": "I1",
+            "type": "BOOL",
+            "description": "Tax receipt for Taster1, On"
+        },
+        {
+            "name": "I2",
+            "type": "BOOL",
+            "description": "Tax receipt for switch2, down"
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Entrance to switch of the output"
+        },
+        {
+            "name": "T_DEBOUNCE",
+            "type": "TIME",
+            "description": "Debounce time for buttons"
+        },
+        {
+            "name": "T_ON_MAX",
+            "type": "TIME",
+            "description": "Start limitation"
+        },
+        {
+            "name": "T_DIMM_START",
+            "type": "TIME",
+            "description": "Reaction time to dim"
+        },
+        {
+            "name": "T_DIMM",
+            "type": "TIME",
+            "description": "Time for a dimming ramp"
+        },
+        {
+            "name": "MIN_ON",
+            "type": "BYTE",
+            "description": "Minimum value of OUT at startup"
+        },
+        {
+            "name": "MAX_ON",
+            "type": "BYTE",
+            "description": "Maximum value of OUT at startup"
+        },
+        {
+            "name": "RST_OUT",
+            "type": "BOOL",
+            "description": "If Reset is true, OUT is set to 0"
+        },
+        {
+            "name": "SOFT_DIMM",
+            "type": "BOOL",
+            "description": "Soft start at power-up"
+        },
+        {
+            "name": "DBL1_TOG",
+            "type": "BOOL",
+            "description": "Enable Toggle for D1"
+        },
+        {
+            "name": "DBL2_TOG",
+            "type": "BOOL",
+            "description": "Enable Toggle for D2"
+        },
+        {
+            "name": "DBL1_SET",
+            "type": "BOOL",
+            "description": "Enable Value for doubleclick I1"
+        },
+        {
+            "name": "DBL2_SET",
+            "type": "BOOL",
+            "description": "Enable Value for doubleclick I2"
+        },
+        {
+            "name": "DBL1_POS",
+            "type": "BYTE",
+            "description": "Value for doubleclick at I1"
+        },
+        {
+            "name": "DBL2_POS",
+            "type": "BYTE",
+            "description": "Value for doubleclick at I2"
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output control for the dimmer"
+        },
+        {
+            "name": "D1",
+            "type": "BOOL",
+            "description": "Output for doubleclick at I1"
+        },
+        {
+            "name": "D2",
+            "type": "BOOL",
+            "description": "Output for doubleclick at I2"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "OUT",
+            "type": "BYTE",
+            "description": "Dimmer Output"
+        }
+    ],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

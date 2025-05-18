@@ -1,0 +1,55 @@
+{
+    "title": "CSV Parser File Module",
+    "description": "CSV_PARSER_FILE enables the analysis of the elements of an \n\narbitrarily large fle which is read into the read data bufer block by block \n\nfor automatically processing. The separator is specifed in parameter \n\n\"SEP\". The name of the fle is passed in parameter \"FILENAME\". The search \n\nfor elements that always begins, depending on the given \"OFFSET\", so it is \n\nvery easy to look at certain points in order to not always have to search \n\nthe entire bufer. At the beginning should be started with by default the \n\nOFFSET 0 (but need not).\n\nWhen queried by elements of the fle, there are various procedures. Of \n\ncourse this is dependent on the content or the structure of the data.\n\nEvaluate elements:\n\nWill specify in SEP 0, lines are always evaluated completely and parameter \n\n\"VALUE\" is issued. If the elements in the fle are structured as CSV (Excel), \n\nso at SEP the separator ',' or something else can be specifed. RUN = 1 \n\nstartes the evaluation. Since it is not foreseeable how long the search \n\ntakes, a watchdog function is Integrated that stops the search for the \n\ncurrent cycle, then RESULT = 5 and RUN remains unchanged. In the next \n\ncycle, the analysis proceeds automatically. As soon as the next element is \n\ndetected, the element in VALUE is passed, and RESULT is 1. If the element \n\nis also the last in a line, then RESULT = 2 is the output. As soon as the end \n\nof the data has been reached at RESULT = 10 passed. Always if yet RUN = \n\n0 is output, RESULT defnes the result. If an item is longer than the \n\nmaximum length (string_length) so the characters are cut of \n\nautomatically. The parameter OFFSET is by the module automatically \n\npassed after each result, but can be defned individually before each \n\nevaluation.",
+    "type": "FUNCTION",
+    "name": "CSV_PARSER_FILE",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The separator used to delineate elements in the file."
+        },
+        {
+            "name": "FILE_NAME",
+            "type": "STRING",
+            "description": "The name of the file to be processed."
+        },
+        {
+            "name": "FSD",
+            "type": "FILE_SERVER_DATA",
+            "description": "The file interface for handling file operations."
+        },
+        {
+            "name": "RUN",
+            "type": "BYTE",
+            "description": "The command code to initiate actions (1 to evaluate elements, 0 when no function to perform)."
+        },
+        {
+            "name": "OFFSET",
+            "type": "UDINT",
+            "description": "The current file offset for the query."
+        },
+        {
+            "name": "VALUE",
+            "type": "STRING",
+            "description": "The value of a key that is parsed from the file."
+        },
+        {
+            "name": "PT",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer used for reading data from the file."
+        }
+    ],
+    "output": [
+        {
+            "name": "RESULT",
+            "type": "BYTE",
+            "description": "The result of the query indicating the status of the evaluation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "The function does not return any value but modifies the parameters as necessary based on the evaluation process."
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "title": "Ramp Function Block (RMP_B)",
+    "description": "RMP_B is a ramp generator with 8 bits (1 byte) resolution. The ramp of\n0..255 is divided into a maximum of 255 steps and go through, in a time\nof PT once complete. An enable signal E switches the ramp generator on\nor of. An asynchronous reset sets each time the output to 0, and a pulse\nat the SET input sets the output to 255. With a UD input, the direction\nOPEN (UD = TRUE) or down (UD = FALSE) is set. The output of BUSY =\nTRUE indicates that a ramp is active. BUSY = FALSE means the output is\nstable. The outputs HIGH and LOW are TRUE, if the output OUT reaches\nthe lower or upper limit (0 and 255).\nAt setting of PT has to be noted, that a PLC with 5ms cycle time needs\n256*5 = 1275 milliseconds for a ramp. If the time PT is made shorter than\nthe cycle time multiplied by 256, the edge is translated in correspondingly\nlarger steps. The ramp is constructed in this case with less than 256 steps\nper cycle. PT may be T#0s, then the output switched between minimum\nand maximum value back and forth.\nThe following example shows an application of RMP_B. The outputs HIGH\nand LOW triggers both NTSC (X4, X5) 1 second delayed, and switch with\nthe RS Flip Flop (X6) the UP input of the Ramps generators in order. The\nresult is a ramp of 5 seconds, followed by an break of 1 second and then\nthe reverse gradient of 5 seconds and then a break of 1 second. In the\nTrace the history of the signals can be seen. \nTiming diagram for Up / Down Ramp:\nAnother example shows the use of a sawtooth RMP_B.\nTiming diagram for sawtooth:",
+    "type": "FUNCTION_BLOCK",
+    "name": "RMP_B",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "A boolean indicating if the ramp should be set to its maximum value."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The time duration over which the ramp should occur."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable input that allows the ramp operation to process; defaults to TRUE."
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "A boolean that determines the direction of the ramp; if TRUE, the ramp will increase, if FALSE, it will decrease."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean that, when set, resets the output value to zero."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "BYTE",
+            "description": "The current value of the ramp output."
+        },
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates if the function block is currently busy processing the ramp operation."
+        },
+        {
+            "name": "HIGH",
+            "type": "BOOL",
+            "description": "Indicates if the output is currently at its maximum value (255)."
+        },
+        {
+            "name": "LOW",
+            "type": "BOOL",
+            "description": "Indicates if the output is currently at its minimum value (0)."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

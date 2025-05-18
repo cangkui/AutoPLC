@@ -1,0 +1,116 @@
+{
+    "title": "UNI_CIRCULAR_BUFFER Function Module",
+    "description": "UNI_CIRCULAR_BUFFER_DATA (data storage)\n\n69 Version 1.21\n\nChapter 7. Data Logger\n\nThe module UNI_CIRCULAR_BUFFER is a ring buffer in the FIFO (first in - first out) \n\nprinciple, and can process any data as a byte stream.\n\nFor this purpose, in the data structure UNI_CIRCULAR_BUFFER_DATA all can be \n\nprocessed. \n\nThe following commands are supported on DATA.D_MODE.\n\n01 Element to write to bufer\n\n10 Element of Bufer read but not to remove\n\n11 The above command 10 read with item is removed.\n\n12 read element from bufer and remove\n\n99 Bufer is reset. All data is deleted\n\nWith DATA.D_HEAD (WORD) in the right byte can be provided the element \n\ntype, and in the left byte optional an additional user ID.\n\nD_HEAD = LEFT-BYTE (ADD-Ino), RIGHT-BYTE (Type ID)\n\nType codes:\n\n1 = STRING (For DATA.D_STRING, the string must be provided)\n\n2 = REAL (For DATA.D_REAL, the REAL value is passed)\n\n3 = DWORD ( In the DWORD the DATA.D_DWORD must be passed) \n\nX = header information without data\n\nIn DATA.BUF_SIZE the number of bytes output, to show the dropped items in total. \n\nWith DATA.BUF_COUNT the number of in Buffer contained elements is provided. \n\nAnd on BUF_USED will issue the occupancy of the buffer as a percentage value.\n\nWhen an item is written in the buffer, and the required free space (memory) does not \n\nexist, after calling the module, the DATA.D_MODE remains unchanged. The \n\ncommand was successfu only if D_MODE contains 0 after module call.\n\nWhen reading elements, the same operation is essential.\n\n70 Version 1.21\n\nChapter 7. Data Logger\n\nOnly if D_MODE subsequently is 0, in D_HEAD the data type can be found, and if \n\nnecessary, the data from D_STRING, D_REAL, D_DWORD can be read. After \n\nsuccessful reading step, the deletion of the element to be performed with command \n\n11.",
+    "type": "FUNCTION",
+    "name": "UNI_Circular_Buffer",
+    "input": [
+        {
+            "name": "DATA",
+            "type": "UNI_CIRCULAR_BUFFER_DATA",
+            "description": "The data storage structure that holds the current status of the buffer operations.",
+            "fields": [
+                {
+                    "name": "D_MODE",
+                    "type": "WORD",
+                    "description": "Determines the action to be performed on the buffer (write, read, delete, reset)."
+                },
+                {
+                    "name": "D_HEAD",
+                    "type": "WORD",
+                    "description": "Contains element type and an optional user ID."
+                },
+                {
+                    "name": "D_STRING",
+                    "type": "STRING",
+                    "description": "The string data to write to the buffer; only used if the type is STRING."
+                },
+                {
+                    "name": "D_REAL",
+                    "type": "REAL",
+                    "description": "The real value to write to the buffer; only used if the type is REAL."
+                },
+                {
+                    "name": "D_DWORD",
+                    "type": "DWORD",
+                    "description": "The DWORD data to write to the buffer; only used if the type is DWORD."
+                },
+                {
+                    "name": "BUF_SIZE",
+                    "type": "DWORD",
+                    "description": "The total size of the buffer in bytes."
+                },
+                {
+                    "name": "BUF_COUNT",
+                    "type": "DWORD",
+                    "description": "The number of elements currently stored in the buffer."
+                },
+                {
+                    "name": "BUF_USED",
+                    "type": "REAL",
+                    "description": "The occupancy of the buffer expressed as a percentage."
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "DATA",
+            "type": "UNI_CIRCULAR_BUFFER_DATA",
+            "description": "The updated data storage structure after performing the buffer operation.",
+            "fields": [
+                {
+                    "name": "D_MODE",
+                    "type": "WORD",
+                    "description": "Indicates if the last operation was successful (0 if successful)."
+                },
+                {
+                    "name": "D_HEAD",
+                    "type": "WORD",
+                    "description": "Contains the data type of the element read from the buffer, if applicable."
+                },
+                {
+                    "name": "D_STRING",
+                    "type": "STRING",
+                    "description": "The string data read from the buffer, if the type was STRING."
+                },
+                {
+                    "name": "D_REAL",
+                    "type": "REAL",
+                    "description": "The real value read from the buffer, if the type was REAL."
+                },
+                {
+                    "name": "D_DWORD",
+                    "type": "DWORD",
+                    "description": "The DWORD data read from the buffer, if the type was DWORD."
+                },
+                {
+                    "name": "BUF_SIZE",
+                    "type": "DWORD",
+                    "description": "The total size of the buffer in bytes."
+                },
+                {
+                    "name": "BUF_COUNT",
+                    "type": "DWORD",
+                    "description": "The number of elements currently stored in the buffer after the operation."
+                },
+                {
+                    "name": "BUF_USED",
+                    "type": "REAL",
+                    "description": "The updated occupancy of the buffer as a percentage after the operation."
+                }
+            ]
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRUCT",
+        "description": "Contains the status of the operation performed on the buffer.",
+        "fields": [
+            {
+                "name": "status",
+                "type": "BOOL",
+                "description": "Indicates the success of the buffer operation."
+            }
+        ]
+    }
+}

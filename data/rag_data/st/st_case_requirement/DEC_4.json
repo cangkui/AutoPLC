@@ -1,0 +1,47 @@
+{
+    "title": "4-Bit Digital Decoder",
+    "description": "IS_NCC tests whether the string STR none of the in STR listed characters\nare included. Is a character of CMP found in STR, the function returns FAL￾SE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "DEC_4",
+    "input": [
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "Data input that controls the activation of the outputs."
+        },
+        {
+            "name": "A0",
+            "type": "BOOL",
+            "description": "Address input bit 0."
+        },
+        {
+            "name": "A1",
+            "type": "BOOL",
+            "description": "Address input bit 1."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output signal 0, active when D is TRUE, A0 is FALSE, and A1 is FALSE."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal 1, active when D is TRUE, A0 is TRUE, and A1 is FALSE."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output signal 2, active when D is TRUE, A0 is FALSE, and A1 is TRUE."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output signal 3, active when D is TRUE, A0 is TRUE, and A1 is TRUE."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

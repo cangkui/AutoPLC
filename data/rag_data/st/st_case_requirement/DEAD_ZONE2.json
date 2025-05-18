@@ -1,0 +1,27 @@
+{
+    "title": "Dead Zone Function Block",
+    "description": "RTC_MS is a clock component with a resolution of milliseconds and date.\nThe time is automatically every time you SET = TRUE to the value of SDT\nand SMS. If SET = FALSE the time is running on their own and provides the\noutput XDT the current date and time, and at the output XMS milliseconds.\nThe output XMS counts every second 0-999 and begins with the next se￾cond again at 0. The accuracy of the clock depends on the millisecond Ti￾mer of the PLC.",
+    "type": "FUNCTION_BLOCK",
+    "name": "DEAD_ZONE2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value that is processed by the dead zone logic."
+        },
+        {
+            "name": "L",
+            "type": "REAL",
+            "description": "The dead zone threshold value. If the absolute value of 'X' is less than or equal to 'L', 'Y' will be set to either 'L' or '-L'."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value after applying the dead zone logic based on the input 'X' and threshold 'L'."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

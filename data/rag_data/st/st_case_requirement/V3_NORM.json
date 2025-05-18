@@ -1,0 +1,26 @@
+{
+    "title": "Normalize a 3D Vector",
+    "description": "GAMMA calculates the gamma function after approximation\nof NEMES.\nThe gamma function can be used for Integer X as replacement for the Fa￾culty.",
+    "type": "FUNCTION",
+    "name": "V3_NORM",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The input 3D vector that needs to be normalized."
+        }
+    ],
+    "output": [
+        {
+            "name": "V3_NORM",
+            "type": "vector_3",
+            "description": "The normalized 3D vector as the output."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "vector_3",
+        "description": "The normalized form of the input vector.",
+        "fields": []
+    }
+}

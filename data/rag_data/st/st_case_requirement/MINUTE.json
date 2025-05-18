@@ -1,0 +1,19 @@
+{
+    "title": "Minute Calculation from Time of Day",
+    "description": "MINUTE function extracts the current minute of the day.",
+    "type": "FUNCTION",
+    "name": "MINUTE",
+    "input": [
+        {
+            "name": "itod",
+            "type": "TOD",
+            "description": "The Time of Day input from which the minute value will be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The calculated minute value derived from the given Time of Day input."
+    }
+}

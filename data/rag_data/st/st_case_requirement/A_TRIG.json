@@ -1,0 +1,32 @@
+{
+    "title": "A_TRIG Function Block",
+    "description": "A_TRIG monitors an input value on change and every time when the input\nvalue changes by more than RES, the module generates an output pulse\nfor a cycle so that the new value can be processed. At the same time, the\ndevice remembers the current input value with which it compares with the\ninput IN at the next cycle. At the output D the diference between IN and\nthe stored value is displayed.",
+    "type": "FUNCTION_BLOCK",
+    "name": "A_TRIG",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The current input value to be evaluated."
+        },
+        {
+            "name": "RES",
+            "type": "REAL",
+            "description": "The threshold value for the change detection."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output indicating whether a significant change has occurred."
+        },
+        {
+            "name": "D",
+            "type": "REAL",
+            "description": "The calculated difference between the current input and the last input."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

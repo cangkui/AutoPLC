@@ -1,0 +1,62 @@
+{
+    "title": "CLICK Button Interface",
+    "description": "CLICK is a button interface which automatically adjusts to the connected\n\nswitch. If a switch is connected, CLICK recognize themselves whether it is\n\nan opener or closer, and then evaluates each case only the frst fank.\n\nWith the setup variable T_DEBOUNCE the debounce of the buttons is set.\n\nIt is set by default to 10 ms. The time T_RESetup is used to decide whe￾ther a make or break is connected to the input IN. If the input is for more\n\nthan this time in a state, it is assumed as rest mode. The default value is 1\n\nminute for T_RESetup. With short successive pulses a single, double or tri￾ple pulse evaluated and switches according to the output SINGLE, DOUBLE\n\nor TRIPLE. If the pulse is longer than the setup time T_SHORT or a pause\n\nbetween two pulses is longer than T_PAUSE, then the pulse sequence is in￾terrupted and the corresponding output is set, until the contrary input pul￾se is inactive. The output Q corresponds to the input pulse. However, it is\n\nalways High- active. An ESR compliant status output indicates state chan￾ges to subsequent ESR compliant evaluation modules. With short pulses,\n\nthe output SINGLE (one pulse), DOUBLE (2 pulses) or TRIPLE (3 pulses) is\n\n47 Version 1.00\n\nChapter 6. Electrical Engineering\n\nselected. The corresponding output remains at least one cycle active and\n\nas a maximum of as long as the input IN remains active. \n\nStatus\n\n110 Inactive input\n\n111 Output SINGLE activated\n\n112 Output DOUBLE activated\n\n113 TRIPLE output enabled",
+    "type": "FUNCTION",
+    "name": "CLICK_Interface",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Control input for buttons."
+        },
+        {
+            "name": "T_DEBOUNCE",
+            "type": "TIME",
+            "description": "Debounce time for buttons. Default is 10 ms."
+        },
+        {
+            "name": "T_SHORT",
+            "type": "TIME",
+            "description": "Maximum time for short pulse."
+        },
+        {
+            "name": "T_PAUSE",
+            "type": "TIME",
+            "description": "Maximum interval between two pulses."
+        },
+        {
+            "name": "T_RESetup",
+            "type": "TIME",
+            "description": "Reconfiguration time. Default is 1 minute."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output corresponding to the input pulse, always High-active."
+        },
+        {
+            "name": "SINGLE",
+            "type": "BOOL",
+            "description": "Output for a single key press."
+        },
+        {
+            "name": "DOUBLE",
+            "type": "BOOL",
+            "description": "Output for a double key press."
+        },
+        {
+            "name": "TRIPLE",
+            "type": "BOOL",
+            "description": "Output for a triple key press."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output indicating state changes."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

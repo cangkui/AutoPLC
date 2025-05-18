@@ -1,0 +1,22 @@
+{
+    "title": "B_TRIG Function Block",
+    "description": "B_TRIG generates after a change of edge on the CLK\ninput an output pulse for exactly one PLC cycle. In contrast to the two\nstandard modules R_TRIG and F_TRIG that produce only at falling or rising\nedge of a pulse, B_TRIG generates at falling and rising edge of an output\npulse.",
+    "type": "FUNCTION_BLOCK",
+    "name": "B_TRIG",
+    "input": [
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Input variable that represents the clock signal."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output variable that reflects the state triggered by the input clock signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,36 @@
+{
+    "title": "Complex Subtraction Function",
+    "description": "CSUB Subtracts two complex numbers, Csub = X - Y.",
+    "type": "FUNCTION",
+    "name": "CSUB",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "The first complex number from which the second complex number will be subtracted."
+        },
+        {
+            "name": "Y",
+            "type": "COMPLEX",
+            "description": "The second complex number which will be subtracted from the first complex number."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "COMPLEX",
+        "description": "The complex result obtained by subtracting Y from X.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the result."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the result."
+            }
+        ]
+    }
+}

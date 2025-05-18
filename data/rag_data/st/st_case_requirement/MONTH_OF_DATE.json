@@ -1,0 +1,25 @@
+{
+    "title": "Determine Month of a Given Date",
+    "description": "MONTH_OF_DATE(D#2007-12-31) = 12\nMONTH_OF_DATE(D#2006-1-1) = 1",
+    "type": "FUNCTION",
+    "name": "MONTH_OF_DATE",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The date for which the month needs to be determined."
+        }
+    ],
+    "output": [
+        {
+            "name": "MONTH_OF_DATE",
+            "type": "INT",
+            "description": "The month of the year corresponding to the given date, as an integer value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "Returns the calculated month of the year based on the input date."
+    }
+}

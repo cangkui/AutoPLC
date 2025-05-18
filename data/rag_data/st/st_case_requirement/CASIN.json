@@ -1,0 +1,37 @@
+{
+    "title": "Complex Arc Sine Function",
+    "description": "CASIN calculates the arc sine of a complex number\nThe range of values of the result is between [-/2,+/2 ] For the imagina￾ry part.",
+    "type": "FUNCTION",
+    "name": "CASIN",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "Input variable of type complex, representing the complex number for which the arc sine will be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "CASIN",
+            "type": "complex",
+            "description": "Output variable of type complex, representing the arc sine of the input complex number X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The resulting complex number from the computation of the arc sine.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "real",
+                "description": "The real part of the resulting complex number."
+            },
+            {
+                "name": "im",
+                "type": "real",
+                "description": "The imaginary part of the resulting complex number."
+            }
+        ]
+    }
+}

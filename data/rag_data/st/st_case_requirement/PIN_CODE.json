@@ -1,0 +1,32 @@
+{
+    "title": "PIN Code Verification",
+    "description": "PIN_CODE checks a stream of bytes for the presence of a specifc se￾quence. If the sequence is found, this is indicated by a TRUE at output TP.\nIn the following example, two modules PIN_CODE be used to decode two\nCODE_SEQUENCES of a matrix keyboard.",
+    "type": "FUNCTION_BLOCK",
+    "name": "PIN_CODE",
+    "input": [
+        {
+            "name": "CB",
+            "type": "BYTE",
+            "description": "The byte value representing the current code input by the user."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "A boolean flag indicating whether the input verification should be processed."
+        },
+        {
+            "name": "PIN",
+            "type": "STRING[8]",
+            "description": "The PIN code string that the user needs to match, up to 8 characters long."
+        }
+    ],
+    "output": [
+        {
+            "name": "TP",
+            "type": "BOOL",
+            "description": "A boolean output indicating whether the proper PIN code has been detected (TRUE) or not (FALSE)."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

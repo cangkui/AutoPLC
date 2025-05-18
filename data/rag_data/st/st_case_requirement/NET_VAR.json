@@ -1,0 +1,42 @@
+{
+    "title": "Bidirectional Data Exchange between Controllers",
+    "description": "NET_VAR_* enables the bidirectional process data\n\nexchange between two controllers on which network.lib is available. Bet￾ween the two controls a point to point (P2P) connection is established. The\n\nprocess data can by means of the modules\n\nNET_VAR_BOOL8\n\nNET_VAR_DWORD\n\nNET_VAR_BUFFER\n\nNET_VAR_STRING\n\nNET_VAR_REAL\n\nbe collected or passed. Each of these modules has input and output pro￾cess data which are automatically exchanged with the other party (other\n\nplc).\n\nIN data on the one side are output as the OUT data on the other side\n\nagain.\n\nIn this way process data can be exchanged easily between the same con￾trols but also between diferent controllers and platforms (WAGO, Beck￾hof, Phoenician CONTACT).\n\nApproach to the creation of the master module:\n\nFirst all required process data can be parameterized or transferred by\n\nmeans of NET_VAR_* modules instances. Finally, once the NET_VAR_CON￾TROL must be passed, the process data are then automatically exchanged\n\nwith the other side. The IP address of the second plc and MASTER = TRUE\n\nmust be set.\n\n \n\nApproach to create the slave module:\n\nThe previously created master device must simply be copied 1:1. The IP\n\naddress must be replaced by the opposite side, and be set at MASTER =\n\nFALSE.\n\n197 Version 1.21\n\nChapter 12. Network Variables",
+    "type": "FUNCTION_BLOCK",
+    "name": "NET_VAR_CONTROL",
+    "input": [
+        {
+            "name": "MasterData",
+            "type": "NET_VAR_BOOL8",
+            "description": "Input process data from the master PLC that will be transmitted to the slave PLC."
+        },
+        {
+            "name": "SlaveData",
+            "type": "NET_VAR_BOOL8",
+            "description": "Input process data from the slave PLC that will be transmitted back to the master PLC."
+        },
+        {
+            "name": "IPAddress",
+            "type": "STRING",
+            "description": "IP address of the other PLC to establish the connection."
+        },
+        {
+            "name": "Master",
+            "type": "BOOL",
+            "description": "Boolean parameter to indicate if this controller is the master (TRUE) or the slave (FALSE)."
+        }
+    ],
+    "output": [
+        {
+            "name": "MasterOutputData",
+            "type": "NET_VAR_BOOL8",
+            "description": "Output process data from the master PLC after transmission."
+        },
+        {
+            "name": "SlaveOutputData",
+            "type": "NET_VAR_BOOL8",
+            "description": "Output process data from the slave PLC after transmission."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

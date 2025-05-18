@@ -1,0 +1,56 @@
+{
+    "title": "Holiday Calculation",
+    "description": "HOLIDAYS: ARRAY [0..29] of HOLIDAY_DATA\nOutput Y: BOOL (TRUE if DATE_IN is a holiday)\nName: STRING(30) (name of present-day holiday)\nThe HOLIDAY function shows the output Y with TRUE holidays and also pro￾vides the name of the current holiday at the output NAME. HOLIDAY can,\nin addition to celebration days during the weekdays Friday, Saturday or\nSunday be active and deliver at the output Y TRUE, depending on whether\nthe inputs are FRIDAY, SATURDAY or SUNDAY set to TRUE. In the array HO￾LIDAYS are name and date of holidays defned and also universally adapta￾ble to other countries. Holidays can be defned as a fxed date, with a di￾stance of Easter or the week before a fxed date. The input LANGU selects\nthe appropriate language from the setup data so that expenditure for Fri￾day, Saturday and Sunday can be customized language-specifc. [fzy] The\nlanguages are global constants in the \"LOCATION SETUP\" defned and can\nbe expanded or adapted.\nIn the external array HOLIDAYS up to 30 holidays can be defned. Examp￾les are located in the description of the data type HOLYDAY_DATA.",
+    "type": "FUNCTION_BLOCK",
+    "name": "HOLIDAY",
+    "input": [
+        {
+            "name": "DATE_IN",
+            "type": "DATE",
+            "description": "The date to check for a holiday."
+        },
+        {
+            "name": "LANGU",
+            "type": "INT",
+            "description": "The language code to determine the holiday name."
+        },
+        {
+            "name": "FRIDAY",
+            "type": "BOOL",
+            "description": "Indicates whether Friday should be considered as a weekend."
+        },
+        {
+            "name": "SATURDAY",
+            "type": "BOOL",
+            "description": "Indicates whether Saturday should be considered as a weekend."
+        },
+        {
+            "name": "SUNDAY",
+            "type": "BOOL",
+            "description": "Indicates whether Sunday should be considered as a weekend."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "BOOL",
+            "description": "Indicates whether the date is a holiday."
+        },
+        {
+            "name": "NAME",
+            "type": "STRING[30]",
+            "description": "The name of the holiday, if any, corresponding to the given date."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "HOLIDAYS",
+            "type": "ARRAY[0..29] OF HOLIDAY_DATA",
+            "description": "An array containing holiday data to be checked against the input date."
+        }
+    ],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

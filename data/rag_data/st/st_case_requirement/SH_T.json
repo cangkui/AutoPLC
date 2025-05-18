@@ -1,0 +1,27 @@
+{
+    "title": "SH_T Function Block",
+    "description": "SH_T is a transparent Sample and Hold module. The input signal is provi￾ded at the output, as long as E is TRUE. With a falling edge of E, the value\nstored in the output OUT and will stay here until E return TRUE, and thus is\nswitched back to OUT. \nThe following example illustrates the operation of SH_T",
+    "type": "FUNCTION_BLOCK",
+    "name": "SH_T",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value that will be passed to the output when enabled."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "The enable signal that determines whether the input is passed to the output."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "REAL",
+            "description": "The output value that reflects the input value when enabled."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

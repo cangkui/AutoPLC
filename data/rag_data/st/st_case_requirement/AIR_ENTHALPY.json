@@ -1,0 +1,31 @@
+{
+    "title": "AIR_ENTHALPY Function",
+    "description": "AIR_ENTHALPY calculates the enthalpy of moist air from the statements T\n\nfor temperature in degrees Celsius and relative humidity RH in % (50 =\n\n50%). The enthalpy is calculated in joules/gram.\n\n22 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "AIR_ENTHALPY",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Air temperature in degrees Celsius."
+        },
+        {
+            "name": "RH",
+            "type": "REAL",
+            "description": "Relative humidity of the air in percentage."
+        }
+    ],
+    "output": [
+        {
+            "name": "Enthalpy",
+            "type": "REAL",
+            "description": "The enthalpy of moist air calculated in joules/gram."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated enthalpy of air in J/g.",
+        "fields": []
+    }
+}

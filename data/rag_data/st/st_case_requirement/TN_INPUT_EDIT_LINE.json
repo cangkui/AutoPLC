@@ -1,0 +1,112 @@
+{
+    "title": "Telnet Input Line Management",
+    "description": "TN_INPUT_EDIT_LINE is used to manage a command line. This \n\nmust be set *. in_TYPE = 1.\n\nThe item will be provided as *.in_X and *.in_Y. Every entry line can be \n\nprovided with a title text. With *.in_Title_Y_Ofset and *.in_Title_X_Ofset \n\nthe position relative to the element coordinates is expressed. The color \n\ncan be determined with *.by_Title_Attr, and the text by *.st_Title_String. If \n\na tool tip should appear at the element *. st_Input_ToolTip the text hast to \n\nbe specifed.\n\nIf the item has focus, using the keyboard cursor left / right the fashing \n\ncursor can be moved within the line. The backspace key can delete \n\nentered character. By pressing the Enter / Return key the input text is \n\nissued at *.st_Input_String and *.bo_Input_Entered ist set to TRUE. The \n\ninput fag must be reset after receive by the user. Using *.bo_Input_Hidden \n\n= TRUE the hidden input is activated, thus, all input characters \n\nrepresented with a '*'.\n\nUsing *.st_Input_Mask determines at which position and how many \n\ncharacters can be entered. At each position which a space, character can \n\nbe entered. During initialization *.st_Input_Mask must be copied once to \n\n*.st_Input_Data.\n\nIs *.bo_Input_Only_Num = TRUE only numeric keys are accepted and \n\nadopted.",
+    "type": "FUNCTION",
+    "name": "TN_INPUT_EDIT_LINE",
+    "input": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "User interface screen structure used for managing the input line."
+        },
+        {
+            "name": "Xus_TN_INPUT_CONTROL",
+            "type": "us_TN_INPUT_CONTROL",
+            "description": "Control structure for handling input operations and statuses."
+        },
+        {
+            "name": "in_Type",
+            "type": "INT",
+            "description": "Set type of the input, should be set to 1."
+        },
+        {
+            "name": "in_Y",
+            "type": "INT",
+            "description": "Y-coordinate position for the input line."
+        },
+        {
+            "name": "in_X",
+            "type": "INT",
+            "description": "X-coordinate position for the input line."
+        },
+        {
+            "name": "by_Attr_mF",
+            "type": "BYTE",
+            "description": "Attribute for the foreground color of the input line."
+        },
+        {
+            "name": "by_Attr_oF",
+            "type": "BYTE",
+            "description": "Attribute for the background color of the input line."
+        },
+        {
+            "name": "in_Cursor_Pos",
+            "type": "INT",
+            "description": "Current position of the cursor in the input line."
+        },
+        {
+            "name": "bo_Input_Only_Num",
+            "type": "BOOL",
+            "description": "Flag indicating if only numeric input is allowed."
+        },
+        {
+            "name": "bo_Input_Hidden",
+            "type": "BOOL",
+            "description": "Flag indicating if the input should be hidden; input characters are shown as '*' when true."
+        },
+        {
+            "name": "st_Input_Mask",
+            "type": "STRING",
+            "description": "Mask defining the allowed input characters and their positions."
+        },
+        {
+            "name": "st_Input_Data",
+            "type": "STRING",
+            "description": "Data input buffer initialized from the input mask."
+        },
+        {
+            "name": "st_Input_ToolTip",
+            "type": "STRING",
+            "description": "Tooltip text displayed when hovering over the input line."
+        },
+        {
+            "name": "in_Input_Option",
+            "type": "INT",
+            "description": "Control option for the input line."
+        },
+        {
+            "name": "in_Title_Y_Ofset",
+            "type": "INT",
+            "description": "Y-offset for the title relative to its position."
+        },
+        {
+            "name": "in_Title_X_Ofset",
+            "type": "INT",
+            "description": "X-offset for the title relative to its position."
+        },
+        {
+            "name": "by_Title_Attr",
+            "type": "BYTE",
+            "description": "Attribute for the title's text color."
+        },
+        {
+            "name": "st_Title_String",
+            "type": "STRING",
+            "description": "Text string for the title associated with the input line."
+        }
+    ],
+    "output": [
+        {
+            "name": "st_Input_String",
+            "type": "STRING",
+            "description": "The text input received from the user."
+        },
+        {
+            "name": "bo_Input_Entered",
+            "type": "BOOL",
+            "description": "Flag indicating if the input has been submitted by the user."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Sign Function",
+    "description": "SIGN_I returns TRUE if the input value is negative. The input\nvalues are of type DINT.",
+    "type": "FUNCTION",
+    "name": "SIGN_I",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DINT",
+            "description": "A 32-bit signed integer input whose sign is to be checked."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "A boolean value indicating the sign of the input integer. Returns true if the sign bit is set (input is negative), otherwise returns false."
+    }
+}

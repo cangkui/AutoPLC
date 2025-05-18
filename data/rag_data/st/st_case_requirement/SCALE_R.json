@@ -1,0 +1,46 @@
+{
+    "title": "Scale a Value",
+    "description": "SCALE_R scales an input value REAL and calculates an output value in\nREAL. The input value X is limited here to I_LO and I_HI. SCALE_D\n(IN,4,20,0,100) scales an input with 4 .. 20mA to the output 0..100.\nSCALE_R can also be negative output values and work with a negative slo￾pe, the values I_LO and I_HI but must always be specifed that ILO < I_HI.",
+    "type": "FUNCTION",
+    "name": "SCALE_R",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The value to be scaled."
+        },
+        {
+            "name": "I_LO",
+            "type": "REAL",
+            "description": "The lower bound of the input range."
+        },
+        {
+            "name": "I_HI",
+            "type": "REAL",
+            "description": "The upper bound of the input range."
+        },
+        {
+            "name": "O_LO",
+            "type": "REAL",
+            "description": "The lower bound of the output range."
+        },
+        {
+            "name": "O_HI",
+            "type": "REAL",
+            "description": "The upper bound of the output range."
+        }
+    ],
+    "output": [
+        {
+            "name": "SCALE_R",
+            "type": "REAL",
+            "description": "The scaled output value corresponding to the input value X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The final scaled value based on the input parameters.",
+        "fields": []
+    }
+}

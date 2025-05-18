@@ -1,0 +1,61 @@
+{
+    "title": "Actuator Pump Control",
+    "description": "ACTUATOR_PUMP is a pump interface with operating hours counter. The\n\npump can be turned on with both IN or Manual. The setup variables\n\nMIN_ONTIME and MIN_OFFTIME set a minimum ON time and minimum OFF\n\ntime. If the input IN reaches TRUE quicker than MIN_ONTIME, then the\n\npump continues to run until the minimum run time is reached. If the input\n\nIN is set longer than MIN_ONTIME to TRUE, the pump runs until IN is FALSE\n\nagain.\n\nIf the pump is turned on in quick succession, the pump waits until the\n\nelapsed time MIN_OFFTIME, until they turn on the pump. With the setup\n\nvariables RUN_EVERY the time is defned after that the pump runs auto￾matically when it is standing still for more than RUN_EVERY time, so a\n\nstuck of the pump can be avoided. The pump turns itself on in this case,\n\nand runs for MIN_ONTIME. By RUN_EVERY = T # 0s, the automatic activati￾on can be switched of.\n\nAn internal counter counts the pump operating hours and the number of\n\nswitching cycles. Both values can be reset to zero with TRUE at input RST.\n\nThe hour meter is permanently and gets not lost neither at power failure\n\nor reset. RUNTIME and CYCLES are both REAL values, so not the usual\n\nOverfow happens, as happened with TIME values after 50 days.",
+    "type": "FUNCTION",
+    "name": "ACTUATOR_PUMP",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Control signal for the pump to turn on"
+        },
+        {
+            "name": "MANUAL",
+            "type": "BOOL",
+            "description": "Manual control signal to override automatic controls and turn on the pump"
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to reset the operational hours and cycles"
+        }
+    ],
+    "output": [
+        {
+            "name": "PUMP",
+            "type": "BOOL",
+            "description": "Control signal indicating whether the pump is currently active"
+        },
+        {
+            "name": "RUNTIME",
+            "type": "REAL",
+            "description": "Total engine running time in hours"
+        },
+        {
+            "name": "CYCLES",
+            "type": "REAL",
+            "description": "Total number of on/off cycles of the pump"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "MIN_ONTIME",
+            "type": "TIME",
+            "description": "Minimum runtime for the pump before it can be turned off"
+        },
+        {
+            "name": "MIN_OFFTIME",
+            "type": "TIME",
+            "description": "Minimum time that the pump must remain off before it can be turned on again"
+        },
+        {
+            "name": "RUN_EVERY",
+            "type": "TIME",
+            "description": "Time after which the pump will automatically activate if it has been idle"
+        }
+    ],
+    "return_value": {
+        "type": "void",
+        "description": "No return value as this function directly controls the pump based on input conditions"
+    }
+}

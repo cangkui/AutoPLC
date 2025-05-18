@@ -1,0 +1,60 @@
+{
+    "title": "DNS Client Function",
+    "description": "DNS_CLIENT determine from the given qualifed DOMAIN name the \n\nassociated IPv4 address eg \"www.oscat.de\" . For this purpose, a DNS \n\nquery to a DNS server for confgured DOMAIN name with is made. With \n\npositive edge of ACTIVATE the specifed DOMAIN is stored so that they no \n\nlonger must be present. If the query provide more IP addresses, so always \n\nhe highest value of the TTL (Time To Live) is used. As IP4_DNS can be used \n\nany public DNS servers. If the PLC is sitting behind a DSL router, this \n\nrouter can be used through its gateway address as a DNS server. Which \n\nultimately leads to faster even with repeated requests response times \n\nbecause they are managed in the router cache. With positive results DONE \n\n= TRUE the IP4 contains the requested IP address until the start of the \n\nnext query by positive edge of ACTIVATE. If in the DOMAIN name a valid \n\nIPv4 address is detected, no more DNS query is made and it is passed in \n\nconverted type to IPv4 and DONE is set to TRUE. ERROR gives, if an error \n\noccurs, the exact cause. \n\n89 Version 1.21\n\nChapter 9. Network and Communication\n\nError Codes:\n\nValue Source Description\n\nB3 B2 B1 B0\n\nnn nn nn xx IP_CONTROL Error from module IP_CONTROL\n\nxx xx xx 00 DNS_CLIENT No error: The request completed successfully\n\nxx xx xx 01 DNS_CLIENT Format error: The name server was unable to interpret the query. \n\nxx xx xx 02 DNS_CLIENT Server failure: The name server was unable to process this query\n\ndue to a problem with the nameserver.\n\nxx xx xx 03 DNS_CLIENT Name Error: Meaningful only for responses from an authoritative\n\nname server, this code signifies that the domain name referenced in\n\nthe query does not exist\n\nxx xx xx 04 DNS_CLIENT Not Implemented: The name server does not support the requested\n\nkind of query\n\nxx xx xx 05 DNS_CLIENT Refused: The name server refuses to perform the specified opera￾tion for policy reasons\n\nxx xx xx 06 DNS_CLIENT YXDomain: Name Exists when it should not\n\nxx xx xx 07 DNS_CLIENT YXRRSet. RR: Set Exists when it should not\n\nxx xx xx 08 DNS_CLIENT Nxrrset. RR: Set that should exist does not\n\nxx xx xx 09 DNS_CLIENT Server Not Authoritative for zone\n\nxx xx xx 0A DNS_CLIENT Name not contained in zone\n\nxx xx xx FF DNS_CLIENT No ip-address found",
+    "type": "FUNCTION",
+    "name": "DNS_CLIENT",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for the IP control"
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer to transmit data"
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer to receive data"
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Query start by positive edge"
+        },
+        {
+            "name": "DOMAIN",
+            "type": "STRING",
+            "description": "Domain name or IP as String"
+        },
+        {
+            "name": "IP4_DNS",
+            "type": "DWORD",
+            "description": "IPv4 address of the DNS server"
+        }
+    ],
+    "output": [
+        {
+            "name": "IP4",
+            "type": "DWORD",
+            "description": "IPv4 address of the requested domain"
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates whether the IP of the domain has been queried successfully"
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the issue encountered during the query"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

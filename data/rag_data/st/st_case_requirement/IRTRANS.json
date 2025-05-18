@@ -1,0 +1,31 @@
+{
+    "title": "IRTrans Module Interface",
+    "description": "IRTRANS_? provide an interface for infrared Transmitter Com￾pany IRTrans GmbH. IRTrans ofers transmitter for RS232 and TCP/IP, all of\n\nwhich can be operated with the following driver components. The basic\n\nconnection to RS232 or TCP/IP must be made with the appropriate manu￾facturer routines. The interface modules rely on a Bufer Interface to which\n\nprovides in a Bufer (Array of Byte) data and in a Counter the length of the\n\ndata packet in bytes. The IRTrans devices learn the IR key codes and trans￾late them in ASCII Strings using a confgurable database. With the Ether￾net variant, this Strings then sent over UDP and can be received from a\n\nPLC and be evaluated. Thus, for example, the blinds are automatically\n\nshut down when someone turns on the TV without this additional action\n\nwould be necessary. The PLC can listen in this manner any number of re￾mote controls in diferent areas and derive appropriate actions from it.\n\nConversely, of course, the release of key codes on the Transmitter modu￾les is possible.",
+    "type": "FUNCTION_BLOCK",
+    "name": "IRTransInterface",
+    "input": [
+        {
+            "name": "Buffer",
+            "type": "Array of Byte",
+            "description": "An array containing the data packet to be sent to the infrared transmitter."
+        },
+        {
+            "name": "Counter",
+            "type": "Integer",
+            "description": "The length of the data packet in bytes."
+        }
+    ],
+    "output": [
+        {
+            "name": "IRKeyCodes",
+            "type": "Array of String",
+            "description": "An array containing the learned IR key codes translated into ASCII strings."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "Boolean",
+        "description": "Indicates whether the operation to send the IR signal was successful.",
+        "fields": []
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Convert Time of Day to Seconds",
+    "description": "SECOND extracts the seconds portion of the day",
+    "type": "FUNCTION",
+    "name": "SECOND",
+    "input": [
+        {
+            "name": "itod",
+            "type": "TOD",
+            "description": "The input time of day value that needs to be converted to seconds."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The output value represents the time in seconds converted from the input TOD."
+    }
+}

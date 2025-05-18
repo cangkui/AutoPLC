@@ -1,0 +1,16 @@
+{
+    "title": "Timer Counting using System Timer",
+    "description": "TC_US determines the last cycle time, that is the time since the last call of\nthe module has passed. The time comes in milliseconds. The module calls\nthe function T_PLC_US(). T_PLC_US () returns the internal PLC Timer in mi￾croseconds with a step width of 1000 microseconds. If a higher resolution\nis required the function T_PLC_US() has to be adjusted to the appropriate\nsystem. \n 22. Calculations",
+    "type": "FUNCTION_BLOCK",
+    "name": "TC_US",
+    "input": [],
+    "output": [
+        {
+            "name": "TC",
+            "type": "DWORD",
+            "description": "The elapsed time in microseconds since the last update."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

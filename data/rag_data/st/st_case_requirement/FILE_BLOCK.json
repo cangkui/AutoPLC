@@ -1,0 +1,53 @@
+{
+    "title": "File Block Access Module",
+    "description": "FILE_BLOCK provides access to fles of any size by a data \n\nblock that is always kept in a read bufer. If the requested byte of a fle is \n\nnot stored in last block of data, automatically a matching new data block is \n\nread and the desired byte is putted out. The greater the read bufer is the \n\nless frequently a block must be read again. Optimally it is a linear access \n\nto the bytes, so that as seldom as possible, a data block must be read \n\nanew.\n\n152 Version 1.21\n\nChapter 10. File-System\n\nProcedure:\n\nThe Parameter FILENAME specifes the name of the fle to be read, and \n\nwith PT_SIZE the size of the read bufer is specifed in bytes. The value for \n\nparameter POS is the exact data position within the fle, which has to be \n\nread. The process is triggered by setting MODE to 1. Then the system \n\nautomatically checks whether the desired data byte is already in the read \n\nbufer. If not, then a new matching block of data is copied into the read \n\nbufer, and the desired data byte is passed on the parameter DATA. As \n\nlong as this operation is not fnished yet, MODE remains at 1, and only \n\nafter completion of the operation of module is reset to MODE = 0. If a \n\nspecifed data position is larger than the current length of the fle or the \n\nfle has length 0, so the output at ERROR is 255 (See ERROR codes from \n\nblock FILE_SERVER).\n\nIf the fle access is no longer needed, the user must close the fle be either \n\nby use of AUTO_CLOSE or MODE 5 (close fle) of the FILE_SERVER.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FILE_BLOCK",
+    "input": [
+        {
+            "name": "PT_SIZE",
+            "type": "UINT",
+            "description": "Number of bytes in the buffer"
+        },
+        {
+            "name": "FILE_NAME",
+            "type": "STRING",
+            "description": "Name of the file to be read"
+        },
+        {
+            "name": "POS",
+            "type": "UDINT",
+            "description": "Current file reading position"
+        }
+    ],
+    "output": [
+        {
+            "name": "ERROR",
+            "type": "BYTE",
+            "description": "Error code - See module FILE_SERVER"
+        },
+        {
+            "name": "DATA",
+            "type": "BYTE",
+            "description": "Byte of the requested file position"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "IN_OUT_MODE",
+            "type": "BYTE",
+            "description": "Current mode of the operation"
+        },
+        {
+            "name": "FD",
+            "type": "FILE_SERVER_DATA",
+            "description": "File Interface"
+        },
+        {
+            "name": "PT",
+            "type": "NETWORK_BUFFER",
+            "description": "Read data"
+        }
+    ],
+    "return_value": null
+}

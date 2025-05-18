@@ -1,0 +1,19 @@
+{
+    "title": "SINC Function",
+    "description": "SINC calculates the sine Kardinalis or the gap function.\nMit SINC(0) = 1.",
+    "type": "FUNCTION",
+    "name": "SINC",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the sine calculation is to be performed."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the sine calculation, or 1.0 if the input value is zero."
+    }
+}

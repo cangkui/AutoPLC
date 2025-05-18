@@ -1,0 +1,26 @@
+{
+    "title": "Convert Day to Time",
+    "description": "DAY_TO_TIME calculates a value (TIME) from the input value\nin days as REAL.",
+    "type": "FUNCTION",
+    "name": "DAY_TO_TIME",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value representing a duration in days that needs to be converted into time."
+        }
+    ],
+    "output": [
+        {
+            "name": "TIME",
+            "type": "TIME",
+            "description": "The output value representing the equivalent time format after conversion from the input days."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "TIME",
+        "description": "The TIME value that represents the input duration in days converted to time.",
+        "fields": []
+    }
+}

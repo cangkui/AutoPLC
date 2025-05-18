@@ -1,0 +1,57 @@
+{
+    "title": "TN_SC_VIEWPORT",
+    "description": "TN_SC_VIEWPORT is used to display messages from the data \n\nstructure LOG_CONTROL within a rectangular area on the screen. The \n\ndesired messages are processed before using with Block LOG_VIEWPORT, \n\nand if necessary, with Xus_LOG_VIEWPORT.UPDATE an update is triggered. \n\nMeans Iin_X and Iin_Y defnes the upper-left corner of the window, and with \n\nIin_Width the width if of the viewing window is defned. The number of \n\nrows to be displayed is determined by Xus_LOG_VIEWPORT.COUNT. The \n\ncolor information is stored in Xus_LOG_CONTROL.MSG_OPTION [x] per \n\nmessage. It is converted to the confgured color codes from Idw_ATTR_1 \n\nand Idw_ATTR2 automatically, so the colors in the presentation can always \n\nbe adjusted individually. The messages are always automatically reduced \n\nto the width of the window or cut of.",
+    "type": "FUNCTION",
+    "name": "TN_SC_VIEWPORT",
+    "input": [
+        {
+            "name": "Iin_Y",
+            "type": "INT",
+            "description": "(Y coordinate)"
+        },
+        {
+            "name": "Iin_X",
+            "type": "INT",
+            "description": "(X coordinate)"
+        },
+        {
+            "name": "Iin_Width",
+            "type": "INT",
+            "description": "(width of the window - the number of characters)"
+        },
+        {
+            "name": "Idw_ATTR_1",
+            "type": "DWORD",
+            "description": "(color 1,2,3 and 4)"
+        },
+        {
+            "name": "Idw_ATTR_2",
+            "type": "DWORD",
+            "description": "(color 5,6,7 and 8)"
+        },
+        {
+            "name": "Iti_TIME",
+            "type": "TIME",
+            "description": "(update time)"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_LOG_VIEWPORT",
+            "type": "LOG_VIEWPORT",
+            "description": "Viewport for displaying log messages"
+        },
+        {
+            "name": "Xus_LOG_CONTROL",
+            "type": "LOG_CONTROL",
+            "description": "Control structure for log messages"
+        },
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "us_TN_SCREEN",
+            "description": "Screen structure for telnet vision"
+        }
+    ],
+    "output": [],
+    "return_value": null
+}

@@ -1,0 +1,30 @@
+{
+    "title": "Exponentiation Function",
+    "description": "EXPN calculates the exponential value of X^N for integer N. EXPN is espe￾cifcally written for PLC without Floating Point Unit and is about 30 times\nfaster than the IEC standard function EXPT(). Note the special case of the\n0^0 defned mathematically as a 1 and is not a 0. \nEXPN(10,-2) = 0.01 EXPN(1.5,2) = 2.25\nEXPN(0,0) = 1",
+    "type": "FUNCTION",
+    "name": "EXPN",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The base value which is a real number."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The exponent value which is an integer. It can be positive or negative."
+        }
+    ],
+    "output": [
+        {
+            "name": "EXPN",
+            "type": "REAL",
+            "description": "The result of the calculation, representing X raised to the power of N."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The real number result of the exponentiation."
+    }
+}

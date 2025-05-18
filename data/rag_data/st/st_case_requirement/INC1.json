@@ -1,0 +1,24 @@
+{
+    "title": "Increment Function",
+    "description": "FSTRING_TO_MONTH determines from a string containing a month name\nor abbreviation the value of the month. The function can handle both the\nmonth names and abbreviations as input as well as a number of the\nmonth.\nFSTRING_TO_MONTH('Januar',2) = 1\nFSTRING_TO_MONTH('Jan',2) = 1\nFSTRING_TO_MONTH('11',0) = 11\nThe input LANG selects the used language, 0 = the default in the Setup , 1\n= English .... more info about the language settings, see the chapter Data\nTypes.",
+    "type": "FUNCTION",
+    "name": "INC1",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "The integer value to be incremented."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The limit value that determines the behavior of the increment."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The result of the increment operation, which will be either X + 1 or 0 if X is greater than or equal to N - 1."
+    }
+}

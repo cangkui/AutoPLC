@@ -1,0 +1,19 @@
+{
+    "title": "Conversion from BFT to MS",
+    "description": "BFT_TO_MS calculete wind speeds on the Beaufort scale in meters per se￾cond.\nThe calculation is done using the formula:\nBFT_TO_MS = 0.836m/s * B^3/2",
+    "type": "FUNCTION",
+    "name": "BFT_TO_MS",
+    "input": [
+        {
+            "name": "BFT",
+            "type": "INT",
+            "description": "An integer value representing BFT to be converted to MS."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted MS value calculated as BFT raised to the power of 1.5 multiplied by 0.836."
+    }
+}

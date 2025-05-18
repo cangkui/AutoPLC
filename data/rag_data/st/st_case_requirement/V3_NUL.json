@@ -1,0 +1,19 @@
+{
+    "title": "Check if a 3D Vector is Null",
+    "description": "COUNT_BR is a byte count from 0 to MX and starts again at 0. The counter\ncan, using two edge-triggered inputs UP and DN, both forward and back￾ward counting. when reaching a fnal value 0 or MX it counts again at 0 or\nMX. The STEP input sets the increment value of the counter. With a TRUE\nat input SET the counter is set to present value at the IN input. A reset in￾put RST resets the counter at any time to 0.\nSET IN UP DN STEP RST CNT\nReset - - - - - 1 0\nSet 1 N - - - 0 N\nup 0 - ↑ 0 N 0 CNT + N\ndown 0 - 0 ↑ N 0 CNT - N\nIf the independent inputs UP and DN with CLK and a control input UP/DN\nshould be replaced, id can be done using two AND gates at the inputs:\nCOUNT_BR may work with individual step width at UP or Down command,\nit is important to note that the counter behaves as if it internally counts\nthe number of STEP steps forward or backward.",
+    "type": "FUNCTION",
+    "name": "V3_NUL",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "A 3D vector whose components will be checked to determine if it is a null vector."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the vector A is a null vector (all components are zero); otherwise, returns FALSE."
+    }
+}

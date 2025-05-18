@@ -1,0 +1,82 @@
+{
+    "title": "TELNET_PRINT Function Module",
+    "description": "TELNET_PRINT The module enables easy output of text to a TELNET console. At the \n\nparameter TEXT is passed the desired string. To unlock the module for \n\ncommunication, ENABLE = 1 must be set, so that the registration takes \n\nplace at IP_CONTROL. With parameter PORT can be defned the port \n\nnumber you want, if not value is specifed the default port 23 is activated. \n\nWith BACK_COLOR and FRONT_COLOR can be defned the colors you want, \n\nif the function parameter OPTION is activated. The parameters X_pos and \n\nY_pos pass the desired coordinates of the text. If indicated in X_pos and \n\nY_pos the value \"0\", the text position is inactive, and the text are always \n\nappended at the current cursor position. The standard Telnet console \n\nallows X_pos (horizontal) from 1 to 80 and a Y_pos (Vertical) 1 to 25. The \n\nbehavior here can in turn be modifed by OPTION (Autowrap, carriage \n\nreturn, line feed, Buf_Flush etc..). If a large quantity of text will be issued, \n\nthere may be a bufering enabled, so the data are written if either the \n\nbufer is full (this is from the module induced independently) or this is \n\nsignaled by the amended OPTION parameter. By SEND = 1, the data is \n\nwritten into the bufer. The parameters may only be changed again if \n\nREADY is 1, and with DONE the data acquisition was displayed as a \n\npositive edge.\n\nOPTION:\n\nBIT Function Description\n\n0 SCREEN_INIT After connecting to the TELNET console the entire screen is\n\ncleared. If the COLOR OPTION is selected, the screen\n\nBACK_COLOR will be deleted.\n\n1 AUTOWRAP In AUTOWRAP = 1, the write cursor is on reaching the end\n\nof line is automatically set to a next line. If the text output\n\nthe X,Y positions are always specifed with, it is better when\n\nAUTOWRAP = 0.\n\n2 COLOR Enables the color mode, it will apply BACK_COLOR and\n\nFRONT_COLOR to the output.\n\n3 NEW_LINE In NEW_LINE = 1 is automatically a carriage return and line\n\nfeed added to the end of the text. So the next text output\n\nstarts a new line. But this is only useful if no X_pos and\n\nY_pos be specifed.\n\n4 RESERVE\n\n5 RESERVE\n\n6 RESERVE\n\n7 NO_BUF_FLUSH Prevents the data in the bufer to be sent immediately. Only\n\nif the bufer is completely full, or this option is disabled, the\n\ndata is sent. Allows fast sending many texts in the same\n\ncycle\n\n138 Version 1.21\n\nChapter 9. Network and Communication\n\nFRONT_COLOR:\n\nByte Color Byte Color\n\n0 Black 16 Flashing Black\n\n1 Light Red 17 Flashing Light Red\n\n2 Light Green 18 Flashing Light Green\n\n3 Yellow 19 Flashing Yellow\n\n4 Light Blue 20 Flashing Light Blue\n\n5 Pink / Light Magenta 21 Flashing Pink / Light Magenta\n\n6 Light Cyan 22 Flashing Light Cyan\n\n7 White 23 Flashing White\n\n8 Black 24 Flashing Black\n\n9 Red 25 Flashing Red\n\n10 Green 26 Flashing Green\n\n11 Brown 27 Flashing Brown\n\n12 Blue 28 Flashing Blue\n\n13 Purple / Magenta 29 Purple / Magenta\n\n14 Cyan 30 Flashing Cyan\n\n15 Gray 31 Flashing Gray\n\nBACK_COLOR:\n\nByte Color\n\n0 Black\n\n1 Red\n\n2 Green\n\n3 Brown\n\n4 Blue\n\n5 Purple / Magenta\n\n6 Cyan\n\n139 Version 1.21\n\nChapter 9. Network and Communication\n\n7 Gray",
+    "type": "FUNCTION",
+    "name": "TELNET_PRINT",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for IP control."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "INPUT TEXT",
+            "type": "STRING",
+            "description": "The string that you want to output to the TELNET console."
+        },
+        {
+            "name": "S_BUF_SIZE",
+            "type": "UINT",
+            "description": "Size of the buffer S_BUF."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Enable communication; set to 1 to unlock the module."
+        },
+        {
+            "name": "SEND",
+            "type": "BOOL",
+            "description": "Positive edge to initiate sending of data."
+        },
+        {
+            "name": "OPTION",
+            "type": "BYTE",
+            "description": "Send options to configure the behavior of text output."
+        },
+        {
+            "name": "BACK_COLOR",
+            "type": "BYTE",
+            "description": "Background color for text output."
+        },
+        {
+            "name": "FRONT_COLOR",
+            "type": "BYTE",
+            "description": "Foreground color for text output."
+        },
+        {
+            "name": "X_pos",
+            "type": "BYTE",
+            "description": "X-coordinate of the cursor position (horizontal)."
+        },
+        {
+            "name": "Y_pos",
+            "type": "BYTE",
+            "description": "Y-coordinate of the cursor position (vertical)."
+        },
+        {
+            "name": "PORT",
+            "type": "WORD",
+            "description": "Port number for the TELNET connection; defaults to port 23 if not specified."
+        }
+    ],
+    "output": [
+        {
+            "name": "READY",
+            "type": "BOOL",
+            "description": "Indicates if the module is ready for operation."
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Positive edge indicating that the transmission is completed."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

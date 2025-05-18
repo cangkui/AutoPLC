@@ -1,0 +1,45 @@
+{
+    "title": "Set Date and Time",
+    "description": "SET_DT calculates a time-date value (DATE_TIME) from the\ninput values, day, month, year, hour, minute and seconds.",
+    "type": "FUNCTION",
+    "name": "SET_DT",
+    "input": [
+        {
+            "name": "year",
+            "type": "INT",
+            "description": "The year to be set."
+        },
+        {
+            "name": "month",
+            "type": "INT",
+            "description": "The month to be set, ranging from 1 to 12."
+        },
+        {
+            "name": "day",
+            "type": "INT",
+            "description": "The day of the month to be set."
+        },
+        {
+            "name": "hour",
+            "type": "INT",
+            "description": "The hour of the day to be set, ranging from 0 to 23."
+        },
+        {
+            "name": "minute",
+            "type": "INT",
+            "description": "The minute of the hour to be set, ranging from 0 to 59."
+        },
+        {
+            "name": "second",
+            "type": "INT",
+            "description": "The second of the minute to be set, ranging from 0 to 59."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DT",
+        "description": "The date and time represented as a DWORD.",
+        "fields": []
+    }
+}

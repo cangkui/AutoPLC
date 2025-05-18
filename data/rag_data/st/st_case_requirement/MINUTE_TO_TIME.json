@@ -1,0 +1,26 @@
+{
+    "title": "Convert Minutes to Time",
+    "description": "MINUTE_TO_TIME calculates a time value (TIME) from the in￾put in minutes as REAL.",
+    "type": "FUNCTION",
+    "name": "MINUTE_TO_TIME",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input parameter representing the time in minutes to be converted."
+        }
+    ],
+    "output": [
+        {
+            "name": "MINUTE_TO_TIME",
+            "type": "TIME",
+            "description": "The output time value calculated from the input minutes."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "TIME",
+        "description": "The resulting time value after conversion from minutes.",
+        "fields": []
+    }
+}

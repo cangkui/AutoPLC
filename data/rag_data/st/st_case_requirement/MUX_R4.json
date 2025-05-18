@@ -1,0 +1,50 @@
+{
+    "title": "Multiplexer Function",
+    "description": "CCOS calculates the cosine of a complex number",
+    "type": "FUNCTION",
+    "name": "MUX_R4",
+    "input": [
+        {
+            "name": "IN0",
+            "type": "REAL",
+            "description": "The first input value."
+        },
+        {
+            "name": "IN1",
+            "type": "REAL",
+            "description": "The second input value."
+        },
+        {
+            "name": "IN2",
+            "type": "REAL",
+            "description": "The third input value."
+        },
+        {
+            "name": "IN3",
+            "type": "REAL",
+            "description": "The fourth input value."
+        },
+        {
+            "name": "A0",
+            "type": "BOOL",
+            "description": "The first boolean selection input."
+        },
+        {
+            "name": "A1",
+            "type": "BOOL",
+            "description": "The second boolean selection input."
+        }
+    ],
+    "output": [
+        {
+            "name": "MUX_R4",
+            "type": "REAL",
+            "description": "The output value selected based on the input and selection parameters."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The selected output value based on the multiplexer logic."
+    }
+}

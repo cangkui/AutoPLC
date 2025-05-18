@@ -1,0 +1,40 @@
+{
+    "title": "MD5 Stream Calculation",
+    "description": "MD5_STREAM allows the calculation of the MD5 ( Mes￾sage-Digest Algorithm 5 ) of a cryptographic hash function. \n\nThis can be created from any data stream a unique check value. It is vir￾tually impossible to fnd two diferent messages with the same test value,\n\nthis is referred to as collisions free. This can be used to check a confgura￾tion fle for change or manipulation.\n\nWith the hash algorithm (MD5) a hash value is generated from 128 bits in\n\nlength for any data. The maximum length of the stream is on this module\n\nis limited to 2^32 (4 gigabyte). The result is a 16 bytes hash value at pa￾rameters MD5.",
+    "type": "FUNCTION",
+    "name": "MD5_STREAM",
+    "input": [
+        {
+            "name": "mode",
+            "type": "INT",
+            "description": "The mode of operation for the MD5_STREAM function. Use 1 for initialization, 2 for data block processing, and 3 for completion."
+        },
+        {
+            "name": "BUF",
+            "type": "ARRAY[0..63] OF BYTES",
+            "description": "The buffer containing the source data to be hashed."
+        },
+        {
+            "name": "SIZE",
+            "type": "UDINT",
+            "description": "The number of bytes in the data to process."
+        }
+    ],
+    "output": [
+        {
+            "name": "MD5",
+            "type": "ARRAY[0..15] OF BYTE",
+            "description": "The calculated MD5 hash value as a 16-byte array."
+        },
+        {
+            "name": "POS",
+            "type": "UDINT",
+            "description": "The start address of the requested data block."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "The function does not return a value. The results are provided via output parameters."
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "title": "Complex Number Set Function",
+    "description": "CSET generated from the two input components RE and IM is a complex\nnumber of type COMPLEX.",
+    "type": "FUNCTION",
+    "name": "CSET",
+    "input": [
+        {
+            "name": "RE",
+            "type": "REAL",
+            "description": "The real part of the complex number."
+        },
+        {
+            "name": "IM",
+            "type": "REAL",
+            "description": "The imaginary part of the complex number."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The complex number consisting of the provided real and imaginary parts.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the complex number."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the complex number."
+            }
+        ]
+    }
+}

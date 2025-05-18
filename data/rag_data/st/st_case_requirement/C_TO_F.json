@@ -1,0 +1,26 @@
+{
+    "title": "Celsius to Fahrenheit Conversion Function",
+    "description": "C_TO_F converts a temperature reading from Celsius to Fahrenheit.",
+    "type": "FUNCTION",
+    "name": "C_TO_F",
+    "input": [
+        {
+            "name": "celsius",
+            "type": "REAL",
+            "description": "The temperature value in degrees Celsius to be converted to Fahrenheit."
+        }
+    ],
+    "output": [
+        {
+            "name": "C_TO_F",
+            "type": "REAL",
+            "description": "The temperature value in degrees Fahrenheit obtained from the conversion."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted temperature value in degrees Fahrenheit.",
+        "fields": []
+    }
+}

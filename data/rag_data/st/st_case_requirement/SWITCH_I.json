@@ -1,0 +1,52 @@
+{
+    "title": "Intelligent Switch Function Module",
+    "description": "SWITCH_I is an intelligent switch which automatically adjusts to the\n\nconnected switch or push-button switches. If a switch is connected, the\n\noutput follows each switching edge of the switch. However, if a push-but￾ton switch is connected, SWITCH_I detects whether there is an opener or\n\ncloser, and then evaluates only the frst edge. The setup variable\n\nT_ON_MAX determines after which time the output is switched of automa-\n\n58 Version 1.00\n\nChapter 6. Electrical Engineering\n\ntically. With the SET and RST inputs the output can be switched at any\n\ntime to 100% or of. Applications are the message of smoke detectors or\n\nalarm systems. The time T_DEBOUNCE serves to debounce the switch and\n\nis by default set to 10ms. The time T_RESetup is used to decide whether a\n\nclose switch or break switch is connected to the input IN. If the input is for\n\nmore than this time in a state, it is assumed as rest mode.",
+    "type": "FUNCTION",
+    "name": "SWITCH_I",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Input for switching the output to 100%"
+        },
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Control input for buttons"
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Entrance to switch off the output"
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output indicating the state of the intelligent switch"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value as this function handles output directly"
+    },
+    "setup": [
+        {
+            "name": "T_DEBOUNCE",
+            "type": "TIME",
+            "description": "Debounce time for buttons, default set to 10ms"
+        },
+        {
+            "name": "T_RESetup",
+            "type": "TIME",
+            "description": "Reconfiguration time to determine connected switch type"
+        },
+        {
+            "name": "T_ON_MAX",
+            "type": "TIME",
+            "description": "Start limitation time after which the output is switched off automatically"
+        }
+    ]
+}

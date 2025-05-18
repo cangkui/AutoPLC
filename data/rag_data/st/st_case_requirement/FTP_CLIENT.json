@@ -1,0 +1,75 @@
+{
+    "title": "FTP Client Module",
+    "description": "FTP_CLIENT is used to transfer fles from the PLC to an FTP \n\nserver and to transmitted from the FTP server to the PLC. A positive edge \n\n94 Version 1.21\n\nChapter 9. Network and Communication\n\nat ACTIVATE starts the transfer process. In FTP_DOWNLOAD the \n\ntransmission direction can be specifed. The parameter FTP_URL contains \n\nthe name of the FTP server and pass the optional user name and \n\npassword, an access path and an additional port number for the data \n\nchannel. If no username or password is passed, the module trys \n\nautomatically to register as \"Anonymous\" . The parameter FTP_ACTIV \n\ndetermines whether the FTP server is operated in active or passive mode. \n\nIn the ACTIV mode, the FTP server tries to establish the data channel for \n\ncontrol, however these may cause problems by security software, frewall, \n\netc. because these could block the connection request. For this purpose, in \n\nthe frewall a corresponding exception rule has to be defned. In the \n\npassive mode, this problem is alleviated since the controller establishes \n\nthe connection, and can easily pass through the frewall. The control \n\nchannel is always set up on port 20, and the data channel via standard \n\nPORT21, but this is in turn is depending whether active or passive mode is \n\nused, or optional PORT number in the FTP-URL is specifed. With the \n\nparameter FILE_DELETE can be determined whether the source fle should \n\nbe deleted after successful transfer. This works on FTP and even on the \n\ncontrol side. In specifying FTP directories the behavior depends on FTP \n\nserver, whether they exist in this case or are created automatically. \n\nNormally, these should be already available. The size of fles is no limit per \n\nse, but there are practical limits: Space on PLC, FTP storage and the \n\ntransmission time. With dns_ip4 the IP address of the DNS server must be \n\nspecifed, if in the FTP URL a DNS name is given, alternatively, an IP \n\naddress can be entered in the FTP URL. At parameters PLC_IP4 the own IP \n\naddresses has to be supplied. If errors occur during transmission these are \n\npassed to the output ERROR_C and ERROR_T. As long as the transfer is \n\nrunning, BUSY = TRUE, and after an error-free completion of the operation, \n\nDONE = TRUE. Once a new transfer is started, DONE, ERROR_T and \n\nERROR_C are reseted.\n\nThe module has integrated the IP_CONTROL and must not be externally \n\nlinked to this, as it by default would be necessary.\n\nBackground: http://de.wikipedia.org/wiki/File_Transfer_Protocol \n\nURL examples:\n\nftp://username:password@servername:portnummer/directory/\n\nftp://username:password@servername\n\nftp://username:password @ servername / directory /\n\nftp://servername\n\nftp://username:password@192.168.1.1/directory/\n\nftp://192.168.1.1\n\n95 Version 1.21\n\nChapter 9. Network and Communication\n\nERROR_T:\n\nValue Properties\n\n1 Problem: DNS_CLIENT\n\nThe exact meaning of ERROR_C can be read at module DNS_CLIENT\n\n2 Problem: FTP control channel\n\nThe exact meaning of ERROR_C can be read at module IP_CONTROL\n\n3 Problem: FTP data channel\n\nThe exact meaning of ERROR_C can be read at module IP_CONTROL\n\n4 Problem: FILE_SERVER\n\nThe exact meaning of ERROR_C can be read at block FILE_SERVER\n\n5 Problem: END - TIMEOUT\n\nERROR_C contains the left WORD of the step number, and the right WORD has the re￾sponse code received by the FTP server.\n\nThe parameters must be considered first as a HEX value, divided into two WORDS, and\n\nthen be considered as a decimal value.",
+    "type": "FUNCTION",
+    "name": "FTP_CLIENT",
+    "input": [
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "A positive edge starts the query."
+        },
+        {
+            "name": "FILE_NAME",
+            "type": "STRING",
+            "description": "File path and filename for the transfer."
+        },
+        {
+            "name": "FTP_URL",
+            "type": "STRING",
+            "description": "FTP access path including optional username, password, and port."
+        },
+        {
+            "name": "FTP_DOWNLOAD",
+            "type": "BOOL",
+            "description": "0 for upload, 1 for download."
+        },
+        {
+            "name": "FTP_ACTIV",
+            "type": "BOOL",
+            "description": "0 for passive mode, 1 for active mode."
+        },
+        {
+            "name": "FILE_DELETE",
+            "type": "BOOL",
+            "description": "Indicates whether to delete files after transfer."
+        },
+        {
+            "name": "TIMEOUT",
+            "type": "TIME",
+            "description": "Time duration for the transfer process."
+        },
+        {
+            "name": "Dns_ip4",
+            "type": "DWORD",
+            "description": "IP4 address of the DNS server."
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates transfer completion without error."
+        },
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates the transfer is currently active."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code if an error occurred during transfer."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Indicates the type of the problem encountered."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

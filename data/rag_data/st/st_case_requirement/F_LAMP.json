@@ -1,0 +1,63 @@
+{
+    "title": "Fluorescent Lamp Control Module",
+    "description": "F_LAMP is an interface for fuorescent lamp. The output LAMP follows the\n\ninput DIMM and SWITCH. If DIMM is not connected, the default is of 255 is\n\nused and the output LAMP passes 0-255 depending on SWITCH. The out￾puts ONTIME and CYCLES count the operating time of the light bulb in se￾conds and the switching cycles. Both values are externally stored and can\n\nbe saved permanent or persistent , more info, see the module ONTIME. A\n\nTRUE at the input RST resets both values to 0. The setup variables\n\nT_NO_DIMM determines after which length of time a new lamp the dim￾ming may be done. This value, when not otherwise set by the user,\n\ndefaults to 100 hours. Fluorescent lamps may not use reduced levels of\n\nbrightness, during the frst 100 hours , otherwise your life is shortened\n\ndramatically. By a RST at replace of the lamp module it prevents the dim￾ming in the initial phase. The output state is ESR compatible, and can re￾port operating conditions, but also pass a message to change the bulb.\n\nThe default time T_MAINTENANCE is, if not modifed by the user, 15000\n\nhours. If T_Maintenance set to 0 so no message is generated for lamp re￾placement. \n\nStatus\n\n110 Lamp of\n\n111 Lamp on, no dimming allowed\n\n112 Lamp on, dim allowed\n\n120 Call for lamp replacement\n\nThe following example shows the use of the module F_LAMP in conjunction\n\nwith DIMM_I:\n\n55 Version 1.00\n\nChapter 6. Electrical Engineering",
+    "type": "FUNCTION",
+    "name": "F_LAMP",
+    "input": [
+        {
+            "name": "SWITCH",
+            "type": "BOOL",
+            "description": "Input from the dimmer switch."
+        },
+        {
+            "name": "DIMM",
+            "type": "BYTE",
+            "description": "Input from the dimmer that determines the output level."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Input to reset the operating time and cycles counter."
+        }
+    ],
+    "output": [
+        {
+            "name": "LAMP",
+            "type": "BYTE",
+            "description": "Dimmer output based on the input DIMM and SWITCH."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output indicating the operational conditions of the lamp."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "ONTIME",
+            "type": "UDINT",
+            "description": "Operating time of the lamp in seconds."
+        },
+        {
+            "name": "ONTIME",
+            "type": "UDINT",
+            "description": "Count of the operating time in seconds."
+        }
+    ],
+    "return_value": {
+        "type": "void",
+        "description": "No return value as this is a function that controls outputs based on inputs."
+    },
+    "setup": [
+        {
+            "name": "T_NO_DIMM",
+            "type": "UINT",
+            "description": "Time in hours after which dimming may commence for a new lamp, default is 100 hours."
+        },
+        {
+            "name": "T_Maintenance",
+            "type": "UINT",
+            "description": "Reporting time for lamp replacement in hours, default is 15000 hours."
+        }
+    ]
+}

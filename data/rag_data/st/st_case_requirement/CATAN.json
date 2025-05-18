@@ -1,0 +1,37 @@
+{
+    "title": "Complex Arc Tangent Function",
+    "description": "CATAN calculates the arc tangent of a complex number\nThe range of values of the result is between [-/2,+/2 ] For the imagina￾ry part.",
+    "type": "FUNCTION",
+    "name": "CATAN",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "Input variable of type complex."
+        }
+    ],
+    "output": [
+        {
+            "name": "CATAN",
+            "type": "complex",
+            "description": "The result of the arc tangent calculation, returned as a complex number."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The complex result representing the arc tangent of the input complex number.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the arc tangent result."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the arc tangent result."
+            }
+        ]
+    }
+}

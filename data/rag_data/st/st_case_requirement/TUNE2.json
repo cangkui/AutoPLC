@@ -1,0 +1,92 @@
+{
+    "title": "TUNE2 Function Block",
+    "description": "CATAN calculates the arc tangent of a complex number\nThe range of values of the result is between [-/2,+/2 ] For the imagina￾ry part.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TUNE2",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Indicator to set the output to SET_val."
+        },
+        {
+            "name": "SU",
+            "type": "BOOL",
+            "description": "Signal to initiate a slow step up operation."
+        },
+        {
+            "name": "SD",
+            "type": "BOOL",
+            "description": "Signal to initiate a slow step down operation."
+        },
+        {
+            "name": "FU",
+            "type": "BOOL",
+            "description": "Signal to initiate a fast step up operation."
+        },
+        {
+            "name": "FD",
+            "type": "BOOL",
+            "description": "Signal to initiate a fast step down operation."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Indicator to reset the output to RST_val."
+        },
+        {
+            "name": "SS",
+            "type": "REAL",
+            "description": "The amount to be added or subtracted during each slow step operation."
+        },
+        {
+            "name": "FS",
+            "type": "REAL",
+            "description": "The amount to be added or subtracted during each fast step operation."
+        },
+        {
+            "name": "Limit_L",
+            "type": "REAL",
+            "description": "The lower limit for the output."
+        },
+        {
+            "name": "LIMIT_H",
+            "type": "REAL",
+            "description": "The upper limit for the output."
+        },
+        {
+            "name": "RST_val",
+            "type": "REAL",
+            "description": "The value to assign to Y when the reset is triggered."
+        },
+        {
+            "name": "SET_val",
+            "type": "REAL",
+            "description": "The value to assign to Y when the set operation is triggered."
+        },
+        {
+            "name": "TR",
+            "type": "TIME",
+            "description": "The time duration for the ramp operation."
+        },
+        {
+            "name": "S1",
+            "type": "REAL",
+            "description": "The speed factor used for slow movements."
+        },
+        {
+            "name": "S2",
+            "type": "REAL",
+            "description": "The speed factor used for fast movements."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value after processing commands."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

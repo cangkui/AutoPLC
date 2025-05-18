@@ -1,0 +1,30 @@
+{
+    "title": "Calculate Array Variance",
+    "description": "ARRAY_VAR calculates the variance of an arbitrary array of\nREAL. When called a pointer to the array and its size in bytes is passed to\nthe function. Under CoDeSys the call reads: ARRAY_VAR(ADR(Array), SI￾ZEOF(Array)), where array is the name of the array to be manipulated.\nADR() is a standard function, which identifes the pointer to the array and\nSIZEOF() is a standard function, which determines the size of the array. In\norder to determine the maximum, the array referenced by the pointer is\nscanned directly in memory. The function ARRAY_VAR does not change the\ncontent of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "ARRAY_VAR",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY[0..32000] OF REAL",
+            "description": "Pointer to an array of real numbers whose variance will be calculated."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The size of the array, indicating the number of elements present within the array."
+        }
+    ],
+    "output": [
+        {
+            "name": "ARRAY_VAR",
+            "type": "REAL",
+            "description": "The calculated variance of the real numbers in the array."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the computed variance of the array of real numbers."
+    }
+}

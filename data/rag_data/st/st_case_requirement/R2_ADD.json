@@ -1,0 +1,42 @@
+{
+    "title": "Real2 Addition Function",
+    "description": "_BUFFER_INIT initializes any array of Byte with value INIT.\nWhen called, a pointer to the array and its size in bytes is passed to the\nfunction. Under CoDeSys the call reads: _BUFFER_INIT(ADR(Array), SI￾ZEOF(Array), INIT), where array is the name of the array to be manipula￾ted. ADR() is a standard function which identifes the pointer to the array\nand SIZEOF() is a standard function, which determines the size of the ar￾ray. The function only returns TRUE. The array specifed by the pointer is\nmanipulated directly in memory. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "R2_ADD",
+    "input": [
+        {
+            "name": "X",
+            "type": "Real2",
+            "description": "A derived type that contains two real numbers, RX and R1."
+        },
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "A real number that will be added to the components of the Real2 input."
+        }
+    ],
+    "output": [
+        {
+            "name": "R2_ADD",
+            "type": "REAL2",
+            "description": "The output structure of type Real2 containing the results of the addition operations."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL2",
+        "description": "The resulting Real2 structure after performing the addition.",
+        "fields": [
+            {
+                "name": "RX",
+                "type": "REAL",
+                "description": "The result of adding Y, X.R1, and X.RX."
+            },
+            {
+                "name": "R1",
+                "type": "REAL",
+                "description": "The result of computing temp minus RX, plus Y, and X.R1."
+            }
+        ]
+    }
+}

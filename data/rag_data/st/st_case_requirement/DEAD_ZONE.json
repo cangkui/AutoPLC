@@ -1,0 +1,24 @@
+{
+    "title": "Dead Zone Function",
+    "description": "DEAD_ZONE is a linear transfer function with dead zone. The output equals \nthe input signal when the absolute value of the input is greater than L.\nDEAD_ZONE = X if ABS(X) > L \nDEAD_ZONE = 0 if ABS(X) <= L",
+    "type": "FUNCTION",
+    "name": "DEAD_ZONE",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input variable X of type REAL which is evaluated against the threshold L."
+        },
+        {
+            "name": "L",
+            "type": "REAL",
+            "description": "Input variable L of type REAL which serves as the threshold for the dead zone."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the dead zone calculation, which is either the value of X if |X| > L or 0.0 if |X| <= L."
+    }
+}

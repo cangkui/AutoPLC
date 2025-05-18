@@ -1,0 +1,19 @@
+{
+    "title": "Convert BCD to Integer",
+    "description": "BCDC_TO_INT converts a BCD coded input BYTE in an integer value.",
+    "type": "FUNCTION",
+    "name": "BCDC_TO_INT",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "A BYTE input representing the BCD value to be converted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The resulting integer value derived from the given BCD input."
+    }
+}

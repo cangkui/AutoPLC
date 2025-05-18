@@ -1,0 +1,19 @@
+{
+    "title": "Calculate Day of Month",
+    "description": "DAY_OF_MONTH function calculates the day of the month from the in￾put date IDATE.",
+    "type": "FUNCTION",
+    "name": "DAY_OF_MONTH",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The input date for which the day of the month is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The calculated day of the month based on the input date, adjusted for leap years and month offsets."
+    }
+}

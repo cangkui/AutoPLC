@@ -1,0 +1,20 @@
+{
+    "title": "BYTE_To_STRH",
+    "description": "BYTE_TO_STRH converts a byte into a fxed-length STRING. The output\nstring is exactly two characters long and is the hexadecimal notation of\nthe value of IN. The output string consists of the characters '0 '.. '9' and\n'A' .. 'F'. The least signifcant sign is right in the STRING.",
+    "type": "FUNCTION",
+    "name": "BYTE_TO_STRH",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The BYTE input variable to be converted into a hexadecimal string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The resulting string representation of the input BYTE in hexadecimal format.",
+        "fields": []
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "title": "Bit Load Word Function",
+    "description": "BIT_LOAD_W copies the bit at input VAL to the bit in position N in WORD\nIN. The least signifcant bit B0 is described by the position 0.",
+    "type": "FUNCTION",
+    "name": "BIT_LOAD_W",
+    "input": [
+        {
+            "name": "IN",
+            "type": "WORD",
+            "description": "The input WORD to be modified."
+        },
+        {
+            "name": "VAL",
+            "type": "BOOL",
+            "description": "Boolean value indicating whether to set or clear the bit."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position of the bit to be set or cleared."
+        }
+    ],
+    "output": [
+        {
+            "name": "BIT_LOAD_W",
+            "type": "WORD",
+            "description": "The modified WORD after the bit operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "The resulting WORD after the function's bit manipulation."
+    }
+}

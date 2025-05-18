@@ -1,0 +1,115 @@
+{
+    "title": "IRTRANS_RCV_8 Function Module",
+    "description": "IRTRANS_RCV_8 checkes when CMD = TRUE if the string matches the input\n\nDEV corresponds to DEV_CODE (device code) and the string at the input\n\nKEY corresponds to the KEY_CODE. If the codes match and CMD = TRUE,\n\n39 Version 1.21\n\nChapter 6. Device Driver\n\nthen the output Q for a cycle is set to TRUE. For more information about\n\nthe function of the device are under IRTRANS_RCV_1.",
+    "type": "FUNCTION",
+    "name": "IRTRANS_RCV_8",
+    "input": [
+        {
+            "name": "CMD",
+            "type": "BOOL",
+            "description": "TRUE if data for evaluating are available."
+        },
+        {
+            "name": "DEV",
+            "type": "STRING",
+            "description": "Name of the remote control."
+        },
+        {
+            "name": "KEY",
+            "type": "STRING",
+            "description": "Name of button."
+        },
+        {
+            "name": "DEV_CODE",
+            "type": "STRING",
+            "description": "To be decoded remote control name."
+        },
+        {
+            "name": "KEY_CODE_0",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        },
+        {
+            "name": "KEY_CODE_1",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        },
+        {
+            "name": "KEY_CODE_2",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        },
+        {
+            "name": "KEY_CODE_3",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        },
+        {
+            "name": "KEY_CODE_4",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        },
+        {
+            "name": "KEY_CODE_5",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        },
+        {
+            "name": "KEY_CODE_6",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        },
+        {
+            "name": "KEY_CODE_7",
+            "type": "STRING",
+            "description": "Key code to be decoded."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output signal for key code 0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal for key code 1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output signal for key code 2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output signal for key code 3."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "Output signal for key code 4."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "Output signal for key code 5."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "Output signal for key code 6."
+        },
+        {
+            "name": "Q7",
+            "type": "BOOL",
+            "description": "Output signal for key code 7."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

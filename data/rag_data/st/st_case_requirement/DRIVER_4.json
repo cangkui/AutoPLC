@@ -1,0 +1,72 @@
+{
+    "title": "Driver Control Function Block",
+    "description": "EVEN = TRUE if the input IN is even and FALSE for odd IN.",
+    "type": "FUNCTION_BLOCK",
+    "name": "DRIVER_4",
+    "input": [
+        {
+            "name": "Toggle_Mode",
+            "type": "BOOL",
+            "description": "A boolean value indicating the mode of operation to toggle."
+        },
+        {
+            "name": "Timeout",
+            "type": "TIME",
+            "description": "A time duration which sets the timeout for the drivers."
+        },
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "A boolean signal to set the driver functionality."
+        },
+        {
+            "name": "IN0",
+            "type": "BOOL",
+            "description": "Input signal for the first driver instance."
+        },
+        {
+            "name": "IN1",
+            "type": "BOOL",
+            "description": "Input signal for the second driver instance."
+        },
+        {
+            "name": "IN2",
+            "type": "BOOL",
+            "description": "Input signal for the third driver instance."
+        },
+        {
+            "name": "IN3",
+            "type": "BOOL",
+            "description": "Input signal for the fourth driver instance."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to clear the driver states."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output state of the first driver instance."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output state of the second driver instance."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output state of the third driver instance."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output state of the fourth driver instance."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

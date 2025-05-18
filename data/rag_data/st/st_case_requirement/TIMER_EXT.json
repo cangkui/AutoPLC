@@ -1,0 +1,120 @@
+{
+    "title": "Twilight Timer Control Module",
+    "description": "TIMER_EXT is a Timer specifcally for outdoor lighting or other loads are to\n\nbe turned on at twilight. The output Q is at fxed times of the day ON and\n\nOFF, in addition, the output can before twilight turned ON and after twi￾light turned of automatically. An additional input SWITCH can switch the\n\noutput, regardless of the respective time of day, on and of. The inputs\n\nENA, ON, OFF and MAN provide a detailed automatic and manual control\n\nof the output. If ENA is not connected, the module is still Enabled because\n\nits internal Default is TRUE. The following table provides detailed informa￾tion about the operating conditions of the block. \n\nENA ON OFF MAN SWITCH Timer Q STATUS\n\nL - - - - - L 104\n\nH H L - - - H 101\n\nH L H - - - L 102\n\nH H H X - - MAN 103\n\nH L L -  - NOT Q 110\n\nH L L - - TOD = T_DAY_START H 111\n\nH L L - - TOD = T_DAY_STOP L 112\n\nH L L - - TOD = SUN_RISE - T_RISE_START H 113\n\nH L L - - TOD = SUN_RISE + T_RISE_STOP L 114\n\nH L L - - TOD = SUN_SET - T_SET_START H 115\n\nH L L - - TOD = SUN_SET + T_SET_STOP L 116\n\n64 Version 1.00\n\nChapter 6. Electrical Engineering\n\nThe setup variables ENABLE_SUNDAY, SATURDAY and HOLIDAY defne\n\nwhether the block is active on Saturdays, Sundays and public holidays. If\n\nthe module should not be ON at public holidays, at the input HOLIDAY to\n\nthe module HOLIDAY must be connected from the library, this module indi￾cates a TRUE if today is a public holiday. The setup variables T_SET_START,\n\nT_SET_STOP, T_RISE_START, T_RISE_STOP, T_DAY_START and T_DAY_STOP\n\nset the switching times. if one of those variables is T#0s or TOD#00:00\n\nthen the switch time is inactive. This means that ie. T_SET_START (switch\n\nbefore sunset) only turns on when it is set to at least 1 second. the modu￾le gets ON the output Q, at a time T_DAY_START, and in reach of\n\nT_DAY_STOP OFF again when one of the two times ( T_DAY_START or\n\nT_DAY_STOP) TOD#0:00 is and the corresponding switch process is not\n\nexecuted. The module switch ON at the time T_RISE_START before sunrise\n\n(SUN_RISE), and OFF reaching of T_RISE_STOP after sunrise again. The\n\nsame is for the times at sunset.",
+    "type": "FUNCTION",
+    "name": "TwilightTimer",
+    "input": [
+        {
+            "name": "ENA",
+            "type": "BOOL",
+            "description": "Module enable"
+        },
+        {
+            "name": "ON",
+            "type": "BOOL",
+            "description": "Forces the output Q to TRUE"
+        },
+        {
+            "name": "OFF",
+            "type": "BOOL",
+            "description": "Forces the output Q to FALSE"
+        },
+        {
+            "name": "MAN",
+            "type": "BOOL",
+            "description": "Control input when ON = OFF = TRUE"
+        },
+        {
+            "name": "SWITCH",
+            "type": "BOOL",
+            "description": "Push button input for manual switching"
+        },
+        {
+            "name": "DT_IN",
+            "type": "DATETIME",
+            "description": "Input for date and time of day"
+        },
+        {
+            "name": "SUN_SET",
+            "type": "TOD",
+            "description": "Time of sunset"
+        },
+        {
+            "name": "SUN_RISE",
+            "type": "TOD",
+            "description": "Time of sunrise"
+        },
+        {
+            "name": "HOLIDAY",
+            "type": "BOOL",
+            "description": "Input for holiday module"
+        },
+        {
+            "name": "Setup HOLIDAY",
+            "type": "BOOL",
+            "description": "Input for holiday module setup"
+        },
+        {
+            "name": "T_SET_START",
+            "type": "TIME",
+            "description": "Start-before sunset time"
+        },
+        {
+            "name": "T_SET_STOP",
+            "type": "TIME",
+            "description": "Time after sunset to stop"
+        },
+        {
+            "name": "T_DAY_STOP",
+            "type": "TOD",
+            "description": "Time after daytime to stop"
+        },
+        {
+            "name": "T_RISE_START",
+            "type": "TIME",
+            "description": "ON time before sunrise"
+        },
+        {
+            "name": "T_DAY_START",
+            "type": "TOD",
+            "description": "Turn-on time of day"
+        },
+        {
+            "name": "T_RISE_STOP",
+            "type": "TIME",
+            "description": "OFF time after sunrise"
+        },
+        {
+            "name": "ENABLE_SATURDAY",
+            "type": "BOOL",
+            "description": "Active on Saturdays if TRUE"
+        },
+        {
+            "name": "ENABLE_SUNDAY",
+            "type": "BOOL",
+            "description": "Active on Sundays if TRUE"
+        },
+        {
+            "name": "ENABLE_HOLIDAY",
+            "type": "BOOL",
+            "description": "Active on Holiday if TRUE"
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Switch output"
+        },
+        {
+            "name": "Status",
+            "type": "BYTE",
+            "description": "ESR compliant status output"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "title": "FT_TN16 Function Block",
+    "description": "BIT_TOGGLE_B inverts a specifed bit at IN.\nBIT_TOGGLE_W(2#0000_1111, 2) = 2#0000_1011\nBIT_TOGGLE_W(2#0000_1111, 7) = 2#1000_1111",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_TN16",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The real input value to be processed."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "The time duration that influences the input processing frequency."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The output value from the circular array of input values."
+        },
+        {
+            "name": "trig",
+            "type": "BOOL",
+            "description": "A boolean flag that indicates whether a new value has been output."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,20 @@
+{
+    "title": "Check Real Number",
+    "description": "CHK_REAL reviewes X for valid values.\nThe return values are:\n#00 valid foating-point\n#20 + Infnity\n#40 - Infnity\n#80 NAN\nFor more information see the IEEE754 foating point specifcation.",
+    "type": "FUNCTION",
+    "name": "CHK_REAL",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number to be checked."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "Returns a byte indicating the status of the real number according to IEEE754 standards.",
+        "fields": []
+    }
+}

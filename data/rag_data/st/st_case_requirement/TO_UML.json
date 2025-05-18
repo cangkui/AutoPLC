@@ -1,0 +1,25 @@
+{
+    "title": "Convert Byte to UML Representation",
+    "description": "TO_UML converts individual characters of the character set to greater than\n127 in a combination of two letters. It is here the extended ASCII character\nset ISO 8859-1 (Latin1).\nIt will be converted the following characters:\nÄ >> Ae ä >> ae Ö >> Oe ö >> oe Ü >> Ue ü >> ue\nß >> ss\nAll other characters are returned as a string with the character IN.",
+    "type": "FUNCTION",
+    "name": "TO_UML",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "A BYTE input that represents a character in a specific encoding."
+        }
+    ],
+    "output": [
+        {
+            "name": "TO_UML",
+            "type": "string",
+            "description": "The UML representation of the input byte, transformed according to predefined rules."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The resulting UML string representation of the input BYTE."
+    }
+}

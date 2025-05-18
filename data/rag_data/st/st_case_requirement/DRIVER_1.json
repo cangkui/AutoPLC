@@ -1,0 +1,42 @@
+{
+    "title": "Driver Function Block",
+    "description": "KMH_TO_MS converts value to a speed of kilomter per Hour in meters per\nsecond. KMH_TO_MS := KMH / 3.6",
+    "type": "FUNCTION_BLOCK",
+    "name": "DRIVER_1",
+    "input": [
+        {
+            "name": "Toggle_Mode",
+            "type": "BOOL",
+            "description": "A boolean input that determines whether the output Q should toggle its state."
+        },
+        {
+            "name": "Timeout",
+            "type": "TIME",
+            "description": "The duration after which the output will reset, if applicable."
+        },
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "A boolean input to set the output Q to TRUE."
+        },
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "A boolean input to indicate the control state; it may trigger toggling of the output Q."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean input to reset the output Q to FALSE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The output signal that indicates the state of the driver."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

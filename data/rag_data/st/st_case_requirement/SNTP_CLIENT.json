@@ -1,0 +1,60 @@
+{
+    "title": "SNTP Client",
+    "description": "SNTP_CLIENT is used to synchronize local time with an SNTP server. \n\nFor this, the Simple Network Time Protocol is used which is designed to \n\nprovide a reliable time information over networks with variable packet \n\ndelay. The SNTP is technically completely identical with NTP, which here \n\nmeans no diferences. Therefore, all known SNTP and NTP server can be \n\nused, whether it be on the local network or via the Internet. For IP4 a IP￾address of a SNTP / NTP server is specifed. A positive edge at ACTIVATE \n\nstarts the query. The elapsed time between sending and receiving of the \n\ntime is measured and a time correction is calculated. Then, the received \n\ntime will be corrected by this value. Upon successful completion DONE_P is \n\none positive edge, and the current time is passed at UDT. On XMS the \n\nassociated fractional seconds as milliseconds are passed. The values of \n\n127 Version 1.21\n\nChapter 9. Network and Communication\n\nUDT and XMS are only valid when DONE_P = TRUE, since this is a static \n\ntime value, and is only used for setting of pulse-controlled time. ERROR \n\ngives at error the exact cause (See block IP_CONTROL).",
+    "type": "FUNCTION",
+    "name": "SNTP_CLIENT",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for IP Control."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "IP4",
+            "type": "DWORD",
+            "description": "IP address of the SNTP server."
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Starts the query when a positive edge is detected."
+        }
+    ],
+    "output": [
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the cause of any failure."
+        },
+        {
+            "name": "DONE_P",
+            "type": "BOOL",
+            "description": "Positive edge indicating successful completion without error."
+        },
+        {
+            "name": "UDT",
+            "type": "DT",
+            "description": "Date and time output as Universal Time."
+        },
+        {
+            "name": "XMS",
+            "type": "INT",
+            "description": "Milliseconds of the Universal Time UDT."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

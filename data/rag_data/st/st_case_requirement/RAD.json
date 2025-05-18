@@ -1,0 +1,19 @@
+{
+    "title": "Convert Degrees to Radians with Modulo Operation",
+    "description": "RAD function converts an angle value from degrees to radians. Taking\ninto account that the DEG will not be greater than 360. If DEG is greater\nthan 360, 360 is to be subtracted as long as DEG is again between 0-360\n°.\nRAD(0) = 0 RAD(180) = π\nRAD(360) = 0 RAD(540) = π",
+    "type": "FUNCTION",
+    "name": "RAD",
+    "input": [
+        {
+            "name": "DEG",
+            "type": "REAL",
+            "description": "Degrees as input variable."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated radians value, constrained to be within the range [0, 2PI]."
+    }
+}

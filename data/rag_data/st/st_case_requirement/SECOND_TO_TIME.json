@@ -1,0 +1,25 @@
+{
+    "title": "Convert Seconds to TIME",
+    "description": "SECOND_TO_TIME calculates a value (TIME) from the input\nvalue in seconds as a REAL.",
+    "type": "FUNCTION",
+    "name": "SECOND_TO_TIME",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value representing time in seconds that needs to be converted to TIME."
+        }
+    ],
+    "output": [
+        {
+            "name": "SECOND_TO_TIME",
+            "type": "TIME",
+            "description": "The output time value converted from the input seconds into the TIME format."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "TIME",
+        "description": "Returns the converted TIME value."
+    }
+}

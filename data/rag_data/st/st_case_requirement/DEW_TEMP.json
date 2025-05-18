@@ -1,0 +1,29 @@
+{
+    "title": "Dew Point Calculation",
+    "description": "DEW_TEMP calculate the dew point temperature from the re￾lative humidity (RH) and temperature (T in ° C). The relative humidity is gi￾ven in % (50 = 50%).\n\n31 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "calculateDewPoint",
+    "input": [
+        {
+            "name": "RH",
+            "type": "REAL",
+            "description": "Relative Humidity in percentage (e.g., 50 represents 50%)"
+        },
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Temperature in degrees Celsius"
+        }
+    ],
+    "output": [
+        {
+            "name": "dewPoint",
+            "type": "REAL",
+            "description": "Calculated dew point temperature"
+        }
+    ],
+    "return_value": {
+        "type": "REAL",
+        "description": "The dew point temperature calculated from the input parameters"
+    }
+}

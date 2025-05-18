@@ -1,0 +1,31 @@
+{
+    "title": "Bitwise Shift Left Function",
+    "description": "BIT_TOGGLE_B inverts a specifed bit at IN.\nBIT_TOGGLE_W(2#0000_1111, 2) = 2#0000_1011\nBIT_TOGGLE_W(2#0000_1111, 7) = 2#1000_1111",
+    "type": "FUNCTION",
+    "name": "SHL1",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The input value that will be shifted."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of positions to shift the input value to the left."
+        }
+    ],
+    "output": [
+        {
+            "name": "SHL1",
+            "type": "DWORD",
+            "description": "The result of the left shift operation applied to the input value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The final computed value after applying bitwise operations.",
+        "fields": []
+    }
+}

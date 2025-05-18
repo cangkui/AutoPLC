@@ -1,0 +1,39 @@
+{
+    "title": "Automatic Valve Control Function",
+    "description": "ACTUATOR_COIL is used to control simple valves. The output OUT follows\n\nthe input signal IN. If the setup variable SELF_ACT_CYCLE set to a value\n\ngreater than 0, the valve is automatically activated for the duration of\n\nSELF_ACT_TIME if it was of for the time SELF_ACT_CYCLE. An ESR compli￾ant status output indicates state changes of the valve for further proces￾sing or Data Logging. The status messages are defned as follows:\n\nSTATUS = 100, Standby. \n\nSTATUS = 101, valve was activated by TRUE at the input IN.\n\nSTATUS = 102, valve was activated automatically.",
+    "type": "FUNCTION",
+    "name": "ControlValve",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Control signal for the valve."
+        },
+        {
+            "name": "SELF_ACT_CYCLE",
+            "type": "TIME",
+            "description": "Automatic activation time for the valve."
+        },
+        {
+            "name": "SELF_ACT_TIME",
+            "type": "TIME",
+            "description": "Duration for which the valve will be activated automatically."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "BOOL",
+            "description": "Control signal for the pump, follows the input signal."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output indicating state changes of the valve."
+        }
+    ],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

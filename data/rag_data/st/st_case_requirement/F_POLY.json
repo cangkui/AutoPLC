@@ -1,0 +1,24 @@
+{
+    "title": "Polynomial Evaluation Function",
+    "description": "F_POLY calculates a polynomial of 7th degree.\nF_POLY = C[0] + C[1] * X^1 + C[2] * X^2 + ...C[7] * X^7",
+    "type": "FUNCTION",
+    "name": "F_POLY",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value at which the polynomial is to be evaluated."
+        },
+        {
+            "name": "C",
+            "type": "ARRAY[0..7] OF REAL",
+            "description": "An array of coefficients for the polynomial, where each index corresponds to the coefficient for X to the power of the index."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The resulting value of the polynomial evaluated at X."
+    }
+}

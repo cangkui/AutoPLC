@@ -1,0 +1,25 @@
+{
+    "title": "Find Maximum Value in an Array",
+    "description": "ARRAY_MAX(ADR(Array), SIZEOF(Array)), where array is the name of the\narray to be manipulated. ADR() is a standard function which identifes the\npointer to the array and SIZEOF() is a standard function, which determines\nthe size of the array. In order to determine the maximum, the array refe￾renced by the pointer is scanned directly in memory. The function\nARRAY_MAX does not change the content of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "ARRAY_MAX",
+    "input": [
+        {
+            "name": "pt",
+            "type": "ARRAY[0..32000] OF REAL",
+            "description": "A pointer to an array of real numbers from which the maximum value is to be found."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The number of elements in the array."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The maximum value found in the array.",
+        "fields": []
+    }
+}

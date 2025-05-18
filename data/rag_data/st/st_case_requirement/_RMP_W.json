@@ -1,0 +1,32 @@
+{
+    "title": "Rate of Motion Profile (RMP)",
+    "description": "_RMP_W Is an 16-bit ramp generator. The ramp is generated in an external￾ly declared variable. The ramp is rising when DIR = TRUE and falling if DIR\n= FALSE. Reaching a fnal value of the ramp, the generator remains at this\nvalue. With the input E the ramp can be stopped at any time, when E =\nTRUE the ramp runs. The input TR shows the time which is needed to cy￾cle through 0-65535 or the other way around.",
+    "type": "FUNCTION_BLOCK",
+    "name": "_RMP_W",
+    "input": [
+        {
+            "name": "DIR",
+            "type": "BOOL",
+            "description": "Indicates the direction of the ramp. True for one direction and false for the opposite."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal for the ramp calculation. Default value is TRUE."
+        },
+        {
+            "name": "TR",
+            "type": "TIME",
+            "description": "Time interval used for calculating the ramp step."
+        }
+    ],
+    "output": [
+        {
+            "name": "RMP",
+            "type": "WORD",
+            "description": "The calculated ramp value constrained between 0 and 65535."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

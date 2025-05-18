@@ -1,0 +1,30 @@
+{
+    "title": "Extract Byte from String at Position",
+    "description": "CODE determines the numerical code for a character at the position POS\nin STR. Is CODE called with a position with less than 1 or greater than the\nlength of STR, 0 is returned.",
+    "type": "FUNCTION",
+    "name": "ExtractByteFromString",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string from which the byte will be extracted."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position in the string from which to extract the byte. Must be between 1 and the length of the string."
+        }
+    ],
+    "output": [
+        {
+            "name": "CODE",
+            "type": "BYTE",
+            "description": "The byte extracted from the string at the specified position, or 0 if the position is invalid."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "Returns the byte extracted from the string at the specified position, or 0 if the position is out of bounds."
+    }
+}

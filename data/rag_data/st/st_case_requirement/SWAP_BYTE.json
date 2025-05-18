@@ -1,0 +1,20 @@
+{
+    "title": "Byte Swapping Function",
+    "description": "SWAP_BYTE exchanges the High and Low Bytes in a WORD.",
+    "type": "FUNCTION",
+    "name": "SWAP_BYTE",
+    "input": [
+        {
+            "name": "IN",
+            "type": "WORD",
+            "description": "The input WORD that will undergo byte swapping."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "The result of the byte-swapped input WORD.",
+        "fields": []
+    }
+}

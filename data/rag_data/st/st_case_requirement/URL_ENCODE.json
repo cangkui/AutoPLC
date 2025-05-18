@@ -1,0 +1,26 @@
+{
+    "title": "URL Encode Function",
+    "description": "URL_ENCODE converts reserved characters in the string IN in the string\n\n'%HH'. In a URL encoding only the characters [A.. Z, a.. Z found, 0 .9, -._~]\n\ncan occur. Other characters with a % sign followed by the two-character\n\nhexadecimal code of the character are shown. The reserved character '#'\n\nis encoded as a '%23'.",
+    "type": "FUNCTION",
+    "name": "URL_ENCODE",
+    "input": [
+        {
+            "name": "STRING",
+            "type": "STRING",
+            "description": "The input string that contains reserved characters to be encoded."
+        }
+    ],
+    "output": [
+        {
+            "name": "STRING_LENGTH",
+            "type": "STRING",
+            "description": "The URL-encoded output string with reserved characters converted."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "The URL-encoded string representing the input with reserved characters encoded.",
+        "fields": []
+    }
+}

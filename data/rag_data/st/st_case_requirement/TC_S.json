@@ -1,0 +1,16 @@
+{
+    "title": "Time Calculation Function Block",
+    "description": "TC_S determines the last cycle time, that is the time since the last call of\nthe module has passed. The time will be delivered in seconds, but has an\naccuracy in microseconds. The module calls the function T_PLC_US().\nT_PLC_US () returns the internal PLC Timer in microseconds with a step\nwidth of 1000 microseconds. If a higher resolution is required the function\nT_PLC_US() has to be adjusted to the appropriate system.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TC_S",
+    "input": [],
+    "output": [
+        {
+            "name": "TC",
+            "type": "REAL",
+            "description": "The elapsed time in seconds since the last invocation of the block."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

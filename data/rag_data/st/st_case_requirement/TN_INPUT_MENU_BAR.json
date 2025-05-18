@@ -1,0 +1,60 @@
+{
+    "title": "Menu Bar Management Module",
+    "description": "TN_INPUT_MENU_BAR is used to manage and view the \n\nMenu_Bar. The element is shown in *.in_X and *.in_Y. The menu items are \n\nstored as elements within verschachelte *.st_MENU_TEXT. Two diferent \n\nseparators are used. A '$' separates the diferent menu lists, and each \n\nmenu list is further divided by '#' into individual menu items. The frst \n\nmenu list is the actual menu bar, this implies the number of sub-menus, \n\nand the titles of the elements. Then all the sub-menu lists are follow and \n\nare separated by '%'. To devide individual sub-menu items from each other \n\nor providing them with a cut line, an '-' has to submitted as text menu￾element.\n\nBy pressing the Escape key, the menu bar activated and the respective \n\nsub-menu is displayed using the module TN_INPUT_MENU_POPUP. Within \n\nthe sub-menu can be navigated with up / down key. Within the sub-menu \n\ncan be navigated with up / down cursor. If a sub-menu item is confrmed \n\nby pressing Enter / Return key, then in *.in_Menu_Selected the number of \n\nthe selected menu-point is passed. The calculation of the menu item \n\nnumber is as following: Main menu index * 10 + Submenu-index. The entry \n\nin *.in_Menu_Selected needs set again to 0 after acceptance by users.\n\nThus, a maximum of 9 main menu items and each 9-Submenu items are \n\nexecutable. Means of escape key at any time the menu can be hided \n\nagain.\n\n176 Version 1.21\n\nChapter 11. Telnet-Vision\n\nActive Menu automatically backs up the background before it is drawn, \n\nand restores the background after ending.\n\nAs long as a menu is display, the user program may not make graphical \n\nchanges. This can be checked by TN_SCREEN.bo_Menue_Bar_Dialog = \n\nTRUE.",
+    "type": "FUNCTION",
+    "name": "TN_INPUT_MENU_BAR",
+    "input": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen parameters for the menu bar."
+        },
+        {
+            "name": "Xus_TN_MENU",
+            "type": "us_TN_MENU",
+            "description": "Menu parameters that drive the menu bar functionality."
+        },
+        {
+            "name": "in_X",
+            "type": "INT",
+            "description": "The X position on the screen where the menu bar will be displayed."
+        },
+        {
+            "name": "in_Y",
+            "type": "INT",
+            "description": "The Y position on the screen where the menu bar will be displayed."
+        },
+        {
+            "name": "by_Attr_mF",
+            "type": "BYTE",
+            "description": "Attributes for the menu foreground color."
+        },
+        {
+            "name": "by_Attr_oF",
+            "type": "BYTE",
+            "description": "Attributes for the menu background color."
+        },
+        {
+            "name": "st_MENU_TEXT",
+            "type": "STRING",
+            "description": "The string containing the text for the menu and its sub-menus."
+        },
+        {
+            "name": "bo_Create",
+            "type": "BOOL",
+            "description": "Flag to indicate whether the menu bar should be created."
+        }
+    ],
+    "output": [
+        {
+            "name": "in_Menu_Selected",
+            "type": "INT",
+            "description": "The index of the selected menu item."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "No return value, function operates through output parameters."
+    }
+}

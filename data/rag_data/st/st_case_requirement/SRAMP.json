@@ -1,0 +1,62 @@
+{
+    "title": "SRAMP Function Block",
+    "description": "SRAMP generates an output signal which is is limited by the adjustable pa￾rameters. The output follows the input signal and is limited by maximum\nspeed (VU_MAX and VD_MAX), upper and lower limit (LIMIT_LOW and LI￾MIT_HIGH), and maximum acceleration (A_UP and A_DN). SRAMP is used to\ndrive motors, for example. The output V passes the current speed of the\noutput.\nIn following diagram, the internal process of SRAMP is shown. A ramp ge￾nerator X2, sets the speed of the output change, and a second ramp gene￾rator X3 controls the output.\nThe Trace Recording shows an example of SRAMP. The input (green) increa￾ses from 0 to 20 and then immediately to 10 while the output increases\nwith the maximum acceleration to maximum speed. Then is shown that\nthe Input during the course may change. In this example, it slowed down\nin time, so that the output stops exactly at 10. After reaching the end va￾lue 10 of the input switches to -3 and the output Y follows accordingly. \nThe input values for A_UP and VU_MAX must be specifed with a positive\nsign, A_DN and VD_MAX need a negative sign.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SRAMP",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The target value that the output 'Y' should reach."
+        },
+        {
+            "name": "A_UP",
+            "type": "REAL",
+            "description": "The acceleration rate when ramping up towards the target value."
+        },
+        {
+            "name": "A_DN",
+            "type": "REAL",
+            "description": "The deceleration rate when ramping down away from the target value."
+        },
+        {
+            "name": "VU_MAX",
+            "type": "REAL",
+            "description": "The maximum speed limit when ramping up."
+        },
+        {
+            "name": "VD_MAX",
+            "type": "REAL",
+            "description": "The maximum speed limit when ramping down."
+        },
+        {
+            "name": "LIMIT_HIGH",
+            "type": "REAL",
+            "description": "The upper limit for the output 'Y'."
+        },
+        {
+            "name": "LIMIT_LOW",
+            "type": "REAL",
+            "description": "The lower limit for the output 'Y'."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean reset signal. If true, it resets the internal states."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The current output value of the function block, which is ramped towards 'X'."
+        },
+        {
+            "name": "V",
+            "type": "REAL",
+            "description": "The current speed of the ramping operation, determining how quickly 'Y' approaches 'X'."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

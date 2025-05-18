@@ -1,0 +1,20 @@
+{
+    "title": "Convert Frequency to Angular Frequency",
+    "description": "F_TO_OM calculates the angular frequency omega of the frequency in Hz",
+    "type": "FUNCTION",
+    "name": "F_TO_OM",
+    "input": [
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "The frequency value in Hertz to be converted to angular frequency."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted angular frequency in radians per second.",
+        "fields": []
+    }
+}

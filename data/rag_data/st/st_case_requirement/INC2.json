@@ -1,0 +1,35 @@
+{
+    "title": "Increment Function with Bounds",
+    "description": "MULTIME function multiplies a time value with a multiplier.",
+    "type": "FUNCTION",
+    "name": "INC2",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "The integer value to be incremented."
+        },
+        {
+            "name": "D",
+            "type": "INT",
+            "description": "The increment value to be added to X."
+        },
+        {
+            "name": "L",
+            "type": "INT",
+            "description": "The lower boundary limit for the incremented value."
+        },
+        {
+            "name": "U",
+            "type": "INT",
+            "description": "The upper boundary limit for the incremented value."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The incremented value of X after applying the increment D within the specified limits.",
+        "fields": []
+    }
+}

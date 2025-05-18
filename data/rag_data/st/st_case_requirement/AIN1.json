@@ -1,0 +1,112 @@
+{
+    "title": "Analog Input Processing",
+    "description": "DEC_TO_INT converts a decimal encoded string into a byte\nvalue. Here only decimal characters '0 '.. '9' and '-' are interpreted, others\nin DEC occurring characters are ignored .",
+    "type": "FUNCTION_BLOCK",
+    "name": "AIN1",
+    "input": [
+        {
+            "name": "in",
+            "type": "DWORD",
+            "description": "The input value that needs to be processed."
+        },
+        {
+            "name": "sign_bit",
+            "type": "INT",
+            "description": "The position of the sign bit in the input value, defaulting to 255."
+        },
+        {
+            "name": "error_bit",
+            "type": "INT",
+            "description": "The position of the error bit in the input value, defaulting to 255."
+        },
+        {
+            "name": "error_code_en",
+            "type": "BOOL",
+            "description": "A boolean flag enabling error code checking."
+        },
+        {
+            "name": "error_code",
+            "type": "DWORD",
+            "description": "The error code to compare against the input value."
+        },
+        {
+            "name": "overflow_bit",
+            "type": "INT",
+            "description": "The position of the overflow bit in the input value, defaulting to 255."
+        },
+        {
+            "name": "overflow_code_en",
+            "type": "BOOL",
+            "description": "A boolean flag enabling overflow code checking."
+        },
+        {
+            "name": "overflow_code",
+            "type": "DWORD",
+            "description": "The overflow code to compare against the input value."
+        },
+        {
+            "name": "Bit_0",
+            "type": "INT",
+            "description": "The starting bit position for the processing."
+        },
+        {
+            "name": "Bit_N",
+            "type": "INT",
+            "description": "The maximum bit position for processing, defaulting to 31."
+        },
+        {
+            "name": "out_min",
+            "type": "REAL",
+            "description": "The minimum output value after conversion."
+        },
+        {
+            "name": "out_max",
+            "type": "REAL",
+            "description": "The maximum output value after conversion, defaulting to 10.0."
+        },
+        {
+            "name": "code_min",
+            "type": "DWORD",
+            "description": "The minimum allowable code value for valid input."
+        },
+        {
+            "name": "code_max",
+            "type": "DWORD",
+            "description": "The maximum allowable code value for valid input, defaulting to 16#FFFFFFFF."
+        },
+        {
+            "name": "error_output",
+            "type": "REAL",
+            "description": "Output value when an error condition is detected."
+        },
+        {
+            "name": "overflow_output",
+            "type": "REAL",
+            "description": "Output value when an overflow condition is detected, defaulting to 10.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The processed output value after conversion."
+        },
+        {
+            "name": "sign",
+            "type": "BOOL",
+            "description": "Indicator of the sign of the output value."
+        },
+        {
+            "name": "error",
+            "type": "BOOL",
+            "description": "Flag indicating whether an error condition was detected."
+        },
+        {
+            "name": "overflow",
+            "type": "BOOL",
+            "description": "Flag indicating whether an overflow condition was detected."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

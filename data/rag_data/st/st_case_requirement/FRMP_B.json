@@ -1,0 +1,40 @@
+{
+    "title": "FRMP_B Function",
+    "description": "FRMP_B calculates the value of a ramp at a given time TD. The module en￾sures that no bufer overrun or underrun can take place at the output. The\noutput value is limited in all cases to 0 .. 255. TR sets the time for a full\nramp 0 .. 255 and TD is the elapsed time. If DIR = TRUE, a rising ramp is\ncalculated and if DIR = FALSE a falling edge. With the start value an edge\ncan be calculated from any starting point.",
+    "type": "FUNCTION",
+    "name": "FRMP_B",
+    "input": [
+        {
+            "name": "START",
+            "type": "BYTE",
+            "description": "The starting byte value to be used in calculations."
+        },
+        {
+            "name": "DIR",
+            "type": "BOOL",
+            "description": "Direction flag, where TRUE indicates an increment operation and FALSE indicates a decrement operation."
+        },
+        {
+            "name": "TD",
+            "type": "TIME",
+            "description": "The first time duration to be compared with TR."
+        },
+        {
+            "name": "TR",
+            "type": "TIME",
+            "description": "The second time duration used for comparison with TD."
+        }
+    ],
+    "output": [
+        {
+            "name": "FRMP_B",
+            "type": "BYTE",
+            "description": "The resulting byte value calculated based on the input parameters."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "This return value represents the calculated byte value based on the function logic."
+    }
+}

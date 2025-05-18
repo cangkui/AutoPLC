@@ -1,0 +1,25 @@
+{
+    "title": "List Cleaning Function",
+    "description": "LIST_CLEAN cleans a list of empty elements. The list consists of Strings\n(elements) that begin with the separation character SEP.\nLIST_CLEAN('&ABC$23&&NEXT', 38) = '&ABC&23&NEXT'\nLIST_CLEAN('&&23&&NEXT&', 38) = '&23&NEXT'\nLIST_CLEAN('&&&&', 38) = ''",
+    "type": "FUNCTION",
+    "name": "LIST_CLEAN",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The separator character used to determine element boundaries in the list."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "LIST",
+            "type": "STRING[LIST_LENGTH]",
+            "description": "The list of strings that will be cleaned. The function modifies this list in-place."
+        }
+    ],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates the success of the cleaning operation. The function returns TRUE upon successful completion."
+    }
+}

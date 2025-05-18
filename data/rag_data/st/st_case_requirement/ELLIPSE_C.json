@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Ellipse Circumference",
+    "description": "ELLIPSE_C calculates the circumference of an ellipse that is defned by the\nradii R1 and R2.",
+    "type": "FUNCTION",
+    "name": "ELLIPSE_C",
+    "input": [
+        {
+            "name": "R1",
+            "type": "REAL",
+            "description": "The length of the semi-major axis of the ellipse."
+        },
+        {
+            "name": "R2",
+            "type": "REAL",
+            "description": "The length of the semi-minor axis of the ellipse."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed circumference of the ellipse.",
+        "fields": []
+    }
+}

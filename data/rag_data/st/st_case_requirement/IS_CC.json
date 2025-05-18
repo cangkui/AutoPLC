@@ -1,0 +1,24 @@
+{
+    "title": "Check if All Characters are Present",
+    "description": "IS_CC tests whether the string in STR only the in STR listed characters are\nincluded. If another character is found the function returns FALSE.",
+    "type": "FUNCTION",
+    "name": "IS_CC",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The input string to be checked against the comparison string."
+        },
+        {
+            "name": "cmp",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The comparison string containing characters to look for in the input string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the input string contains all characters from the comparison string in the specified portion; otherwise, returns FALSE."
+    }
+}

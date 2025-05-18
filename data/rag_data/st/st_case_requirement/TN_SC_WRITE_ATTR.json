@@ -1,0 +1,35 @@
+{
+    "title": "TN_SC_WRITE_ATTR Function Module",
+    "description": "TN_SC_WRITE_ATTR changes at the given coordinates Iin_Y, \n\nIin_Y the colorcode to change without changing the existing character at \n\nthat position.",
+    "type": "FUNCTION",
+    "name": "TN_SC_WRITE_ATTR",
+    "input": [
+        {
+            "name": "Iin_Y",
+            "type": "INT",
+            "description": "Y coordinate where the color code will be changed."
+        },
+        {
+            "name": "Iin_X",
+            "type": "INT",
+            "description": "X coordinate where the color code will be changed."
+        },
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color code to apply at the specified coordinates."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen data structure that holds the current screen state."
+        }
+    ],
+    "return_value": {
+        "type": "VOID",
+        "description": "The function does not return any value."
+    }
+}

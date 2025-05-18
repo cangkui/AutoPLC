@@ -1,0 +1,36 @@
+{
+    "title": "R2_MUL Function",
+    "description": "_ARRAY_MEDIAN calculates the median value of an arbitrary\narray of REAL. When called a pointer to the array and its size in bytes is\npassed to the function. Under CoDeSys the call reads:\n_ARRAY_MEDIAN(ADR(Array), SIZEOF(Array)), where array is the name of\nthe array to be manipulated. ADR() is a standard function, which identifes\nthe pointer to the array and SIZEOF() is a standard function, which deter￾mines the size of the array. In order to determine the median value the ar￾ray referenced by the pointer is sorted in the memory and remains after\nfunction end sorted. The function _ARRAY_MEDIAN thus changes the con￾tents of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.\nIf an array is processed, which should not be changed, so it has to be co￾pied to a temporary array before handing over the Pointer and calling the\nfunction.",
+    "type": "FUNCTION",
+    "name": "R2_MUL",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL2",
+            "description": "Input structure containing two REAL components RX and R1 to be multiplied."
+        },
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "A REAL value to multiply with the components of the structure X."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL2",
+        "description": "The new REAL2 structure resulting from multiplying the components of X by Y.",
+        "fields": [
+            {
+                "name": "RX",
+                "type": "REAL",
+                "description": "The result of multiplying the RX component of X by Y."
+            },
+            {
+                "name": "R1",
+                "type": "REAL",
+                "description": "The result of multiplying the R1 component of X by Y."
+            }
+        ]
+    }
+}

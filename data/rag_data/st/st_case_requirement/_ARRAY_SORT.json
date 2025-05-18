@@ -1,0 +1,24 @@
+{
+    "title": "Array Sorting Function",
+    "description": "_ARRAY_SORT(ADR(Array), SI￾ZEOF(Array)), where array is the name of the array to be manipulated.\nADR() is a standard function which identifes the pointer to the array and\nSIZEOF() is a standard function, which determines the size of the array.\nThe function only returns TRUE. The array specifed by the pointer is mani￾pulated directly in memory. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "_ARRAY_SORT",
+    "input": [
+        {
+            "name": "PT",
+            "type": "POINTER TO ARRAY[1..32000] OF REAL",
+            "description": "A pointer to the array of real numbers to be sorted."
+        },
+        {
+            "name": "SIZE",
+            "type": "UINT",
+            "description": "The size of the array."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates whether the sorting was successful or not."
+    }
+}

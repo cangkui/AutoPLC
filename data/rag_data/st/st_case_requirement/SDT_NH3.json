@@ -1,0 +1,25 @@
+{
+    "title": "Saturation Vapor Pressure Calculation for Ammonia",
+    "description": "SDT_NH3 calculates the saturation temperature for ammonia (NH3). The\n\npressure P is given in Celsius. The scope of the function is 0.001 bar to 60\n\nbar.",
+    "type": "FUNCTION",
+    "name": "SDT_NH3",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Temperature in °C"
+        }
+    ],
+    "output": [
+        {
+            "name": "REAL",
+            "type": "REAL",
+            "description": "Saturation vapor pressure in Pa"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated saturation vapor pressure for ammonia in Pa"
+    }
+}

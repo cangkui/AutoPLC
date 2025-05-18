@@ -1,0 +1,34 @@
+{
+    "title": "Quadratic Function Calculator",
+    "description": "F_QUAD = A * X² + B * X + C)\nF_QUAD calculates the result of a quadratic equation using the formula\nf_QUAD = A * X ² + B * X + C.",
+    "type": "FUNCTION",
+    "name": "F_QUAD",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The value of the variable X for which the quadratic function is calculated."
+        },
+        {
+            "name": "A",
+            "type": "REAL",
+            "description": "The coefficient A in the quadratic equation."
+        },
+        {
+            "name": "B",
+            "type": "REAL",
+            "description": "The coefficient B in the quadratic equation."
+        },
+        {
+            "name": "C",
+            "type": "REAL",
+            "description": "The coefficient C in the quadratic equation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed value of the quadratic function based on the input parameters X, A, B, and C."
+    }
+}

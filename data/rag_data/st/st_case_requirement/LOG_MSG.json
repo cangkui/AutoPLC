@@ -1,0 +1,40 @@
+{
+    "title": "Log Control Function Module",
+    "description": "LOG_MSG messages (STRINGS) are stored in a ring bufer. The \n\nmessages can be provided with additional parameters such as the front \n\ncolor and back color for the output to TELNET and a flter by specifying an \n\nentry-level news. Is the level of the message larger than the default log \n\nlevel, the message is discarded. Furthermore,with Enable the logging will \n\nbe disabled in general. Thus, it is not a problem to archive many messages \n\nper PLC cycle. The message bufer can be passed to a telnet client with \n\nthe module TELNET_LOG. Details on the interface are shown in the table \n\nbelow.\n\nIf messages are applied from various module instances to the same \n\nLOG_BUFFER, then the \"LOG_CL\" data structure has to be created Global.",
+    "type": "FUNCTION",
+    "name": "LOG_CL",
+    "input": [
+        {
+            "name": "LOG_MSG",
+            "type": "STRING",
+            "description": "Messages to be stored in the log."
+        },
+        {
+            "name": "FrontColor",
+            "type": "STRING",
+            "description": "Color of the front text in the output to TELNET."
+        },
+        {
+            "name": "BackColor",
+            "type": "STRING",
+            "description": "Color of the background in the output to TELNET."
+        },
+        {
+            "name": "LogLevel",
+            "type": "INT",
+            "description": "Filtering log messages based on the entry-level news."
+        },
+        {
+            "name": "Enable",
+            "type": "BOOL",
+            "description": "If true, logging is enabled; if false, logging is disabled."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates whether the log message was successfully processed.",
+        "fields": []
+    }
+}

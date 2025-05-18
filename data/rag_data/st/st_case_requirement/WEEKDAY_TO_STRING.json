@@ -1,0 +1,30 @@
+{
+    "title": "Convert Weekday Integer to String Representation",
+    "description": "WEEKDAY_TO_STRING converts a weekday in the corresponding string.\nThe input WDAY indicates the corresponding day of the week: 1 = Monday\nand 7 = Sunday. The input LANG chooses the language: 1 = English and 2\n= German. LANG = 0 used as Default the language specifed in the Global\nSetup variable LANGUAGE_DEFAULT. [fzy] The input LX sets the length of\nthe string to be generated: 0 = full month name, 3 = 3-letter abbreviation,\nall other values at the input LX are undefned. \nThe strings produced by the module, and the supported languages are de￾fned in the Global Constants and can be expanded and changed. \nWEEKDAY_TO_STRING(1,0,0) = ' Monday ' \ndependent on the global constant LANGUAGE_DEFAULT\nWEEKDAY_TO_STRING(1,2,0) = ' Monday ' \nWEEKDAY_TO_STRING(1,0,2) = ' Mon ' \n 14. Memory Modules",
+    "type": "FUNCTION",
+    "name": "WEEKDAY_TO_STRING",
+    "input": [
+        {
+            "name": "WDAY",
+            "type": "INT",
+            "description": "An integer representing the weekday. Valid values are from 1 to 7."
+        },
+        {
+            "name": "LANG",
+            "type": "INT",
+            "description": "An integer representing the language choice. If set to 0, the default language is used."
+        },
+        {
+            "name": "LX",
+            "type": "INT",
+            "description": "An integer that specifies the language format. 0 for standard, 2 for an alternative format."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "Returns the string representation of the weekday in the specified language.",
+        "fields": []
+    }
+}

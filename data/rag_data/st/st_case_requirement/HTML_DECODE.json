@@ -1,0 +1,25 @@
+{
+    "title": "HTML Decode Function",
+    "description": "HTML_DECODE converts reserved characters which are in the form\n\n&name; stored HTML code, in the original character. In addition, all coded\n\ncharacters are converted into the corresponding ASCII code. Special cha￾racters can be represented by the following string in HTML:\n\n- &#NN, where NN represents the position of the character within the cha￾racter map in decimal notation.\n\n- &#xNN, or &#XNN where NN represents the position of the character wi￾thin the character table in hexadecimal notation.\n\n&name; Special characters have names like &euro; for €.\n\nThe reserved characters in HTML are:\n\n& Is encoded as &amp;\n\n75 Version 1.21\n\nChapter 8. Converter\n\n> Is encoded as &gt;\n\n< Is encoded as &lt;\n\n\" is coded as &quot;",
+    "type": "FUNCTION",
+    "name": "HTML_DECODE",
+    "input": [
+        {
+            "name": "String",
+            "type": "STRING",
+            "description": "The input string containing HTML encoded characters."
+        }
+    ],
+    "output": [
+        {
+            "name": "string_length",
+            "type": "STRING",
+            "description": "The decoded output string with reserved characters converted to their original form."
+        }
+    ],
+    "return_value": {
+        "type": "STRING",
+        "description": "The result of the HTML decode operation.",
+        "fields": []
+    }
+}

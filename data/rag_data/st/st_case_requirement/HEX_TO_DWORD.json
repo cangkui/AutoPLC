@@ -1,0 +1,20 @@
+{
+    "title": "Hexadecimal to DWORD Converter",
+    "description": "HEX_TO_DWORD converts a hexadecimal string in a DWORD\nvalue. Here only hexadecimal characters '0'..'9', 'a..f' and 'A'.. 'F' are inter￾preted, others occurring in HEX characters are ignored.",
+    "type": "FUNCTION",
+    "name": "HEX_TO_DWORD",
+    "input": [
+        {
+            "name": "Hex",
+            "type": "STRING",
+            "description": "A hexadecimal string input with a maximum length of 20 characters."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The DWORD value that results from converting the hexadecimal input string.",
+        "fields": []
+    }
+}

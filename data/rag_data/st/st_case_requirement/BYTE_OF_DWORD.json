@@ -1,0 +1,30 @@
+{
+    "title": "Extracting a Byte from a DWORD",
+    "description": "BYTE_OF_DWORD extracts a byte (B0 .. B3) a DWORD. The individual by￾tes are selected with 0-3 at the input IN.",
+    "type": "FUNCTION",
+    "name": "BYTE_OF_DWORD",
+    "input": [
+        {
+            "name": "in",
+            "type": "DWORD",
+            "description": "The DWORD value from which a byte will be extracted."
+        },
+        {
+            "name": "N",
+            "type": "BYTE",
+            "description": "The index of the byte to extract from the DWORD, multiplied by 8 to account for bit shifts."
+        }
+    ],
+    "output": [
+        {
+            "name": "BYTE_OF_DWORD",
+            "type": "BYTE",
+            "description": "The extracted byte from the specified position of the input DWORD."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The resulting byte obtained from the extraction process."
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "title": "Pulse Width Modulation Control",
+    "description": "PWM_PW is a pulse width modulated frequency generator. The generator\ngenerates a fxed frequency F with a duty cycle (TON / TOFF) which can\nbemodulated (set) by the input PW. The input passes the time before the\nsignal remains TRUE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "PWM_PW",
+    "input": [
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "The frequency of the PWM signal in Hertz."
+        },
+        {
+            "name": "PW",
+            "type": "TIME",
+            "description": "The duration of the pulse width."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The output Boolean signal representing the PWM signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

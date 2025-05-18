@@ -1,0 +1,53 @@
+{
+    "title": "Timing Measurement Function Block (M_TX)",
+    "description": "M_TX determined from the input signal IN the time which the signal IN was\nTRUE (TH) and the time the signal was set to FALSE (TL). The times of TH\nand TL are only measured after a rising or falling edge. If IN is at the frst\ncall of the module already high, this is not seen as a rising edge. From the\nmeasured values of TH and TL the Duty Cycle and the frequency in Hz are\ncalculated. A Duty Cycle of 0.4 means the signal was 40% TRUE and 60%\nFALSE. Output ET of type TIME is started with each rising edge at 0 and\nruns up until the next rising edge it starts again at 0. With a TRUE at the\ninput RST, the outputs can be reset at any time to 0. The input TMAX sets,\nafter which the elapsed time at ET, the outputs automatically are reseted.\nTMAX is internally assigned a default value of T#10d and can normally be\nleft open. The input TMAX is primarily used to reset in the absence of input\nsignal for a defned time the outputs. An example of a possible application\nis to measure the speed of a wave, indicating absence of the sensor si￾gnals to the speed (frequency) 0. TMAX is used with caution because, for\nexample, a TMAX of 10 seconds at the same time limits the smallest mea￾surable frequency to 0.1 Hz.",
+    "type": "FUNCTION_BLOCK",
+    "name": "M_TX",
+    "input": [
+        {
+            "name": "in",
+            "type": "BOOL",
+            "description": "The input signal to be monitored for edges (rising and falling)."
+        },
+        {
+            "name": "tmax",
+            "type": "TIME",
+            "description": "The maximum allowed timing duration; after this duration, the block will reset the measurements.",
+            "fields": []
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "Reset signal to initialize the measurement outputs."
+        }
+    ],
+    "output": [
+        {
+            "name": "TH",
+            "type": "TIME",
+            "description": "The duration of the high state (rising edge) in time."
+        },
+        {
+            "name": "TL",
+            "type": "TIME",
+            "description": "The duration of the low state (falling edge) in time."
+        },
+        {
+            "name": "DC",
+            "type": "REAL",
+            "description": "The duty cycle computed as the ratio of the high time to the total period."
+        },
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "The frequency calculated based on the high and low durations."
+        },
+        {
+            "name": "ET",
+            "type": "TIME",
+            "description": "Elapsed time since the last rising edge."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

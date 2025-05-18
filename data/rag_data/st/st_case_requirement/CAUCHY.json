@@ -1,0 +1,29 @@
+{
+    "title": "Cauchy Function Calculation",
+    "description": "CAUCHY calculates the density function for Cauchy.",
+    "type": "FUNCTION",
+    "name": "CAUCHY",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The first parameter of the Cauchy function."
+        },
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "The second parameter, which alters the position of the distribution."
+        },
+        {
+            "name": "U",
+            "type": "REAL",
+            "description": "The scale parameter for the Cauchy distribution."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed value of the Cauchy function based on the provided input parameters."
+    }
+}

@@ -1,0 +1,82 @@
+{
+    "title": "IRTRANS_SND_4 Function Module",
+    "description": "IRTRANS_SND_4 allows users to send remote control commands to the IR￾Trans. If IN_x is TRUE the specifed device and key code in setup is sent to\n\nthe IRTrans which outputs in turn as a real remote control commands. With\n\nT_REPEAT the repeat time for sending can be specifed . If IN_0 remains\n\nconstant to TRUE so always this key code sent repeated after the time\n\nT_REPEAT. If a change to a diferent IN_x occures this code will send imme￾diately and then again delayed with T_REPEAT, if it remains a long period\n\nof time. At output KEY the currently controlled KEY will be displayed. KEY\n\n= 0 means that no IN_x is active. The values 1-3 are the IN_0 - IN_3.",
+    "type": "FUNCTION",
+    "name": "IRTRANS_SND_4",
+    "input": [
+        {
+            "name": "IN_0",
+            "type": "BOOL",
+            "description": "If TRUE, sends the key code x to the IRTrans."
+        },
+        {
+            "name": "IN_1",
+            "type": "BOOL",
+            "description": "If TRUE, sends the key code x to the IRTrans."
+        },
+        {
+            "name": "IN_2",
+            "type": "BOOL",
+            "description": "If TRUE, sends the key code x to the IRTrans."
+        },
+        {
+            "name": "IN_3",
+            "type": "BOOL",
+            "description": "If TRUE, sends the key code x to the IRTrans."
+        },
+        {
+            "name": "T_REPEAT",
+            "type": "TIME",
+            "description": "Time interval to re-send the key code."
+        },
+        {
+            "name": "IP_C",
+            "type": "struct",
+            "description": "Data structure containing parameterization information for IP control.",
+            "fields": []
+        },
+        {
+            "name": "S_BUF",
+            "type": "struct",
+            "description": "Data structure to transmit network buffer.",
+            "fields": []
+        },
+        {
+            "name": "DEV_CODE",
+            "type": "STRING",
+            "description": "The name of the remote control to be decoded."
+        },
+        {
+            "name": "KEY_CODE_0",
+            "type": "STRING",
+            "description": "Key code to be sent when IN_0 is active."
+        },
+        {
+            "name": "KEY_CODE_1",
+            "type": "STRING",
+            "description": "Key code to be sent when IN_1 is active."
+        },
+        {
+            "name": "KEY_CODE_2",
+            "type": "STRING",
+            "description": "Key code to be sent when IN_2 is active."
+        },
+        {
+            "name": "KEY_CODE_3",
+            "type": "STRING",
+            "description": "Key code to be sent when IN_3 is active."
+        }
+    ],
+    "output": [
+        {
+            "name": "KEY",
+            "type": "BYTE",
+            "description": "Displays the currently controlled key. KEY = 0 means no IN_x is active; values 1-3 represent states of IN_0 to IN_3."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "title": "16-Element Stack Function Block",
+    "description": "COUNT_BR is a byte count from 0 to MX and starts again at 0. The counter\ncan, using two edge-triggered inputs UP and DN, both forward and back￾ward counting. when reaching a fnal value 0 or MX it counts again at 0 or\nMX. The STEP input sets the increment value of the counter. With a TRUE\nat input SET the counter is set to present value at the IN input. A reset in￾put RST resets the counter at any time to 0.\nSET IN UP DN STEP RST CNT\nReset - - - - - 1 0\nSet 1 N - - - 0 N\nup 0 - ↑ 0 N 0 CNT + N\ndown 0 - 0 ↑ N 0 CNT - N\nIf the independent inputs UP and DN with CLK and a control input UP/DN\nshould be replaced, id can be done using two AND gates at the inputs:\nCOUNT_BR may work with individual step width at UP or Down command,\nit is important to note that the counter behaves as if it internally counts\nthe number of STEP steps forward or backward.",
+    "type": "FUNCTION_BLOCK",
+    "name": "STACK_16",
+    "input": [
+        {
+            "name": "Din",
+            "type": "DWORD",
+            "description": "The data input to be written to the stack."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable input, which must be TRUE for read or write operations to occur. Defaults to TRUE."
+        },
+        {
+            "name": "RD",
+            "type": "BOOL",
+            "description": "Read signal, which when TRUE and stack is not empty, triggers the reading of the top element from the stack."
+        },
+        {
+            "name": "WD",
+            "type": "BOOL",
+            "description": "Write signal, which when TRUE and stack is not full, triggers the writing of the input data to the stack."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal, when TRUE resets the stack to its initial state."
+        }
+    ],
+    "output": [
+        {
+            "name": "Dout",
+            "type": "DWORD",
+            "description": "The data output that provides the most recently read value from the stack."
+        },
+        {
+            "name": "EMPTY",
+            "type": "BOOL",
+            "description": "Indicates if the stack is empty. TRUE if the stack is empty."
+        },
+        {
+            "name": "FULL",
+            "type": "BOOL",
+            "description": "Indicates if the stack is full. TRUE if the stack is full."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

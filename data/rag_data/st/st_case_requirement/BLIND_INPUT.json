@@ -1,0 +1,160 @@
+{
+    "title": "Blind Input Control Module",
+    "description": "BLIND_INPUT serves as a key interface for operating blinds. The module\n\nsupports three modes, manual, automatic and controlled operation. if IN =\n\nFALSE (manual mode), the inputs S1 and S2 are used to control the out￾puts of QU and QD. If the Setup Variable SINGLE_SWITCH = TRUE, then the\n\ninput S2 is ignored and the entire control is on the S1 switch. S1 will\n\nswitch alternately QU and QD so as followed by pressing the button S1\n\nchange between up and down motion in succession. The internal default is\n\nFALSE (2 button confguration). The setup variable MANUAL_TIMEOUT def￾ned rest period after which (time with no signal at S1 or S2), the device\n\nautomatically switches to automatic mode. If this value is not specifed\n\nthen the internal default value of 1 hour used. When the input IN = TRUE,\n\nthe outputs of QU and QD goes to automatic (both are set TRUE), and\n\nswitched the inputs PI and AI to the outputs PO and AO. IN can be pulsed\n\nto take on the values in short, the module controls these values for the\n\ntime MAX_RUNTIME and then switches back to automatic mode. As long as\n\nIN = TRUE the automatic mode is pushed to the values of AI and PI. The\n\ninputs POS and ANG are the return receipts for the current position of the\n\nshutter. These values are provided by the module BLIND_CONTROL. With\n\n81 Version 1.00\n\nChapter 7. Blind Modules\n\nthe variable SETUP CLICK_MODE a click operation is set, a short press\n\nstarts on the direction up for S1 and down for S2 and a second short press\n\nstops the appropriate direction or reverses the direction. This setting make\n\nsense for blinds with a long run time, or to move with a button press to\n\none end. if the key is pressed longer as the setup time CLICK_TIME so the\n\nCLICK mode will be leaved and the shutter moves as long as the button is\n\nheld down in manual mode. If a key press is shorter than CLICK_TIME, the\n\nblinds moves further until a further click stops the drive or a fnal position\n\nis achieved. The default value is 500 milliseconds for CLICK_TIME and the\n\ndefault for CLICK_MODE is TRUE. If both variables CLICK_MODE Setup and\n\nSINGLE_SWITCH are TRUE at the same time, a button operation with only\n\none button on S1 is possible. With the time set of MAX_RUNTIME the run\n\ntime is limited, which ist started by a simple one Click started but not ter￾minated with another Click . The value of MAX_ RUNTIME defaults to\n\nT#60s and should be as long as the blind safely reach the end position\n\nfrom any position. Two outputs D1 and D2 can be used to evaluate a dou￾ble-click on S1 or S2, if D?_Toggle = TRUE a double-clicking switch an ap￾propriate output and a further double-click again of, if D?_Toggle = FALSE\n\nso with each double-click a pulse is generated at the corresponding out￾put. \n\nAfter a manual operation command is the module is for the time\n\nMANUAL_TIMEOUT in the mode \"Manual Standby\" (STATUS = 131), the\n\nmanually hit position is maintained so well for this time and the automatic\n\nfunctions of all downstream components are suppressed. By a long (longer\n\nthan CLICK_TIME) pressure on both buttons, the \"Manual standby\" mode is\n\nterminated prematurely and returned to automatic mode.\n\nThe following table shows the operating states of the module:\n\nPOS\n\nANG\n\nS1 S2 IN PI\n\nAI\n\nQU QD PO\n\nAO\n\nD1 D2\n\nX L L L - H H X * 5 - - Standy / automatic operation\n\n- - - H Y H H Y - - controlled operation, PI and AI are\n\nserved\n\nX H L L - H L X - - Manual mode up\n\nX L H L - L H X - - Manual operation down\n\nX H H L - H H X - - Manual Mode Exit prematurely\n\nX L L L - L L X - - Manual operation standby until ti￾meout expires\n\nX * 4 L L - H L X - - CLICK_EN = TRUE\n\nX L * 4 L - L H X - - CLICK_EN = TRUE\n\n- * 2 L L - H H - / D1 - D1_TOGGLE = TRUE\n\n- * 2 L L - H H - * 3 - D1_TOGGLE = FALSE\n\n82 Version 1.00\n\nChapter 7. Blind Modules\n\n- L * 2 L - H H - - / D2 D2_TOGGLE = TRUE\n\n- L * 2 L - H H - - * 3 D2_TOGGLE = FALSE\n\n*1 in transition in the automatic mode, the outputs PO and AO are set to the last value of POS and AN.\n\n*2 Double click\n\n*3 Output pulse for one cycle\n\n*4 Single click, is blind moves in one direction for MAX_RUNTIME\n\n*5 angle and position are not transferred if the variable MASTER_MODE = TRUE.\n\nThe output of STATUS is compatible and ESR are status messages about\n\nstate changes.\n\nSTATUS Meaning\n\n130 Standby mode\n\n131 Manual Standby\n\n132 manually up\n\n133 manually down\n\n134 Single-clicking up\n\n135 single-click down\n\n136 IN = TRUE forces values\n\n137 Double-clicking position 1 is hit\n\n138 Double-click position 2 is hit\n\n139 Force Automatic Mode\n\nThe following example shows the structure of a blind controller with the\n\nmodule BLIND_INPUT and BLIND_CONTROL:\n\n83 Version 1.00\n\nChapter 7. Blind Modules\n\nThe use of other BLIND modules is optional and is used to extend the func￾tionality. BLIND_INPUT and BLIND_CONTROL gives a full blind control.\n\nBLIND_INPUT can decode a double click at the two inputs S1 and S2 and\n\nturn the two outputs D1 and D2. These outputs can be used downstream\n\nfunction blocks or to control any other event.\n\nMaster Mode:\n\nWith the variable MASTER_MODE = TRUE, the master mode is turned on.\n\nThe master mode prevents that the angle ANG and position POS will be\n\ntransfered to the outputs AO and PO in Standby Mode 130. Blind modules\n\nwhich are between the input and Control modules can switch the position\n\nof the shutter and the shutter remains after the change in the new positi￾on (if MASTER_MODE = FALSE). However, if the variable MASTER_MODE =\n\nTRUE ensures that after an automatic stop by downstream modules the\n\nBlind Input resets again to the old position. If MASTER_MODE = FALSE in\n\nthe state 130 the POS and ANG is transmitted in on the outputs of PO and\n\nAO. Is MASTER_MODE = TRUE the last valid value remains at the STATUS\n\n130 on the outputs PO and AO and the inputs of POS and ANG are not\n\ntransferred. The module BLIND_INPUT thus retains the last valid BLIND_IN￾PUT position.",
+    "type": "FUNCTION",
+    "name": "BLIND_INPUT",
+    "input": [
+        {
+            "name": "POS",
+            "type": "BYTE",
+            "description": "Return of the blind position"
+        },
+        {
+            "name": "ANG",
+            "type": "BYTE",
+            "description": "Return of the slat angle"
+        },
+        {
+            "name": "S1",
+            "type": "BOOL",
+            "description": "Input for UP command"
+        },
+        {
+            "name": "S2",
+            "type": "BOOL",
+            "description": "Input for DOWN command"
+        },
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Controlled operations if TRUE"
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Position if IN = TRUE"
+        },
+        {
+            "name": "AI",
+            "type": "BYTE",
+            "description": "Angle if IN = TRUE"
+        },
+        {
+            "name": "SINGLE_SWITCH",
+            "type": "BOOL",
+            "description": "TRUE for single button operation"
+        },
+        {
+            "name": "CLICK_EN",
+            "type": "BOOL",
+            "description": "TRUE for single-click mode"
+        },
+        {
+            "name": "CLICK_TIME",
+            "type": "TIME",
+            "description": "Timeout for Click Detection"
+        },
+        {
+            "name": "MAX_RUNTIME",
+            "type": "TIME",
+            "description": "Timeout for one movement"
+        },
+        {
+            "name": "MANUAL_TIMEOUT",
+            "type": "TIME",
+            "description": "Timeout of manual operation"
+        },
+        {
+            "name": "DEBOUNCE_TIME",
+            "type": "TIME",
+            "description": "Debounce time for the inputs S"
+        },
+        {
+            "name": "DBL_CLK1",
+            "type": "BOOL",
+            "description": "Move to double-click position if TRUE"
+        },
+        {
+            "name": "DBL_POS1",
+            "type": "BYTE",
+            "description": "Position at S1 double-click"
+        },
+        {
+            "name": "DBL_ANG1",
+            "type": "BYTE",
+            "description": "Angle at S1 double-click"
+        },
+        {
+            "name": "DBL_CLK2",
+            "type": "BOOL",
+            "description": "Move to double-click position if TRUE"
+        },
+        {
+            "name": "DBL_POS2",
+            "type": "BYTE",
+            "description": "Position at S2 double-click"
+        },
+        {
+            "name": "DBL_ANG2",
+            "type": "BYTE",
+            "description": "Angle at S2 double-click"
+        },
+        {
+            "name": "D1_TOGGLE",
+            "type": "BOOL",
+            "description": "Toggle mode for D1"
+        },
+        {
+            "name": "D2_TOGGLE",
+            "type": "BOOL",
+            "description": "Toggle mode for D2"
+        },
+        {
+            "name": "MASTER_MODE",
+            "type": "BOOL",
+            "description": "Enable the master mode if TRUE"
+        }
+    ],
+    "output": [
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor up signal"
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor down signal"
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output"
+        },
+        {
+            "name": "PO",
+            "type": "BYTE",
+            "description": "Output position"
+        },
+        {
+            "name": "AO",
+            "type": "BYTE",
+            "description": "Output angular position"
+        },
+        {
+            "name": "D1",
+            "type": "BOOL",
+            "description": "Command output for double-click function 1"
+        },
+        {
+            "name": "D2",
+            "type": "BOOL",
+            "description": "Command output for double-click function 2"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

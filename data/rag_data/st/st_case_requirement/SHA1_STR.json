@@ -1,0 +1,32 @@
+{
+    "title": "SHA1 Hash Calculation",
+    "description": "SHA1_STR the SHA1 hash can be calculated in a string. In the STR a\n\nstring is passed to the module, and a positive edge at input \"RUN\", the\n\ncalculation starts. DONE is immediately reset at startup, and after the pro￾cess is DONE is set to TRUE. Then, at the parameter HASH the actual cal￾culated HASH value is available. (See module SHA1-STREAM).",
+    "type": "FUNCTION",
+    "name": "SHA1_Hash_Calculator",
+    "input": [
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "Positive edge input that starts the calculation."
+        },
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "The string input for which the SHA1 hash will be created."
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates TRUE if calculations are complete."
+        },
+        {
+            "name": "HASH",
+            "type": "ARRAY[0..19] OF BYTE",
+            "description": "The actual SHA1 hash value calculated from the input string."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

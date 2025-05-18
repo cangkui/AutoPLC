@@ -1,0 +1,35 @@
+{
+    "title": "Time to DWORD Conversion with Offset and Debugging",
+    "description": "T_PLC_US returns the current internal PLC time in microseconds. This has\nnothing to do with a possibly existing clock (Real Time Module), but is the\ninternal Timer of a PLC that is used as a time reference. \nThe source code of the module has the following characteristics:\nFUNCTION T_PLC_US : DWORD\nVAR CONSTANT\nDEBUG : BOOL := FALSE;\nN : INT := 0;\nOFFSET := 0;\nEND_VAR\nVAR\nTEMP : DWORD := 1;\nEND_VAR\nT_PLC_US := TIME_TO_DWORD(TIME())*1000;\nIF DEBUG THEN\nT_PLC_US := SHL(T_PLC_US,N) OR SHL(TEMP,N)-1 + OFFSET;\nEND_IF;\nIn normal operation, the module reads the function TIME() the internal\nTimer of the PLC. Since the internal Timer of the PLC works according to\nIEC standard with 1 millisecond resolution, the read value is multiplied by\n1000 to deliver the value in micro-seconds back. This function was created\nfor compatibility reasons in that way, to provide microseconds timer for\ncontrols, that has a resolution no better than milliseconds, which can then\nbe used in other modules. If the existing PLC supports microseconds, this\nfunction can easily be adjusted only at this point and the accuracy chan￾ges by this simple patch for all the modules that call this feature. The soft￾ware remains portable and future proof. Already, virtually all PLC control￾lers support a resolution in microseconds. This will however not be read\nusing standard routines, but provided vendor specifc and non-standard.\nThe module T_PLC_US provides so an appropriate interface to these ven￾dor-specifc timers. \nAnother feature of T_PLC_US is a Debug Mode, which allows to produce\nthe overfow of the internal PLC Timers and test the software developed\nright shure. The internal Timer of any PLC has, independent of manufac￾turer and type of implementation, after a fxed time an overfow. That\nmeans that it is running against FF..FFFF (highest value of the correspon￾ding type can be stored) and then starts again at 000..0000. At standard\nPLC Timer is the overfow time 2^32 -1 milliseconds, which is about 49.71\ndays. Since this Timer is implemented in a hardware, it initial value can\nnot be set, so that after starting the PLC it always starts at 0 and runs up\nto the maximum value. After reaching the maximum value, the infamous\nTimer Overfow arises, which causes fatal consequences in the application\nsoftware , but can only be tested extremely difcult. \nT_PLC_US ofers several ways to test the overfow and time-dependent\nsoftware. With the constant DEBUG, the test mode is switched on and\nthen, using the constants N and ofset , starts the timer at a certain level,\nthus specifcally the overfow can be tested without waiting the 49. Ofset\ndefnces a value which is added to the value of the internal Timer . With\nthe constant N is determined by how many bits of the internal Timer Value\nis shifted to the left, while the lower N bits are flled with 1. With N thus\nthe speed of the internal Timers can be increased by factors of 2,4,8,16\nand so on. \nT_PLC_US thus ofers all possibilities to test time-dependent software, both\nfor the problem of overfow, and for very slow time-dependent functions.\nThe constant DEBUG, N and OFFSET were intentionally not implemented\nas inputs of the function to avoid accidental misuse.",
+    "type": "FUNCTION",
+    "name": "T_PLC_US",
+    "input": [
+        {
+            "name": "debug",
+            "type": "BOOL",
+            "description": "Flag indicating whether debug mode is active."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "Number of bits to shift in the conversion process."
+        },
+        {
+            "name": "offset",
+            "type": "DWORD",
+            "description": "Offset to apply to the converted time value."
+        }
+    ],
+    "output": [
+        {
+            "name": "T_PLC_US",
+            "type": "DWORD",
+            "description": "The resulting DWORD value derived from the time conversion."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Returns the converted time value as a DWORD."
+    }
+}

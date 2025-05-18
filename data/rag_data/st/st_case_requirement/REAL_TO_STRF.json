@@ -1,0 +1,35 @@
+{
+    "title": "Real to String Formatting Function",
+    "description": "REAL_TO_STRF converts a REAL value to a string with a fxed number of\ndecimal N. At the conversion entirely in a normal number format XXX.NNN\nis converted. At the conversion IN is rounded to N digits after the decimal\npoint and then converted into a String to the format XXX.NNN. When N =\n0, the REAL number is rounded to 0 digits after the decimal point and the\nresult is passed as an integer without a point and decimal places. If the\nnumber IN is less than, as with N decimal places can be captured, a zero is\npassed. The decimal places are always flled up to N digits with zeros. The\nmaximum string length is 20 digits. The D input determines which charac￾ter represents the decimal point.",
+    "type": "FUNCTION",
+    "name": "REAL_TO_STRF",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The real number to be converted to a string."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of decimal places to round the real number to. Must be limited to the range 0..7."
+        },
+        {
+            "name": "D",
+            "type": "STRING[1]",
+            "description": "The character to be used as the decimal separator."
+        }
+    ],
+    "output": [
+        {
+            "name": "REAL_TO_STRF",
+            "type": "string",
+            "description": "The resulting string representation of the real number."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The string representation of the real number after conversion and formatting."
+    }
+}

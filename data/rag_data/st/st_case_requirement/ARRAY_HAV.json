@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Harmonic Average of an Array",
+    "description": "ARRAY_HAV calculates the harmonic median value of an ar￾bitrary array of REAL. When called, a pointer to the array and its size in\nbytes is passed to the function. Under CoDeSys the call reads:\nARRAY_HAV(ADR(Array), SIZEOF(Array)), where array is the name of the\narray to be manipulated. ADR() is a standard function which identifes the\npointer to the array and SIZEOF() is a standard function, which determines\nthe size of the array. In order to determine the maximum, the array refe￾renced by the pointer is scanned directly in memory. The function\nARRAY_HAV does not change the content of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "ARRAY_HAV",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY [0..32000] OF REAL",
+            "description": "Pointer to the array of real numbers for which the harmonic average is to be calculated."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The size of the array, indicating the number of elements to consider for the calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The harmonic average of the array elements.",
+        "fields": []
+    }
+}

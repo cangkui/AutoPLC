@@ -1,0 +1,37 @@
+{
+    "title": "Real-Time Clock Management Function Block",
+    "description": "RTC_MS is a clock component with a resolution of milliseconds and date.\nThe time is automatically every time you SET = TRUE to the value of SDT\nand SMS. If SET = FALSE the time is running on their own and provides the\noutput XDT the current date and time, and at the output XMS milliseconds.\nThe output XMS counts every second 0-999 and begins with the next se￾cond again at 0. The accuracy of the clock depends on the millisecond Ti￾mer of the PLC.",
+    "type": "FUNCTION_BLOCK",
+    "name": "RTC_MS",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "A boolean flag to initiate the clock setting process."
+        },
+        {
+            "name": "SDT",
+            "type": "DT",
+            "description": "The current date and time to set the clock to."
+        },
+        {
+            "name": "SMS",
+            "type": "INT",
+            "description": "The initial count of milliseconds to set."
+        }
+    ],
+    "output": [
+        {
+            "name": "XDT",
+            "type": "DT",
+            "description": "The updated date and time after processing."
+        },
+        {
+            "name": "XMS",
+            "type": "INT",
+            "description": "The updated count of milliseconds since the last clock update."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

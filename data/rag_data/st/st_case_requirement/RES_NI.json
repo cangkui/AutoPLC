@@ -1,0 +1,30 @@
+{
+    "title": "Calculate RES_NI for temperature and resistance",
+    "description": "RES_NI calculated the resistance of a NI-resistance sensor from the input\nvalues T (temperature in°C) and R0 (resistance at 0°C).\nThe calculation is done using the formula:\nRES_NI = R0 + A*T + B*T²+C*T4\nA = 0.5485\nB = 0.665E-3\nC = 2.805E-9\nThe calculation is suitable for temperatures from -60.. +180 °C.",
+    "type": "FUNCTION",
+    "name": "RES_NI",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "The input temperature in degrees Celsius at which the resistance is calculated."
+        },
+        {
+            "name": "R0",
+            "type": "REAL",
+            "description": "The reference resistance at 0°C."
+        }
+    ],
+    "output": [
+        {
+            "name": "RES_NI",
+            "type": "REAL",
+            "description": "The calculated resistance value based on the input temperature and reference resistance."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated resistance value (RES_NI) returned from the function."
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "title": "Multiply and Add Function",
+    "description": "MUL_ADD multiplies the input value X with K and adds O.\nMUL_ADD = X * K + O.\nMUL_ADD (0.5, 10, 2) is 0.5 * 10 + 2 = 7",
+    "type": "FUNCTION",
+    "name": "MUL_ADD",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The first input value that will be multiplied."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "The second input value that will multiply with X."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "The value that will be added to the product of X and K."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the operation, which is the value of X multiplied by K, plus O."
+    }
+}

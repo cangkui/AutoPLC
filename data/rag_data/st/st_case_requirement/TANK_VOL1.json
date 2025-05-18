@@ -1,0 +1,35 @@
+{
+    "title": "Tank Volume Calculation",
+    "description": "TANK_VOL1 calculates the contents of a tube-shaped tanks flled to the\n\nheight H.",
+    "type": "FUNCTION",
+    "name": "TANK_VOL1",
+    "input": [
+        {
+            "name": "TR",
+            "type": "REAL",
+            "description": "Radius of the tank."
+        },
+        {
+            "name": "TL",
+            "type": "REAL",
+            "description": "Length of the tank."
+        },
+        {
+            "name": "H",
+            "type": "REAL",
+            "description": "Filling height of the tank."
+        }
+    ],
+    "output": [
+        {
+            "name": "Real",
+            "type": "REAL",
+            "description": "Contents of the tank to the fill level."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated volume of the tank based on the given parameters."
+    }
+}

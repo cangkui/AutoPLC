@@ -1,0 +1,19 @@
+{
+    "title": "Hour Extraction from DateTime",
+    "description": "HOUR_OF_DT extracts the hour from a current DT value.\nHOUR_OF_DT(DT#2008-6-6-10:22:20) = 10",
+    "type": "FUNCTION",
+    "name": "HOUR_OF_DT",
+    "input": [
+        {
+            "name": "XDT",
+            "type": "DT",
+            "description": "A DateTime value from which the hour will be extracted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "An integer representing the hour part of the given DateTime value, in the range of 0 to 23."
+    }
+}

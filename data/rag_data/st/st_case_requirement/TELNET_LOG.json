@@ -1,0 +1,47 @@
+{
+    "title": "TELNET_LOG Function Module",
+    "description": "TELNET_LOG is used to pass all the messages in the ring LOG_CONTROL￾bufer over TELNET. By \"ENABLE\", the module can be activated. At \n\nparameter PORT the desired port number can be defned. If the parameter \n\nis not defned the default port is 23.\n\nWith OPTION various properties can still be controlled (See Table OPTION). \n\nIf the parameter OPTION is not connected the following default is \n\nassumed:\n\nOPTION = BYTE#2#1000_1100;\n\nAs soon as a Telnet client connects this is indicated by parameter \"READY\". \n\nThen be automatically all messages are passed to TELNET. Once occurred \n\nnew reports in the course in LOG_CONTROL they are always passed \n\nautomatically. When a new connection from/to rebuilds, all messages will \n\nbe passed again. Most TELNET clients ofer the opportunity to redirect the \n\ndata stream to a fle, just to make a long-term data archiving.\n\nOPTION:\n\nBIT Function Description\n\n0 SCREEN_INIT After connecting to the TELNET console the entire screen is\n\ncleared. If the COLOR OPTION is selected, the screen\n\nBACK_COLOR will be deleted.\n\n1 AUTOWRAP In AUTOWRAP = 1, the write cursor is on reaching the end\n\nof line is automatically set to a next line. If the text output\n\nthe X,Y positions are always specifed with, it is better when\n\nAUTOWRAP = 0.\n\n2 COLOR Enables the color mode, it will apply BACK_COLOR and\n\nFRONT_COLOR to the output.\n\n3 NEW_LINE In NEW_LINE = 1 is automatically a carriage return and line\n\nfeed added to the end of the text. So the next text output\n\nstarts a new line. But this is only useful if no X_pos and\n\nY_pos be specifed.\n\n4 RESERVE\n\n5 RESERVE\n\n136 Version 1.21\n\nChapter 9. Network and Communication\n\n6 RESERVE\n\n7 NO_BUF_FLUSH Prevents the data in the bufer to be sent immediately. Only\n\nif the bufer is completely full, or this option is disabled, the\n\ndata is sent. Allows fast sending many texts in the same\n\ncycle",
+    "type": "FUNCTION",
+    "name": "TELNET_LOG",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for IP configuration."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "S_BUF_SIZE",
+            "type": "UINT",
+            "description": "Size of S_BUF."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Toggle for activating the TELNET server."
+        },
+        {
+            "name": "OPTION",
+            "type": "BYTE",
+            "description": "Send options controlling various properties (default is BYTE#2#1000_1100)."
+        },
+        {
+            "name": "PORT",
+            "type": "WORD",
+            "description": "Desired port number for TELNET connection (default is 23 if not defined)."
+        }
+    ],
+    "output": [
+        {
+            "name": "READY",
+            "type": "BOOL",
+            "description": "Indicates that the TELNET client has established a connection."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

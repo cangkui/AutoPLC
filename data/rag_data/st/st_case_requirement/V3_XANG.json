@@ -1,0 +1,37 @@
+{
+    "title": "Calculate Angle in 3D Space",
+    "description": "CABS calculates the length of the vector of a complex number The absolu￾te value is also module or Magnitude mentioned.\nCABS = SQRT(X.RE² + X.IM²)",
+    "type": "FUNCTION",
+    "name": "V3_XANG",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "A 3D vector from which the angle is to be calculated.",
+            "fields": [
+                {
+                    "name": "X",
+                    "type": "REAL",
+                    "description": "The X component of the vector."
+                },
+                {
+                    "name": "Y",
+                    "type": "REAL",
+                    "description": "The Y component of the vector."
+                },
+                {
+                    "name": "Z",
+                    "type": "REAL",
+                    "description": "The Z component of the vector."
+                }
+            ]
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The angle in radians calculated from the 3D vector.",
+        "fields": []
+    }
+}

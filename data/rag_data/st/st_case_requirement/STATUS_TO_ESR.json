@@ -1,0 +1,68 @@
+{
+    "title": "Status to ESR Data Converter",
+    "description": "STATUS_TO_ESR generates a record from the input values.\nA STATUS in the range between 1.. 99 is an error message and will be mar￾ked as Type 1. Status 100 .. 199 is characterized as type 2 and 200 .. 255\nis marked as Type 3 ( Debug I nformation). \nThe ESR data at the output consist of the following items:\n.TYPE 1 = error, 2 = State, 3 = Debug \n.ADRESS Byte address of ISR data recording\n.LINE Line number (input) of the ESR data recording\n.DS Date stamp of type DATE_TIME\n.DT Timestamp of type TIME (PLC-timer)\n.Data Data block of 8 bytes\n 5. Mathematics",
+    "type": "FUNCTION",
+    "name": "STATUS_TO_ESR",
+    "input": [
+        {
+            "name": "status",
+            "type": "BYTE",
+            "description": "A byte representing the status value which determines the type of ESR data."
+        },
+        {
+            "name": "adress",
+            "type": "STRING[10]",
+            "description": "A string of up to 10 characters representing the address associated with the ESR data."
+        },
+        {
+            "name": "DT_in",
+            "type": "DT",
+            "description": "A date and time input that represents the timestamp to be stored in the ESR data."
+        },
+        {
+            "name": "TS",
+            "type": "TIME",
+            "description": "A time input that indicates the time to be included in the ESR data."
+        }
+    ],
+    "output": [
+        {
+            "name": "esr_data",
+            "type": "Struct",
+            "description": "The output ESR data structure filled based on the input parameters and logic applied within the function.",
+            "fields": [
+                {
+                    "name": "typ",
+                    "type": "INT",
+                    "description": "The type classification of the ESR data, determined by the status value."
+                },
+                {
+                    "name": "adress",
+                    "type": "STRING[10]",
+                    "description": "The address associated with the ESR data."
+                },
+                {
+                    "name": "DS",
+                    "type": "DT",
+                    "description": "The date and time input retained in the ESR data."
+                },
+                {
+                    "name": "TS",
+                    "type": "TIME",
+                    "description": "The time input retained in the ESR data."
+                },
+                {
+                    "name": "data",
+                    "type": "ARRAY[0..10] OF BYTE",
+                    "description": "An array storing the status input at index 0."
+                }
+            ]
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "Struct",
+        "description": "This function does not return a value directly, but modifies the output variable 'esr_data' instead.",
+        "fields": []
+    }
+}

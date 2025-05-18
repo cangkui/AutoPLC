@@ -1,0 +1,25 @@
+{
+    "title": "File Path Split Function",
+    "description": "FILE_PATH_SPLIT The module split a fle path into its component elements. The drive, path \n\nand fle name are extracted and stored in the data structure X. As \n\ndirectory separator \"\\\" and \"/\" will be accepted. If the passed \"File name\" is \n\nnot empty and elements can be evaluated, the module returns TRUE, \n\notherwise FALSE.",
+    "type": "FUNCTION",
+    "name": "FILE_PATH_SPLIT",
+    "input": [
+        {
+            "name": "INPUT_FILE_NAME",
+            "type": "STRING",
+            "description": "The input file path as a string."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "X",
+            "type": "FILE_PATH_DATA",
+            "description": "A data structure that stores the extracted components of the file path."
+        }
+    ],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the input file name is valid and elements can be evaluated, FALSE otherwise."
+    }
+}

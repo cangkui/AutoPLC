@@ -1,0 +1,26 @@
+{
+    "title": "URL Decode Function",
+    "description": "URL_DECODE converts the in %HH encoded special characters in the\n\nstring IN in the appropriate ASCII code. In a URL encoding only the charac￾ters [A.. Z, a.. Z found, 0 .9, -._~] can occur. Other characters with a %\n\ncharacter, followed by 2 characters long Hexadecimal of the character are\n\nshown. The reserved character '#' is encoded as a '%23'.",
+    "type": "FUNCTION",
+    "name": "URL_DECODE",
+    "input": [
+        {
+            "name": "String",
+            "type": "STRING",
+            "description": "The URL-encoded string to be decoded."
+        }
+    ],
+    "output": [
+        {
+            "name": "string_length",
+            "type": "STRING",
+            "description": "The decoded string after processing the input URL-encoded string."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "The result of the URL decoding process, containing the ASCII representation of the input string.",
+        "fields": []
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "title": "Offset Calculation Function",
+    "description": "DEG_TO_DIR calculates a direction (0 .360 degrees) into to compass rea￾dings. At the input DEG the direction in degrees is available (0 = North, 90\n= East, 180 = South and 270 = West ). The output represents the directi￾on as String NNE. With the input N the maximum length of the direction in￾dication is limited. When N = 1, only in the 4 cardinal directions N, E, S, W\ndissolved. If N = 2 between each another direction is inserted: NE, SE, SW,\nNW. At N = 3 are also directions as NNO ... are dissolved, with N = 3 a to￾tal of 16 directions are evaluated. The input L allows the switching of the\nlanguages defned in the language setup. 0L = 0 means Default Langua￾ge, a number > 0 is one of the predefned languages. more info about the\npre-defned data types can be found at CONSTANTS_LANGUAGE.",
+    "type": "FUNCTION",
+    "name": "OFFSET2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The primary input value that may receive an offset."
+        },
+        {
+            "name": "O1",
+            "type": "BOOL",
+            "description": "Flag indicating whether to add Offset_1."
+        },
+        {
+            "name": "O2",
+            "type": "BOOL",
+            "description": "Flag indicating whether to add Offset_2."
+        },
+        {
+            "name": "O3",
+            "type": "BOOL",
+            "description": "Flag indicating whether to add Offset_3."
+        },
+        {
+            "name": "O4",
+            "type": "BOOL",
+            "description": "Flag indicating whether to add Offset_4."
+        },
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "Flag that determines if the default value should be returned instead of the adjusted X."
+        },
+        {
+            "name": "Offset_1",
+            "type": "REAL",
+            "description": "Value to be added if O1 is true."
+        },
+        {
+            "name": "Offset_2",
+            "type": "REAL",
+            "description": "Value to be added if O2 is true."
+        },
+        {
+            "name": "Offset_3",
+            "type": "REAL",
+            "description": "Value to be added if O3 is true."
+        },
+        {
+            "name": "Offset_4",
+            "type": "REAL",
+            "description": "Value to be added if O4 is true."
+        },
+        {
+            "name": "default",
+            "type": "REAL",
+            "description": "The default value returned if D is true."
+        }
+    ],
+    "output": [
+        {
+            "name": "OFFSET2",
+            "type": "REAL",
+            "description": "The calculated offset value which is either the adjusted X or the default value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the final computed offset value.",
+        "fields": []
+    }
+}

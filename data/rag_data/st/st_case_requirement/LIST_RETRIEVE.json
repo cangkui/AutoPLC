@@ -1,0 +1,30 @@
+{
+    "title": "Retrieve Element from List",
+    "description": "LIST_RETRIEVE passes the item at the position POS from a list and deletes\nthe corresponding item in the list. The list consists of Strings (elements)\nthat begin with the separation character SEP. The frst element of the list\nis at position 1. The function returns an empty string if no element is at\nthe position POS.",
+    "type": "FUNCTION",
+    "name": "LIST_RETRIEVE",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The byte value representing the separator used to delimit elements in the list."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position of the element to retrieve from the list, where the first element is at position 1."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "LIST",
+            "type": "STRING(LIST_LENGTH)",
+            "description": "The list from which an element will be retrieved. This is both the input list and will be updated during the operation."
+        }
+    ],
+    "return_value": {
+        "type": "string",
+        "description": "The retrieved element from the list. If the position is not greater than 0, the function returns an empty string."
+    }
+}

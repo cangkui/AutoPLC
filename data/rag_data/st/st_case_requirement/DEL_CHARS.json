@@ -1,0 +1,31 @@
+{
+    "title": "Delete Characters from String",
+    "description": "DEL_CHARS deletes all characters from a string which are contained in the\nstring CX.\nCLEAN('Nr.1 23#', ' #ABCDEFG') = 'Nr.123'",
+    "type": "FUNCTION",
+    "name": "DEL_CHARS",
+    "input": [
+        {
+            "name": "IN",
+            "type": "STRING",
+            "description": "The input string from which characters will be deleted."
+        },
+        {
+            "name": "CX",
+            "type": "STRING[80]",
+            "description": "A string containing the characters to be deleted from the input string."
+        }
+    ],
+    "output": [
+        {
+            "name": "DEL_CHARS",
+            "type": "STRING",
+            "description": "The modified string after the specified characters have been deleted."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The resulting string after all specified characters have been removed.",
+        "fields": []
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "title": "NET_VAR_STRING Function Module",
+    "description": "NET_VAR_STRING is used for bidirectional transmission of STRING \n\nfrom the master to slave and vice versa. The STRING in the parameters IN will be \n\n203 Version 1.21\n\nChapter 12. Network Variables\n\nrecorded and passed on the other side (control) on the same module at the same \n\nposition as OUT parameter.\n\nAt the same time the input String on the opposite side of the (other control) is passed \n\nhere as a OUT value again.\n\nID parameter indicates the current identification number of the module instance. If the \n\nconfiguration of the master and the slave program is differently (incorrectly) that ID \n\nnumber is passed as a fault in the module NET_VAR_CONTROL.",
+    "type": "FUNCTION",
+    "name": "NET_VAR_STRING",
+    "input": [
+        {
+            "name": "X",
+            "type": "NET_VAR_DATA",
+            "description": "A NET_VAR data structure for variable data transmission."
+        },
+        {
+            "name": "STRING",
+            "type": "STRING",
+            "description": "The input string that will be transmitted."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "STRING",
+            "description": "The output string that is received on the opposite side."
+        },
+        {
+            "name": "ID",
+            "type": "BYTE",
+            "description": "The current identification number of the module instance."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

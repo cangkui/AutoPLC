@@ -1,0 +1,42 @@
+{
+    "title": "Fade Function Block",
+    "description": "FADE is used to switch between 2 inputs IN1 and IN2 with a soft transition.\nThe switching time is specifed as TF. An asynchronous reset (RST) resets\nthe module without delay to IN1 if F = FALSE or IN2 when F = TRUE. A\nswitching operation is triggered by a change in the value of R. Then it\nswitches within the time TF between the two inputs. The switchover will\nmix the two entrances during the changeover. At the beginning of swit￾ching at the output are at 0% of the new value and 100% of the old value\npasssed. after half the transfer time (TF/2) the output has 50% each of the\ntwo input values (Y = in1* 0.5 + in2 * 0.5). after the time TF is then the\nnew output value to 100% available.\nDuring the switching of the output Y is:\nY = TU/TF * IN1 + (1 - TU/TF) * IN2.\nTU is the time elapsed since the start of the switchover.\nSince the output of FADE is dynamically calculated, the device can also be\nused to switch dynamic signals. The switch is divided into up to 65,535\nsteps, which can be limited by the cycle time of the PLC. A PLC with a cy￾cle time of 10ms and a TF of a second is only in 1s/10ms = 100 steps to\nchange channels.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FADE",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "REAL",
+            "description": "The starting value for the fade effect."
+        },
+        {
+            "name": "IN2",
+            "type": "REAL",
+            "description": "The target value for the fade effect."
+        },
+        {
+            "name": "F",
+            "type": "BOOL",
+            "description": "A boolean flag that indicates whether the fade operation should be active."
+        },
+        {
+            "name": "TF",
+            "type": "TIME",
+            "description": "The duration of the fade effect."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "A reset signal that initializes the ramp module and stops the fade effect."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value after applying the fade effect between IN1 and IN2."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

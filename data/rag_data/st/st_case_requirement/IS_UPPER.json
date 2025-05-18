@@ -1,0 +1,19 @@
+{
+    "title": "Check Uppercase String",
+    "description": "IS_UPPER checks if in the string STR all capital letters are included. If an\nincorrect, non capital character is found the function returns FALSE. If in\nSTR are only capital letters included, the function returns TRUE. In exami￾ning the Global Setup EXTENDED_ASCII constant is considered. If EXTEN￾DED_ASCII = TRUE the extended ASCII character-set to be considered in\naccordance with ISO 8859-1. Umlauts like Ä, Ö, Ü are considered only if\nthe global constant EXTENDED_ASCII = TRUE.",
+    "type": "FUNCTION",
+    "name": "IS_UPPER",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING",
+            "description": "The input string to be checked for uppercase characters."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "True if all characters in the string are uppercase, false otherwise."
+    }
+}

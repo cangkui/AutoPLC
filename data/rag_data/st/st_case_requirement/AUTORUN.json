@@ -1,0 +1,52 @@
+{
+    "title": "AUTORUN Function Module",
+    "description": "AUTORUN monitors the duration of a load and ensures that the load at\n\nOUT is on, after the time TOFF at least for the time TRUN. AUTORUN stores\n\nthe run time and switches the output only on, if a minimum TRUN within\n\nthe period TOFF is not reached. The input IN is the switching input for the\n\noutput OUT. The output ARO indicates that just Autorun is activ. The input\n\nARE must be TRUE to enable autorun, at ARE a Timer can be connected to\n\nstart autorun at certain times. The I/O ARX prevents if TRUE an autorun,\n\nautorun can only be active if ARI = FALSE. If ARI = FALSE and the internal\n\nTimer have expired, the module switches ARO and OUT to TRUE and at the\n\nsame time ARI to TRUE. This mechanism can be used in several ways:\n\na) A TRUE on the I/O ARX can prevent an autorun, it can, for example be\n\ncontrolled by an external Timer and allow the autorun only during a cer￾tain period of time.\n\nb) The ARI ports of multiple modules can be connected together and thus\n\nprevents that several modules simultaneously switch in the autorun mode.\n\nThe modules wait until the frst module is fnished with Autorun and then\n\nthe next module will begin. This is very useful to prevent that a larger\n\nnumber of loads perform simultaneously the autorun and therefore create\n\nunnecessarily high current load.\n\nThe operating states of AUTORUN:\n\nIN T\n\nE\n\nS\n\nT\n\nA\n\nR\n\nE\n\nA\n\nR\n\nX\n\nA\n\nR\n\nO\n\nO\n\nU\n\nT\n\nX 0 - - - X Normal operation\n\n- 1 - 1 1 1 TEST starts the Au￾torun cycle\n\n- 0 1 1 0\n\n>\n\n>\n\n1\n\n1 Autorun cycle is ac￾tive\n\nA simple application of Autorun with input and output:\n\n20 Version 1.00\n\nChapter 4. Actuators\n\nIn the next example, the inputs ARE (Autorun Enable ) will be released by\n\na Timer so that autorun will run only at certain times. The autorun of the\n\nmodules X1 and X2 will start at the same time.\n\nThe following example shows three autorun modules that are locked on\n\nARI each other, so that only one device can go into the autorun and the\n\nother has to wait.\n\n21 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\n 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "AUTORUN",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Switching input for the output"
+        },
+        {
+            "name": "TEST",
+            "type": "BOOL",
+            "description": "Enables the Autorun cycle"
+        },
+        {
+            "name": "ARE",
+            "type": "BOOL",
+            "description": "Enable Autorun"
+        },
+        {
+            "name": "TRUN",
+            "type": "TIME",
+            "description": "Minimum duration of the load"
+        },
+        {
+            "name": "TOFF",
+            "type": "TIME",
+            "description": "Maximum lifetime of the load"
+        },
+        {
+            "name": "ARX",
+            "type": "BOOL",
+            "description": "Autorun Enable Signal"
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "BOOL",
+            "description": "Output to load"
+        },
+        {
+            "name": "ARO",
+            "type": "BOOL",
+            "description": "TRUE if Autorun is active"
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

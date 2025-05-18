@@ -1,0 +1,47 @@
+{
+    "title": "CLICK_MODE Function Block",
+    "description": "CLICK_MODE is a push button interface which decodes both simple click,\n\ndouble click or long keystrokes. With short pulses a single or double-click\n\nis decoded switches the according outputs SINGLE or DOUBLE, each for a\n\none cycle. If the pulse is longer than the T_LONG, then the output TP_OUT\n\nis set for one cycle to TRUE and the output LONG remains TRUE until the\n\ninput IN goes back to FALSE.",
+    "type": "FUNCTION",
+    "name": "CLICK_MODE",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Control input for buttons."
+        }
+    ],
+    "output": [
+        {
+            "name": "SINGLE",
+            "type": "BOOL",
+            "description": "Output for simple key press."
+        },
+        {
+            "name": "DOUBLE",
+            "type": "BOOL",
+            "description": "Output for double key press."
+        },
+        {
+            "name": "LONG",
+            "type": "BOOL",
+            "description": "Output for a long key press."
+        },
+        {
+            "name": "TP_LONG",
+            "type": "BOOL",
+            "description": "Pulse when long key press starts."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value as this is a procedure based function."
+    },
+    "parameters": [
+        {
+            "name": "T_LONG",
+            "type": "TIME",
+            "description": "Decoding time for long key press."
+        }
+    ]
+}

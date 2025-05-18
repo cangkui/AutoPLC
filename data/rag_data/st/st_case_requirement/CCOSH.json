@@ -1,0 +1,31 @@
+{
+    "title": "Compute Complex Hyperbolic Cosine",
+    "description": "CCOSH calculates the hyperbolic cosine of a complex number",
+    "type": "FUNCTION",
+    "name": "CCOSH",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "A complex number for which the hyperbolic cosine is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The hyperbolic cosine of the input complex number.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "real",
+                "description": "The real part of the hyperbolic cosine."
+            },
+            {
+                "name": "im",
+                "type": "real",
+                "description": "The imaginary part of the hyperbolic cosine."
+            }
+        ]
+    }
+}

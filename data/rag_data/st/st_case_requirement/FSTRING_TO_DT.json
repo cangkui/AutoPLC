@@ -1,0 +1,31 @@
+{
+    "title": "String to DateTime Conversion",
+    "description": "FSTRING_TO_DT convert a formatted string to a DATETIME value. Useing\nthe string FMT a format is given for decoding. The character '#' followed\nby a letter defnes the information to be decoded.\n#Y Year in the spelling in 08 or 2008\n#M Month in the spelling of 01 or 1\n#N Month in the spelling of 'Jan' or 'January' (Big and small letters are ignored)\n#D Day in the spelling of 01 or 1\n#h Hour in the spelling of 01 or 1\n#m Minute in the spelling of 01 or 1\n#s Second in the spelling of 01 or 1",
+    "type": "FUNCTION",
+    "name": "FSTRING_TO_DT",
+    "input": [
+        {
+            "name": "SDT",
+            "type": "STRING[60]",
+            "description": "Input variable for the source data text which contains the date and time as a string."
+        },
+        {
+            "name": "FMT",
+            "type": "STRING[60]",
+            "description": "Input variable for the format that specifies how to interpret the source data text."
+        }
+    ],
+    "output": [
+        {
+            "name": "FSTRING_TO_DT",
+            "type": "DT",
+            "description": "The resulting DateTime value extracted from the provided string based on the specified format."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DT",
+        "description": "The return value is the DateTime constructed from the parsed string.",
+        "fields": []
+    }
+}

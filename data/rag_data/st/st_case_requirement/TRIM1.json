@@ -1,0 +1,19 @@
+{
+    "title": "Trim String Function",
+    "description": "FSTRING_TO_MONTH determines from a string containing a month name\nor abbreviation the value of the month. The function can handle both the\nmonth names and abbreviations as input as well as a number of the\nmonth.\nFSTRING_TO_MONTH('Januar',2) = 1\nFSTRING_TO_MONTH('Jan',2) = 1\nFSTRING_TO_MONTH('11',0) = 11\nThe input LANG selects the used language, 0 = the default in the Setup , 1\n= English .... more info about the language settings, see the chapter Data\nTypes.",
+    "type": "FUNCTION",
+    "name": "TRIM1",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string that needs to be trimmed of spaces."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The trimmed string with no leading, trailing, or consecutive spaces."
+    }
+}

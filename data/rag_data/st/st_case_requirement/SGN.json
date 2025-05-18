@@ -1,0 +1,26 @@
+{
+    "title": "Sign Function (SGN)",
+    "description": "SGN calculates the Signum of X. \nSGN = +1 if X > 0\nSGN = 0 if X = 0\nSGN = -1 if X < 0",
+    "type": "FUNCTION",
+    "name": "SGN",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number for which the sign is to be determined."
+        }
+    ],
+    "output": [
+        {
+            "name": "SGN",
+            "type": "INT",
+            "description": "The sign of the input number, which will be 1, -1, or 0."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "Returns the sign of the input number as an integer value.",
+        "fields": []
+    }
+}

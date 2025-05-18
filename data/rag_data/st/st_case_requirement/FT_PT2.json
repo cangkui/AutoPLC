@@ -1,0 +1,37 @@
+{
+    "title": "FT_PT2 Function Block",
+    "description": "INTEGRATE is a Integrator which integrates the value of X to an external\nvalue Y. The integrator operates when E = TRUE, the internal Default of E\n= TRUE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PT2",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input signal value to be processed by the function block."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "The time duration for the integration process."
+        },
+        {
+            "name": "D",
+            "type": "REAL",
+            "description": "The damping factor used in the integration calculation."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "The gain constant for scaling the input, with a default value of 1.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The output result after processing the input through the function block."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

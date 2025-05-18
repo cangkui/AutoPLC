@@ -1,0 +1,42 @@
+{
+    "title": "Sequence Control Block",
+    "description": "CTRL_OUT adds to the CI input the value of OFFSET and returns the result\nto Y if MANUAL = FALSE. If MANUAL is TRUE at output Y the input value of\nMAN_IN + OFFSET is issued. Y is always limited to the boundaries defned\nby LIM_L and LIM_H. If Y reaches one of the limits, then the output LIM is\nTRUE. CTRL_OUT can be used to build own rule modules.\nBlock diagram of CTRL_OUT:",
+    "type": "FUNCTION_BLOCK",
+    "name": "SEQUENCE_64",
+    "input": [
+        {
+            "name": "START",
+            "type": "BOOL",
+            "description": "A boolean signal to start the sequence."
+        },
+        {
+            "name": "SMAX",
+            "type": "INT",
+            "description": "The maximum state index for the sequence."
+        },
+        {
+            "name": "PROG",
+            "type": "ARRAY[0..63] OF TIME",
+            "description": "An array containing timing intervals for each state in the sequence."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean signal to reset the sequence state."
+        }
+    ],
+    "output": [
+        {
+            "name": "STATE",
+            "type": "INT",
+            "description": "The current state of the sequence, initialized to -1."
+        },
+        {
+            "name": "TRIG",
+            "type": "BOOL",
+            "description": "A trigger signal that indicates when a state transition has occurred."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

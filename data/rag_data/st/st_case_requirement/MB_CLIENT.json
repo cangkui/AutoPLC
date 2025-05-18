@@ -1,0 +1,115 @@
+{
+    "title": "MODBUS Client Function Module",
+    "description": "MB_CLIENT The module provides access to Ethernet devices, the MODBUS TCP or \n\nMODBUS UDP supported, or MODBUS RS232/485 devices are connected \n\nvia Ethernet Modbus gateway. There commands from Classes 0,1,2 are \n\nsupported. The parameters IP_C, S_BUF, R_BUF this form the interface to \n\nthe module IP_CONTROL and used here for processing and coordination. \n\nThe desired IP address and port number (for MODBUS default is 502) must \n\nbe specifed on IP_CONTROL centrally. The DATA structure is designed as a \n\nWORD array and contains the MODBUS data for reading and writing. The \n\nsize of the WORD_ARRAY is given by DATA_SIZE. By ENABLE, the module is \n\nreleased, and by remove of the release a possibly still active query is \n\nended. For devices that support MODBUS with UDP = TRUE this mode can \n\nbe activated. The parameter UNIT_ID must only at use of Ethernet Modbus \n\nprovided. The desired function is specifed by FC (see function code table). \n\nDepending on the function, the R_xxx and W_xxx parameters has to be \n\nsupplied with data. By specifying the DELAY the repetition time can be \n\nspecifed. If not specify the time an attempt is made as often as possible \n\nto execute the command. The integrated access management \n\nautomatically guarantees to get the other module instances also to the \n\nseries. A negative command execution is reported by ERROR (see ERROR￾table). If the module actively performs a query, then BUSY = TRUE will be \n\npassed during this time.\n\nSupported function codes and parameters used:\n\n113 Version 1.21\n\nChapter 9. Network and Communication\n\n1 x Coils Read Coils x x x x\n\n2 x Input Discrete Read Discrete Inputs x x x x\n\n3 x Holding Register Read Holding Registers x x x\n\n4 x Input Register Read Input Register x x\n\n5 x Coils Write Single Coil x x x\n\n6 x Holding Register Write Single Register x x\n\n15 x Coils Write Multiple Coils x x x x\n\n16 x Holding Register Write Multiple Register x x x\n\n22 x Holding Register Mask Write Register x x\n\n23 x Holding Register Read/Write Multiple Register x x x x x x\n\nERROR:\n\nValue Source Description\n\nB3 B2 B1 B0\n\nnn nn nn xx IP_CONTROL Error from module IP_CONTROL\n\nxx xx xx 00 MB_CLIENT No Error\n\nxx xx xx 01 MB_CLIENT ILLEGAL FUNCTION:\n\nThe function code received in the query is not an allowable action\n\nfor the server (or slave). This may be because the function code is\n\nonly applicable to newer devices, and was not implemented in the\n\nunit selected. It could also indicate that the server (or slave) is in the\n\nwrong state to process a request of this type, for example because it\n\nis unconfigured and is being asked to return register values.\n\nxx xx xx 02 MB_CLIENT ILLEGAL DATA ADDRESS:\n\nThe data address received in the query is not an allowable address\n\nfor the server (or slave). More specifically, the combination of refer￾ence number and transfer length is invalid. For a controller with 100\n\n114 Version 1.21\n\nF\n\nu\n\nn\n\nctio\n\nn\n\nC\n\no\n\nd\n\ne\n\nBit A\n\nc\n\nc\n\ne\n\ns\n\ns\n\n16\n\nBit A\n\nc\n\nc\n\ne\n\ns\n\ns (R\n\ne\n\ngister)\n\nGro\n\nu\n\np\n\nF\n\nu\n\nn\n\nctio\n\nn\n\nD\n\ne\n\ns\n\ncriptio\n\nn\n\nR_A\n\nD\n\nD\n\nR\n\nR_\n\nP\n\nOIN\n\nT\n\nS\n\nR_\n\nD\n\nATA_A\n\nD\n\nR\n\nR_\n\nD\n\nATA_\n\nBIT\n\nP\n\nO\n\nS\n\nW_A\n\nD\n\nD\n\nR\n\nW_\n\nP\n\nOIN\n\nT\n\nS\n\nW_\n\nD\n\nATA_A\n\nD\n\nR\n\nW_\n\nD\n\nATA_\n\nBIT\n\nP\n\nO\n\nS\n\nChapter 9. Network and Communication\n\nregisters, the PDU addresses the first register as 0, and the last one\n\nas 99. If a request is submitted with a starting register address of 96\n\nand a quantity of registers of 4, then this request will successfully\n\noperate (address-wise at least) on registers 96, 97, 98, 99. If a re￾quest is submitted with a starting register address of 96 and a quan￾tity of registers of 5, then this request will fail with Exception Code\n\n0x02 “Illegal Data Address” since it attempts to operate on registers\n\n96, 97, 98, 99 and 100, and there is no register with address 100.\n\nxx xx xx 03 MB_CLIENT ILLEGAL DATA VALUE:\n\nA value contained in the query data field is not an allowable value\n\nfor server (or slave). This indicates a fault in the structure of the re￾mainder of a complex request, such as that the implied length is in￾correct. It specifically does NOT mean that a data item submitted for\n\nstorage in a register has a value outside the expectation of the appli￾cation program, since the MODBUS protocol is unaware of the sig￾nificance of any particular value of any particular register.\n\nxx xx xx 04 MB_CLIENT SLAVE DEVICE FAILURE:\n\nAn unrecoverable error occurred while the server (or slave) was at￾tempting to perform the requested action.\n\nxx xx xx 05 MB_CLIENT ACKNOWLEDGE:\n\nSpecialized use in conjunction with programming commands. The\n\nserver (or slave) has accepted the request and is processing it, but\n\na long duration of time will be required to do so. This response is re￾turned to prevent a timeout error from occurring in the client (or\n\nmaster). The client (or master) can next issue a Poll Program Com￾plete message to determine if processing is completed.\n\nxx xx xx 06 MB_CLIENT SLAVE DEVICE BUSY:\n\nSpecialized use in conjunction with programming commands. The\n\nserver (or slave) is engaged in processing a long–duration program\n\ncommand. The client (or master) should retransmit the message\n\nlater when the server (or slave) is free.\n\nxx xx xx 8 MB_CLIENT MEMORY PARITY ERROR:\n\nSpecialized use in conjunction with function codes 20 and\n\n21 and reference type 6, to indicate that the extended file area\n\nfailed to pass a consistency check.The server (or slave) attempted\n\nto read record file, but detected a parity error in the memory.The\n\nclient (or master) can retry the request, but service may be required\n\non the server (or slave) device.\n\nxx xx xx 0A MB_CLIENT GATEWAY PATH UNAVAILABLE:\n\nSpecialized use in conjunction with gateways, indicates that the\n\ngateway was unable to allocate an internal communication path\n\nfrom the input port to the output port for processing the request.\n\nUsually means that the gateway is misconfigured or overloaded.\n\nxx xx xx 0B MB_CLIENT GATEWAY TARGET DEVICE FAILED TO RESPOND:\n\nSpecialized use in conjunction with gateways, indicates that no re￾sponse was obtained from the target device. Usually means that the\n\n115 Version 1.21\n\nChapter 9. Network and Communication\n\ndevice is not present on the network.",
+    "type": "FUNCTION",
+    "name": "MB_CLIENT",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for the IP control interface."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "DATA",
+            "type": "ARRAY[0..255] OF WORD",
+            "description": "Array containing MODBUS register data."
+        },
+        {
+            "name": "DATA_SIZE",
+            "type": "INT",
+            "description": "Number of data words in the structure MB_DATA."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Enables or disables the module."
+        },
+        {
+            "name": "UDP",
+            "type": "BOOL",
+            "description": "Selects TCP (FALSE) or UDP (TRUE) mode."
+        },
+        {
+            "name": "FC",
+            "type": "INT",
+            "description": "Function code for the MODBUS command."
+        },
+        {
+            "name": "UNIT_ID",
+            "type": "BYTE",
+            "description": "Device ID for the MODBUS communication."
+        },
+        {
+            "name": "R_ADDR",
+            "type": "INT",
+            "description": "Read command: MODBUS data point address."
+        },
+        {
+            "name": "R_POINTS",
+            "type": "INT",
+            "description": "Read command: number of MODBUS data points."
+        },
+        {
+            "name": "R_DATA_ADR",
+            "type": "INT",
+            "description": "Read command: DATA data point address."
+        },
+        {
+            "name": "R_DATA_BITPOS",
+            "type": "INT",
+            "description": "Read command: DATA data point bit position."
+        },
+        {
+            "name": "W_ADDR",
+            "type": "INT",
+            "description": "Write command: MODBUS data point address."
+        },
+        {
+            "name": "W_POINTS",
+            "type": "INT",
+            "description": "Write command: number of MODBUS data points."
+        },
+        {
+            "name": "W_DATA_ADR",
+            "type": "INT",
+            "description": "Write command: DATA data point address."
+        },
+        {
+            "name": "W_DATA_BITPOS",
+            "type": "INT",
+            "description": "Write command: DATA data point bit position."
+        },
+        {
+            "name": "DELAY",
+            "type": "TIME",
+            "description": "Repetition time for command execution."
+        }
+    ],
+    "output": [
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code returned from the command execution."
+        },
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates if the module is currently processing a command."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value, as this is a function that executes commands."
+    }
+}

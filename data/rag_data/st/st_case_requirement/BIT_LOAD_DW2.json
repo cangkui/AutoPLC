@@ -1,0 +1,40 @@
+{
+    "title": "Bitwise Load with Rotation",
+    "description": "SH_T is a transparent Sample and Hold module. The input signal is provi￾ded at the output, as long as E is TRUE. With a falling edge of E, the value\nstored in the output OUT and will stay here until E return TRUE, and thus is\nswitched back to OUT. \nThe following example illustrates the operation of SH_T",
+    "type": "FUNCTION",
+    "name": "BIT_LOAD_DW2",
+    "input": [
+        {
+            "name": "I",
+            "type": "DWORD",
+            "description": "The input DWORD value to be manipulated."
+        },
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "A boolean flag to determine the operation mode: TRUE for rotation left, FALSE for mask application."
+        },
+        {
+            "name": "P",
+            "type": "INT",
+            "description": "The number of bit positions to rotate or shift."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of bits to be shifted left or right from the maximum DWORD value."
+        }
+    ],
+    "output": [
+        {
+            "name": "BIT_LOAD_DW2",
+            "type": "DWORD",
+            "description": "The resulting DWORD value after the bitwise load operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The value obtained from the bit manipulation operations, as specified by the input parameters."
+    }
+}

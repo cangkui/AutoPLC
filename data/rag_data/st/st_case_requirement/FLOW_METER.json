@@ -1,0 +1,53 @@
+{
+    "title": "Flow Meter Function Block",
+    "description": "FLOW_METER determines the fow rate per unit of\ntime and count quantities. FLOW_METER determines the fow rate from the\ninput VX and E. The module supports two operating modes are determined\nby the variable setup PULSE_MODE. If PULSE_MODE = TRUE is the volume\nfow and the amount determined by is added at each rising edge at E, the\nvalue of VX upon itself. If the PULSE_MODE = FALSE the input VX is inter￾preted as fow per unit time and is added up as long as E = TRUE. Using\nthe input RST, the internal counter can be always set to zero. X and Y are\nexternal to be declared variables and can be declared retentive / perma￾nent to be permanent in case of power failure. The module provides the\ninstantaneous fow value F as the Real in accordance to the unit connec￾ted to VX. If a value at VX is applied eg. in liters / hour so is the measured\nvalue at the output F in l / h. The output F is set at the constant intervals\nUPDATE_TIME. The outputs X and Y make up the over time accumulated\nmeasure values where X in REAL represent in the decimal point and Y in\nUDINT the integer part. A count of 234.111234 is represented by 0.111234\nat X and a value of 234 at Y. If for count only a REAL is used then the reso￾lution (for Real to IEEE32), is only 7-8 position . The above described me￾thod can provide more than 9 digits before the decimal point (2^32-1) and\nat least 7 digits after the decimal point. Since in this case X is always\nsmaller than 1, Y can be used for output without decimal places. The two\nvariables X and Y must be declared external and can, as the following ex￾ample, also be secured against power failure.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FLOW_METER",
+    "input": [
+        {
+            "name": "VX",
+            "type": "REAL",
+            "description": "Input velocity for flow calculation."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal for the flow measurement."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to initialize flow measurement parameters."
+        },
+        {
+            "name": "PULSE_MODE",
+            "type": "BOOL",
+            "description": "Flag to indicate if the flow meter is operating in pulse mode."
+        },
+        {
+            "name": "UPDATE_TIME",
+            "type": "TIME",
+            "description": "Time interval for updating flow calculation. Default is 1 second."
+        }
+    ],
+    "output": [
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "Calculated flow rate based on input parameters."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Current flow measurement value."
+        },
+        {
+            "name": "Y",
+            "type": "UDINT",
+            "description": "Counter for flow measurements, incremented based on calculated results."
+        }
+    ],
+    "return_value": null
+}

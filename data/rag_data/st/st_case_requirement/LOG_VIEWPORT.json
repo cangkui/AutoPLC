@@ -1,0 +1,53 @@
+{
+    "title": "LOG_VIEWPORT Module",
+    "description": "LOG_VIEWPORT\n\nThe module LOG_VIEWPORT is used to index a list of LOG_CONTROL \n\nmessages, which are currently in the virtual view. To move around within \n\nthe message list (scroll), a scroll ofset can be specifed by LV.MOVE_TO_X. \n\nA positive value scroll in direction of newer reports and a negative value \n\nin the direction of the earlier messages. The number of lines in the \n\n111 Version 1.21\n\nChapter 9. Network and Communication\n\nmessage list of the virtual view is given by LV.COUNT. The current \n\nmessages in the virtual view are stored in LV.LINE_ARRAY [x], and are \n\navailable for further processing. A change in the message list is always \n\nannounced with LV.UPDATE:= TRUE, and the user has to reset.\n\n The following LV.MOVE_TO_X values produce a special behavior.\n\n+30000 = display previous Messages (beginning of the ring bufer)\n\n+30001 = display latest messages (end of the ring bufer)\n\n+30002 = one full page in direction of recent messages.\n\n+30003 = One full page in direction of older messages",
+    "type": "FUNCTION",
+    "name": "LOG_VIEWPORT",
+    "input": [
+        {
+            "name": "LC",
+            "type": "LOG_CONTROL",
+            "description": "Control data for logging messages."
+        },
+        {
+            "name": "LV",
+            "type": "us_LOG_VIEWPORT",
+            "description": "Viewport data structure for managing display of log messages.",
+            "fields": [
+                {
+                    "name": "MOVE_TO_X",
+                    "type": "INTEGER",
+                    "description": "Scroll offset to navigate through log messages."
+                },
+                {
+                    "name": "COUNT",
+                    "type": "INTEGER",
+                    "description": "Total number of lines in the message list of the virtual view."
+                },
+                {
+                    "name": "LINE_ARRAY",
+                    "type": "ARRAY",
+                    "description": "Array containing the current messages in the virtual view.",
+                    "fields": [
+                        {
+                            "name": "x",
+                            "type": "STRING",
+                            "description": "Individual message text."
+                        }
+                    ]
+                },
+                {
+                    "name": "UPDATE",
+                    "type": "BOOLEAN",
+                    "description": "Flag to indicate whether the message list has changed."
+                }
+            ]
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "No return value for the LOG_VIEWPORT function."
+    }
+}

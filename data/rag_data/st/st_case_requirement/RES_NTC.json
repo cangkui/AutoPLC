@@ -1,0 +1,29 @@
+{
+    "title": "Calculate Resistance at Non-Temperature Coefficient (NTC)",
+    "description": "RES_NTC calculated the resistance of an NTC resistance sensor from the\ninput values T (temperature in °C) and RN (resistance at 25°C). The input\nvalue B is a constant value which must be read in the data sheets of that\nsensor. Typical values are at NTC sensors 2000 - 4000 Kelvin.\nThe calculation is done using the formula:\nThe formula provides a sufcient accuracy for small temperature ranges,\neg 0-100°C. For wide temperature ranges the formula according to Stein￾hart is more suitable.",
+    "type": "FUNCTION",
+    "name": "RES_NTC",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "The temperature in degrees Celsius."
+        },
+        {
+            "name": "RN",
+            "type": "REAL",
+            "description": "The reference resistance at a specified temperature."
+        },
+        {
+            "name": "B",
+            "type": "REAL",
+            "description": "The material characteristic constant for the NTC thermistor."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated resistance value based on the provided inputs."
+    }
+}

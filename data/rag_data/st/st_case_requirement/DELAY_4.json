@@ -1,0 +1,37 @@
+{
+    "title": "Delay Block",
+    "description": "SINH calculates the sinus Hyperbolic according the following formula:",
+    "type": "FUNCTION_BLOCK",
+    "name": "DELAY_4",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input signal to be delayed."
+        }
+    ],
+    "output": [
+        {
+            "name": "out1",
+            "type": "REAL",
+            "description": "The first delayed output of the input signal."
+        },
+        {
+            "name": "out2",
+            "type": "REAL",
+            "description": "The second delayed output of the input signal."
+        },
+        {
+            "name": "out3",
+            "type": "REAL",
+            "description": "The third delayed output of the input signal."
+        },
+        {
+            "name": "out4",
+            "type": "REAL",
+            "description": "The fourth delayed output of the input signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

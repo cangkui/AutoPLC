@@ -1,0 +1,25 @@
+{
+    "title": "Convert Direction to Degrees",
+    "description": "DIR_TO_DEG converts a NNE direction in the form to degrees. It will be up\nto 3 points evaluated, corresponding to a resolution of 22.5°. The output is\ninteger. The input must be in capital letters and East must be marked with\nO or E. The string NO is converted to 45°. L specifes the used language,\nfor detailed information see data type CONSTANTS_LANGUAGE.\nThe cardinal points are: 0° = North, 90° = East, 180° = South, 270° =\nWest. The conversion is done according to the following table:\nN 0° NNO, NNE 23° NO 45° ONO, ENE 68°\nO 90° OSO, ESE 113° SO, SE 135° SSO, SSE 158°\nS 180° SSW 203° SW 225° WSW 248°\nW 270° WNW 293° NW 315° NNW 338°",
+    "type": "FUNCTION",
+    "name": "DIR_TO_DEG",
+    "input": [
+        {
+            "name": "DIR",
+            "type": "STRING[3]",
+            "description": "A string representation of the direction, limited to three characters."
+        },
+        {
+            "name": "L",
+            "type": "INT",
+            "description": "An integer indicating the language option, used for direction localization."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The degree representation of the input direction calculated as per the language-specific mapping.",
+        "fields": []
+    }
+}

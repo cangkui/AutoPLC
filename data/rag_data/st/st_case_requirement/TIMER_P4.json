@@ -1,0 +1,159 @@
+{
+    "title": "TIMER_P4 - Universal Programmable Timer",
+    "description": "TIMER_P4 is a universal programmable Timer which has a lot of opportuni￾ties. In addition to events at fxed times, also events depending on exter￾nal hours like sunrise or sunset can be programmed. In addition to the ti￾ming programm, all outputs can be linked fexible with logic inputs. Up to\n\n63 independently programmable events are possible, and the user has\n\nvirtually unlimited possibilities. \n\nThe programming of the Timers are done via an ARRAY [0..63] OF\n\nTIMER_EVENT. It can thereby any number of events per channel and over￾lapping events can be generated. \n\nThe data structure TIMER_EVENT contains the following felds:\n\nData field Data Type Description\n\nCHANNEL BYTE Channel number\n\n66 Version 1.00\n\nChapter 6. Electrical Engineering\n\nTYPE BYTE Event Type\n\nDAY BYTE Day or another number\n\nSTART TOD Start time\n\nDURATION TIME Duration of the event\n\nLAND BYTE Mask to be logical and\n\nLOR BYTE Mask for Logical OR\n\nLAST DWORD Internal use\n\nThe data feld is the CHANNEL specifed for the relevant event channel, if\n\nmultiple channels are to be switched simultaneously per channel must be\n\nprogrammed in separate events. The TYPE of event determines what type\n\nof event is to be programmed, see the overview in the following table. DAY\n\ndefnes either a bitmask days of the week (Bit7 = MO, bit0 = SO), or the\n\nday of the month/year or a defned another number or count depending\n\non the event type. START is the start time (TIMEOFDAY) of the event, with\n\nevents as a function of an external time START can also defne a time dif￾ference. The duration defnes independent of the type of event, how long\n\nthe event lasts. Was an event is started the timer remembers in the data\n\nstructure each day, so that each event is run at maximum once per day. If\n\nseveral events per day and channel are to be defned, they can be pro￾grammed independently by multiple events. LAND and LOR defne logical\n\nmasks for additional logical links, a detailed description of the possible\n\nstate of links is provided below in the text. \n\nThe Timer has an additional manual input which allows to override outputs\n\nmanually. If MAN = TRUE is the 4 lowest bits of the input MI are passed to\n\nthe outputs Q. The input is an enable input and must be set to TRUE for\n\nnormal operation, if ENQ is set to FALSE, all outputs remain at FALSE. The\n\nModule can always be reset by means of the asynchronous input RST,\n\nhere all running events are deleted. The input OFS is used only when more\n\nof the TIMER modules are cascaded, the value of OFS then determines\n\nwhich channel number the frst output of the module has. If OFS is set to 4\n\nfor example, so the modules does not response to the corresponding\n\nchannel number 0..3 but to the channels 4..7. Thus, multiple devices are\n\ncascaded in a simple way. \n\nThe STATUS output is an ESR compliant status output which reports the\n\noperating states of the module.\n\nSTATUS = 100 (The module is disabled , ENQ = FALSE) \n\nSTATUS = 101 (manual operation, MAN = TRUE)\n\nSTATUS = 102 (automatic operation)\n\n The following example shows two cascaded timers : \n\n67 Version 1.00\n\nChapter 6. Electrical Engineering\n\n Block diagram of the timers : \n\nIf a programmed event occurs then the corresponding timer of the selec￾ted channel is started with the pre-defned time period. The channel out￾put can be linked by logical AND with up to 4 inputs L0..L3, only the inputs\n\nare associated, which are defnded in the event mask LAND with a 1 . con￾tains the mask LAND not a 1 (2#00000000) then no input is connected to\n\nthe output. If the mask LAND contains, for example 2#00001001) then the\n\noutput signal of the Timer is linked with the logic inputs L0 and L3 by AND.\n\nThe output in this case is only true if both an event the Timer has started\n\nand at the same time L0 and L3 are TRUE. After the AND link the output\n\ncan be additionally connected to any logic inputs in the same manner\n\nusing the mask LOR OR. \n\nThe following events can be programmed:\n\nTYP\n\nE\n\nDescription DAY Start Duration\n\n1 daily event - Start time Duration\n\n2 Event on selected days of the week B0..6 Start time Duration\n\n3 Event every N days N Start time Duration\n\n10 Weekly Event Day of the Start time Duration\n\n68 Version 1.00\n\nChapter 6. Electrical Engineering\n\nweek\n\n20 monthly event Day of the\n\nmonth\n\nStart time Duration\n\n21 last day of the month - Start time Duration\n\n30 annual event Day of the\n\nyear\n\nStart time Duration\n\n31 last day of the year - Start time Duration\n\n40 Event to leap days - Start time Duration\n\n41 Event on holidays - Start time Duration\n\n42 on holidays and weekends - Start time Duration\n\n43 Event during the week - Start time Duration\n\n50 External event after time 0,1 Ofset Duration\n\n51 Event before external time 0,1 -Ofset Duration\n\n52 Output to time+set ofset 0,1,2 Ofset\n\n53 Output to time + ofset delete 0,1,2 Ofset\n\n54 output to time - set ofset 0,1,2 Ofset\n\n55 output to time - ofset delete 0,1,2 Ofset\n\nEvent Types:\n\n1. daily event\n\nat a daily event, only channel number, start time and duration of the\n\nevent is programmed. The feld DAY has no meaning.\n\n2. Event on selected days of the week\n\nat this event the timer is started at selectable day of the week. In feld\n\nDAY is here defned by a bit mask at which days during the week days the\n\nevent has to be started. Monday = bit 6,.... Sunday = bit 0. The event will\n\nstart only on weekdays when the corresponding bit in feld DAY is TRUE. \n\n3. Event every N days\n\nthis after a period of N days, the defned event starts. In feld DAY is speci￾fed, after how many days the event starts. N = 3 means that the event\n\nwill be started every 3 days. N can take this value of 1..255.\n\n10. Weekly Event\n\n69 Version 1.00\n\nChapter 6. Electrical Engineering\n\nhere, a event is started on a particular day in the week, the corresponding\n\nday is defned in the feld DAY: 1 = Monday ..... 7 = Sunday.\n\n20. monthly event\n\nAt monthly events in the feld DAY the corresponding day of the month is\n\ndefned in which the event will take place. DAY = 24 means that the event\n\nrespectively at 24th of a month starts.\n\n21. End of the month\n\nAs months have no fxed length, it is also useful to generate an event on\n\nthe last day of a month. In this mode the DAY has no meaning.\n\n30. annual event\n\nAt annual events, in the feld DAY the corresponding day of the year is de￾fned, in which the event starts. DAY = 33 means that each event at the\n\n33rd day of the year starts, which corresponds to the 2nd of February.\n\n31. End of the year\n\nAs years have no fxed length, it is also useful to generate an event on the\n\nlast day of the year . In this mode the DAY has no meaning. The event is\n\nproduced on 31. December.\n\n40. Event to leap days\n\nThis event is only generated on 29. February, which is only in a leap year.\n\nDAY here has no meaning.\n\n41. Event on holidays\n\nThis event is only generated when the input HOLY = TRUE. At this input\n\nmust be connected the module HOLIDAY from the library. If this mode is\n\nnot used, the input HOLY remains open. The Field Day has no meaning\n\nhere.\n\n42. Event on holidays and weekends\n\nThis event is generated when the input HOLY = TRUE, or a Saturday or\n\nSunday is present. At this input JHOLY must be connected for this purpose\n\nthe module HOLIDAY from the library. If this mode is not used, the input\n\nHOLY remains open. The Field Day has no meaning here.\n\n43. Event during the week\n\nThis event is generated only during the week days from Monday to Friday.\n\nThe Field Day has no meaning here.\n\n50. External event after time\n\nHere is generated a daily event that depends on an external time. IN feld\n\nSTART here is not the start time itself, but rather set the ofset of the ex￾ternal time. In feld DAY is indicated the external time that is used as a re￾ference. DAY = 0 means TREF_0, and DAY = 1 corresponds TREF_1. An\n\nevent after external time, for example, is an event 1 hour after sunset. In\n\nthis case, TREF_1 (DAY must be on 1) passes the time of sunset, and in\n\n70 Version 1.00\n\nChapter 6. Electrical Engineering\n\nthe feld Start the time 01:00 (one hour ofset) is specifed. The times for\n\nsunrise and sunset can be fed from the module SUN_TIME from the library.\n\n51. Event before external time\n\nHere is generated a daily event that depends on an external time. IN feld\n\nSTART here is not the start time itself, but rather set the ofset of the ex￾ternal time. In feld DAY is indicated the external time that is used as a re￾ference. DAY = 0 means TREF_0, and DAY = 1 corresponds TREF_1. An\n\nevent before external time, for example, is an event 1 before after sunset.\n\nIn this case, TREF_1 (DAY must be on 1) passes the time of sunset, and in\n\nthe feld Start the time 01:00 (one hour ofset before TREF_1) is specifed.\n\nThe times for sunrise and sunset can be fed from the module SUN_TIME\n\nfrom the library.\n\n52 Set output after external time\n\nAn event of type 52 switches the output on at reaching an external time +\n\nSTART. The external time is TREF1 when DAY = 1 or TREF_0 if DAY = 0. If\n\nDAY > 1 the external time is 0. The output remains then to TRUE until it is\n\noverwritten with a new event or is deleted by a separate event.\n\n53 Delete output with external ofset\n\nAn event of type 53 switches the output of at reaching an external time +\n\nSTART. The external time is TREF1 when DAY = 1 or TREF_0 if DAY = 0. Is\n\nDAY > 1 is the external time is 0.\n\n54 Set output with negative ofset\n\nAn event of type 54 switches the output on at reaching an external time -\n\nSTART. The external time is TREF1 when DAY = 1 or TREF_0 if DAY = 0. If\n\nDAY >1 the external time is 0. The output is then held to TRUE until it is\n\noverwritten with a new event or deleted by a separate event.\n\n55 Output with negative ofset\n\nAn event of type 55 switches the output of when reaching the external\n\ntime - START. The external time is TREF1 when DAY = 1 or TREF_0 if DAY =\n\n0. Is DAY > 1 is the external time is 0.\n\n71 Version 1.00\n\nChapter 7. Blind Modules\n\n7. Blind Modules",
+    "type": "FUNCTION",
+    "name": "TIMER_P4",
+    "input": [
+        {
+            "name": "DTIME",
+            "type": "DATE_TIME",
+            "description": "Input date and time for the timer operations."
+        },
+        {
+            "name": "TREF_0",
+            "type": "TOD",
+            "description": "Reference time 0 for scheduling events."
+        },
+        {
+            "name": "TREF_1",
+            "type": "TOD",
+            "description": "Reference time 1 for scheduling events."
+        },
+        {
+            "name": "HOLY",
+            "type": "BOOL",
+            "description": "Input to specify if the current day is a holiday."
+        },
+        {
+            "name": "L0",
+            "type": "BOOL",
+            "description": "Logic input 0 for logical operations."
+        },
+        {
+            "name": "L1",
+            "type": "BOOL",
+            "description": "Logic input 1 for logical operations."
+        },
+        {
+            "name": "L2",
+            "type": "BOOL",
+            "description": "Logic input 2 for logical operations."
+        },
+        {
+            "name": "L3",
+            "type": "BOOL",
+            "description": "Logic input 3 for logical operations."
+        },
+        {
+            "name": "OFS",
+            "type": "INT",
+            "description": "Channel offset for cascading multiple TIMER modules."
+        },
+        {
+            "name": "ENQ",
+            "type": "BOOL",
+            "description": "Enable input; if FALSE, all outputs remain FALSE."
+        },
+        {
+            "name": "MAN",
+            "type": "BOOL",
+            "description": "Manual operation switch; if TRUE, outputs follow manual input."
+        },
+        {
+            "name": "MI",
+            "type": "BYTE",
+            "description": "Channel selection for manual operation."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Asynchronous reset input to clear running events."
+        },
+        {
+            "name": "I/O PROG",
+            "type": "ARRAY[0..63] OF TIMER_EVENT",
+            "description": "Array containing data for programmable timer events."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output channel 0 for the timer."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output channel 1 for the timer."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output channel 2 for the timer."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output channel 3 for the timer."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "Status output indicating the operation state of the module."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value."
+    },
+    "fields": [
+        {
+            "name": "TIMER_EVENT",
+            "type": "struct",
+            "description": "Structure holding the configuration for a timer event.",
+            "fields": [
+                {
+                    "name": "CHANNEL",
+                    "type": "BYTE",
+                    "description": "The channel number for the event."
+                },
+                {
+                    "name": "TYPE",
+                    "type": "BYTE",
+                    "description": "The type of the event to be programmed."
+                },
+                {
+                    "name": "DAY",
+                    "type": "BYTE",
+                    "description": "Specifies the day(s) for the event based on its type."
+                },
+                {
+                    "name": "START",
+                    "type": "TOD",
+                    "description": "Start time of the event."
+                },
+                {
+                    "name": "DURATION",
+                    "type": "TIME",
+                    "description": "Duration for which the event is active."
+                },
+                {
+                    "name": "LAND",
+                    "type": "BYTE",
+                    "description": "Logical AND mask for input linking."
+                },
+                {
+                    "name": "LOR",
+                    "type": "BYTE",
+                    "description": "Logical OR mask for input linking."
+                },
+                {
+                    "name": "LAST",
+                    "type": "DWORD",
+                    "description": "Internal use field."
+                }
+            ]
+        }
+    ]
+}

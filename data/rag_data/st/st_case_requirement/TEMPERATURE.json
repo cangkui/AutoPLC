@@ -1,0 +1,62 @@
+{
+    "title": "Temperature Conversion",
+    "description": "TEMPERATURE converts diferent, in practice common used units for\ntemperature. Normally, only the input to be converted is occupied and the\nremaining inputs remain free. However, if several inputs loaded with va￾lues, the values of all inputs are converted accordingly and then summed.\n1 K = 273.15 °C\n1 °C = 273.15 K\n1 °F = °C * 1.8 + 32\n1 Re = °C * 0.8\n1 Ra = K * 1.8\n23. Control Modules",
+    "type": "FUNCTION_BLOCK",
+    "name": "TEMPERATURE",
+    "input": [
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Input temperature in Kelvin."
+        },
+        {
+            "name": "C",
+            "type": "REAL",
+            "description": "Celsius conversion base value, initialized to -273.15."
+        },
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "Fahrenheit conversion base value, initialized to -459.67."
+        },
+        {
+            "name": "Re",
+            "type": "REAL",
+            "description": "Réaumur conversion base value, initialized to -218.52."
+        },
+        {
+            "name": "Ra",
+            "type": "REAL",
+            "description": "Rankine value to be converted."
+        }
+    ],
+    "output": [
+        {
+            "name": "YK",
+            "type": "REAL",
+            "description": "Converted temperature in Kelvin."
+        },
+        {
+            "name": "YC",
+            "type": "REAL",
+            "description": "Converted temperature in Celsius."
+        },
+        {
+            "name": "YF",
+            "type": "REAL",
+            "description": "Converted temperature in Fahrenheit."
+        },
+        {
+            "name": "YRe",
+            "type": "REAL",
+            "description": "Converted temperature in Réaumur."
+        },
+        {
+            "name": "YRa",
+            "type": "REAL",
+            "description": "Converted temperature in Rankine."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

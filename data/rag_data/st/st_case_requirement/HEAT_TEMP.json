@@ -1,0 +1,45 @@
+{
+    "title": "Heating Curve Calculation",
+    "description": "HEAT_TEMP calculates the fow temperature of the outside temperature by\n\nthe following formula:\n\nTY = TR + T_DIFF / 2 * TX + (TY_Setup - T_DIFF / 2 - TR) * TX ^ (1 / C)\n\nwith: TR = T_INT + OFFSET\n\nTX := (TR - T_EXT) / (T_INT_Setup - T_EXT_Setup);\n\nThe parameters of the heating curve are given by the setup variables\n\nTY_C (design fow temperature), T_INT_C (room temperature at the design\n\npoint), T_EXT_C (outside temperature at the design point) and T_DIFF_C\n\n(diference between forward / reverse at the design point). With the input\n\nofset, the heating curve of room reduction (negative ofset) or room\n\nboost (positive ofset) can be adjusted. With the setup variables TY_MIN\n\nand TY_MAX the fow temperature can be kept to a minimum and maxi￾mum value. The input T_REQ is used to support requirements such as ex￾ternal temperature from the boiler. If T_REQ is larger than the calculated\n\nvalue of the heating curve for TY so TY is set to T_REQ. The limit of\n\nTY_MAX does not apply to the request by T_REQ. The setup variable H de￾fne at what outside temperature the heating curve is calculated, as long\n\nas T_EXT + H >= T_INT +OFFSET the TY stays at 0 and HEAT is FALSE. If\n\nT_EXT + H < T_INT + OFFSET the HEAT is TRUE and TY outputs the calcu-\n\n34 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\nlated fow temperature. The setup variable C determines the curvature of\n\nthe heating curve. The curvature is dependent on the heating system.\n\nConvectors: C = 1.25 – 1.45\n\nPanel radiators: C = 1.20 – 1.30\n\nRadiators: C = 1.30\n\nPipes: C = 1.25\n\nFloor heating:C = 1.1\n\nThe larger the value of C, the stronger the heating curve is curved. A va￾lue of 1.0 gives a straight line as the heating curve. Typical heating sys￾tems are between 1.0 and 1.5.\n\nThe graph shows Heating curves for the design temperatures of 30 - 80°C\n\nfow temperature at -20 ° C outside temperature and at a C of 1.33:",
+    "type": "FUNCTION",
+    "name": "HEAT_TEMP",
+    "input": [
+        {
+            "name": "T_EXT",
+            "type": "REAL",
+            "description": "Outside temperature (TAT)"
+        },
+        {
+            "name": "T_INT",
+            "type": "REAL",
+            "description": "Nominal room temperature"
+        },
+        {
+            "name": "OFFSET",
+            "type": "REAL",
+            "description": "Lowering or raising the room temperature"
+        },
+        {
+            "name": "T_REQ",
+            "type": "REAL",
+            "description": "Temperature requirement"
+        }
+    ],
+    "output": [
+        {
+            "name": "TY",
+            "type": "REAL",
+            "description": "Heating circuit flow temperature"
+        },
+        {
+            "name": "HEAT",
+            "type": "BOOL",
+            "description": "Heating requirement indicator"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "NONE",
+        "description": "The function does not return any value, but outputs are provided in the output parameters."
+    }
+}

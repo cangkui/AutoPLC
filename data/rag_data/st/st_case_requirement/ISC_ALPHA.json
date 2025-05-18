@@ -1,0 +1,25 @@
+{
+    "title": "Check if Input is Alphabetic",
+    "description": "ISC_ALPHA tests whether the character IN is an alphabetic character. If IN\nis a sign A..Z, a..z or any umlaut, the function returns TRUE, if not the\nfunction returns FALSE. In examining the Global Setup EXTENDED_ASCII\nconstant is considered. If EXTENDED_ASCII = TRUE the extended ASCII\ncharacter-set to be considered in accordance with ISO 8859-1. Umlauts\nlike Ä, Ö, Ü are considered only if the global constant EXTENDED_ASCII =\nTRUE.\nThe following Table Explains the code:\nCode EXTENDED_ASCII = TRUE EXTENDED_ASCII = FAS￾LE 0..64 FALSE FALSE\n65..90 TRUE TRUE\n91..96 FALSE FALSE\n97..122 TRUE TRUE\n123..191 FALSE FALSE\n192..214 TRUE FALSE\n215 FALSE FALSE\n216..246 TRUE FALSE\n247 FALSE FALSE\n248..255 TRUE FALSE",
+    "type": "FUNCTION",
+    "name": "ISC_ALPHA",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The input byte to be checked to see if it represents an alphabet character."
+        }
+    ],
+    "output": [
+        {
+            "name": "ISC_ALPHA",
+            "type": "BOOL",
+            "description": "Returns true if the input byte is an alphabet character, otherwise returns false."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The boolean result indicating if the input is an alphabetic character."
+    }
+}

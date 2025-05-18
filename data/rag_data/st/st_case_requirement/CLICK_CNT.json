@@ -1,0 +1,32 @@
+{
+    "title": "Click Counter Function Block",
+    "description": "CLICK_CNT determines the number of pulses within the unit time TC. at in￾put IN. A rising edge at IN will start an internal timer with time TC. During\nthe course of Timers the module counts the falling edges of IN and review￾es after the expiry of the time TC whether N pulses are within the time TC.\nJust when exactly N pluses within TC will happen, the output Q is set for a\nPLC cycle to TRUE. The module decodes also N = 0, which corresponds to\na rising edge but not falling edge within TC.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CLICK_CNT",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "A boolean input signal that indicates when an event occurs."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "An integer that specifies the number of falling edges that should be counted before setting the output Q."
+        },
+        {
+            "name": "TC",
+            "type": "TIME",
+            "description": "A time parameter that defines the time interval for which the input signal is observed."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "A boolean output that is activated for one cycle when the defined count of falling edges is reached."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

@@ -1,0 +1,26 @@
+{
+    "title": "Fibonacci Function",
+    "description": "FIB calculate the Fibonacci number The Fibonacci number is defned as fol￾lows:\nFIB(0) = 0, FIB(1) = 1, FIB(2) = 1, FIB(3) = 2, FIB(4) = 3, FIB(5) = 5 .....\nThe Fibonacci number of X is equal to the sum of the Fibonacci numbers of\nX-1 and X-2. The function can compute the Fibonacci numbers up to 46, if\nX < 0 or greater than 46, the function returns -1.",
+    "type": "FUNCTION",
+    "name": "FIB",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "An integer input for which the Fibonacci number needs to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "FIB",
+            "type": "DINT",
+            "description": "The calculated Fibonacci number, or -1 for invalid input."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "The final result of the Fibonacci calculation.",
+        "fields": []
+    }
+}

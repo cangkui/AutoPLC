@@ -1,0 +1,37 @@
+{
+    "title": "Complex Exponential Function",
+    "description": "CEXP calculates the complex exponent to base E, CEXP = E^X.",
+    "type": "FUNCTION",
+    "name": "CEXP",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "The input complex number for which the exponential is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "CEXP",
+            "type": "complex",
+            "description": "The resulting complex number after computing the exponential of the input."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "Returns the computed complex exponential value.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the computed complex exponential."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the computed complex exponential."
+            }
+        ]
+    }
+}

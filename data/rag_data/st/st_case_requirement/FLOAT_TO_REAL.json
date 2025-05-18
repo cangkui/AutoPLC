@@ -1,0 +1,20 @@
+{
+    "title": "Float to Real Conversion Function",
+    "description": "FLOAT_TO_REAL converts a string- foating point number into a data type\nREAL. While the conversion characters \".\" or ',' interpreted as a comma\nand 'E' or 'e' as the separator of the exponent. The characters '-\n0123456789' are evaluated and others in FLT occurring characters are\nignored.",
+    "type": "FUNCTION",
+    "name": "FLOAT_TO_REAL",
+    "input": [
+        {
+            "name": "FLT",
+            "type": "STRING[20]",
+            "description": "The string input representing a floating-point number to be converted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted real number value from the input string.",
+        "fields": []
+    }
+}

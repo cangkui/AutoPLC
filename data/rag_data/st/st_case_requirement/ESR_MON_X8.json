@@ -1,0 +1,113 @@
+{
+    "title": "ESR Monitoring Function Block",
+    "description": "MINUTE function extracts the current minute of the day.",
+    "type": "FUNCTION_BLOCK",
+    "name": "ESR_MON_X8",
+    "input": [
+        {
+            "name": "s0",
+            "type": "BYTE",
+            "description": "First status input byte."
+        },
+        {
+            "name": "s1",
+            "type": "BYTE",
+            "description": "Second status input byte."
+        },
+        {
+            "name": "s2",
+            "type": "BYTE",
+            "description": "Third status input byte."
+        },
+        {
+            "name": "s3",
+            "type": "BYTE",
+            "description": "Fourth status input byte."
+        },
+        {
+            "name": "s4",
+            "type": "BYTE",
+            "description": "Fifth status input byte."
+        },
+        {
+            "name": "s5",
+            "type": "BYTE",
+            "description": "Sixth status input byte."
+        },
+        {
+            "name": "s6",
+            "type": "BYTE",
+            "description": "Seventh status input byte."
+        },
+        {
+            "name": "s7",
+            "type": "BYTE",
+            "description": "Eighth status input byte."
+        },
+        {
+            "name": "DT_in",
+            "type": "DT",
+            "description": "DateTime input parameter."
+        },
+        {
+            "name": "Mode",
+            "type": "BYTE",
+            "description": "Mode of operation, default is 3."
+        },
+        {
+            "name": "a0",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s0."
+        },
+        {
+            "name": "a1",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s1."
+        },
+        {
+            "name": "a2",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s2."
+        },
+        {
+            "name": "a3",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s3."
+        },
+        {
+            "name": "a4",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s4."
+        },
+        {
+            "name": "a5",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s5."
+        },
+        {
+            "name": "a6",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s6."
+        },
+        {
+            "name": "a7",
+            "type": "STRING[10]",
+            "description": "Additional string input for status s7."
+        }
+    ],
+    "output": [
+        {
+            "name": "ESR_Flag",
+            "type": "BOOL",
+            "description": "Flag indicating if any status input has changed and an output was updated."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "ESR_Out",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Output array that stores the converted status based on inputs."
+        }
+    ],
+    "return_value": null
+}

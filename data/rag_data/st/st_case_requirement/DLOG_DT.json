@@ -1,0 +1,35 @@
+{
+    "title": "DLOG_DT Module for Data Logging",
+    "description": "DLOG_DT is for logging (recording) of a date or time value of \n\ntype STRING, and can only be used in combination with a DLOG_STORE_* \n\nmodule, as this coordinates the record the data by the data structure X. \n\nUsing FMT parameter, the formatting will be set. In the FMT parameter can \n\nalso be combined with normal text formatting parameters. See \n\ndocumentation on the block DT_TO_STRF. If the FMT parameter is not \n\nspecifed, the default formatting\n\n'#A-#D-#H #N:#R:#T' is used.\n\nAt recording formats that support a process value name, such as at \n\nDLOG_STORE_FILE_CSV a name can be provided at COLUMN\".\n\nIf with DELTA parameter a value greater than 0 is specified, the automatic data \n\nlogging is enabled via differential monitoring. If time changes by the value of DELTA \n\nautomatically a record is stored. This feature can be applied in parallel to the central \n\ntrigger on the DLOG_STORE_ * module. If, for example DELTA is the value 30, \n\nautomatically every 30 seconds a record is saved.\n\n50 Version 1.21\n\nChapter 7. Data Logger",
+    "type": "FUNCTION",
+    "name": "DLOG_DT",
+    "input": [
+        {
+            "name": "X",
+            "type": "DLOG_DATA",
+            "description": "DLOG data structure for recording data."
+        },
+        {
+            "name": "FMT",
+            "type": "STRING",
+            "description": "Formatting parameters for the date or time value. If not specified, defaults to '#A-#D-#H #N:#R:#T'."
+        },
+        {
+            "name": "COLUMN",
+            "type": "STRING",
+            "description": "Process value name, limited to 40 characters."
+        },
+        {
+            "name": "DELTA",
+            "type": "UDINT",
+            "description": "Difference in seconds for enabling automatic data logging via differential monitoring. If greater than 0, records will automatically be stored based on this time difference."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "The formatted date or time value recorded.",
+        "fields": []
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "title": "UTC to Local Time Conversion",
+    "description": "UTC_TO_LTIME calculates from the universal time at\ninput UTC the local time (LOCAL_DT), with automatic daylight saving time\nif DST_ENABLE is set to True. If DST_ENABLE is FALSE, the local time is cal￾culated without daylight saving.\nThis function module requires UTC at the input, which is normally provided\nby the PLC and can be read by a routine of the manufacturer. \nThe following example an application for a WAGO 750-841 CPU is shown.\nThe reading of the internal clock is done by the manufacturer SYSRTCGET￾TIME routine. The PLC clock must be in this case set to UTC.",
+    "type": "FUNCTION",
+    "name": "UTC_TO_LTIME",
+    "input": [
+        {
+            "name": "UTC",
+            "type": "DT",
+            "description": "The UTC date and time to be converted."
+        },
+        {
+            "name": "DST_ENABLE",
+            "type": "BOOL",
+            "description": "A boolean flag indicating whether daylight saving time adjustments should be applied."
+        },
+        {
+            "name": "TIME_ZONE_OFFSET",
+            "type": "INT",
+            "description": "The time zone offset in minutes to be applied to the UTC time."
+        }
+    ],
+    "output": [
+        {
+            "name": "UTC_TO_LTIME",
+            "type": "DT",
+            "description": "The converted local time in date and time format."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DT",
+        "description": "The function returns the local time corresponding to the input UTC time after applying the necessary adjustments for the time zone and DST.",
+        "fields": []
+    }
+}

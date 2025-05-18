@@ -1,0 +1,20 @@
+{
+    "title": "Calculate Argument of Complex Number",
+    "description": "CARG calculates the angle of a complex number in the coordinate system.\nThe range of values of the result is between [-π , +π ].",
+    "type": "FUNCTION",
+    "name": "CARG",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "A complex number for which the argument needs to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated argument (angle in radians) of the complex number X.",
+        "fields": []
+    }
+}

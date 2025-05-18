@@ -1,0 +1,20 @@
+{
+    "title": "Fahrenheit to Celsius Conversion",
+    "description": "F_TO_C converts a temperature reading from Fahrenheit in Celsius.",
+    "type": "FUNCTION",
+    "name": "F_TO_C",
+    "input": [
+        {
+            "name": "fahrenheit",
+            "type": "REAL",
+            "description": "The temperature value in Fahrenheit that needs to be converted to Celsius."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted temperature value in Celsius.",
+        "fields": []
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "title": "Fractional Part Calculation",
+    "description": "FRACT(3.14) results 0.14.\nFor X greater than or less than +/- 2.14 * 10^9 Fract always provides a\nzero return. As the resolution of a 32bit REAL is a maximum of 8 digits,\nfrom numbers larger or smaller than +/- 2.14 * 10^9 no fractional part can\nbe determined, because this part can also not be stored in a REAL varia￾ble.",
+    "type": "FUNCTION",
+    "name": "FRACT",
+    "input": [
+        {
+            "name": "x",
+            "type": "REAL",
+            "description": "The real number from which the fractional part is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "FRACT",
+            "type": "REAL",
+            "description": "The calculated fractional part of the input number, or 0 if the absolute value of the input number is greater than or equal to 2 billion."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the fractional component of the input real number."
+    }
+}

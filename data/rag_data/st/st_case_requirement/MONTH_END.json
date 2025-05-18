@@ -1,0 +1,19 @@
+{
+    "title": "Calculate End of Month Date",
+    "description": "MONTH_END calculates the date of the last day of the current month and\ncurrent year.\nMONTH_END(D#2008-2-13) = D#2008-2-29",
+    "type": "FUNCTION",
+    "name": "MONTH_END",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The input date for which the end of month is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The last date of the month corresponding to the provided input date."
+    }
+}

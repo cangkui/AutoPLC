@@ -1,0 +1,37 @@
+{
+    "title": "PWM Control Function Block",
+    "description": "CTRL_PWM converts the input value of CI (0 .1) in a pulse width modulated\noutput signal Q. When MANUAL is TRUE at the output Q the input value of\nMAN_IN is passed. CTRL_OUT can be used to build own rule modules.\nBlock diagram of CTRL_PWM:\nThe following example shows a PI controller with PWM output:",
+    "type": "FUNCTION_BLOCK",
+    "name": "CTRL_PWM",
+    "input": [
+        {
+            "name": "CI",
+            "type": "REAL",
+            "description": "The control input value used for PWM calculation."
+        },
+        {
+            "name": "MAN_IN",
+            "type": "REAL",
+            "description": "The manual input value that can override the control input when MANUAL is true."
+        },
+        {
+            "name": "MANUAL",
+            "type": "BOOL",
+            "description": "A boolean flag indicating whether to use MAN_IN (true) or CI (false) for the PWM calculation."
+        },
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "The frequency used for PWM signal generation."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The output status indicating whether the PWM signal is active."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

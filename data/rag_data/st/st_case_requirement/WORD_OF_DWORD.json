@@ -1,0 +1,31 @@
+{
+    "title": "Extract Specific Word from DWORD",
+    "description": "WORD_OF_DWORD extracts a word (W0 .. W1) from a DWORD.\n 17. Latches, Flip-Flop and Shift Register",
+    "type": "FUNCTION",
+    "name": "WORD_OF_DWORD",
+    "input": [
+        {
+            "name": "in",
+            "type": "DWORD",
+            "description": "The input DWORD from which the WORD will be extracted."
+        },
+        {
+            "name": "N",
+            "type": "BYTE",
+            "description": "The index of the WORD to extract from the DWORD, where N specifies which 16-bit segment to retrieve."
+        }
+    ],
+    "output": [
+        {
+            "name": "WORD_OF_DWORD",
+            "type": "WORD",
+            "description": "The output WORD extracted from the input DWORD at the specified index N."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "The extracted 16-bit unsigned integer (WORD) from the input DWORD.",
+        "fields": []
+    }
+}

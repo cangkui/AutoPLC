@@ -1,0 +1,24 @@
+{
+    "title": "Calculate Volume of a Cone",
+    "description": "CONE_V calculated the volume of a cone with the radius RX and height HX.",
+    "type": "FUNCTION",
+    "name": "CONE_V",
+    "input": [
+        {
+            "name": "rx",
+            "type": "REAL",
+            "description": "The radius of the cone's base."
+        },
+        {
+            "name": "hx",
+            "type": "REAL",
+            "description": "The height of the cone."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated volume of the cone."
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "title": "Celsius to Kelvin Conversion",
+    "description": "C_TO_K converts a temperature reading from Celsius to Kelvin.",
+    "type": "FUNCTION",
+    "name": "C_TO_K",
+    "input": [
+        {
+            "name": "Celsius",
+            "type": "REAL",
+            "description": "The temperature in degrees Celsius that needs to be converted to Kelvin."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted temperature value in Kelvin, calculated by adjusting the Celsius input.",
+        "fields": []
+    }
+}

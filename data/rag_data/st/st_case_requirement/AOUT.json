@@ -1,0 +1,46 @@
+{
+    "title": "Output Calculation Function",
+    "description": "AOUT is confgured by setup parameters and calculates the input\nvalues (IN) to accordingly, so that after the module AOUT is a digital value\navailable at the output of the D/A converter generates a value that is the\nREAL value IN matches. Furthermore, the module can insert a Sign- Bit\nanywhere if the D/A converter need a Sign- Bit. By double-clicking on the\nmodule, several setup variables can be defned. Bits defne how many Bits\nthe D/A converter can handle. For a 12 bit converter, this value is 12. Then\nonly the bits 0 - 11 are scored. Sign defnes whether a sign bit is needed\nand where to place in the source DWORD. Sign = 255 means that no sign\nbit is needed, and 15 means Bit 15 in the DWORD contains the sign. LOW\nand HIGH defne the smallest and highest input value. If a Sign-Bit is def￾ned ( SIGN< 255), then LOW and HIGH must be positive. Without Sign-Bit\nthey can be either positive or negative.",
+    "type": "FUNCTION",
+    "name": "AOUT",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input real number to be processed."
+        },
+        {
+            "name": "Bits",
+            "type": "BYTE",
+            "description": "The number of bits to be used in the output calculation."
+        },
+        {
+            "name": "sign",
+            "type": "BYTE",
+            "description": "The sign bit, defaults to 255 if not specified."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower limit for the input value."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper limit for the input value, defaults to 10.0 if not specified."
+        }
+    ],
+    "output": [
+        {
+            "name": "Aout",
+            "type": "DWORD",
+            "description": "The calculated 32-bit output value based on the processed input."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The final computed output value.",
+        "fields": []
+    }
+}

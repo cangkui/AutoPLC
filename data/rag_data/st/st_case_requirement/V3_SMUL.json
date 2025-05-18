@@ -1,0 +1,81 @@
+{
+    "title": "Scalar Multiplication of a 3D Vector",
+    "description": "SGN calculates the Signum of X. \nSGN = +1 if X > 0\nSGN = 0 if X = 0\nSGN = -1 if X < 0",
+    "type": "FUNCTION",
+    "name": "V3_SMUL",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The 3-dimensional vector that is to be multiplied by the scalar.",
+            "fields": [
+                {
+                    "name": "X",
+                    "type": "REAL",
+                    "description": "The x-component of the vector."
+                },
+                {
+                    "name": "Y",
+                    "type": "REAL",
+                    "description": "The y-component of the vector."
+                },
+                {
+                    "name": "Z",
+                    "type": "REAL",
+                    "description": "The z-component of the vector."
+                }
+            ]
+        },
+        {
+            "name": "M",
+            "type": "REAL",
+            "description": "The scalar multiplier to be applied to each component of the vector."
+        }
+    ],
+    "output": [
+        {
+            "name": "V3_SMUL",
+            "type": "Vector_3",
+            "description": "The resulting vector after multiplication by the scalar.",
+            "fields": [
+                {
+                    "name": "X",
+                    "type": "REAL",
+                    "description": "The x-component of the resulting vector."
+                },
+                {
+                    "name": "Y",
+                    "type": "REAL",
+                    "description": "The y-component of the resulting vector."
+                },
+                {
+                    "name": "Z",
+                    "type": "REAL",
+                    "description": "The z-component of the resulting vector."
+                }
+            ]
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "Vector_3",
+        "description": "The resulting vector formed by multiplying each component of the input vector by the scalar.",
+        "fields": [
+            {
+                "name": "X",
+                "type": "REAL",
+                "description": "The x-component of the resulting vector."
+            },
+            {
+                "name": "Y",
+                "type": "REAL",
+                "description": "The y-component of the resulting vector."
+            },
+            {
+                "name": "Z",
+                "type": "REAL",
+                "description": "The z-component of the resulting vector."
+            }
+        ]
+    }
+}

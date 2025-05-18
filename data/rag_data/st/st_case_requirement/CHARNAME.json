@@ -1,0 +1,25 @@
+{
+    "title": "Character Name Generation",
+    "description": "CHARNAME determines the character name for a character code.",
+    "type": "FUNCTION",
+    "name": "CHARNAME",
+    "input": [
+        {
+            "name": "C",
+            "type": "BYTE",
+            "description": "A BYTE value used to determine the character name."
+        }
+    ],
+    "output": [
+        {
+            "name": "CHARNAME",
+            "type": "string",
+            "description": "The resulting character name string constructed from the input BYTE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The character name generated from the BYTE input."
+    }
+}

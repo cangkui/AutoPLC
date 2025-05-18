@@ -1,0 +1,57 @@
+{
+    "title": "PID Controller Function Block",
+    "description": "FT_PIDW is a PID controller with Anti Wind- Up Hold works according to the\nfollowing formula: \nY = KP * ( IN + 1/TN * INTEG(IN) + TV *DERIV(IN))\nThe control parameters are given in the form of KP, TN and TV, and if the￾re are parameters KP, KI and KD they can be converted using the following\nformula:\nTN = KP/KI und TV = KD/KP\nThe input values LIM_H and LIM_L limit the range of the output Y. With\nRST, the internal Integrator can always be set to 0. The output LIM indica￾tes that the Output Y runs to one of the limits LIM_L orL IM_H. The PI con￾troller is free running and uses the trapezoidal rule to calculate the inte￾grator for the highest accuracy and optimal speed. The default values of\nthe input parameters are predefned as follows: KP = 1, TN = 1s, TV = 1s,\nILIM_L =-1E38 and ILIM_H = +1 E38.\n Anti Wind-Up: Control modules with Integrator tend to the so-called Wind￾Up Efect. A Wind-Up means that the integrator module continuously run\nagain because, for example, the control signal Y is at a limit and the sys￾tem can not compensate the deviation, which then leads to subsequent\ntransition into the control range until a long and time-consuming dismant￾ling of the integrator value and the scheme only respond delayed. Since\nthe integrator is only necessary to compensate the deviation for all other\ncontrol units, and the range of the integrator should be limited with the\nvalues of ILIM.\nThe module FT_PIDW has a so-called Wind-Up-Hold which freezes the inte￾grator after reaching for an output limit (LIM_L, LIM_H) on the last value\nand thus a Wind-Up prevents. \nThe following graph illustrates the internal structure of the controller:\nFT_PD can be used in conjunction with the modules CTRL_IN and\nCTRL_OUT to establish a PD controller.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PIDW",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input process variable that the PID controller will process."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "The proportional gain of the PID controller, defaults to 1.0."
+        },
+        {
+            "name": "TN",
+            "type": "REAL",
+            "description": "The integral time constant of the PID controller, defaults to 1.0."
+        },
+        {
+            "name": "TV",
+            "type": "REAL",
+            "description": "The derivative time constant of the PID controller, defaults to 1.0."
+        },
+        {
+            "name": "LIM_L",
+            "type": "REAL",
+            "description": "The lower limit for the output, defaults to -1E+38."
+        },
+        {
+            "name": "LIM_H",
+            "type": "REAL",
+            "description": "The upper limit for the output, defaults to 1E+38."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A reset flag that when true resets the integral component of the controller."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The calculated control output of the PID controller."
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "A flag indicating whether the output is within the defined limits."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

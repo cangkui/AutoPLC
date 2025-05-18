@@ -1,0 +1,37 @@
+{
+    "title": "Timing Function Block",
+    "description": "M_T measures the time how long IN was TRUE. PT is the time from the \nrising edge of signal IN to the falling edge of the IN signal. The Output ET \npasses the elapsed time since the last rising edge to falling edge. As long \nas the input signal is FALSE, ET = 0. M_T requires a rising edge to trigger \nthe measurement. If at the frst call IN is already TRUE, it is not seen as a \nrising edge. For more examples, see the description of M_TX. With TRUE at \nthe input RST, the outputs can always be reset to 0. If ET reaches the \nvalue of TMAX, automatically a reset is generated in the module to reset \nall outputs to 0. TMAX is internally assigned with default value of T#10d \nand normally can be unconnected.",
+    "type": "FUNCTION_BLOCK",
+    "name": "M_T",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "A boolean input that, when true, starts the timing measurement."
+        },
+        {
+            "name": "TMAX",
+            "type": "TIME",
+            "description": "The maximum allowable elapsed time that can be measured. Defaults to 14400 minutes."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean input to reset the elapsed time measurements."
+        }
+    ],
+    "output": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The previous time value recorded before the reset or input changes."
+        },
+        {
+            "name": "ET",
+            "type": "TIME",
+            "description": "The elapsed time measured from the rising edge of the input signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

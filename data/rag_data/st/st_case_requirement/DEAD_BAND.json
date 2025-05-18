@@ -1,0 +1,24 @@
+{
+    "title": "Dead Band Calculation Function",
+    "description": "DEAD_BAND is a linear transfer function with dead zone. The function mo￾ves the positive part of the curve to -L and the negative part of the curve\nby +L. DEAD_BAND is used to flter a quantization noise and other noise\ncomponents from a signal. DEAD_BAND, for example, is used in control\nsystems in order to prevent that the controller permanently switches in\nsmall increments, while the actuator is overstressed and worn out.\nDEAD_BAND = X - SGN(X)*L if ABS(X)> L if ABS(X) > L \nDEAD_BAND = 0 if ABS(X) <= L",
+    "type": "FUNCTION",
+    "name": "DEAD_BAND",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the dead band is calculated."
+        },
+        {
+            "name": "L",
+            "type": "REAL",
+            "description": "The limit value used to determine the dead band thresholds."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated dead band value based on the input conditions."
+    }
+}

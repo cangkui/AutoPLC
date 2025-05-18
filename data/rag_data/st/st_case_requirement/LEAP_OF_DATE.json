@@ -1,0 +1,19 @@
+{
+    "title": "Leap Year Calculation",
+    "description": "LEAP_OF_DATE tests whether the input date is in a leap year.\nThe function calculates whether a date falls within a leap year and returns\nTRUE if necessary. The test is valid for the time window from 1970 to\n2099. In the year 2100 a leap year is indicated although this is not one.\nHowever, since the range of dates according to IEC61131-3 extends only\nto the year 2106 this correction will be omitted.",
+    "type": "FUNCTION",
+    "name": "LEAP_OF_DATE",
+    "input": [
+        {
+            "name": "idate",
+            "type": "DATE",
+            "description": "The date to check for leap year status."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "True if the year of the given date is a leap year, otherwise false."
+    }
+}

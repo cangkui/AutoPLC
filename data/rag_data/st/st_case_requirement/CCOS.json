@@ -1,0 +1,26 @@
+{
+    "title": "Complex Cosine Function",
+    "description": "CCOS calculates the cosine of a complex number",
+    "type": "FUNCTION",
+    "name": "CCOS",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "A complex number for which the cosine is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "CCOS",
+            "type": "complex",
+            "description": "The cosine of the input complex number."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The result of the cosine calculation.",
+        "fields": []
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "title": "Pulse Length Classification",
+    "description": "PULSE_LENGTH sets on an input pulse at IN one of the 3 outputs. The out￾put SHORT is for one cycle TRUE if the input pulse is less than T_SHORT.\n\nThe output MIDDLE will TRUE for one cycle when the input pulse length is\n\nbetween T_SHORT and T_LONG. The output of LONG is set when the input\n\npulse has exceeded T_LONG and remains to TRUE, as the input pulse is set\n\nto TRUE.",
+    "type": "FUNCTION",
+    "name": "PulseLengthClassifier",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input pulse signal to be classified."
+        }
+    ],
+    "output": [
+        {
+            "name": "SHORT",
+            "type": "BOOL",
+            "description": "TRUE for one cycle if the input pulse is less than T_SHORT."
+        },
+        {
+            "name": "MIDDLE",
+            "type": "BOOL",
+            "description": "TRUE for one cycle if the input pulse length is between T_SHORT and T_LONG."
+        },
+        {
+            "name": "LONG",
+            "type": "BOOL",
+            "description": "TRUE if the input pulse exceeds T_LONG."
+        }
+    ],
+    "in/out": [],
+    "return_value": null,
+    "setup": [
+        {
+            "name": "T_SHORT",
+            "type": "TIME",
+            "description": "Maximum length for a short pulse."
+        },
+        {
+            "name": "T_LONG",
+            "type": "TIME",
+            "description": "Minimum length for a long pulse."
+        }
+    ]
+}

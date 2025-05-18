@@ -1,0 +1,55 @@
+{
+    "title": "Spider Access Function Module",
+    "description": "SPIDER_ACCESSvariables can be read wnd written from the PLC, \n\nwhich are provided by visualizations of web servers based on \"spider \n\ncontrol\" from the company iniNet integrated Solution GmbH, \n\nFor the following PLC is this web server integration available:\n\nSimatic S7 200/300/400 \n\nSAIA-Burgess PCD \n\nWago (750-841)\n\nBeckhof (CX series)\n\nPhoenix Contact (ILC Reihe)\n\nSelectron\n\nBerthel\n\nTbox\n\nBeck IPC\n\nIn the PLC program of target PLC, the desired variables must be released \n\nfor web access. Since the communication is performed via HTTP (port 80), \n\nthe data exchange is no problem, even across frewalls. Global and \n\ninstance variables can be processed.\n\nFormat of variables:\n\nAt global variables, only the regular variable names has to be given. An \n\ninstance variable must be specifed below. \n\n\"instance name. variable name\"\n\nMode: Read\n\nIf the MODE parameter is set to \"1\" and the variable name is quoted in \n\n\"NAME\", so cyclically a request to the HTTP to Web Server (PLC) is \n\nperformed and the result is displayed the \"VLAUE\" as a string. \n\n130 Version 1.21\n\nChapter 9. Network and Communication\n\nMode: Write\n\nIf the parameter MODE is set to \"2\" and at \"VALUE\" the variable value and \n\nin \"NAME\" the variable name as string, then cyclically an HTTP request to \n\nthe Web Server (PLC) is performed \n\nThe mode resp. the variable name can be changed in the cyclic mode at \n\nany time. If several variables have to be processed, thus only a many \n\nmodule instances as needed must be called.",
+    "type": "FUNCTION",
+    "name": "SPIDER_ACCESS",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for network communication."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "VALUE",
+            "type": "STRING",
+            "description": "Value of the variable to be written, or the fetched value when reading."
+        },
+        {
+            "name": "NAME",
+            "type": "STRING(40)",
+            "description": "Variable name, which can be a global or instance variable."
+        },
+        {
+            "name": "INPUT MODE",
+            "type": "BYTE",
+            "description": "Operating mode: 1 for read operation, 2 for write operation."
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the status of the operation."
+        }
+    ],
+    "output": [
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the status of the operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "The function does not return a value but performs a network operation."
+    }
+}

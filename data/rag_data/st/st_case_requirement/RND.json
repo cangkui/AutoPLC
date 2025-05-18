@@ -1,0 +1,30 @@
+{
+    "title": "Random Number Generation",
+    "description": "RND in￾ternally uses the standard function TRUNC() which converts the input va￾lue to an INTEGER type DINT. This may come as an overfow because DINT\ncan store in maximum +/-2.14*10^9. The range of the RND is therefore li-\nmited to +/-2.14*10^9 . See also the ROUND function which rounds the in￾put value to N decimal places.",
+    "type": "FUNCTION",
+    "name": "RND",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which a random number is to be generated."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The precision level that determines how finely the random number is generated."
+        }
+    ],
+    "output": [
+        {
+            "name": "RND",
+            "type": "REAL",
+            "description": "The randomly generated number based on input 'X' and precision 'N'."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the random number generation, which can be zero or a scaled version of 'X'."
+    }
+}

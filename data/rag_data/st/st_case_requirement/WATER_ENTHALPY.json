@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Enthalpy of Water",
+    "description": "WATER_ENTHALPY calculates the Enthalpy (Heat content) of liquid water\n\nas a function of temperature at atmospheric pressure. The temperature T\n\nis given in Celsius. The calculation is valid for a temperature of 0 to 100 °\n\nC and the result is the amount of heat needed to head the water from 0 °\n\nC to a temperature of T. The result is expressed in joules / gram J / g and\n\npassed as KJ/Kg. It is calculated by linear interpolation in steps of 10 ° and\n\nthus reach a sufcient accuracy for non-scientifc applications. A possible\n\nApplication of WATER_ENTHALPY is to calculate the amount of energy nee￾ded, for example, to head a bufer tank at X (T2 - T1) degree. From the\n\nenergy required then the runtime of a boiler can be calculated exactly and\n\nthe required energy can be provided. Since there temperature readings\n\nare signifcantly delays, with this method a better heating is possible in\n\npractice.",
+    "type": "FUNCTION",
+    "name": "WATER_ENTHALPY",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Temperature of the water in Celsius (valid range: 0 to 100 °C)"
+        }
+    ],
+    "output": [
+        {
+            "name": "enthalpy",
+            "type": "REAL",
+            "description": "Enthalpy of water in J/g at temperature T"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated enthalpy of water at the given temperature T in J/g."
+    }
+}

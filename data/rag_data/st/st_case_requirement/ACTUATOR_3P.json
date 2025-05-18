@@ -1,0 +1,90 @@
+{
+    "title": "3-Point Actuator Control Module",
+    "description": "ACTUATOR_3P is a 3-point actuator interface for controlling actuators with\n\nup / down input. The signal at the input IN is converted into pulses at the\n\noutputs OUT1 and OUT2 which drives the motor accordingly. The input si￾gnal IN is processed and the two control outputs (OUT1 and OUT2) are\n\ncontrolled so that an input value of 0 closes the fap, 255 opens the fap,\n\nand 127 half-open the fap. The module can also process a limit switch.\n\nThe limit switches must be connected so that no matter whether upper or\n\nlower end have been reached, the input END_POS gets TRUE, and thus in￾dicating that the fap has reached one of the two end positions. To set the\n\nlimit switch into operation, the setup variable SWITCH_AVAIL has to be\n\n13 Version 1.00\n\nChapter 4. Actuators\n\nTRUE, otherwise the limit switch is ignored. The diagnostic input TEST can\n\nstart at any time a fap and engine diagnostics. The module then goes\n\nthrough a diagnostic cycle and report any errors at the output ERROR. A\n\ndiagnostic cycle drives back the fap to 0%, then measures the running\n\ntime from 0% - 100% and drives back to 0%. It also checks if the limit\n\nswitches work properly (if it is activated by the setup variable\n\nSWITCH_AVAIL ). After the diagnostic cycle, the valve moves back to its po￾sition defned by the input IN. The measured runtimes during the diagno￾stic are used in the operation to drive the fap very closely to each requi￾red position. With the setup variable T_DIAG is specifed after which time a\n\ndiagnosis independently is activated without going through the input Test.\n\nAfter power on automatically a diagnosis cycle runs. If the value T_DIAG =\n\nT#0s, an automatic diagnosis is not performed. \n\nA fap is usually moved up and down to set diferent volume fows. The\n\nmore a fap moves, the more it deviates from the ideal absolute position,\n\nbecause with every move a small position error and is added up over\n\nmany movements. To prevent this error with the setup variables T_CAL af￾ter a defned period (The accumulated time of all fap movements), a cali￾bration can be performed automatically. With this calibration the motor\n\nmoves in the zero position and the fap is then returned to the value speci￾fed by IN. A value of T#0s for CAL_RUNTIME means that no automatic ca￾libration is carried out.\n\nWhen calibration and diagnostics without limit for adding a full motion, the\n\ntime T_EXT runtime T_RUN to ensure that reached its fnal position without\n\nthe fap limit switch safely.\n\nAt the output POS of the module, the current fap position is simulated by\n\nset the time T_RUN. At this output can also be determined, when the fap\n\nhas reached the position requested the input. If the input TEST = TRUE,\n\nthe device performs a diagnostic cycle. With the external variable ARX any\n\nmodules communicate with each other and ensure for the self-diagnostic\n\ncycles (after power on) to do not run parallel. The user thereby determines\n\nhow many and which modules are connected to the same variable and\n\nthus can be tuned. If a module is connected to an own variable ARX, no\n\ncoordination of the diagnostic cycles is done. More information about the\n\ninputs TEST, ARE and ARX can be read at module Autorun.\n\nStatus messages the module:\n\nSTATUS ARE ARX\n\n100 Normal operation - -\n\n101 Calibration - -\n\n103 Diagnostic UP TRUE TRUE\n\n104 Diagnostic UP TRUE TRUE\n\n14 Version 1.00\n\nChapter 4. Actuators",
+    "type": "FUNCTION",
+    "name": "ACTUATOR_3P",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "Input control signal ranging from 0 (close) to 255 (open)."
+        },
+        {
+            "name": "TEST",
+            "type": "BOOL",
+            "description": "Initiates diagnostics when TRUE."
+        },
+        {
+            "name": "ARE",
+            "type": "BOOL",
+            "description": "Enables automatic diagnostics when TRUE."
+        },
+        {
+            "name": "END_POS",
+            "type": "BOOL",
+            "description": "Indicates if the actuator has reached a limit switch position."
+        },
+        {
+            "name": "T_RUN",
+            "type": "TIME",
+            "description": "Run-time to achieve full movement (0 - 255)."
+        },
+        {
+            "name": "T_EXT",
+            "type": "TIME",
+            "description": "Duration extension during diagnostics."
+        },
+        {
+            "name": "T_CAL",
+            "type": "TIME",
+            "description": "Period for calibration of the actuator."
+        },
+        {
+            "name": "T_DIAG",
+            "type": "TIME",
+            "description": "Time interval for triggering automatic diagnostics."
+        },
+        {
+            "name": "SWITCH_AVAIL",
+            "type": "BOOL",
+            "description": "Indicates if the limit switch is connected (TRUE)."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT1",
+            "type": "BOOL",
+            "description": "Control signal for opening the fap."
+        },
+        {
+            "name": "OUT2",
+            "type": "BOOL",
+            "description": "Control signal for closing the fap."
+        },
+        {
+            "name": "POS",
+            "type": "BYTE",
+            "description": "Current simulated position of the fap."
+        },
+        {
+            "name": "ERROR",
+            "type": "BOOL",
+            "description": "Indicates the presence of diagnostic errors (TRUE if errors exist)."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        },
+        {
+            "name": "ARX",
+            "type": "BOOL",
+            "description": "Auto-communications status."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

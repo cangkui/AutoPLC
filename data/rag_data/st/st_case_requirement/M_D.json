@@ -1,0 +1,47 @@
+{
+    "title": "M_D Function Block",
+    "description": "M_D measures the time between a rising edge of START and a rising edge \non STOP. PT is the result of the last measurement. Output ET is the elapsed \ntime since the last rising edge of START. M_d requires a rising edge to start \nthe measurement. If at the frst call already START is TRUE, it is not seen \nas a rising edge. Even if STOP is TRUE, a rising edge of START is not \ncounted. Only when all start conditions (STOP = FALSE, RST: = FALSE and \nrising edge at START) are present, the output RUN gets TRUE and a \nmeasurement is started. With TRUE at the input RST, the outputs can \nalways be reset to 0. If ET reaches the value of TMAX, automatically a \nreset is generated in the module to reset all outputs to 0. TMAX is \ninternally assigned with default value of T#10d and normally can be \nunconnected. TMAX serves to defne a maximum value range for PT. The \noutput RUN is TRUE if is a measurement is processed.",
+    "type": "FUNCTION_BLOCK",
+    "name": "M_D",
+    "input": [
+        {
+            "name": "start",
+            "type": "BOOL",
+            "description": "A boolean input to start the timer."
+        },
+        {
+            "name": "stop",
+            "type": "BOOL",
+            "description": "A boolean input to stop the timer."
+        },
+        {
+            "name": "tmax",
+            "type": "TIME",
+            "description": "The maximum preset time for the timer, defaults to 14400 minutes."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "A boolean input to reset the timer."
+        }
+    ],
+    "output": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The preset time that has been set or retained when stopping."
+        },
+        {
+            "name": "ET",
+            "type": "TIME",
+            "description": "The elapsed time counted while the timer is running."
+        },
+        {
+            "name": "run",
+            "type": "BOOL",
+            "description": "A boolean output indicating whether the timer is currently running."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

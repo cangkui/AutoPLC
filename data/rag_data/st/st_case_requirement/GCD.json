@@ -1,0 +1,30 @@
+{
+    "title": "Calculate Greatest Common Divisor (GCD)",
+    "description": "GCD function calculates the greatest common divisor (GCD) of A and\nB.",
+    "type": "FUNCTION",
+    "name": "GCD",
+    "input": [
+        {
+            "name": "A",
+            "type": "DINT",
+            "description": "The first integer for which the GCD is to be calculated."
+        },
+        {
+            "name": "B",
+            "type": "DINT",
+            "description": "The second integer for which the GCD is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "GCD",
+            "type": "INT",
+            "description": "The greatest common divisor of A and B."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The calculated GCD value that is returned by the function."
+    }
+}

@@ -1,0 +1,85 @@
+{
+    "title": "BLIND_CONTROL Function Module",
+    "description": "BLIND_CONTROL controls the shutter and the fn angle according to set￾tings in PI and AI if UP and DN is both TRUE (automatik modue). POS und\n\nANG are herein the values of the shutter. At this outputs the simulated po￾sition and angle of the shutter are bypassed. BLIND_CONTROL switch the\n\noutputs MU or MD to TRUE in a corresponding order until the values in POS\n\nand ANG correspond to default of PI and AI. A internal sequencer controls\n\nthat while shutter moves up and down the fn angle is adjusted before the\n\nup and down movement happens. So when the shutter moves up or down,\n\nthe fn angle is adjusted and after the movement it restores it's angle. The\n\ninput SNES defnes at which diference the control module is active and\n\nadjusts the output in a way to correspond to the inputs PI and AI. IF SENS\n\n= 0 every diference is controlled, if SENS = 5 (default) after a diference\n\nof 5 between the setup values and the actual values controlling is done. If\n\nUP and DN is not TRUE, BLIND_CONTROL leaves the automatic mode and\n\nthe outputs QU and QD are controled by manual mode of UP and DN.\n\nBLIND_CONTROL does not need BLIND_ACTUATOR to control a shutter be￾cause BLIND_ACTUATOR is integrated in BLIND_CONTROL already. If no au-\n\n76 Version 1.00\n\nChapter 7. Blind Modules\n\ntomatic mode for a shutter is needed, BLIND_ACTUATOR only is recom￾mended. Use of BLIND_CONTROL must be carefully and must set the cycle\n\ntime for the module smaller than T_ANGLE / 512 * SENS. With a double￾click to the SENS symbol the setup values can be adjusted (default 5). If\n\nthe cycle time is to long, the shutter moves up and down in a not periodi￾cally manner. If a smaller cycle time is not possible, the SENS value can be\n\nincreased.\n\nThe graph shows the shutter geometry.\n\nThe table shows the working states of the module.\n\nUP DN PI AI MU MD\n\nL L - - L L no action\n\nH L - - H L shutter moves up\n\nL H - - L H shutter moves down\n\nH H P A X X Position P and angle A are driven automatically.\n\nThe input and output S_IN STATUS are ESR compliant outputs and inputs.\n\nIn Input S_IN the upstream functions report their status to the module, this\n\nstatus will be forwarded to the output of STATUS, and own status messa￾ges also issued on STATUS.\n\n77 Version 1.00\n\nChapter 7. Blind Modules\n\nSTATUS Meaning\n\n0 no message\n\n101 manually up\n\n102 manually down\n\n121 position up\n\n122 position down\n\n123 fn setting horizontally\n\n124 fn setting vertically\n\nNNN forwarded messages",
+    "type": "FUNCTION",
+    "name": "BLIND_CONTROL",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input signal to move the shutter up."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input signal to move the shutter down."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Default position for the shutter."
+        },
+        {
+            "name": "AI",
+            "type": "BYTE",
+            "description": "Default angle for the shutter."
+        },
+        {
+            "name": "T_UD",
+            "type": "TIME",
+            "description": "Time to move the shutter up."
+        },
+        {
+            "name": "T_ANGLE",
+            "type": "TIME",
+            "description": "Time to move to the function angle."
+        },
+        {
+            "name": "SENS",
+            "type": "BYTE",
+            "description": "Resolution of the control module."
+        },
+        {
+            "name": "T_LOCKOUT",
+            "type": "TIME",
+            "description": "Lockout time when reversing motor direction."
+        }
+    ],
+    "output": [
+        {
+            "name": "POS",
+            "type": "BYTE",
+            "description": "Simulated shutter position."
+        },
+        {
+            "name": "ANG",
+            "type": "BYTE",
+            "description": "Simulated function angle."
+        },
+        {
+            "name": "MU",
+            "type": "BOOL",
+            "description": "Motor up signal output."
+        },
+        {
+            "name": "MD",
+            "type": "BOOL",
+            "description": "Motor down signal output."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

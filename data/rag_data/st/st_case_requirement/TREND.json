@@ -1,0 +1,37 @@
+{
+    "title": "Trend Function Block",
+    "description": "TREND monitors the input X and time at the output Q to see if X increases\n(Q = TRUE) or X decrease (Q = FALSE). If X does not change, Q remains at\nits last value. If X increases, the output TU gets for one cycle to TRUE and\nat the output D the result X - LAST_X is displayed. If X is less than LAST_X\nso TD gets TRUE for one cycle and the output D is LAST_X - X passed.\nLAST_X is an internal value of the module and is the value of X in the last\ncycle.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TREND",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input variable representing the current value being monitored."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output indicating whether the input variable 'X' has changed (increased or decreased)."
+        },
+        {
+            "name": "TU",
+            "type": "BOOL",
+            "description": "Output indicating if 'X' is greater than the last recorded value."
+        },
+        {
+            "name": "TD",
+            "type": "BOOL",
+            "description": "Output indicating if 'X' is less than the last recorded value."
+        },
+        {
+            "name": "D",
+            "type": "REAL",
+            "description": "Output representing the difference between the current value 'X' and the last value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

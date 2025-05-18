@@ -1,0 +1,43 @@
+{
+    "title": "DLOG_BOOL Function Module",
+    "description": "DLOG_BOOL is for logging (recording) of a process value of type BOOL, \n\nand can only be used in combination with a DLOG_STORE_* module, as this \n\ncoordinates of the data structure X to record the data. At recording formats that \n\nsupport a process value name, such as at DLOG_STORE_FILE_CSV a name can be \n\nprovided at COLUMN\". Depending on the state of the STATE the TEXT of parameter \n\nOFF or ON is used. If with DELTA parameter a TRUE is specified, the automatic data \n\nlogging is enabled via differential monitoring. By changing the state of STATE \n\nautomatically a record is stored. This feature can be applied in parallel to the central \n\ntrigger on the DLOG_STORE_ * module.",
+    "type": "FUNCTION",
+    "name": "DLOG_BOOL",
+    "input": [
+        {
+            "name": "X",
+            "type": "DLOG_DATA",
+            "description": "The DLOG data structure used for logging.",
+            "fields": []
+        },
+        {
+            "name": "STATE",
+            "type": "BOOL",
+            "description": "Process value indicating TRUE or FALSE."
+        },
+        {
+            "name": "ON",
+            "type": "STRING",
+            "description": "Text to use when STATE is TRUE."
+        },
+        {
+            "name": "OFF",
+            "type": "STRING",
+            "description": "Text to use when STATE is FALSE."
+        },
+        {
+            "name": "COLUMN",
+            "type": "STRING",
+            "description": "The name of the process value, limited to 40 characters.",
+            "fields": []
+        },
+        {
+            "name": "DELTA",
+            "type": "DINT",
+            "description": "Difference value for enabling automatic data logging via differential monitoring."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {}
+}

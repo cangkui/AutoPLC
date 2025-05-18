@@ -1,0 +1,87 @@
+{
+    "title": "Manual Control Function Block",
+    "description": "CLK_N generates a pulse every X milliseconds, based on the PLC internal 1\nms reference. The pulses are exactly one PLC cycle length and are genera￾ted every 2^N milliseconds.\nThe period is 1 ms for N = 0, 2ms for N = 1, 4ms, for N=2\nCLK_N replaces the modules CLK_1ms, CLK_2ms, CLK_4ms and CLK_8ms\nfrom older libraries.\nThe following picture shows the output signal for N=0:",
+    "type": "FUNCTION_BLOCK",
+    "name": "MANUAL_4",
+    "input": [
+        {
+            "name": "I0",
+            "type": "BOOL",
+            "description": "Input boolean signal 0."
+        },
+        {
+            "name": "I1",
+            "type": "BOOL",
+            "description": "Input boolean signal 1."
+        },
+        {
+            "name": "I2",
+            "type": "BOOL",
+            "description": "Input boolean signal 2."
+        },
+        {
+            "name": "I3",
+            "type": "BOOL",
+            "description": "Input boolean signal 3."
+        },
+        {
+            "name": "MAN",
+            "type": "BOOL",
+            "description": "Manual control signal; when true, switches to manual mode."
+        },
+        {
+            "name": "STP",
+            "type": "BOOL",
+            "description": "Stop signal; when true, triggers state change."
+        },
+        {
+            "name": "M0",
+            "type": "BOOL",
+            "description": "Manual mode output 0."
+        },
+        {
+            "name": "M1",
+            "type": "BOOL",
+            "description": "Manual mode output 1."
+        },
+        {
+            "name": "M2",
+            "type": "BOOL",
+            "description": "Manual mode output 2."
+        },
+        {
+            "name": "M3",
+            "type": "BOOL",
+            "description": "Manual mode output 3."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output boolean signal 0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output boolean signal 1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output boolean signal 2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output boolean signal 3."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "Status indicator reflecting current operation mode and state."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

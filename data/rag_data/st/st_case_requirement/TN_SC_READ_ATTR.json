@@ -1,0 +1,33 @@
+{
+    "title": "TN_SC_READ_ATTR",
+    "description": "TN_SC_READ_ATTR is used to read the current color of the \n\ncharacter at the specifed location X / Y.",
+    "type": "FUNCTION",
+    "name": "TN_SC_READ_ATTR",
+    "input": [
+        {
+            "name": "Iin_Y",
+            "type": "INT",
+            "description": "Y coordinate"
+        },
+        {
+            "name": "Iin_X",
+            "type": "INT",
+            "description": "X coordinate"
+        }
+    ],
+    "output": [
+        {
+            "name": "Oby_ATTR",
+            "type": "BYTE",
+            "description": "Color information at position X / Y"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen structure with display attributes"
+        }
+    ],
+    "return_value": null
+}

@@ -1,0 +1,52 @@
+{
+    "title": "Network Communication Module",
+    "description": "IP_CONTROL2 . The maximum \n\ndata size for transmission and reception depends on the hardware \n\nplatform and is in the range of < 1500 bytes. This module can always be \n\nused when no data stream mode is needed. The primary advantage is that \n\nless bufer memory is required, and data will not be copied between \n\ninternal and external data bufer. Thus, the module is more economical \n\nwith respect to memory consumption and system load.",
+    "type": "FUNCTION",
+    "name": "IP_CONTROL2",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization data for network control."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "IP",
+            "type": "DWORD",
+            "description": "Encoded IP address as the default."
+        },
+        {
+            "name": "PORT",
+            "type": "WORD",
+            "description": "Port number of the IP address."
+        },
+        {
+            "name": "TIME_OUT",
+            "type": "TIME",
+            "description": "Monitoring time for network operations."
+        }
+    ],
+    "output": [
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Buffer for receiving data."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization that can be read or modified."
+        }
+    ],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Indicates the status of the network operation.",
+        "fields": []
+    }
+}

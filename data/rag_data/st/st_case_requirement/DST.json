@@ -1,0 +1,26 @@
+{
+    "title": "Determine Daylight Saving Time",
+    "description": "FINDB searched for the presence of STR2 in STR1 and returns\nthe last position of STR2 in STR1.\nIf STR2 is not found, a 0 is returned.",
+    "type": "FUNCTION",
+    "name": "DST",
+    "input": [
+        {
+            "name": "UTC",
+            "type": "DT",
+            "description": "The date and time in UTC format that needs to be evaluated for Daylight Saving Time."
+        }
+    ],
+    "output": [
+        {
+            "name": "DST",
+            "type": "BOOL",
+            "description": "Returns TRUE if the given UTC date and time is within the Daylight Saving Time period, otherwise FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates whether the input date is within Daylight Saving Time.",
+        "fields": []
+    }
+}

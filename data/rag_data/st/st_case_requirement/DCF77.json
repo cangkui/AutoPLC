@@ -1,0 +1,90 @@
+{
+    "title": "DCF77 Time Receiver Function Block",
+    "description": "HOUR function extracts the current hour of the day.",
+    "type": "FUNCTION_BLOCK",
+    "name": "DCF77",
+    "input": [
+        {
+            "name": "REC",
+            "type": "BOOL",
+            "description": "Reception signal indicating whether a DCF77 signal is currently being received."
+        },
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Trigger signal to set the RTC with the received time information."
+        },
+        {
+            "name": "SDT",
+            "type": "DT",
+            "description": "Initial date and time to set the RTC on first power up."
+        },
+        {
+            "name": "DSI",
+            "type": "BOOL",
+            "description": "Daylight Saving Time indication to control DST adjustments."
+        },
+        {
+            "name": "SYNC_TIMEOUT",
+            "type": "TIME",
+            "description": "Timeout duration to determine the validity of the synchronization signal.",
+            "fields": []
+        },
+        {
+            "name": "TIME_OFFSET",
+            "type": "INT",
+            "description": "Offset for time zone adjustments relative to UTC.",
+            "fields": []
+        },
+        {
+            "name": "DST_EN",
+            "type": "BOOL",
+            "description": "Enable signal for daylight saving time adjustments.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "TP",
+            "type": "BOOL",
+            "description": "Trigger output that indicates whether the time processing is active."
+        },
+        {
+            "name": "DS",
+            "type": "BOOL",
+            "description": "Output signal indicating whether daylight saving time is currently active."
+        },
+        {
+            "name": "WDAY",
+            "type": "INT",
+            "description": "Output representing the day of the week as an integer."
+        },
+        {
+            "name": "ERROR",
+            "type": "BOOL",
+            "description": "Error flag indicating if an error occurred during the decoding process."
+        },
+        {
+            "name": "RTC",
+            "type": "DT",
+            "description": "Real-time clock output that reflects the current date and time based on the DCF77 signal."
+        },
+        {
+            "name": "RTC1",
+            "type": "DT",
+            "description": "Secondary RTC output, adjusted based on time zone and daylight saving time settings."
+        },
+        {
+            "name": "MSEC",
+            "type": "INT",
+            "description": "Milliseconds elapsed since the last synchronization."
+        },
+        {
+            "name": "SYNC",
+            "type": "BOOL",
+            "description": "Signal indicating successful synchronization with the DCF77 signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

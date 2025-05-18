@@ -1,0 +1,30 @@
+{
+    "title": "Modulo Operation Function",
+    "description": "MODR returns the remainder of a division similar to the stan￾dard MOD function, but for REAL numbers. MODR internally uses the data\nformat of type DINT. This may come to an overfow because DINT can sto￾re a maximum of +/-2.14 * 10^9 The range of MODR is therefore limited\nto +/- 2.14 * 10^9. For DIVI = 0 the function returns 0. \nMODR(A, M) = A - M * FLOOR2(A / M).",
+    "type": "FUNCTION",
+    "name": "MODR",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The number to be divided."
+        },
+        {
+            "name": "DIVI",
+            "type": "REAL",
+            "description": "The divisor used for the modulo operation."
+        }
+    ],
+    "output": [
+        {
+            "name": "MODR",
+            "type": "REAL",
+            "description": "The result of the modulo operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The modulo result, which is either the computed modulo or zero if DIVI is zero."
+    }
+}

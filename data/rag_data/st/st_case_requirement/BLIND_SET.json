@@ -1,0 +1,95 @@
+{
+    "title": "BLIND_SET Function Module",
+    "description": "BLIND_SET can be used anywhere in a BLIND application to accelerate a\n\ndefned position (PX, AX). Using the setup variable OVERRIDE_MANUAL de￾fnes if the module may override a manual operation. If the variable RE￾STORE_POSITION is set to TRUE, the module remembers the last position\n\nand drive to this position automatically after a forced operation. The varia￾ble RESTORE_TIME determines how long the module remains active to re￾store the last Position again. If not set RESTORE_POSITION the forced\n\nstate remains when switch back in the automatic mode.\n\nState table of BLIND_SET:\n\nUP DN PI\n\nAI\n\nIN AX\n\nAX\n\nQU QD STATUS PO\n\nAO\n\nMANUAL_\n\nOVERRIDE\n\n1 1 X 0 - 1 1 S_IN X - Standby\n\n1 1 - 1 Y 1 1 178 Y - Forced position\n\n- - - 1 Y 1 1 178 Y 1 Forced position\n\n- - - - - 1 1 179 Z - Restoreoldposition\n\n0 1 X - - 0 1 S_IN X - Manual operation\n\n1 0 X - - 1 0 S_IN X - Manual operation\n\n0 0 X - - 0 0 S_IN X - Manual operation\n\n92 Version 1.00\n\nChapter 7. Blind Modules",
+    "type": "FUNCTION",
+    "name": "BLIND_SET",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input signal for raising the blind."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input signal for lowering the blind."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "Status input compliant with ESR."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Blind position in automatic mode."
+        },
+        {
+            "name": "AI",
+            "type": "BYTE",
+            "description": "Slat angle in automatic mode."
+        },
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input signal for fire alarm."
+        },
+        {
+            "name": "PX",
+            "type": "BYTE",
+            "description": "Input signal for wind alarm."
+        },
+        {
+            "name": "AX",
+            "type": "BYTE",
+            "description": "Input signal for intrusion detection."
+        },
+        {
+            "name": "OVERRIDE_MANUAL",
+            "type": "BOOL",
+            "description": "Allows manual override if TRUE."
+        },
+        {
+            "name": "RESTORE_POSITION",
+            "type": "BOOL",
+            "description": "If TRUE, restores the old position."
+        },
+        {
+            "name": "RESTORE_TIME",
+            "type": "TIME",
+            "description": "Duration for the restoration of the last position (default = T#60s)."
+        }
+    ],
+    "output": [
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor up signal."
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor down signal."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        },
+        {
+            "name": "PO",
+            "type": "BYTE",
+            "description": "Start value of the blind."
+        },
+        {
+            "name": "AO",
+            "type": "BYTE",
+            "description": "Start value of the slat angle."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

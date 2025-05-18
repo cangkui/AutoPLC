@@ -1,0 +1,29 @@
+{
+    "title": "2-to-1 Multiplexer Function",
+    "description": "DIFFER is TRUE if in1 and in2 difer by more than X from each\nother.",
+    "type": "FUNCTION",
+    "name": "MUX_2",
+    "input": [
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "The first data input to the multiplexer."
+        },
+        {
+            "name": "D1",
+            "type": "BOOL",
+            "description": "The second data input to the multiplexer."
+        },
+        {
+            "name": "A0",
+            "type": "BOOL",
+            "description": "The selection input that determines which data input to output."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The output of the multiplexer, which is either D0 or D1 based on the value of A0."
+    }
+}

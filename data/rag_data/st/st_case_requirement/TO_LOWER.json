@@ -1,0 +1,26 @@
+{
+    "title": "Convert Byte to Lowercase",
+    "description": "TO_LOWER converts individual characters to lowercase. During conversion,\nthe Global Setup EXTENDED_ASCII constant is considered. If\nEXTENDED_ASCII = TRUE, all characters of the extended ASCII character\nset to be considered in accordance with ISO 8859-1.\nThe following Table discusses the conversion code:\nCode EXTENDED_ASCII = TRUE EXTENDED_ASCII = FALSE\n0..64 0..64 0..64\n65..90 97..122 97..122\n91..191 91..191 91..191\n192..214 224..246 192..214\n215 215 215\n216..222 248..254 216..254\n223..255 223..255 223..255",
+    "type": "FUNCTION",
+    "name": "TO_LOWER",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The input byte to be converted to lowercase."
+        }
+    ],
+    "output": [
+        {
+            "name": "TO_LOWER",
+            "type": "BYTE",
+            "description": "The lowercase representation of the input byte."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "Returns the converted lowercase byte if applicable, otherwise returns the input byte.",
+        "fields": []
+    }
+}

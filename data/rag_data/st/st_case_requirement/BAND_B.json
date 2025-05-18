@@ -1,0 +1,25 @@
+{
+    "title": "Band Operation Function",
+    "description": "BAND_B hides at the input areas 0..255\nthe areas 0..B and 255-B.. 255, in this\nareas the output is 0 respectively 255.",
+    "type": "FUNCTION",
+    "name": "BAND_B",
+    "input": [
+        {
+            "name": "X",
+            "type": "BYTE",
+            "description": "The first input value for the band operation."
+        },
+        {
+            "name": "B",
+            "type": "BYTE",
+            "description": "The second input value for the band operation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The result of the band operation based on the input values.",
+        "fields": []
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "title": "String Cleaning Function",
+    "description": "CLEAN removes all characters from a string that are not included in the\nstring CX.\nCLEAN('Nr.1 23#', '0123456789 ') = '123'",
+    "type": "FUNCTION",
+    "name": "CLEAN",
+    "input": [
+        {
+            "name": "IN",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string that needs to be cleaned."
+        },
+        {
+            "name": "CX",
+            "type": "STRING[80]",
+            "description": "A string containing the allowed characters. Only characters found in this string will remain in the output."
+        }
+    ],
+    "output": [
+        {
+            "name": "CLEAN",
+            "type": "STRING",
+            "description": "The cleaned string, containing only allowed characters."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The final cleaned version of the input string.",
+        "fields": []
+    }
+}

@@ -1,0 +1,87 @@
+{
+    "title": "Select 8 Function Block",
+    "description": "SCALE_B scales an input value BYTE and calculates an output value in\nREAL. The input value X is limited here to I_LO and I_HI. SCALE_D (IN, 0,\n255, 0, 100) scales an input with 8-bit resolution on the output 0..100.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SELECT_8",
+    "input": [
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable input for the function block."
+        },
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Sets the state variable to the value of IN when TRUE."
+        },
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "Input value used to set the state variable."
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Increment the state variable when TRUE and the last UP was FALSE."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Decrement the state variable when TRUE and the last DN was FALSE."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Resets the state variable to 0 when TRUE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output signal for state 0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal for state 1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output signal for state 2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output signal for state 3."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "Output signal for state 4."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "Output signal for state 5."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "Output signal for state 6."
+        },
+        {
+            "name": "Q7",
+            "type": "BOOL",
+            "description": "Output signal for state 7."
+        },
+        {
+            "name": "STATE",
+            "type": "INT",
+            "description": "Current state of the selection (0-7)."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

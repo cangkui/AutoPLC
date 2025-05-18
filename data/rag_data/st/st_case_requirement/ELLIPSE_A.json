@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Area of an Ellipse",
+    "description": "ELLIPSE_A calculates the area of an ellipse that is defned by the radii R1\nand R2.",
+    "type": "FUNCTION",
+    "name": "ELLIPSE_A",
+    "input": [
+        {
+            "name": "R1",
+            "type": "REAL",
+            "description": "The length of the semi-major axis of the ellipse."
+        },
+        {
+            "name": "R2",
+            "type": "REAL",
+            "description": "The length of the semi-minor axis of the ellipse."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated area of the ellipse.",
+        "fields": []
+    }
+}

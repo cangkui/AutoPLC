@@ -1,0 +1,34 @@
+{
+    "title": "Air Density Calculation",
+    "description": "AIR_DENSITY calculates the density of air in kg / m³ depending on pressu￾re, humidity and temperature. The temperature is given in ° C, pressure in\n\nPascal and the humidity in % (50 = 50%).",
+    "type": "FUNCTION",
+    "name": "AIR_DENSITY",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Air temperature in °C."
+        },
+        {
+            "name": "P",
+            "type": "REAL",
+            "description": "Air pressure in Pascal."
+        },
+        {
+            "name": "RH",
+            "type": "REAL",
+            "description": "Humidity in %."
+        }
+    ],
+    "output": [
+        {
+            "name": "Density of air",
+            "type": "REAL",
+            "description": "Calculated density of air in kg/m³."
+        }
+    ],
+    "return_value": {
+        "type": "REAL",
+        "description": "The density of air in kg/m³ based on the provided inputs."
+    }
+}

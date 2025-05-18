@@ -1,0 +1,71 @@
+{
+    "title": "Temperature Sensor Function Module",
+    "description": "T_AVG24 determines the daily average temperature T24. The sensor input\n\nTS is of type INT and is the temperature * 10 (a value of 234 means 23.4\n\n°C). The data of flter run for noise suppression on a low-pass flter with\n\ntime T_FILTER. By scale and SFO a zero error, and the scale of the sensor\n\ncan be adjusted. At output TA shows the current outside temperature,\n\nwhich is measured every hour and half hour. The module writes every 30\n\nminutes the last, over the 48 values calculated daily average in the I / O\n\nvariable T24. This needs to be defned externally and thereby can be de￾fnded remanent or persistent. If the frst start a value of -1000 found in\n\nT24, then the module initializes at the frst call with the current sensor va￾lue, so that every 30 minutes a valid average may be passed. If T24 has\n\nany value other than -1000, then the module is initialized with this value\n\nand calculates the average based on this value. This allows a power failure\n\nand remanent storage of T24 an immediate working after restart. A reset\n\ninput can always force a restart of the module, which depending on the\n\nvalue in T24, the module is initializes with either TS or the old value of\n\nT24. If the module should be set on a particular average, the desired value\n\nis written into T24 and then a reset generated.\n\nT24_MAX and T24_MIN passes the maximum and minimum values of the\n\nlast 24 hours. To determine the maximum and minimum value, the tempe￾ratures of each half hour are considered. A temperature value that occurs\n\nbetween 2 measurements is not considered. \n\n40 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "TemperatureSensorModule",
+    "input": [
+        {
+            "name": "TS",
+            "type": "INT",
+            "description": "External temperature sensor reading (temperature * 10, e.g., 234 represents 23.4°C)"
+        },
+        {
+            "name": "DTI",
+            "type": "DT",
+            "description": "Date and time of day"
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset input to restart the module"
+        },
+        {
+            "name": "T_FILTER",
+            "type": "TIME",
+            "description": "Time duration for the input filter for noise suppression"
+        },
+        {
+            "name": "SCALE",
+            "type": "REAL",
+            "description": "Scaling factor for sensor input, default is 1.0"
+        },
+        {
+            "name": "SFO",
+            "type": "REAL",
+            "description": "Zero balance adjustment for the sensor"
+        }
+    ],
+    "output": [
+        {
+            "name": "TA",
+            "type": "REAL",
+            "description": "Current outside temperature measured"
+        },
+        {
+            "name": "TP",
+            "type": "BOOL",
+            "description": "Indicates if T24 has been renewed (TRUE if updated)"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "T24",
+            "type": "REAL",
+            "description": "Daily average temperature, can be defined externally"
+        },
+        {
+            "name": "T24_MAX",
+            "type": "REAL",
+            "description": "Maximum temperature recorded in the last 24 hours"
+        },
+        {
+            "name": "T24_MIN",
+            "type": "REAL",
+            "description": "Minimum temperature recorded in the last 24 hours"
+        }
+    ],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

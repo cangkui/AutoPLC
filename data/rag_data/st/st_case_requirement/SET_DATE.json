@@ -1,0 +1,30 @@
+{
+    "title": "Set Date Function",
+    "description": "SET_DATE calculates a Date (DATE) from the input values,\nday, month and year. SET_DATE does not test the validity of a date. For\nexample, also be February, 30th will be set, which, of course results the\n1st March or in a leap year, the March, 2nd. SET_DATE can therefore also\nbe used to generate any day of the year. This can be a quite practicable\napplication. In this case, the monthly amount may also be 0. An invalid\nmonth always gives a date in relation to January. An invalid month (month\n< 1 or month > 12) is always interpreted as January.",
+    "type": "FUNCTION",
+    "name": "SET_DATE",
+    "input": [
+        {
+            "name": "YEAR",
+            "type": "INT",
+            "description": "The year of the date to be set."
+        },
+        {
+            "name": "MONTH",
+            "type": "INT",
+            "description": "The month of the date to be set."
+        },
+        {
+            "name": "DAY",
+            "type": "INT",
+            "description": "The day of the date to be set."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The calculated date based on the provided year, month, and day.",
+        "fields": []
+    }
+}

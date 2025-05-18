@@ -1,0 +1,41 @@
+{
+    "title": "Vector Subtraction Function",
+    "description": "DWORD_OF_BYTE creates from 4 individual bytes (B0 .. B3) a DWORD.\nA DWORD is composed as follows: B3-B2-B1-B0.",
+    "type": "FUNCTION",
+    "name": "V3_SUB",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The first input vector from which the second vector will be subtracted."
+        },
+        {
+            "name": "B",
+            "type": "Vector_3",
+            "description": "The second input vector that will be subtracted from the first vector."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "vector_3",
+        "description": "The resultant vector after subtracting vector B from vector A.",
+        "fields": [
+            {
+                "name": "X",
+                "type": "REAL",
+                "description": "The X component of the resultant vector, calculated as A.X - B.X."
+            },
+            {
+                "name": "Y",
+                "type": "REAL",
+                "description": "The Y component of the resultant vector, calculated as A.Y - B.Y."
+            },
+            {
+                "name": "Z",
+                "type": "REAL",
+                "description": "The Z component of the resultant vector, calculated as A.Z - B.Z."
+            }
+        ]
+    }
+}

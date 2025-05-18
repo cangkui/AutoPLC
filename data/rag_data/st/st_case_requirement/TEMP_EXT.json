@@ -1,0 +1,52 @@
+{
+    "title": "External Temperature Processing for HVAC Control",
+    "description": "TEMP_EXT processes up to 3 remote temperature sensor and provides by\n\nmode a selected external temperature to the heating control. It calculates\n\nsignals for heating and cooling depending on outdoor temperature, date\n\nand time. With the input T_EXT_Setup is defned how the output value\n\nT_EXT is determined. If T_EXT_Setup is not connected, then the default va￾lue 0. The setup values T_EXT_MIN and T_EXT_Max set the minimum and\n\nmaximum value of the external temperature inputs. If these limits are ex￾ceeded or not reached, a fault in the sensor or broken wire is assumed and\n\ninstead of measured valued the default value T_EXT_DEFAULT is used. \n\nT_EXT_Setup T_EXT\n\n0 Average of T_EXT1, T_ext2 and T_ext3\n\n1 T_EXT1\n\n2 T_EXT2\n\n3 T_EXT3\n\n4 T_EXT_DEFAULT\n\n5 Lowest value of the 3 inputs\n\n6 Highest value of 3 inputs\n\n7 Average value of 3 inputs\n\nWith the setup variables HEAT_PERIOD and COOL_PERIOD is defnes when\n\nheating and when cooling is allowed. The decision, whether the output\n\nHEAT or COOL gets TRUE, still depends on the setup values HEAT_START -\n\nHEAT_STOP and COOL_START and COOL_STOP. These values can be def￾ned separately for day and night. The start of a day and night period can\n\nbe determined by the setup variables START_DAY and START_NIGHT. A va￾riable CYCLE_TIME specifes how often the outside temperature to be que￾ried.\n\n44 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "TEMP_EXT",
+    "input": [
+        {
+            "name": "T_EXT1",
+            "type": "REAL",
+            "description": "External temperature sensor 1"
+        },
+        {
+            "name": "T_EXT2",
+            "type": "REAL",
+            "description": "External temperature sensor 2"
+        },
+        {
+            "name": "T_EXT3",
+            "type": "REAL",
+            "description": "External temperature sensor 3"
+        },
+        {
+            "name": "T_EXT_Setup",
+            "type": "BYTE",
+            "description": "Query mode for selecting output value method"
+        },
+        {
+            "name": "DT_IN",
+            "type": "DATE_TIME",
+            "description": "Current date and time"
+        }
+    ],
+    "output": [
+        {
+            "name": "T_EXT",
+            "type": "REAL",
+            "description": "Calculated outside temperature output"
+        },
+        {
+            "name": "HEAT",
+            "type": "BOOL",
+            "description": "Heating signal output"
+        },
+        {
+            "name": "COOL",
+            "type": "BOOL",
+            "description": "Cooling signal output"
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

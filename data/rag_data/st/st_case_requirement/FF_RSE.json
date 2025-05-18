@@ -1,0 +1,32 @@
+{
+    "title": "FF_RSE Function Block",
+    "description": "FF_RSE an edge-triggered RS fip-fop. The output Q is set by a rising edge\nof CS and cleared by a rising edge on CR. If both edges (CS and CR) rise at\nthe same time, the output is set to FALSE. An asynchronous reset input\nRST sets the output at any time to FALSE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FF_RSE",
+    "input": [
+        {
+            "name": "CS",
+            "type": "BOOL",
+            "description": "Clock signal input, triggers a transition on the rising edge."
+        },
+        {
+            "name": "CR",
+            "type": "BOOL",
+            "description": "Reset signal input, sets the output Q to FALSE on the rising edge."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Asynchronous reset signal to set output Q to FALSE immediately."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal representing the state of the flip-flop (TRUE or FALSE)."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

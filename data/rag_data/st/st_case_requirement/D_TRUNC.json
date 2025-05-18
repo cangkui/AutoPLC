@@ -1,0 +1,20 @@
+{
+    "title": "Integer Truncation Function",
+    "description": "D_TRUNC \nreviewes what result the IEC functions provides, and uses the appropriate \nfunction to deliver a useful result.\nD_TRUNC(1.6) = 1\nD_TRUNC(-1.6) = -1",
+    "type": "FUNCTION",
+    "name": "D_TRUNC",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number to be truncated to an integer."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "The truncated integer value of the input real number.",
+        "fields": []
+    }
+}

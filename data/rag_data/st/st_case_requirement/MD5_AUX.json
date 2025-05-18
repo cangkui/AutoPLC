@@ -1,0 +1,55 @@
+{
+    "title": "MD5 Hash Function",
+    "description": "MD5_AUX. This module has only in\n\nconjunction with the block MD5_STREAM a useful application.\n\n79 Version 1.21\n\nChapter 8. Converter",
+    "type": "FUNCTION",
+    "name": "MD5_Hash",
+    "input": [
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "An integer for internal use."
+        },
+        {
+            "name": "A",
+            "type": "DWORD",
+            "description": "A DWORD parameter for internal use."
+        },
+        {
+            "name": "B",
+            "type": "DWORD",
+            "description": "A DWORD parameter for internal use."
+        },
+        {
+            "name": "C",
+            "type": "DWORD",
+            "description": "A DWORD parameter for internal use."
+        },
+        {
+            "name": "D",
+            "type": "DWORD",
+            "description": "A DWORD parameter for internal use."
+        },
+        {
+            "name": "X",
+            "type": "DWORD",
+            "description": "A DWORD parameter for internal use."
+        },
+        {
+            "name": "U",
+            "type": "INT",
+            "description": "An integer for internal use."
+        },
+        {
+            "name": "T",
+            "type": "DWORD",
+            "description": "A DWORD parameter for internal use."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The resulting MD5 hash value as a DWORD.",
+        "fields": []
+    }
+}

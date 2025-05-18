@@ -1,0 +1,35 @@
+{
+    "title": "BASE64 Decoder Function",
+    "description": "BASE64_DECODE_STREAM arbitrarily long BASE64 byte streams are\n\ndecoded. In one pass, up to 64 bytes are decoded, which in turn emerged\n\nfrom a maximum of 48 bytes each. Here, the source data is passed to the\n\n73 Version 1.21\n\nChapter 8. Converter\n\ndecoder over BUF1 in the data-stream manner as individual blocks of\n\ndata, and in decoded form re-issued in BUF2. The user has to provide the\n\nfurther processing of the BUF2 data before the next block of data is con￾verted. The number of bytes in BUF2 is issued by SIZE2 from the module.",
+    "type": "FUNCTION",
+    "name": "BASE64_DECODE_STREAM",
+    "input": [
+        {
+            "name": "SIZE1",
+            "type": "INT",
+            "description": "Number of bytes in BUF1 for decode."
+        },
+        {
+            "name": "BUF1",
+            "type": "ARRAY [0..63] OF BYTES",
+            "description": "BASE64 data for conversion."
+        }
+    ],
+    "output": [
+        {
+            "name": "SIZE2",
+            "type": "INT",
+            "description": "Number of bytes in BUF2 of the decoded results."
+        },
+        {
+            "name": "BUF2",
+            "type": "ARRAY [0..47] OF BYTES",
+            "description": "Converted data."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "The function does not return a value; it outputs results via parameters."
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "title": "SHA1 Stream Function Module",
+    "description": "SHA1_STREAM allows the calculation of standard cryptogra￾phic hash function SHA-1 (Secure Hash Algorithm).\n\n84 Version 1.21\n\nChapter 8. Converter\n\nThis can be created from any data stream a unique check value. It is vir￾tually impossible to fnd two diferent messages with the same test value,\n\nthis is referred to as collisions free. This can be used to check a confgura￾tion fle for change or manipulation.\n\nWith the secure hash algorithm (SHA1) a hash value is generated from\n\n160 bits in length for any data. The maximum length of the stream is on\n\nthis module is limited to 2^32 (4 gigabyte). The result is a 20-byte hash\n\nvalue, issued as ARRAY [0..19] OF BYTE.",
+    "type": "FUNCTION",
+    "name": "SHA1_STREAM",
+    "input": [
+        {
+            "name": "MODE",
+            "type": "INT",
+            "description": "Operating mode for the module (1 = init, 2 = Data Block, 3 = Complete)"
+        },
+        {
+            "name": "BUF",
+            "type": "ARRAY[0..63] OF BYTES",
+            "description": "Source data buffer for current input data stream"
+        },
+        {
+            "name": "SHA1",
+            "type": "ARRAY[0..19] OF BYTE",
+            "description": "Current SHA1-HASH value"
+        },
+        {
+            "name": "SIZE",
+            "type": "UDINT",
+            "description": "Number of data bytes in BUF"
+        }
+    ],
+    "output": [
+        {
+            "name": "POS",
+            "type": "UDINT",
+            "description": "Start address of the requested data block"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value, the function operates in-place"
+    }
+}

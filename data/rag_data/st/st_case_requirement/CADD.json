@@ -1,0 +1,36 @@
+{
+    "title": "Complex Addition Function",
+    "description": "CADD adds two complex numbers X and Y.",
+    "type": "FUNCTION",
+    "name": "CADD",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "The first complex number to be added."
+        },
+        {
+            "name": "Y",
+            "type": "complex",
+            "description": "The second complex number to be added."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The resulting complex number obtained from the addition of X and Y.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "real",
+                "description": "The real part of the resulting complex number."
+            },
+            {
+                "name": "im",
+                "type": "real",
+                "description": "The imaginary part of the resulting complex number."
+            }
+        ]
+    }
+}

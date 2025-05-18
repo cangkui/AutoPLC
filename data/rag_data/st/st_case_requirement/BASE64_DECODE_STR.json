@@ -1,0 +1,32 @@
+{
+    "title": "BASE64 Decoder Function",
+    "description": "BASE64_DECODE_STR encoded in BASE64 text can be converted\n\nback to plain text. With a positive edge of RUN the process starts. Here\n\nDONE is immediately reseted, if it has been set by a previous conversion.\n\nThe BASE64 encoded text is passed on STR1, and after the conversion the\n\nplain text is available in STR2, and DONE is set to TRUE.",
+    "type": "FUNCTION",
+    "name": "BASE64_DECODE_STR",
+    "input": [
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "A boolean value that when set to TRUE by a positive edge initiates the conversion process."
+        },
+        {
+            "name": "STR1",
+            "type": "STRING(192)",
+            "description": "The BASE64 encoded string that will be converted to plain text."
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "A boolean value that indicates if the conversion has been completed. It is set to TRUE once the conversion finishes."
+        },
+        {
+            "name": "STR2",
+            "type": "STRING(144)",
+            "description": "The converted plain text output from the BASE64 encoded input string."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

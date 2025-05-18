@@ -1,0 +1,30 @@
+{
+    "title": "Gauss cumulative distribution function",
+    "description": "GAUSSCD calculated the distribution function for normal dis￾tribution using the following formula:\nThe normal distribution is the density function normally distributed ran￾dom variables. With the parameters U = 0 and SI = 1, it follows the stan￾dard normal distribution. The distribution function ( Cumulative Distributi￾on Function ).",
+    "type": "FUNCTION",
+    "name": "GAUSSCD",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The value at which to evaluate the cumulative distribution function."
+        },
+        {
+            "name": "U",
+            "type": "REAL",
+            "description": "The mean value of the Gaussian distribution."
+        },
+        {
+            "name": "SI",
+            "type": "REAL",
+            "description": "The standard deviation of the Gaussian distribution."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The cumulative probability for the Gaussian distribution at the given value X.",
+        "fields": []
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "title": "PULSE_T Function Module",
+    "description": "PULSE_T generates an output pulse length of T2 when the input IN is less\n\nthan T1 to TRUE. If the input IN for longer than T1 to TRUE, the output Q\n\nfollows the input IN and is at the same time with IN set to FALSE. If IN is\n\nlonger than the time T2 to TRUE, the output is after the time T2 automati￾cally reset to FALSE. A further impulse at IN while the output is TRUE sets\n\nthe output with the falling edge of IN to FALSE. Is input IN longer than the\n\ntime T2 set to TRUE, the output Q automatically defaults to FALSE after\n\nthe time T2 .\n\nThe following chart shows the input pulse that applies to T1 longer and\n\nthe output Q follows the input. Then, at input IN a short pulse (less than\n\nT1) is generated and the output remains active until a further pulse to IN\n\nresets it again. Another short pulse at the input IN sets the output to\n\nTRUE, until it will be deleted automatically after the expiry of the time T2.",
+    "type": "FUNCTION",
+    "name": "PULSE_T",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input pulse signal."
+        },
+        {
+            "name": "T1",
+            "type": "TIME",
+            "description": "Minimum time threshold for output to follow input."
+        },
+        {
+            "name": "T2",
+            "type": "TIME",
+            "description": "Maximum time for the output pulse duration."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output pulse signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return any value."
+    }
+}

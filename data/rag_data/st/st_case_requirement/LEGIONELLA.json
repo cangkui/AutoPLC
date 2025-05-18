@@ -1,0 +1,176 @@
+{
+    "title": "Legionella Disinfection Control Function",
+    "description": "LEGIONELLA has an integrated timer, which starts on a certain day (DAY)\n\nto a specifc time of day (T_START) the desinfection. For this purpose, the\n\nexternal interface of the local time is needed (DT_IN). Each time can be\n\nstarted the desinfection by hand with a rising edge at MANUAL.\n\n36 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\nThe process of a disinfection cycle is started with an internal start due to\n\nDT_IN, DAY and T_START, or by a rising edge at MANUAL. The output HEAT\n\nis TRUE and controls the heating of the boiler. Within the heating time\n\nT_MAX_HEAT the input signal TEMP_BOILER must go then to TRUE. If the\n\ntemperature is not reported within T_MAX_HEAT, the output STATUS pas￾ses fault. The disinfection then continues anyway. After the heating, the\n\nheater temperature is measured and reheated if necessary by TRUE at the\n\noutput HEAT. When the boiler temperature is reached, PUMP gets TRUE\n\nand the circulation pump is turned on. Then the individual valves are ope￾ned one after the other and measured, whether within the time\n\nT_MAX_RETURN the temperature war reached at the return of the circulati￾on line. If a return fow thermometer is not present, the input T_MAX_RE￾TURN remains open.\n\nThe output STATE is compatible with ESR, and may give the following mes￾sages:\n\n110 On hold \n\n111 Sequence run\n\n1 Boiler temperature was not reached\n\n2 Return temperature at Ventil0 was not reached\n\n3..8 Return temperature at valve1..7 was not reached\n\nSchematic internal structure of Legionella:\n\nThe following example shows a simulation for 2 disinfection circuits with \n\ntrace recording. In this structure, VALVE2 connected to the input RST and \n\nthus disrupts the sequence after of two circles:\n\n37 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "LegionellaDisinfectionControl",
+    "input": [
+        {
+            "name": "MANUAL",
+            "type": "BOOL",
+            "description": "Manual Start Input to initiate the disinfection process"
+        },
+        {
+            "name": "TEMP_BOILER",
+            "type": "REAL",
+            "description": "Current temperature of the boiler"
+        },
+        {
+            "name": "TEMP_RETURN",
+            "type": "REAL",
+            "description": "Current temperature of the circulation pipe"
+        },
+        {
+            "name": "DT_IN",
+            "type": "DATE_TIME",
+            "description": "Current date and time for disinfection scheduling"
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Asynchronous Reset signal"
+        }
+    ],
+    "output": [
+        {
+            "name": "HEAT",
+            "type": "BOOL",
+            "description": "Control signal for hot water heating"
+        },
+        {
+            "name": "PUMP",
+            "type": "BOOL",
+            "description": "Control signal for circulation pump"
+        },
+        {
+            "name": "STATUS",
+            "type": "Byte",
+            "description": "ESR compliant status output signaling the process state"
+        },
+        {
+            "name": "Valve0",
+            "type": "BOOL",
+            "description": "Control outputs for the first valve of circulation"
+        },
+        {
+            "name": "Valve1",
+            "type": "BOOL",
+            "description": "Control outputs for the second valve of circulation"
+        },
+        {
+            "name": "Valve2",
+            "type": "BOOL",
+            "description": "Control outputs for the third valve of circulation"
+        },
+        {
+            "name": "Valve3",
+            "type": "BOOL",
+            "description": "Control outputs for the fourth valve of circulation"
+        },
+        {
+            "name": "Valve4",
+            "type": "BOOL",
+            "description": "Control outputs for the fifth valve of circulation"
+        },
+        {
+            "name": "Valve5",
+            "type": "BOOL",
+            "description": "Control outputs for the sixth valve of circulation"
+        },
+        {
+            "name": "Valve6",
+            "type": "BOOL",
+            "description": "Control outputs for the seventh valve of circulation"
+        },
+        {
+            "name": "Valve7",
+            "type": "BOOL",
+            "description": "Control outputs for the eighth valve of circulation"
+        },
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "Indicates if the disinfection sequence is currently running"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "T_START",
+            "type": "TOD",
+            "description": "Time of day at which the disinfection starts"
+        },
+        {
+            "name": "DAY",
+            "type": "INT",
+            "description": "Weekday on which the disinfection starts"
+        },
+        {
+            "name": "TEMP_SET",
+            "type": "REAL",
+            "description": "Set temperature for the boiler"
+        },
+        {
+            "name": "TEMP_OFFSET",
+            "type": "REAL",
+            "description": "Offset to apply to the temperature readings"
+        },
+        {
+            "name": "TEMP_HYS",
+            "type": "REAL",
+            "description": "Hysteresis value for temperature control"
+        },
+        {
+            "name": "T_MAX_HEAT",
+            "type": "TIME",
+            "description": "Maximum time allowed to heat the boiler"
+        },
+        {
+            "name": "T_MAX_RETURN",
+            "type": "TIME",
+            "description": "Maximum time until the input TEMP_RETURN to be active after VALVE"
+        },
+        {
+            "name": "TP_0",
+            "type": "TIME",
+            "description": "Disinfection time for the first circulation loop"
+        },
+        {
+            "name": "TP_1",
+            "type": "TIME",
+            "description": "Disinfection time for the second circulation loop"
+        },
+        {
+            "name": "TP_2",
+            "type": "TIME",
+            "description": "Disinfection time for the third circulation loop"
+        },
+        {
+            "name": "TP_3",
+            "type": "TIME",
+            "description": "Disinfection time for the fourth circulation loop"
+        },
+        {
+            "name": "TP_4",
+            "type": "TIME",
+            "description": "Disinfection time for the fifth circulation loop"
+        },
+        {
+            "name": "TP_5",
+            "type": "TIME",
+            "description": "Disinfection time for the sixth circulation loop"
+        },
+        {
+            "name": "TP_6",
+            "type": "TIME",
+            "description": "Disinfection time for the seventh circulation loop"
+        },
+        {
+            "name": "TP_7",
+            "type": "TIME",
+            "description": "Disinfection time for the eighth circulation loop"
+        }
+    ],
+    "return_value": {
+        "type": "None",
+        "description": "The function does not return a value."
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "title": "Easter Date Calculation",
+    "description": "EASTER calculates for a given year, the date of Easter Sun￾day. Most religious holidays have a fxed distance from Easter, so that in\nthe case that Easter is known for a year, these holidays can also be deter￾mined easily. EASTER is also used in the module HOLIDAY to calculate holi￾days.",
+    "type": "FUNCTION",
+    "name": "EASTER",
+    "input": [
+        {
+            "name": "year",
+            "type": "INT",
+            "description": "The year for which the Easter date should be calculated, provided as an integer."
+        }
+    ],
+    "output": [
+        {
+            "name": "EASTER",
+            "type": "DATE",
+            "description": "The calculated date of Easter Sunday for the specified year."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The calculated date of Easter Sunday for the year input.",
+        "fields": []
+    }
+}

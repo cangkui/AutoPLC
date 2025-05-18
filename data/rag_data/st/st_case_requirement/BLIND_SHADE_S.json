@@ -1,0 +1,110 @@
+{
+    "title": "BLIND_SHADE_S Function Module",
+    "description": "BLIND_SHADE_S is a much simpler function of BLIND_SHADE specifcally\n\nfor use with roller blind. Here no slat angle for shading must be calculated,\n\nbut simply ensure that when the sun shines the blind closes far enough.\n\nIn the inactive state of the module the inputs UP, DN, and PI S_IN passed\n\nunchanged through to the outputs QU, QD, PO and STATUS.\n\nThe module is activated, if UP = TRUE, DN = TRUE, ENABLE = TRUE and\n\nSUN (for at least SHADE_DELAY) = TRUE. If these conditions are met, the\n\nmodule checks whether the current horizontal sun angle is in the range\n\nbetween HORZ1 and HORZ2 and the vertical sun angle is lower than VERT.\n\nIs now also the current time between sunrise + SUNRISE_OFFSET and sun￾set - SUNSET_PRESET, then the module moves in the STATUS 151 (sha￾ding) and is ensuring that the value issued at output PO, not greater value\n\nthan SHADE_POS (PO is then the minimum of PI and SHADE_POS).\n\nFor the angle HORZ1 and HORZ2 is valid: 90° = East, 180° = South, 270°\n\n= West.\n\nSHADE_DELAY prevents a permanent up and down move when partly\n\ncloud cover the blinds.\n\nWith the input ALERT for example, can be achieved (in a simple manner)\n\nthat the roller blind goes up when the door opens. The ALERT input has\n\nthe highest priority in the module, forces STATUS = 152 independent of\n\nthe inputs and sets QU = TRUE, FALSE = QD, drives therefore manually UP.\n\nWithin a blind control the BLIND_SHADE are used as follows:\n\n97 Version 1.00\n\nChapter 7. Blind Modules\n\nindex of modules\n\nACTUATOR_2P............................................ 12\n\nACTUATOR_3P............................................ 13\n\nACTUATOR_A..............................................15\n\nACTUATOR_COIL.........................................16\n\nACTUATOR_PUMP.......................................16\n\nACTUATOR_UD...........................................17\n\nAIR_DENSITY.............................................. 22\n\nAIR_ENTHALPY...........................................22\n\nAUTORUN...................................................19\n\nBLIND_ACTUATOR......................................74\n\nBLIND_CONTROL........................................ 75\n\nBLIND_CONTROL_S....................................78\n\nBLIND_INPUT.............................................. 80\n\nBLIND_NIGHT.............................................84\n\nBLIND_SCENE.............................................87\n\nBLIND_SECURITY........................................ 89\n\nBLIND_SET.................................................91\n\nBLIND_SHADE............................................93\n\nBLIND_SHADE_S......................................... 96\n\nBOILER....................................................... 23\n\nBUILDING_VERSION....................................11\n\nBURNER.....................................................25\n\nCLICK......................................................... 47\n\nCLICK_MODE..............................................49\n\nDEBOUNCE.................................................49\n\nDEW_CON..................................................29\n\nDEW_RH..................................................... 29\n\nDEW_TEMP................................................. 31\n\nDIMM_2...................................................... 50\n\nDIMM_I....................................................... 52\n\nF_LAMP.......................................................54\n\nHEAT _TEMP...............................................33\n\nHEAT_INDEX............................................... 32\n\nHEAT_METER.............................................. 32\n\nLEGIONELLA............................................... 35\n\nPULSE_LENGTH..........................................56\n\nPULSE_T..................................................... 56\n\nSDD............................................................38\n\nSDD_NH3...................................................39\n\nSDT_NH3.................................................... 39\n\nSW_RECONFIG............................................57\n\nSWITCH_I....................................................58\n\nSWITCH_X..................................................59\n\nT_AVG24....................................................39\n\nTANK_LEVEL............................................... 41\n\nTANK_VOL1................................................42\n\nTANK_VOL2................................................42\n\nTEMP_EXT..................................................43\n\nTIMER _ 1................................................... 60\n\nTIMER_2..................................................... 60\n\nTIMER_EVENT_DECODE.............................. 62\n\nTIMER_EXT................................................. 63\n\nTIMER_P4...................................................65\n\nWATER_CP.................................................. 45\n\nWATER_DENSITY.........................................45\n\nWATER_ENTHALPY......................................46\n\nWCT........................................................... 46\n\n98 Version 1.00",
+    "type": "FUNCTION",
+    "name": "BLIND_SHADE_S",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input UP signal to indicate upward motor action."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input DOWN signal to indicate downward motor action."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Default position of the blind."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Indicates if shading is enabled."
+        },
+        {
+            "name": "SUN",
+            "type": "BOOL",
+            "description": "Input signal from the solar sensor indicating sunlight presence."
+        },
+        {
+            "name": "HORZ1",
+            "type": "REAL",
+            "description": "Horizontal sun angle for shading start."
+        },
+        {
+            "name": "HORZ2",
+            "type": "REAL",
+            "description": "Horizontal sun angle for shading end."
+        },
+        {
+            "name": "VERT",
+            "type": "REAL",
+            "description": "Vertical shading angle."
+        },
+        {
+            "name": "ALERT",
+            "type": "BOOL",
+            "description": "Forced opening of the blinds if triggered."
+        },
+        {
+            "name": "CX",
+            "type": "CALENDAR",
+            "description": "Current time and calendar data."
+        },
+        {
+            "name": "SUNRISE_OFFSET",
+            "type": "TIME",
+            "description": "Delay at sunrise."
+        },
+        {
+            "name": "SUNSET_PRESET",
+            "type": "TIME",
+            "description": "Delay at sunset."
+        },
+        {
+            "name": "SHADE_DELAY",
+            "type": "TIME",
+            "description": "Delay of shading."
+        },
+        {
+            "name": "SHADE_POS",
+            "type": "BYTE",
+            "description": "Maximum position for shading."
+        }
+    ],
+    "output": [
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor up signal."
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor down signal."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        },
+        {
+            "name": "PO",
+            "type": "BYTE",
+            "description": "Blind position in automatic mode."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value for this function."
+    }
+}

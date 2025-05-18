@@ -1,0 +1,26 @@
+{
+    "title": "BASE64 Encoding",
+    "description": "BASE64 encoding is a process for Encoding of 8-bit binary data into a\n\nstring consisting of only 64 globally available ASCII characters. Applicati￾on is HTTP Basic Authentication, PGP signatures and keys, and MIME enco￾ding for e-mail. To enable the SMTP protocol as the easy transport of bina￾ry data, a conversion is necessary, as foreseen in the original version, only\n\n7-bit ASCII characters.\n\nWhen encoding always three bytes of byte stream (24 bit) are devided in\n\n6-bit blocks. Each of these 6-bit blocks results in a number between 0 and\n\n63. This results in the following 64 printable ASCII characters [A-Z] [a-z]\n\n[0-9], [+/]. The encoding increases the space requirements of the data\n\nstream by 33%, from 3 characters each to 4 characters each. If the length\n\nof the coding is not divisible by 4, fller characters will be appended at the\n\nend. In this case the sign \"=\" is used .",
+    "type": "FUNCTION",
+    "name": "Base64Encode",
+    "input": [
+        {
+            "name": "inputData",
+            "type": "string",
+            "description": "The binary data that needs to be encoded in BASE64 format."
+        }
+    ],
+    "output": [
+        {
+            "name": "encodedData",
+            "type": "string",
+            "description": "The BASE64 encoded string resulting from the input data."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The BASE64 encoded string of the provided binary data.",
+        "fields": []
+    }
+}

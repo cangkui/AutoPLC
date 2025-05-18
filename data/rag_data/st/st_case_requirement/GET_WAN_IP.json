@@ -1,0 +1,55 @@
+{
+    "title": "Get WAN IP",
+    "description": "GET_WAN_IP determines the IP address that the Internet router on the Wide \n\nArea Network (Internet) uses. This IP address is necessary for example to \n\nto make DynDNS declarations. With a positive edge of the ACTIVATE the \n\nrequest is started. After successful completion of the query DONE = TRUE, \n\nand the parameters WAN_IP the current WAN IP address displayed. If an \n\nerror occurs during the query it is reported in ERROR_C in combination \n\nwith ERROR_T.\n\nERROR_T:\n\nValue Properties\n\n1 The exact meaning of ERROR_C can be read at module DNS_CLIENT\n\n2 The exact meaning of ERROR_C can be read at module HTTP_GET\n\n97 Version 1.21\n\nChapter 9. Network and Communication",
+    "type": "FUNCTION",
+    "name": "GET_WAN_IP",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "struct",
+            "description": "Data structure for IP Control parameters.",
+            "fields": []
+        },
+        {
+            "name": "S_BUF",
+            "type": "struct",
+            "description": "Data structure for the transmit network buffer.",
+            "fields": []
+        },
+        {
+            "name": "R_BUF",
+            "type": "struct",
+            "description": "Data structure for the receive network buffer.",
+            "fields": []
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Input to release the query."
+        }
+    ],
+    "output": [
+        {
+            "name": "WAN_IP",
+            "type": "DWORD",
+            "description": "Wide Area Network address."
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates whether the query completed without errors."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code associated with the query."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Error type of the query."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

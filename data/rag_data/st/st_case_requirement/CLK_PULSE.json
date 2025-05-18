@@ -1,0 +1,42 @@
+{
+    "title": "CLK_PULSE Function Block",
+    "description": "CLK_PULSE generates a defned number of clock pulses with a program￾mable duty cycle. PT defnes the duty cycle and N is the number of gene￾rated pulses. WIth a reset input RST, the generator can be restarted at\nany time. The output CNT counts the pulses generated and RUN = TRUE\nindicates that the generator currently generate pulses. An input value N =\n0 generates an infnite pulse series, the maximum number of pulses is li￾mited to 32767.\nThe following example shows an application of CLK_PULSE for the produc￾tion of 7 pulses with a duty cycle of 100 ms.\nThe trace recording, shows how the RESET (green) is inactive and thus\nRUN (red) is active. The generator generates then 7 pulses (blue), as spe￾cifed at the input N. The output CNT counts from 1 on the frst pulse to 7\nby the last pulse. After the end of the sequence RUN is inactive again and\nthe cycle is complete until it is started by a new reset.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CLK_PULSE",
+    "input": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The time period for generating each pulse."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of pulses to generate. A value of 0 means continuous pulses."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A reset flag to initialize the pulse generation process."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Indicates when a pulse is generated (TRUE during a pulse)."
+        },
+        {
+            "name": "CNT",
+            "type": "INT",
+            "description": "Counts the number of pulses generated."
+        },
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "Indicates if pulse generation is currently running."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

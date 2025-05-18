@@ -1,0 +1,82 @@
+{
+    "title": "8-Stage Shift Register with Control Inputs",
+    "description": "WORK_WEEK calculates the week from the date of input IDA￾TE. The week starts with 1 for the frst week of the year. The frst Thursday\nof the year is always in the frst week. If a year starts with a Thursday or\nend on a Thursday this year has 53 calendar weeks. If the frst day of the\nyear a Tuesday, Wednesday or Thursday so the week begins one early as\nDecember of last year. If the frst day of the year is Friday, Saturday or\nSunday, the last week of the year extends into January. The calculation is\ndone in accordance with ISO8601.\nAs the work week (Work Week ) International is not always used consis￾tent, before the application of the function is to clarify, whether the work\nweek according to ISO8601 is desired in the desired application function.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SHR_8UDE",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Input to set the state of the shift register."
+        },
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "Input data for the first stage of the shift register."
+        },
+        {
+            "name": "D7",
+            "type": "BOOL",
+            "description": "Input data for the last stage of the shift register."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock input signal that triggers the shifting of the register."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Control input to determine the direction of data shifting."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Input to reset all registers to a known state."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Current output state of the first stage of the shift register."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Current output state of the second stage of the shift register."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Current output state of the third stage of the shift register."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Current output state of the fourth stage of the shift register."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "Current output state of the fifth stage of the shift register."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "Current output state of the sixth stage of the shift register."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "Current output state of the seventh stage of the shift register."
+        },
+        {
+            "name": "Q7",
+            "type": "BOOL",
+            "description": "Current output state of the eighth stage of the shift register."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

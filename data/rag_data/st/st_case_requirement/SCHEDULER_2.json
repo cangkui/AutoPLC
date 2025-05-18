@@ -1,0 +1,92 @@
+{
+    "title": "Scheduler Function Block",
+    "description": "CDIV dividing two complex numbers X / Y.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SCHEDULER_2",
+    "input": [
+        {
+            "name": "E0",
+            "type": "BOOL",
+            "description": "Event input signal 0 that affects output Q0."
+        },
+        {
+            "name": "E1",
+            "type": "BOOL",
+            "description": "Event input signal 1 that affects output Q1."
+        },
+        {
+            "name": "E2",
+            "type": "BOOL",
+            "description": "Event input signal 2 that affects output Q2."
+        },
+        {
+            "name": "E3",
+            "type": "BOOL",
+            "description": "Event input signal 3 that affects output Q3."
+        },
+        {
+            "name": "C0",
+            "type": "UINT",
+            "description": "Cycle count threshold for input E0."
+        },
+        {
+            "name": "C1",
+            "type": "UINT",
+            "description": "Cycle count threshold for input E1."
+        },
+        {
+            "name": "C2",
+            "type": "UINT",
+            "description": "Cycle count threshold for input E2."
+        },
+        {
+            "name": "C3",
+            "type": "UINT",
+            "description": "Cycle count threshold for input E3."
+        },
+        {
+            "name": "O0",
+            "type": "UINT",
+            "description": "Offset value for input signal E0."
+        },
+        {
+            "name": "O1",
+            "type": "UINT",
+            "description": "Offset value for input signal E1."
+        },
+        {
+            "name": "O2",
+            "type": "UINT",
+            "description": "Offset value for input signal E2."
+        },
+        {
+            "name": "O3",
+            "type": "UINT",
+            "description": "Offset value for input signal E3."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output signal 0 indicating if the condition for E0 is met."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal 1 indicating if the condition for E1 is met."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output signal 2 indicating if the condition for E2 is met."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output signal 3 indicating if the condition for E3 is met."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

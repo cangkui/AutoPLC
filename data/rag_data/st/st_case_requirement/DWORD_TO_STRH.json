@@ -1,0 +1,20 @@
+{
+    "title": "Convert DWORD to Hexadecimal String",
+    "description": "DWORD_TO_STRH converts a DWORD, Word or byte in a STRING of fxed\nlength. The output string is exactly 8 characters long and is the hexadeci￾mal notation of the value of IN. The output string consists of the charac￾ters '0 '.. '1' and 'A '.. 'F'. The least signifcant hexadecimal character is\nright in the string. DWORD_TO_STRH can process input as byte, word and\nDWORD types. The output is independent of the input type is always a\nSTRING of 32 characters. If a shorter string is needed, it can be cut with\nthe standard function RIGHT() accordingly. The call\nRIGHT(DWORD_TO_STRH(X),4) results to a string of 4 characters to the\ncontents of the lower 2 bytes of X.",
+    "type": "FUNCTION",
+    "name": "DWORD_TO_STRH",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The input DWORD value that needs to be converted to a hexadecimal string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "A string representation of the hexadecimal value of the input DWORD, consisting of 8 hex characters.",
+        "fields": []
+    }
+}

@@ -1,0 +1,75 @@
+{
+    "title": "IRTRANS_RCV_4 Function Module",
+    "description": "IRTRANS_RCV_4 checkes when CMD = TRUE if the string matches the input\n\nDEV corresponds to DEV_CODE (device code) and the string at the input\n\nKEY corresponds to the KEY_CODE. If the codes match and CMD = TRUE,\n\nthen the output Q for a cycle is set to TRUE. For more information about\n\nthe function of the device are under IRTRANS_RCV_1.",
+    "type": "FUNCTION",
+    "name": "IRTRANS_RCV_4",
+    "input": [
+        {
+            "name": "CMD",
+            "type": "BOOL",
+            "description": "Indicates whether data for evaluating are available (TRUE if available)."
+        },
+        {
+            "name": "DEV",
+            "type": "STRING",
+            "description": "The name of the remote control."
+        },
+        {
+            "name": "KEY",
+            "type": "STRING",
+            "description": "The name of the button."
+        },
+        {
+            "name": "DEV_CODE",
+            "type": "STRING",
+            "description": "Device code that corresponds to the remote control."
+        },
+        {
+            "name": "KEY_CODE_0",
+            "type": "STRING",
+            "description": "Key code 0 to be decoded."
+        },
+        {
+            "name": "KEY_CODE_1",
+            "type": "STRING",
+            "description": "Key code 1 to be decoded."
+        },
+        {
+            "name": "KEY_CODE_2",
+            "type": "STRING",
+            "description": "Key code 2 to be decoded."
+        },
+        {
+            "name": "KEY_CODE_3",
+            "type": "STRING",
+            "description": "Key code 3 to be decoded."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output signal 0 indicating if the conditions are met."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal 1 indicating if the conditions are met."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output signal 2 indicating if the conditions are met."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output signal 3 indicating if the conditions are met."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value."
+    }
+}

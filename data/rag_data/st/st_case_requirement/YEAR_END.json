@@ -1,0 +1,19 @@
+{
+    "title": "Calculate Year-End Date from Year Integer",
+    "description": "YEAR_END calculates '31 December in the year Y.",
+    "type": "FUNCTION",
+    "name": "YEAR_END",
+    "input": [
+        {
+            "name": "y",
+            "type": "INT",
+            "description": "The input variable representing the year as an integer."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The calculated year-end date corresponding to the input year."
+    }
+}

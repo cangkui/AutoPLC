@@ -1,0 +1,36 @@
+{
+    "title": "Addition of Two Real2 Values",
+    "description": "BYTE_OF_DWORD extracts a byte (B0 .. B3) a DWORD. The individual by￾tes are selected with 0-3 at the input IN.",
+    "type": "FUNCTION",
+    "name": "R2_ADD2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL2",
+            "description": "The first 'REAL2' structure that contains the first set of values to be added."
+        },
+        {
+            "name": "Y",
+            "type": "REAL2",
+            "description": "The second 'REAL2' structure that contains the second set of values to be added."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL2",
+        "description": "The 'REAL2' structure that contains the result of the addition of 'X' and 'Y'.",
+        "fields": [
+            {
+                "name": "R1",
+                "type": "REAL",
+                "description": "The first real part of the 'REAL2' structure which is the sum of 'X.R1' and 'Y.R1'."
+            },
+            {
+                "name": "RX",
+                "type": "REAL",
+                "description": "The second real part of the 'REAL2' structure which is the sum of 'X.RX' and 'Y.RX'."
+            }
+        ]
+    }
+}

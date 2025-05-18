@@ -1,0 +1,36 @@
+{
+    "title": "Complex Division Function",
+    "description": "CDIV dividing two complex numbers X / Y.",
+    "type": "FUNCTION",
+    "name": "CDIV",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "The first complex number to be divided, represented by its real and imaginary components."
+        },
+        {
+            "name": "Y",
+            "type": "complex",
+            "description": "The second complex number, which is the divisor in the division operation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The result of the division of complex number X by complex number Y.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the result of the complex division."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the result of the complex division."
+            }
+        ]
+    }
+}

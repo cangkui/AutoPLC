@@ -1,0 +1,52 @@
+{
+    "title": "FIFO Buffer Implementation",
+    "description": "FSTRING_TO_MONTH determines from a string containing a month name\nor abbreviation the value of the month. The function can handle both the\nmonth names and abbreviations as input as well as a number of the\nmonth.\nFSTRING_TO_MONTH('Januar',2) = 1\nFSTRING_TO_MONTH('Jan',2) = 1\nFSTRING_TO_MONTH('11',0) = 11\nThe input LANG selects the used language, 0 = the default in the Setup , 1\n= English .... more info about the language settings, see the chapter Data\nTypes.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FIFO_32",
+    "input": [
+        {
+            "name": "Din",
+            "type": "DWORD",
+            "description": "The data input to be written to the FIFO."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal, when TRUE allows reading and writing operations."
+        },
+        {
+            "name": "RD",
+            "type": "BOOL",
+            "description": "Read signal, when TRUE initiates a read operation from the FIFO."
+        },
+        {
+            "name": "WD",
+            "type": "BOOL",
+            "description": "Write signal, when TRUE initiates a write operation to the FIFO."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal, when TRUE resets the FIFO state."
+        }
+    ],
+    "output": [
+        {
+            "name": "Dout",
+            "type": "DWORD",
+            "description": "The data output read from the FIFO."
+        },
+        {
+            "name": "EMPTY",
+            "type": "BOOL",
+            "description": "Status indicator, TRUE if the FIFO is empty."
+        },
+        {
+            "name": "FULL",
+            "type": "BOOL",
+            "description": "Status indicator, TRUE if the FIFO is full."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Input Control Function for ISC",
+    "description": "ISC_CTRL tests whether a sign IN is a control character, if IN is a controll\ncharacter, the function returns TRUE, if not the function returns FALSE.\nControl characters are all characters with code < 32 or 127.",
+    "type": "FUNCTION",
+    "name": "ISC_CTRL",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "A byte input value that will be evaluated by the function."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the input IN is less than 32 or equal to 127; otherwise, returns FALSE."
+    }
+}

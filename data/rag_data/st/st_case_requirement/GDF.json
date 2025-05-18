@@ -1,0 +1,25 @@
+{
+    "title": "GDF Function Calculation",
+    "description": "GDF calculate the Gundermann function.\nThe calculation is done using the formula:\nThe result of GDF is between -π/2 and + π/2\nGDF(0) = 0",
+    "type": "FUNCTION",
+    "name": "GDF",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input parameter representing a real number which will influence the output based on defined conditions."
+        }
+    ],
+    "output": [
+        {
+            "name": "GDF",
+            "type": "REAL",
+            "description": "Output parameter which is a real number calculated based on the value of the input parameter X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated result based on the input parameter X according to specific conditional logic."
+    }
+}

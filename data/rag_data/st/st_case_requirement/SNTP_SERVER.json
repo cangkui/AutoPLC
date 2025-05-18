@@ -1,0 +1,46 @@
+{
+    "title": "SNTP Server Module",
+    "description": "SNTP_SERVER The module provides the functionality of an SNTP (NTP) server. With \n\nENABLE = TRUE the module logs in at IP_CONTROL and waits for the \n\nrelease of the resource, if it occupied by other subscribers for now. Then \n\nthe module is waiting for requests from other SNTP clients and answers it \n\nwith the current time of UDT and XMS. As long as ENABLE = TRUE, the \n\nEthernet access of this resource is permanently locked for other users \n\n(Exclusive Access - due to passive UDP mode). SNTP uses a hierarchical \n\nsystem of diferent strata. As stratum 0 is defned as the exact time \n\nstandard. The directly coupled systems, such as NTP, GPS or DCF77 time \n\nsignals are called Stratum 1.Each additional dependent unit causes an \n\nadditional time lag of 10-100ms and is designate with a higher number \n\n(Stratum 2, Stratum 3 to 255). If no STRATUM is specifed at the module, \n\nSTRATUM = 1 is used as a standard.\n\n128 Version 1.21\n\nChapter 9. Network and Communication\n\nIf an SNTP client itself has a time with a higher stratum than an SNTP \n\nserver, the time of this is sometimes rejected because it is less accurate \n\nthan their own reference. It is therefore important to specify a logically \n\ncorrect STRATUM. The module SNTP_CLIENT ignores deliberately the \n\nSTRATUM and synchronizes in each case with the SNTP server, because \n\npretty much everyone SNTP server as a more precise time than a PLC.",
+    "type": "FUNCTION",
+    "name": "SNTP_Server",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for the IP address control."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer used to transmit data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer used to receive data."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Starts the SNTP server. When TRUE, the server will log in and wait for requests."
+        },
+        {
+            "name": "STRATUM",
+            "type": "BYTE",
+            "description": "Specifies the hierarchical level or accuracy of the SNTP server."
+        },
+        {
+            "name": "UDT",
+            "type": "DT",
+            "description": "Date and time input as Universal Time."
+        },
+        {
+            "name": "XMS",
+            "type": "INT",
+            "description": "Millisecond of the Universal Time UDT."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": null
+}

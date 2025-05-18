@@ -1,0 +1,122 @@
+{
+    "title": "FT_Profile Function Block",
+    "description": "SCALE_B scales an input value BYTE and calculates an output value in\nREAL. The input value X is limited here to I_LO and I_HI. SCALE_D (IN, 0,\n255, 0, 100) scales an input with 8-bit resolution on the output 0..100.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_Profile",
+    "input": [
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "The gain factor applied to the output value, with a default value of 1.0."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "The offset added to the output value."
+        },
+        {
+            "name": "M",
+            "type": "REAL",
+            "description": "A multiplier applied to the time intervals, with a default value of 1.0."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "A boolean signal to start the profile generation."
+        },
+        {
+            "name": "value_0",
+            "type": "REAL",
+            "description": "The initial value at time_0."
+        },
+        {
+            "name": "time_1",
+            "type": "TIME",
+            "description": "The time at which value_1 is reached."
+        },
+        {
+            "name": "value_1",
+            "type": "REAL",
+            "description": "The value corresponding to time_1."
+        },
+        {
+            "name": "time_2",
+            "type": "TIME",
+            "description": "The time at which value_2 is reached."
+        },
+        {
+            "name": "value_2",
+            "type": "REAL",
+            "description": "The value corresponding to time_2."
+        },
+        {
+            "name": "time_3",
+            "type": "TIME",
+            "description": "The time at which value_3 is reached."
+        },
+        {
+            "name": "value_3",
+            "type": "REAL",
+            "description": "The value corresponding to time_3."
+        },
+        {
+            "name": "time_10",
+            "type": "TIME",
+            "description": "The time at which value_10 is reached."
+        },
+        {
+            "name": "value_10",
+            "type": "REAL",
+            "description": "The value corresponding to time_10."
+        },
+        {
+            "name": "time_11",
+            "type": "TIME",
+            "description": "The time at which value_11 is reached."
+        },
+        {
+            "name": "value_11",
+            "type": "REAL",
+            "description": "The value corresponding to time_11."
+        },
+        {
+            "name": "time_12",
+            "type": "TIME",
+            "description": "The time at which value_12 is reached."
+        },
+        {
+            "name": "value_12",
+            "type": "REAL",
+            "description": "The value corresponding to time_12."
+        },
+        {
+            "name": "time_13",
+            "type": "TIME",
+            "description": "The time at which value_13 is reached."
+        },
+        {
+            "name": "value_13",
+            "type": "REAL",
+            "description": "The value corresponding to time_13."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value calculated from the interpolation and adjusted by K and O."
+        },
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "A boolean indicating whether the function block is currently running or not."
+        },
+        {
+            "name": "ET",
+            "type": "TIME",
+            "description": "Elapsed time since the start of the profile generation."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

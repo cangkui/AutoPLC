@@ -1,0 +1,34 @@
+{
+    "title": "TN_SEND_ROWS",
+    "description": "TN_SEND_ROWS is used to automatically update the graphical \n\nchanges to the Telnet screen, by send the modifed lines to the Telnet \n\nclient.\n\nIf you change the Telnet screen a color or a character in a line, this line is \n\nalways automatically selected for update. The module checks if marked at \n\nXus_TN_SCREEN.bya_Line_Update [0..23] one or more lines, and generates \n\nan ANSI-code byte-stream which is sent to the Telnet client. Furthermore, \n\nwhen Xus_TN_SCREEN.bo_Clear_Screen = TRUE a clear screen is triggered. \n\nUpon detection of a new Telnet client connection automatically all the rows \n\nare marked for update, so that the whole screen content is rendered. If the \n\nrequired amount of data greater than S_BUF.BUFFER the data is \n\nautomatically output in blocks.\n\n \n\n183 Version 1.21\n\nChapter 11. Telnet-Vision",
+    "type": "FUNCTION",
+    "name": "TN_SEND_ROWS",
+    "input": [
+        {
+            "name": "S_BUF_SIZE",
+            "type": "UINT",
+            "description": "Number of bytes in the S_BUF.BUFFER"
+        },
+        {
+            "name": "IP_C",
+            "type": "IP_CONTROL",
+            "description": "Connection data for the Telnet client"
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Transmit data to the Telnet client"
+        },
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "us_TN_SCREEN",
+            "description": "Structure containing information on the Telnet screen update"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "No return value for this function"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "title": "Byte to Gray Code Conversion",
+    "description": "BYTE_TO_GRAY converts a byte value (IN) in the Gray code.",
+    "type": "FUNCTION",
+    "name": "BYTE_TO_GRAY",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "An 8-bit byte that needs to be converted to Gray code."
+        }
+    ],
+    "output": [
+        {
+            "name": "BYTE_TO_GRAY",
+            "type": "BYTE",
+            "description": "The resulting Gray code representation of the input byte."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The Gray code equivalent of the input byte.",
+        "fields": []
+    }
+}

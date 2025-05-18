@@ -1,0 +1,19 @@
+{
+    "title": "Cosh Function",
+    "description": "COSH calculates the hyperbolic cosine using the formula:",
+    "type": "FUNCTION",
+    "name": "COSH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the hyperbolic cosine is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The hyperbolic cosine of the input value X, computed as (1.0 / T + T) * 0.5 where T is equal to EXP(X)."
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "title": "Building Version Function",
+    "description": "BUILDING_VERSION provides if IN = FALSE the current version number as\n\nDWORD. If IN is set to TRUE then the release date of the current version as\n\na DWORD is returned.",
+    "type": "FUNCTION",
+    "name": "BUILDING_VERSION",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "If TRUE, the module provides the release date; if FALSE, it provides the current version number."
+        }
+    ],
+    "output": [
+        {
+            "name": "Version",
+            "type": "DWORD",
+            "description": "The version number or release date of the library, depending on the input parameter IN."
+        }
+    ],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Returns the version number or release date as a DWORD."
+    }
+}

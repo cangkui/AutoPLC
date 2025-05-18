@@ -1,0 +1,25 @@
+{
+    "title": "Convert Real to DWORD",
+    "description": "REAL_TO_DW copies the bit pattern of a REAL (IN) in a DWORD. These bits\nare copied without regard to their meaning. The function REAL_TO_DW is\nthe inverse so that the conversion of REAL_TO_DW and then DW_TO_REAL\nresult in the output value. The IEC standard function REAL_TO_DWORD\nconverts the REAL value to a fxed numerical value and is rounded at the\nlowest point of the DWORD.",
+    "type": "FUNCTION",
+    "name": "REAL_TO_DW",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input variable of type REAL that needs to be converted to DWORD."
+        }
+    ],
+    "output": [
+        {
+            "name": "REAL_TO_DW",
+            "type": "DWORD",
+            "description": "The DWORD representation of the input REAL value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The result of the conversion from REAL to DWORD."
+    }
+}

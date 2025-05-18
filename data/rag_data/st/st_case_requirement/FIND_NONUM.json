@@ -1,0 +1,25 @@
+{
+    "title": "Find Non-Numeric Character",
+    "description": "FIND_NONUM searches STR from the starting position POS\nfrom left to right and returns the frst position which is not a number.\nNumbers are the letters \"0..9\" and \".\"",
+    "type": "FUNCTION",
+    "name": "FIND_NONUM",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The input string to be searched for non-numeric characters."
+        },
+        {
+            "name": "pos",
+            "type": "INT",
+            "description": "The position in the string from which to start the search."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The index of the first non-numeric character found in the string, or 0 if there are no non-numeric characters.",
+        "fields": []
+    }
+}

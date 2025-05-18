@@ -1,0 +1,34 @@
+{
+    "title": "Find Number in String",
+    "description": "FIND_NUM STR from position POS from left to right\nand returns the frst position that is a number.\nNumbers are the letters \"0..9\" and \".\"",
+    "type": "FUNCTION",
+    "name": "FIND_NUM",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING",
+            "description": "The string to be searched for numeric characters.",
+            "fields": []
+        },
+        {
+            "name": "pos",
+            "type": "INT",
+            "description": "The starting position from which to begin the search for numeric characters.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "FIND_NUM",
+            "type": "INT",
+            "description": "The index of the first numeric character found in the string; returns 0 if no numeric character is found.",
+            "fields": []
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "Returns the index of the first numeric character or 0 if none is found.",
+        "fields": []
+    }
+}

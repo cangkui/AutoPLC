@@ -1,0 +1,25 @@
+{
+    "title": "Refraction Calculation",
+    "description": "REFRACTION calculates the atmospheric refraction outside the atmosphe￾re and celestial bodies. A celestial body appears by the refraction of light\nin the atmosphere by the refraction higher above the horizon than he ac￾tually is. The refraction is 0 at the zenith (at 12:00 noon) and increases\nmuch close to the horizon. At 0° (the horizon), the refraction is -0.59° and\n10° above the horizon, it is 0.09°. The refraction is needed to calculated\norbits of celestial bodies and to correct satellite so that they match with\nobservation. The module calculates an average value for the pressure of\n1010mBar and 10° C. When the sun is actually at 0°, so exactly in the ho￾rizon, it appears above the horizon because of refraction at 0.59 degrees .\nThe visible sun position is the actual (astronomical) sun position H + the\nrefraction of the sun. The refraction angle is also calculated below the ho￾rizon ELEV < - 2°, so that below the horizon always the refraction is added\nto the astronomical refraction angle, so as the distance to the sun can be\ncalculated correctly at any time. For astronomical angle < -1.9 ° is the re￾fraction remains constant at 0.744 degrees.",
+    "type": "FUNCTION",
+    "name": "REFRACTION",
+    "input": [
+        {
+            "name": "ELEV",
+            "type": "REAL",
+            "description": "The elevation in degrees which will be used in the refraction calculation."
+        }
+    ],
+    "output": [
+        {
+            "name": "REFRACTION",
+            "type": "REAL",
+            "description": "The calculated refraction value based on the input elevation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The output value representing the refraction calculated from the given elevation."
+    }
+}

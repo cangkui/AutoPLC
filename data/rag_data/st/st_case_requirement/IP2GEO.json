@@ -1,0 +1,60 @@
+{
+    "title": "Geographic Information Retrieval from IP Address",
+    "description": "IP2GEO (Geographic Data)\n\n99 Version 1.21\n\nChapter 9. Network and Communication\n\nINPUT ACTIVATE: BOOL (release for query)\n\nOUTPUT BUSY: BOOL (Query is active)\n\nDONE: BOOL (Query completed without errors)\n\nERROR_C: DWORD (Error code)\n\nERROR_T: BYTE (error type)\n\nThe device supplies because of the wide-area network IP address, the \n\ngeographic information of the Internet access. As the WAN IP addresses \n\nare registered worldwide, therefore can be determined the approximate \n\ngeographical position of the PLC. Should access runs through a proxy \n\nserver, so its geographic position is determined and not the PLC. Usually, \n\nbut normally it is in the nearness of the PLC, and thus the deviation is not \n\nrelevant. This results in calculated positions difer only a few miles from \n\nthe true position, and is relatively accurate.\n\nIf the parameter \"IP\" specifes no IP address, automatically the current \n\nWAN IP is used, otherwise the information of the confgured IP delivered. \n\nWith a positive edge of the ACTIVATE the request is started. As long as the \n\nquery is not complete, BUSY = TRUE is passed. After successful completion \n\nof the query DONE = TRUE, and the parameters WAN_IP the current WAN \n\nIP address displayed. If an error occurs during the query it is reported in \n\nERROR_C in combination with ERROR_T.\n\nERROR_T:\n\nValue Properties\n\n1 The exact meaning of ERROR_C can be read at module DNS_CLIENT\n\n2 The exact meaning of ERROR_C can be read at module HTTP_GET\n\nThe \"country_code is coded according to ISO 3166 country code ALPHA-2\".\n\nhttp://www.iso.org/iso/english_country_names_and_code_elements\n\nhttp://de.wikipedia.org/wiki/ISO-3166-1-Kodierliste\n\n100 Version 1.21\n\nChapter 9. Network and Communication\n\nThe \"REGION_CODE\" is coded to \"FIPS region code\". \n\nhttp://en.wikipedia.org/wiki/List_of_FIPS_region_codes",
+    "type": "FUNCTION",
+    "name": "GetGeoDataFromIP",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization containing the IP address for which geographic data is requested."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data during the query process."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data after the query is completed."
+        },
+        {
+            "name": "GEO",
+            "type": "IP2GEO",
+            "description": "Structure containing the geographic data returned based on the provided IP address."
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Flag that triggers the start of the query on a positive edge."
+        }
+    ],
+    "output": [
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates if the query is currently active."
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the query has completed successfully without errors."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code generated if an error occurs during the query."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Error type that provides context about the error, refer to the DNS_CLIENT and HTTP_GET modules for exact meanings."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value directly. Instead, it populates the output parameters based on the query results."
+    }
+}

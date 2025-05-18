@@ -1,0 +1,62 @@
+{
+    "title": "SHR_4UDE Function Block",
+    "description": "GEN_SIN is a sine wave generator with programmable period, adjustable\namplitude and signal ofset. A special feature is a adjustable delay so that\nwith multiple generators overlapping signals can be generated. A Binary\nOutput Q passes a logical signal, which is generated phase equal to the\nsine signal. The input DL is a delay for the output signal. The Delay is spe￾cifed with DL * PT. A DL of 0.5 delays the signal by half a period. \nThe following example shows GEN_SIN with a trace recording of the sine\nsignal and the binary output Q.\nThe above example generates a sine wave with 0.1 Hz (PT = 10 s) and a\nlower peak value of 0 and upper peak value of 10.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SHR_4UDE",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Control signal to set the output state."
+        },
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "Input data bit to be shifted into the register at Q0."
+        },
+        {
+            "name": "D3",
+            "type": "BOOL",
+            "description": "Input data bit to be shifted into the register at Q3."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock signal for controlling the shifting operation."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Control signal for direct loading of data into the register."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Control signal to reset the output state."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output of the least significant bit of the shift register."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output of the second bit of the shift register."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output of the third bit of the shift register."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output of the most significant bit of the shift register."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

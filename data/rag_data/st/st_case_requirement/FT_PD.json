@@ -1,0 +1,32 @@
+{
+    "title": "First-Order Proportional-Derivative Controller",
+    "description": "FT_PD is a PD controller, the following formula works:\nY = KP * (IN + DERIV(IN))\nFT_PD can be used in conjunction with the modules CTRL_IN and\nCTRL_OUT to establish a PD controller.\nThe following graph illustrates the internal structure of the controller:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PD",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input signal to be controlled."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "The proportional gain constant, default value is 1.0."
+        },
+        {
+            "name": "TV",
+            "type": "REAL",
+            "description": "The time constant for the derivative action, default value is 1.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output of the PD controller based on the input signal and its derivative."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

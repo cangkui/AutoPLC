@@ -1,0 +1,30 @@
+{
+    "title": "Convert Local Time to UTC",
+    "description": "LTIME_TO_UTC calculates UTC (Universal Time) from a given local time. \nThe world time is calculated by subtracting from the TIME_ZONE_OFFSET\nLTIME local time. If the DST is active (DST = TRUE), an additional hour of\nLTIME is deducted.\nNote: The summer time is not regulated the same in all countries. The\nfunction assumes that in addition to summer time a further hour is added\nto ofset.",
+    "type": "FUNCTION",
+    "name": "LTIME_TO_UTC",
+    "input": [
+        {
+            "name": "LOCAL_TIME",
+            "type": "DT",
+            "description": "The local time to be converted to UTC."
+        },
+        {
+            "name": "DST",
+            "type": "BOOL",
+            "description": "A boolean flag indicating if Daylight Saving Time should be considered."
+        },
+        {
+            "name": "TIME_ZONE_OFFSET",
+            "type": "INT",
+            "description": "The offset of the local time from UTC in minutes."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DT",
+        "description": "The converted UTC time.",
+        "fields": []
+    }
+}

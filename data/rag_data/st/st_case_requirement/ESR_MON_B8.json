@@ -1,0 +1,108 @@
+{
+    "title": "ESR Monitor Block",
+    "description": "DWORD_OF_WORD creates from 2 separate WORDS W0 und W1 a\nDWORD.\nA DWORD is composed as follows: W1-W0.",
+    "type": "FUNCTION_BLOCK",
+    "name": "ESR_MON_B8",
+    "input": [
+        {
+            "name": "s0",
+            "type": "BOOL",
+            "description": "Boolean input 0 for state monitoring."
+        },
+        {
+            "name": "s1",
+            "type": "BOOL",
+            "description": "Boolean input 1 for state monitoring."
+        },
+        {
+            "name": "s2",
+            "type": "BOOL",
+            "description": "Boolean input 2 for state monitoring."
+        },
+        {
+            "name": "s3",
+            "type": "BOOL",
+            "description": "Boolean input 3 for state monitoring."
+        },
+        {
+            "name": "s4",
+            "type": "BOOL",
+            "description": "Boolean input 4 for state monitoring."
+        },
+        {
+            "name": "s5",
+            "type": "BOOL",
+            "description": "Boolean input 5 for state monitoring."
+        },
+        {
+            "name": "s6",
+            "type": "BOOL",
+            "description": "Boolean input 6 for state monitoring."
+        },
+        {
+            "name": "s7",
+            "type": "BOOL",
+            "description": "Boolean input 7 for state monitoring."
+        },
+        {
+            "name": "DT_in",
+            "type": "DT",
+            "description": "Data time input to be associated with the monitored states."
+        },
+        {
+            "name": "a0",
+            "type": "STRING[10]",
+            "description": "String address for input 0."
+        },
+        {
+            "name": "a1",
+            "type": "STRING[10]",
+            "description": "String address for input 1."
+        },
+        {
+            "name": "a2",
+            "type": "STRING[10]",
+            "description": "String address for input 2."
+        },
+        {
+            "name": "a3",
+            "type": "STRING[10]",
+            "description": "String address for input 3."
+        },
+        {
+            "name": "a4",
+            "type": "STRING[10]",
+            "description": "String address for input 4."
+        },
+        {
+            "name": "a5",
+            "type": "STRING[10]",
+            "description": "String address for input 5."
+        },
+        {
+            "name": "a6",
+            "type": "STRING[10]",
+            "description": "String address for input 6."
+        },
+        {
+            "name": "a7",
+            "type": "STRING[10]",
+            "description": "String address for input 7."
+        }
+    ],
+    "output": [
+        {
+            "name": "ESR_Flag",
+            "type": "BOOL",
+            "description": "Flag indicating if any input state has changed."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "ESR_Out",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Array of output data structures that hold information about the changes in the inputs."
+        }
+    ],
+    "return_value": null
+}

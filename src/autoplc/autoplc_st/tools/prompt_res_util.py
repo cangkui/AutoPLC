@@ -4,9 +4,10 @@ import os
 import json
 from typing import List
 
+from common import ROOTPATH
 
 class PromptResultUtil():
-    RAG_DATA_DIR = os.path.join(os.getenv("ROOTPATH"), "data/rag_data")
+    RAG_DATA_DIR = os.path.join(ROOTPATH, "data/rag_data")
 
     @classmethod
     def xml_to_dict(cls, element: ET.Element) -> dict:
@@ -61,6 +62,7 @@ class PromptResultUtil():
     @classmethod
     def get_json_content(cls, name: str, code_type: str) -> dict:
         json_path = f"{cls.RAG_DATA_DIR}/{code_type}/{code_type}_case_requirement/{name}.json"
+        print(json_path)
         if not os.path.exists(json_path):
             print(f"Warning: There is no case json named '{name}' in: {json_path}.")
             return None
@@ -90,7 +92,7 @@ class PromptResultUtil():
     
     @classmethod
     def get_plan_diff(cls, name: str, plan_version: str) -> str:
-        plan_path = f"{cls.RAG_DATA_DIR}/scl/scl_case_plan/{plan_version}/{name}.plan"
+        plan_path = f"{cls.RAG_DATA_DIR}/st/st_case_plan/{plan_version}/{name}.plan"
         if not os.path.exists(plan_path):
             print(f"Warning: There is no case plan named '{name}' in: {plan_path}.")
             return None

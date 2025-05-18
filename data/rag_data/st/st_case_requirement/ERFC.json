@@ -1,0 +1,19 @@
+{
+    "title": "Complementary Error Function Calculation",
+    "description": "ERFC calculates the inverse error function of X.",
+    "type": "FUNCTION",
+    "name": "ERFC",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the complementary error function is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The value of the complementary error function computed from the input X."
+    }
+}

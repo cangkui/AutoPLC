@@ -1,0 +1,26 @@
+{
+    "title": "Compute Inverse Hyperbolic Cosine of a Complex Number",
+    "description": "CACOSH calculates the arc hyperbolic cosine of a complex number\n[fzy] The range of values of the result is between [-  ,+  ] For the imagi￾nary part.",
+    "type": "FUNCTION",
+    "name": "CACOSH",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "Input variable representing a complex number for which the inverse hyperbolic cosine will be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "CACOSH",
+            "type": "complex",
+            "description": "The result of the inverse hyperbolic cosine of the input complex number."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "Returns the complex result of the inverse hyperbolic cosine function.",
+        "fields": []
+    }
+}

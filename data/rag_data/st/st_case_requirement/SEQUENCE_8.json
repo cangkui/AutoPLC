@@ -1,0 +1,207 @@
+{
+    "title": "Sequencer Function Block",
+    "description": "F_QUAD = A * X² + B * X + C)\nF_QUAD calculates the result of a quadratic equation using the formula\nf_QUAD = A * X ² + B * X + C.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SEQUENCE_8",
+    "input": [
+        {
+            "name": "in0",
+            "type": "BOOL",
+            "description": "Input signal for step 0 activation."
+        },
+        {
+            "name": "in1",
+            "type": "BOOL",
+            "description": "Input signal for step 1 activation."
+        },
+        {
+            "name": "in2",
+            "type": "BOOL",
+            "description": "Input signal for step 2 activation."
+        },
+        {
+            "name": "in3",
+            "type": "BOOL",
+            "description": "Input signal for step 3 activation."
+        },
+        {
+            "name": "in4",
+            "type": "BOOL",
+            "description": "Input signal for step 4 activation."
+        },
+        {
+            "name": "in5",
+            "type": "BOOL",
+            "description": "Input signal for step 5 activation."
+        },
+        {
+            "name": "in6",
+            "type": "BOOL",
+            "description": "Input signal for step 6 activation."
+        },
+        {
+            "name": "in7",
+            "type": "BOOL",
+            "description": "Input signal for step 7 activation."
+        },
+        {
+            "name": "start",
+            "type": "BOOL",
+            "description": "Start signal to initialize the sequence."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "Reset signal to reset the sequence state."
+        },
+        {
+            "name": "wait0",
+            "type": "TIME",
+            "description": "Wait time before executing step 0."
+        },
+        {
+            "name": "delay0",
+            "type": "TIME",
+            "description": "Delay time after completing step 0."
+        },
+        {
+            "name": "wait1",
+            "type": "TIME",
+            "description": "Wait time before executing step 1."
+        },
+        {
+            "name": "delay1",
+            "type": "TIME",
+            "description": "Delay time after completing step 1."
+        },
+        {
+            "name": "wait2",
+            "type": "TIME",
+            "description": "Wait time before executing step 2."
+        },
+        {
+            "name": "delay2",
+            "type": "TIME",
+            "description": "Delay time after completing step 2."
+        },
+        {
+            "name": "wait3",
+            "type": "TIME",
+            "description": "Wait time before executing step 3."
+        },
+        {
+            "name": "delay3",
+            "type": "TIME",
+            "description": "Delay time after completing step 3."
+        },
+        {
+            "name": "wait4",
+            "type": "TIME",
+            "description": "Wait time before executing step 4."
+        },
+        {
+            "name": "delay4",
+            "type": "TIME",
+            "description": "Delay time after completing step 4."
+        },
+        {
+            "name": "wait5",
+            "type": "TIME",
+            "description": "Wait time before executing step 5."
+        },
+        {
+            "name": "delay5",
+            "type": "TIME",
+            "description": "Delay time after completing step 5."
+        },
+        {
+            "name": "wait6",
+            "type": "TIME",
+            "description": "Wait time before executing step 6."
+        },
+        {
+            "name": "delay6",
+            "type": "TIME",
+            "description": "Delay time after completing step 6."
+        },
+        {
+            "name": "wait7",
+            "type": "TIME",
+            "description": "Wait time before executing step 7."
+        },
+        {
+            "name": "delay7",
+            "type": "TIME",
+            "description": "Delay time after completing step 7."
+        },
+        {
+            "name": "stop_on_error",
+            "type": "BOOL",
+            "description": "Flag to indicate if the sequence should stop on error."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output for step 0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output for step 1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output for step 2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output for step 3."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "Output for step 4."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "Output for step 5."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "Output for step 6."
+        },
+        {
+            "name": "Q7",
+            "type": "BOOL",
+            "description": "Output for step 7."
+        },
+        {
+            "name": "QX",
+            "type": "BOOL",
+            "description": "Any output active indicator."
+        },
+        {
+            "name": "run",
+            "type": "BOOL",
+            "description": "Indicator if the sequencer is currently running."
+        },
+        {
+            "name": "step",
+            "type": "INT",
+            "description": "Current step of the sequence."
+        },
+        {
+            "name": "status",
+            "type": "BYTE",
+            "description": "Current status of the sequencer."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

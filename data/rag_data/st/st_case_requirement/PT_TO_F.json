@@ -1,0 +1,20 @@
+{
+    "title": "Convert Process Time to Frequency",
+    "description": "PT_TO_F expects a period of seconds in the appropriate frequency to fre￾quency in Hz.",
+    "type": "FUNCTION",
+    "name": "PT_TO_F",
+    "input": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The input process time that needs to be converted to frequency."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The frequency value calculated from the process time.",
+        "fields": []
+    }
+}

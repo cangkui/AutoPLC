@@ -1,0 +1,55 @@
+{
+    "title": "Tank Level Control Function",
+    "description": "TANK_LEVEL used to keep the level of liquid in a tank constant. At the in￾put LEVEL a niveau sensor is connected and at the output VALVE, the after\n\nfeed valve is connected. To debounce at the troubled fll niveau the level\n\nsensor, its response time can be adjusted using the Setup variable\n\nLEVEL_DELAY_TIME. At the input LEVEL with TRUE is displayed, that the li￾quid level is too low. After the input was through for the time LEVEL_DE￾LAY_TIME to TRUE, the output VALVE set to TRUE to replenish fuid. During\n\nthe replenishment process MAX_VALVE_TIME is monitored, and if VALVE\n\nstay longer than this time to TRUE, an alarm is generated in the case of\n\nsensor failures or leaks to prevent a permanent refll. The module also mo￾nitors the input LEAK which for normal operation must always be FALSE.\n\nOnce LEAK goes to TRUE the refll immediately stops and a alarm is gene￾rated. LEAK is used to connect leak sensors and or additional niveau sen￾sors above the normal levels. If f an alarm occurs in the operation the mo￾dule will stop any refll until the error has been fxed and the input ACLR is\n\nset to TRUE shortly. At the ESR status output all operating conditions are\n\npassed with ESR messages.\n\nSTATUS = 1, leak sensor (LEAK) is enabled.\n\nSTATUS = 2, refll time (MAX_VALVE_TIME) was exceeded.\n\nSTATUS = 100, level is reached, feeding of.\n\nSTATUS = 101, ACLR was pressed.\n\nSTATUS = 102, level below, make-up runs.\n\n41 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "TankLevelControl",
+    "input": [
+        {
+            "name": "LEVEL",
+            "type": "BOOL",
+            "description": "Input for level sensor indicating whether the liquid level is too low."
+        },
+        {
+            "name": "LEAK",
+            "type": "BOOL",
+            "description": "Input for leak sensors; expected to be FALSE during normal operation."
+        },
+        {
+            "name": "ACLR",
+            "type": "BOOL",
+            "description": "Input to reset the alarm."
+        },
+        {
+            "name": "MAX_VALVE_TIME",
+            "type": "TIME",
+            "description": "Maximum allowed time for the refill valve to be activated."
+        },
+        {
+            "name": "LEVEL_DELAY_TIME",
+            "type": "TIME",
+            "description": "Response time to debounce the level sensor input."
+        }
+    ],
+    "output": [
+        {
+            "name": "VALVE",
+            "type": "BOOL",
+            "description": "Output signal to the refill valve."
+        },
+        {
+            "name": "ALARM",
+            "type": "BOOL",
+            "description": "Alarm output indicating a fault condition."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output representing the current operational state."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value as this is a control function."
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "title": "FindB Function",
+    "description": "FINDB searched for the presence of STR2 in STR1 and returns\nthe last position of STR2 in STR1.\nIf STR2 is not found, a 0 is returned.",
+    "type": "FUNCTION",
+    "name": "FindB",
+    "input": [
+        {
+            "name": "str1",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The main string in which the search for the substring will be conducted."
+        },
+        {
+            "name": "str2",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The substring that is being searched for in 'str1'."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The position of the last occurrence of 'str2' in 'str1'. Returns 0 if 'str2' is not found.",
+        "fields": []
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "title": "Check if Array is Sorted",
+    "description": "IS_SORTED checks whether any array of REAL is sorted in\nascending order. When called, a pointer to the array and its size in bytes is\ntransferred to the function. Under CoDeSys the call is:\n_ARRAY_SORT(ADR(Array), SIZEOF(Array)), where array is the name of the\narray to be manipulated. ADR() is a standard function which identifes the\npointer to the array and SIZEOF() is a standard function, which determines\nthe size of the array.\nThe function returns TRUE if the array is sorted in ascending order.\nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "IS_SORTED",
+    "input": [
+        {
+            "name": "pt",
+            "type": "pointer to ARRAY[0..32000] of REAL",
+            "description": "A pointer to an array containing REAL numbers."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The size of the array, specifying the number of elements in the pointer array."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the array is sorted in ascending order, otherwise returns FALSE."
+    }
+}

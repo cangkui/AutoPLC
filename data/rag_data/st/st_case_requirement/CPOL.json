@@ -1,0 +1,42 @@
+{
+    "title": "Complex Polar Calculator",
+    "description": "CPOL produces a complex number in polar form. The input values of L and\nA specify the length (radius) and the angle.",
+    "type": "FUNCTION",
+    "name": "CPOL",
+    "input": [
+        {
+            "name": "L",
+            "type": "REAL",
+            "description": "The magnitude of the complex number in polar coordinates."
+        },
+        {
+            "name": "A",
+            "type": "REAL",
+            "description": "The angle (in radians) of the complex number in polar coordinates."
+        }
+    ],
+    "output": [
+        {
+            "name": "CPOL",
+            "type": "complex",
+            "description": "A complex number represented with a real part and an imaginary part."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The result of the conversion from polar to rectangular form for the complex number.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the complex number."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the complex number."
+            }
+        ]
+    }
+}

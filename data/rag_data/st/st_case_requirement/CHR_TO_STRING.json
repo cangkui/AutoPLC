@@ -1,0 +1,19 @@
+{
+    "title": "Character to String Conversion",
+    "description": "CHR_TO_STRING forms a ASCII characters from a byte and returns it as a\none-character string.",
+    "type": "FUNCTION",
+    "name": "CHR_TO_STRING",
+    "input": [
+        {
+            "name": "C",
+            "type": "BYTE",
+            "description": "The byte value representing a character that needs to be converted to a string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "Returns the string representation of the input character, properly null-terminated."
+    }
+}

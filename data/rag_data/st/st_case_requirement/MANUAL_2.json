@@ -1,0 +1,47 @@
+{
+    "title": "Manual Control Function Block",
+    "description": "WEEKDAY_TO_STRING converts a weekday in the corresponding string.\nThe input WDAY indicates the corresponding day of the week: 1 = Monday\nand 7 = Sunday. The input LANG chooses the language: 1 = English and 2\n= German. LANG = 0 used as Default the language specifed in the Global\nSetup variable LANGUAGE_DEFAULT. [fzy] The input LX sets the length of\nthe string to be generated: 0 = full month name, 3 = 3-letter abbreviation,\nall other values at the input LX are undefned. \nThe strings produced by the module, and the supported languages are de￾fned in the Global Constants and can be expanded and changed. \nWEEKDAY_TO_STRING(1,0,0) = ' Monday ' \ndependent on the global constant LANGUAGE_DEFAULT\nWEEKDAY_TO_STRING(1,2,0) = ' Monday ' \nWEEKDAY_TO_STRING(1,0,2) = ' Mon ' \n 14. Memory Modules",
+    "type": "FUNCTION_BLOCK",
+    "name": "MANUAL_2",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input signal to the function block indicating the manual input state."
+        },
+        {
+            "name": "ENA",
+            "type": "BOOL",
+            "description": "Enable signal to activate the function block."
+        },
+        {
+            "name": "ON",
+            "type": "BOOL",
+            "description": "Signal indicating a request to turn the output ON."
+        },
+        {
+            "name": "OFF",
+            "type": "BOOL",
+            "description": "Signal indicating a request to turn the output OFF."
+        },
+        {
+            "name": "MAN",
+            "type": "BOOL",
+            "description": "Manual control input signal when neither ON nor OFF is active."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Current output state of the function block."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "Status code representing the current state of processing."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

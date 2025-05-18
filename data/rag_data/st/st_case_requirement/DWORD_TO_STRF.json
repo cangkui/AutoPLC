@@ -1,0 +1,25 @@
+{
+    "title": "Convert DWORD to String with Length Limitation",
+    "description": "DWORD_TO_STRF converts a DWORD, Word or byte in a STRING of fxed\nlength. The output string is exactly N digits, with leading zeros inserted or\nleading digits truncated. The maximum permitted length N is 20 digits.",
+    "type": "FUNCTION",
+    "name": "DWORD_TO_STRF",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The DWORD value to be converted to a string."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The maximum length of the resulting string, which should be limited to a maximum of 20."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The resulting string representation of the DWORD input, limited to the specified length N.",
+        "fields": []
+    }
+}

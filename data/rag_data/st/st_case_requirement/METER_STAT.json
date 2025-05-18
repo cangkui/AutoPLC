@@ -1,0 +1,67 @@
+{
+    "title": "Meter Status Function Block",
+    "description": "METER_STAT calculates the consumption of the current day, week, month\nand year and shows the value of the last corresponding period. The accu￾mulated consumption value is at the IN input, while at the DI input is app￾lied the current date. With the RST input, the counter can be reset at any\ntime. For ease of storage in the persistent and retentive memory, the out￾puts are defned as I / O.\nThe following example shows the application of METER_STAT with the mo￾dule METER:",
+    "type": "FUNCTION_BLOCK",
+    "name": "METER_STAT",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value measured by the meter."
+        },
+        {
+            "name": "DI",
+            "type": "DATE",
+            "description": "The current date corresponding to the measurement."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean flag to indicate whether to reset the current measurements."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "Last_Day",
+            "type": "REAL",
+            "description": "The value of the last day measurement."
+        },
+        {
+            "name": "Current_Day",
+            "type": "REAL",
+            "description": "The value of the current day measurement."
+        },
+        {
+            "name": "Last_Week",
+            "type": "REAL",
+            "description": "The value of the last week measurement."
+        },
+        {
+            "name": "Current_Week",
+            "type": "REAL",
+            "description": "The value of the current week measurement."
+        },
+        {
+            "name": "Last_Month",
+            "type": "REAL",
+            "description": "The value of the last month measurement."
+        },
+        {
+            "name": "Current_Month",
+            "type": "REAL",
+            "description": "The value of the current month measurement."
+        },
+        {
+            "name": "Last_Year",
+            "type": "REAL",
+            "description": "The value of the last year measurement."
+        },
+        {
+            "name": "Current_Year",
+            "type": "REAL",
+            "description": "The value of the current year measurement."
+        }
+    ],
+    "return_value": null
+}

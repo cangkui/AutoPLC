@@ -1,0 +1,25 @@
+{
+    "title": "Ceil2 Function",
+    "description": "GEN_RMP is a sawtooth generator. It generates a ramp at the output OUT \nwith the duration of PT and repeats this continuously. The output Q is for \nexactly one cycle TRUE when the ramp starts at the output OUT. The input \nAM and OS set the amplitude and the ofset for the output OUT. If the \ninputs OS and AM are not connected the default values are 0 and 1. The \noutput OUT then generates a sawtooth signal of 0 .. 1. The input DL can \nmove the output up to a period (PT) and is used to produce multiple \nshifted signals to each other. A 0 at the input DL means no displacement. \nA value between 0 and 1 shifts the signal by up to a period. \nThe following example shows a trace recording of the input values PT =\n10s, AM = 1 and OS = 0",
+    "type": "FUNCTION",
+    "name": "CEIL2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number input for which the ceiling needs to be computed."
+        }
+    ],
+    "output": [
+        {
+            "name": "CEIL2",
+            "type": "DINT",
+            "description": "The computed ceiling value of the input real number, represented as an integer."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "Returns the ceiling of the input real number as an integer."
+    }
+}

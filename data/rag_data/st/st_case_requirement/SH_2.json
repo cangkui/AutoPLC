@@ -1,0 +1,57 @@
+{
+    "title": "Sample High-Low Average Calculation",
+    "description": "SPHERE_V calculates the volume of a sphere with a radius of RX.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SH_2",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input value to be sampled for calculations."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The time period for triggering the sample calculations."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of samples to consider for the average and high/low calculations. Default value is 16."
+        },
+        {
+            "name": "disc",
+            "type": "INT",
+            "description": "The disc value used in determining the sampling range."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The most recent input value that has been sampled."
+        },
+        {
+            "name": "trig",
+            "type": "BOOL",
+            "description": "Indicates whether the sampling trigger has occurred."
+        },
+        {
+            "name": "avg",
+            "type": "REAL",
+            "description": "The average value computed from the sampled inputs."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The highest value among the sampled inputs."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lowest value among the sampled inputs."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

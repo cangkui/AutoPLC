@@ -1,0 +1,20 @@
+{
+    "title": "Convert BYTE to STRING Representation",
+    "description": "BYTE_TO_STRB convert a byte into a fxed-length STRING. The output\nstring is exactly 8 characters long and is the bitwise notation of the value\nof IN. The output string consists of the characters '0 'and '1'. The least si￾gnifcant bit is right in the STRING. If a STRING is required with less than 8\ncharacters, it can be truncated with the standard function RIGHT () accor￾dingly. The call RIGHT(BYTE_TO_STRB (X),4) results in a STRING with four\ncharacters that correspond to the content of the lowest 4 bits of X.",
+    "type": "FUNCTION",
+    "name": "BYTE_TO_STRB",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The BYTE value to be converted into a string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The string representation of the byte input, consisting of 8 characters representing each bit.",
+        "fields": []
+    }
+}

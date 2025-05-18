@@ -1,0 +1,84 @@
+{
+    "title": "XML_READER Function Module",
+    "description": "XML_READER means it is possible to parse so-called 'well-formed' XML do￾cuments. Here, not as usual at high-level languages, the whole XML data\n\nis read as a data structure and stored in memory, but a very resource-fri￾endly version is used. The XML_READER reads XML data as a sequential\n\ndata stream from the bufer and signals the in COMMAND defned element\n\ntypes automatically back.\n\nWith XML is a strict distinction between upper and lower case. An XML do￾cument consists of just elements, attributes, their assignments, and the\n\ncontents of the elements that can be text or child elements, which in turn\n\ncan have attributes with assigned values and content. There are elements\n\nwith and without attributes, elements can consist of many other elements,\n\nand those that may occur within the text only, and even empty elements\n\nthat may have no content. The structure that emerges from these ele￾ments and their principles, can be understood as a tree structure. Ele￾ments always consist of tags and end tags. Attributes are additional infor￾mation about items. There are also comment elements allowed, however,\n\nthese may not between the start and end tags are of elements in\n\nXML_READER. The possible DTD - Document Type Defnition only be repor￾ted as DTD, but not further evaluated and applied by XML_READER. With a\n\nCDATA section a parser is told that no markup follows, but normal text\n\nwhich is reported by start-end block.\n\nBefore the frst call of the XML_READER a few parameters in the CTRL data\n\nstructure needs to be initialized. CTRL.START_POS and CTRL.STOP_POS\n\ndefnes the beginning and the end of the XML data in the bufer. CTRL.-\n\nCOMMAND with one hand, can be an initialization (Bit15 = TRUE) and\n\nwith bit 0-14 can be defned which element / data types are reported. Here\n\nthe type codes in the following table corresponds just the bit number,\n\nwhich has to be set to True in CTRL.COMMAND.\n\nIt is tried to pass the text of element, attribute, Value and Path in total\n\nlength to the accompanying STRINGS. In STRINGS greater than 255 cha￾racters this will be cut of fush left, but with block-start and block-end pa￾rameters is reported back, so that they can subsequently be evaluated yet\n\ncomplete. The BLOCK-START/STOP index are is always passed parallel to\n\nthe STRINGS. If the PATH STRING is greater than 255 characters so the\n\nPATH tracking is disabled and only \"OVERFLOW\" is entered as text.\n\nSince for very large and complex XML data is not clear, how long it takes\n\nuntil the module fnd data to report back, an WATCHDOG function is inte￾grated. A maximum processing time can be parameterized. When rea￾ching the time limit the module call is automatically canceled, and the\n\nnext cycle resumes at the same point. The type code 98 is returned.\n\nThe following type codes are defned.\n\nType\n\n(Code)\n\nData Type Description\n\n141 Version 1.21\n\nChapter 9. Network and Communication\n\n00 Unknown Undefned item found\n\n01 TAG (element) Start - of Element\n\nData pointer for the element of BLOCK1\n\n02 END-TAG (Element) End - of the element\n\n03 TEXT Content of an element\n\nData pointer for value on BLOCK1\n\n04 ATTRIBUTE Attributes of an element\n\nData pointer for attributes of BLOCK1\n\nData pointer for value on BLOCK2\n\n05 TAG ( Processing Instruction ) Instructions for processing\n\nData pointer for the element of BLOCK1\n\n12 CDATA not analyzed content TEXT\n\nData pointer for value on BLOCK1\n\n13 COMMENT COMMENT\n\nData pointer for value on BLOCK1\n\n14 DTD Document Type Declaration\n\nData pointer for value on BLOCK1\n\n98 WATCHDOG Maximum processing time reached - cancel\n\n99 END No more items available\n\nSample XML\n\nfat display\n\n<?xml version=\"1.0\" ?><rss version=\"2.0\"><channel><!-- XML-Demo\n\n--><![CDATA[<b>CurrentConditions:</b><br\n\n/>]]><title>XML_Reader</title>\n\n<link>http://oscat.de</link></channel></rss>\n\nRepresentation of the levels (without processing Instruction )\n\n142 Version 1.21\n\nChapter 9. Network and Communication\n\nView as tree of item types\n\nLegend:\n\nApplication example:\n\n CASE STATE OF\n\n00:\n\n STATE := 10;\n\n CTRL.START_POS := HTTP_GET.BODY_START; (Index des ersten Zeichen *)\n\n CTRL.STOP_POS := HTTP_GET.BODY_STOP; (Index of last character *)\n\n CTRL.COMMAND := WORD#2#11111111_11111111; (* Init + report all elements *)\n\n10:\n\n (* XML * data read serial)\n\n XML_READER.CTRL := CTRL;\n\n XML_READER.BUF := BUFFER;\n\n XML_READER();\n\n CTRL := XML_READER.CTRL;\n\n BUFFER := XML_READER.BUF;\n\n IF CTRL.TYP = 99 THEN \n\n STATE := 20; (* Exit – no further elements available *)\n\n ELSIF CTRL.TYP < 98 THEN (* do nothing at timeout(Code 98) *)\n\n (* Evaluation of the XML elements by pressing CTRL-data structure *)\n\n END_IF; \n\n20: \n\n143 Version 1.21\n\nChapter 9. Network and Communication\n\n (* sonstiges...... *)\n\nEND_CASE; \n\nThe following information is passed via the CTRL-data structure\n\n--------First pass -------- \n\nCOUNT: 1 \n\nTYPE: 5 (OPEN ELEMENT - PROCESSING \n\nINSTRUCTION)\n\nLEVEL: 1\n\nELEMENT: 'xml'\n\nPATH: '/xml'\n\n--------Next cycle-------- \n\nCOUNT: 2 \n\nTYPE: 4 (ATTRIBUTE) \n\nLEVEL: 1\n\nELEMENT: 'xml'\n\nATTRIBUTE: 'version'\n\nVALUE: '1.0'\n\nPATH: '/xml'\n\n--------Next cycle-------- \n\nCOUNT: 3 \n\nTYPE: 2 (CLOSE ELEMENT)\n\nLEVEL: 0\n\nELEMENT: 'xml'\n\nPATH: ''\n\n--------Next cycle-------- \n\nCOUNT: 4 \n\nTYPE: 1 (OPEN ELEMENT - Standard)\n\nLEVEL: 1\n\nELEMENT: 'rss'\n\nPATH: '/rss'\n\n--------Next cycle-------- \n\nCOUNT: 5 \n\nTYPE: 4 (ATTRIBUTE) \n\nLEVEL: 1\n\nELEMENT: 'rss'\n\nATTRIBUTE: 'version'\n\nVALUE: '2.0'\n\nPATH: '/rss'\n\n--------Next cycle-------- \n\nCOUNT: 6 \n\nTYPE: 1 (OPEN ELEMENT - Standard)\n\nLEVEL: 2\n\nELEMENT: 'channel'\n\nPATH: '/rss/channel'\n\n--------Next cycle-------- \n\nCOUNT: 7 \n\n144 Version 1.21\n\nChapter 9. Network and Communication\n\nTYPE: 13 (COMMENT-ELEMENT)\n\nLEVEL: 2\n\nVALUE: ' XML-Demo '\n\nPATH: '/rss/channel'\n\n--------Next cycle-------- \n\nCOUNT: 8 \n\nTYPE: 12 (CDATA)\n\nLEVEL: 2\n\nVALUE: '<b>Current Conditions:</b><br />'\n\nPATH: '/rss/channel'\n\n--------Next cycle-------- \n\nCOUNT: 9 \n\nTYPE: 1 (OPEN ELEMENT - Standard)\n\nLEVEL: 3\n\nELEMENT: 'title'\n\nPATH: '/rss/channel/title'\n\n--------Next cycle-------- \n\nCOUNT: 10\n\nTYPE: 3 (TEXT)\n\nLEVEL: 3\n\nELEMENT: 'title'\n\nVALUE: ' XML_Reader'\n\nPATH: '/rss/channel/title'\n\n--------Next cycle-------- \n\nCOUNT: 11 \n\nTYPE: 2 (CLOSE ELEMENT)\n\nLEVEL: 2\n\nELEMENT: 'title'\n\nPATH: '/rss/channel'\n\n--------Next cycle-------- \n\nCOUNT: 12 \n\nTYPE: 1 (OPEN ELEMENT - Standard)\n\nLEVEL: 3\n\nELEMENT: 'link'\n\nPATH: '/rss/channel/link'\n\n--------Next cycle-------- \n\nCOUNT: 13\n\nTYPE: 3 (TEXT)\n\nLEVEL: 3\n\nELEMENT: 'link'\n\nVALUE: 'http://oscat.de'\n\nPATH: '/rss/channel/link'\n\n--------Next cycle-------- \n\nCOUNT: 14 \n\nTYPE: 2 (CLOSE ELEMENT)\n\nLEVEL: 2\n\nELEMENT: 'link'\n\nPATH: '/rss/channel'\n\n145 Version 1.21\n\nChapter 9. Network and Communication\n\n--------Next cycle-------- \n\nCOUNT: 15 \n\nTYPE: 2 (CLOSE ELEMENT)\n\nLEVEL: 1\n\nELEMENT: 'channel'\n\nPATH: '/rss'\n\n--------Next cycle-------- \n\nCOUNT: 16 \n\nTYPE: 2 (CLOSE ELEMENT)\n\nLEVEL: 0\n\nELEMENT: 'rss'\n\nPATH: ''\n\n--------Next cycle-------- \n\nCOUNT: 17 \n\nTYPE: 99 (EXIT – END OF DATA)\n\n146 Version 1.21\n\nChapter 10. File-System\n\n 10. File-System",
+    "type": "FUNCTION",
+    "name": "XML_READER",
+    "input": [
+        {
+            "name": "CTRL",
+            "type": "XML_CONTROL",
+            "description": "Control and status data required for XML reading operation. Must be initialized before the first call.",
+            "fields": [
+                {
+                    "name": "START_POS",
+                    "type": "INT",
+                    "description": "Position of the first character of the XML data in the buffer."
+                },
+                {
+                    "name": "STOP_POS",
+                    "type": "INT",
+                    "description": "Position of the last character of the XML data in the buffer."
+                },
+                {
+                    "name": "COMMAND",
+                    "type": "WORD",
+                    "description": "Command flags for initialization and reporting element data types."
+                },
+                {
+                    "name": "TYP",
+                    "type": "BYTE",
+                    "description": "Type code indicating the status or data type read from the XML."
+                }
+            ]
+        },
+        {
+            "name": "BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer containing the XML data to be parsed."
+        }
+    ],
+    "output": [
+        {
+            "name": "CTRL",
+            "type": "XML_CONTROL",
+            "description": "Updated control and status data after processing the XML data.",
+            "fields": [
+                {
+                    "name": "COUNT",
+                    "type": "INT",
+                    "description": "Counter for the number of elements processed."
+                },
+                {
+                    "name": "TYPE",
+                    "type": "BYTE",
+                    "description": "Type code for the current XML element being processed."
+                },
+                {
+                    "name": "LEVEL",
+                    "type": "INT",
+                    "description": "Depth level of the current element in the XML tree structure."
+                },
+                {
+                    "name": "ELEMENT",
+                    "type": "STRING",
+                    "description": "Name of the current XML element being processed."
+                },
+                {
+                    "name": "PATH",
+                    "type": "STRING",
+                    "description": "Path to the current XML element within the structure."
+                }
+            ]
+        },
+        {
+            "name": "BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Updated buffer after processing XML data, which may include additional parsed data."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "The function does not return a value; it updates the CTRL and BUF structures."
+    }
+}

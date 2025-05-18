@@ -1,0 +1,38 @@
+{
+    "title": "Holiday Event Checker",
+    "description": "EVENTS shows the output Y with TRUE special days and also\nprovides the names of the events at the output NAME. EVENTS can also\ntake into account events over several days. The array ELIST name, date\nand duration of events are set.\nIn the external array ELIST can defne up to 50 such events in the followi￾ng format.\n*.NAME : STRING(30) specifes the name of the event\n*.DAY : SINT Events of the month\n*.MONTH : SINT Month of Events\n*.USE : SINT Duration of the event in days",
+    "type": "FUNCTION_BLOCK",
+    "name": "EVENTS",
+    "input": [
+        {
+            "name": "DATE_IN",
+            "type": "DATE",
+            "description": "The date to check for holiday events."
+        },
+        {
+            "name": "ENA",
+            "type": "BOOL",
+            "description": "Enable signal to determine if the holiday event check should be processed."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "BOOL",
+            "description": "Output indicating if a holiday event is active."
+        },
+        {
+            "name": "NAME",
+            "type": "STRING(30)",
+            "description": "The name of the holiday if an event is active, otherwise an empty string."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "ELIST",
+            "type": "ARRAY[0..49] OF HOLIDAY_DATA",
+            "description": "An array of holiday data structures to check against the input date."
+        }
+    ],
+    "return_value": null
+}

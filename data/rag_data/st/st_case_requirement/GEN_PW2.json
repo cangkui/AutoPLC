@@ -1,0 +1,57 @@
+{
+    "title": "Pulse Width Modulation Generator",
+    "description": "ARRAY_VAR calculates the variance of an arbitrary array of\nREAL. When called a pointer to the array and its size in bytes is passed to\nthe function. Under CoDeSys the call reads: ARRAY_VAR(ADR(Array), SI￾ZEOF(Array)), where array is the name of the array to be manipulated.\nADR() is a standard function, which identifes the pointer to the array and\nSIZEOF() is a standard function, which determines the size of the array. In\norder to determine the maximum, the array referenced by the pointer is\nscanned directly in memory. The function ARRAY_VAR does not change the\ncontent of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION_BLOCK",
+    "name": "GEN_PW2",
+    "input": [
+        {
+            "name": "ENQ",
+            "type": "BOOL",
+            "description": "Enable signal to start the timing operation."
+        },
+        {
+            "name": "TH1",
+            "type": "TIME",
+            "description": "Time duration for the high state in the first timing configuration."
+        },
+        {
+            "name": "TL1",
+            "type": "TIME",
+            "description": "Time duration for the low state in the first timing configuration."
+        },
+        {
+            "name": "TH2",
+            "type": "TIME",
+            "description": "Time duration for the high state in the second timing configuration."
+        },
+        {
+            "name": "TL2",
+            "type": "TIME",
+            "description": "Time duration for the low state in the second timing configuration."
+        },
+        {
+            "name": "TS",
+            "type": "BOOL",
+            "description": "Selects between the first or second timing configuration."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal indicating the state of the PWM (TRUE for high, FALSE for low)."
+        },
+        {
+            "name": "TH",
+            "type": "TIME",
+            "description": "Elapsed time in the high state since the last transition."
+        },
+        {
+            "name": "TL",
+            "type": "TIME",
+            "description": "Elapsed time in the low state since the last transition."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

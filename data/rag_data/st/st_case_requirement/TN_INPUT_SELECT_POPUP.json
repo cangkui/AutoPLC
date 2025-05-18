@@ -1,0 +1,90 @@
+{
+    "title": "TN_INPUT_SELECT_POPUP",
+    "description": "TN_INPUT_SELECT_POPUP is used to manage a selection of \n\ntexts, by displaying a pop-up dialogue. This must be set *.IN_TYPE = 3.\n\nThe item will be provided as *.in_X and *.in_Y. Every entry line can be \n\nprovided with a title text. With *.in_Title_Y_Ofset and *.in_Title_X_Ofset \n\nthe position relative to the element coordinates is expressed. The color \n\ncan be determined with *.by_Title_Attr, and the text by *.st_Title_String. If \n\na tool tip should appear at the element *. st_Input_ToolTip the text hast to \n\nbe specifed.\n\nThe selection of texts will be handed over in *.st_Input_Data. The text \n\nelement should be separated from each other by the character '#'.\n\nIf the focus is on an element, using the Enter / Return key selection dialog \n\ncan be activated.\n\nWith the cursor up/down can be changed between the individual elements. \n\nIf the beginning or the end of the list will be reachted, it continues at the \n\nopposite side.\n\nThe text-element is connected by means *.st_Input_Mask, meaning that \n\nthe output text length are afected later.\n\nBy pressing the Enter / Return key is the text of the selected element is \n\npassed to *. st_Input_String and *. bo_Input_Entered = TRUE. The input \n\nfag must be reset after receive by the user.\n\nAn active selection (selection dialog) can always be canceled with the \n\nEscape key.",
+    "type": "FUNCTION",
+    "name": "TN_INPUT_SELECT_POPUP",
+    "input": [
+        {
+            "name": "in_Type",
+            "type": "INT",
+            "description": "Type of the input selection dialog. Must be set to 3."
+        },
+        {
+            "name": "in_Y",
+            "type": "INT",
+            "description": "Vertical position of the input dialog."
+        },
+        {
+            "name": "in_X",
+            "type": "INT",
+            "description": "Horizontal position of the input dialog."
+        },
+        {
+            "name": "by_Attr_mF",
+            "type": "STRING",
+            "description": "Color attributes for the selected state, separated by '#'."
+        },
+        {
+            "name": "by_Attr_oF",
+            "type": "STRING",
+            "description": "Color attributes for the unselected state, separated by '#'."
+        },
+        {
+            "name": "st_Input_ToolTip",
+            "type": "STRING",
+            "description": "Tooltip text that appears when the element is focused."
+        },
+        {
+            "name": "in_Input_Option",
+            "type": "INT",
+            "description": "Option settings for the input."
+        },
+        {
+            "name": "in_Title_Y_Ofset",
+            "type": "INT",
+            "description": "Vertical offset for the title text position."
+        },
+        {
+            "name": "in_Title_X_Ofset",
+            "type": "INT",
+            "description": "Horizontal offset for the title text position."
+        },
+        {
+            "name": "by_Title_Attr",
+            "type": "STRING",
+            "description": "Color attributes for the title text."
+        },
+        {
+            "name": "st_Title_String",
+            "type": "STRING",
+            "description": "Title text displayed on the dialog."
+        },
+        {
+            "name": "st_Input_Mask",
+            "type": "STRING",
+            "description": "Mask that affects the output text length."
+        },
+        {
+            "name": "st_Input_Data",
+            "type": "STRING",
+            "description": "The text elements to be selected, separated by '#'."
+        }
+    ],
+    "output": [
+        {
+            "name": "st_Input_String",
+            "type": "STRING",
+            "description": "The string output of the selected element."
+        },
+        {
+            "name": "bo_Input_Entered",
+            "type": "BOOL",
+            "description": "Indicates whether an input has been selected (TRUE) or not (FALSE)."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "This function does not return a value."
+    }
+}

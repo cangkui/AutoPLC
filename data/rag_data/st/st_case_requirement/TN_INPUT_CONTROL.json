@@ -1,0 +1,21 @@
+{
+    "title": "Input Control Management",
+    "description": "TN_INPUT_CONTROL: us_TN_INPUT_CONTROL\n\nThe module TN_INPUT_CONTROL is used to manage the INPUT_CONTROL \n\nelements. If Xus_TN_INPUT_CONTROL.bo_Reset_Fokus = TRUE then the \n\nFOCUS is disabled on all elements and the frst item gets to the focus. \n\nUsing the cursor up / down buttons and tab, the individual elements can \n\nbe selected or changed. The current element loses focus and then the next \n\nfollowing item gets the input focus reallocated. At the focus change of the \n\nelements automatically a redraw of the respective elements is triggered. \n\nThe image/fashing cursor is always positioned at each active element and \n\nis displayed. It always automatically displays and updates the ToolTip text, \n\nas this has been confgured.\n\nIt supports the following elements.\n\nTN_INPUT_EDIT_LINE\n\nTN_INPUT_SELECT_TEXT \n\nTN_INPUT_SELECT_POPUP",
+    "type": "FUNCTION",
+    "name": "TN_INPUT_CONTROL",
+    "input": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen information for the input control interface."
+        },
+        {
+            "name": "Xus_TN_INPUT_CONTROL",
+            "type": "us_TN_INPUT_CONTROL",
+            "description": "Control structure for managing input elements."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": null
+}

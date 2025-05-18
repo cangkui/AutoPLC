@@ -1,0 +1,42 @@
+{
+    "title": "Dead Band Filter Function Block",
+    "description": "DEAD_BAND_A is a self adapting linear transfer function with dead zone.\nThe function moves the positive part of the curve to -L and the negative\npart of the curve by +L. DEAD_BAND_A is used to flter the noise com￾ponents at the origin of a signal. DEAD_BAND_A, for example, used in con￾trol systems in order to prevent that the controller permanently switches\nin small increments, while the actuator is overstressed and worn out.\nThe size L is calculated by fltering the HF cpmponents of the input signal\nX using a low pass with time constant T and the dead zone L calculated\nfrom the amplitude of the HF portion. The sensitivity of the device can be\nchanged via the parameter KL. KL is predefned to 1 and can be unconnec￾ted. Reasonable values for KL are between 1 - 5.\nL = HF_Amplitude(efective) *KL.\nSo that the module will remain stable even under extreme operating con￾ditions, the input LM is limited by of the maximum value of L.\nDEAD_BAND = X - SGN(X)*L if ABS(X)> L if ABS(X) > L \nDEAD_BAND = 0 if ABS(X) <= L",
+    "type": "FUNCTION_BLOCK",
+    "name": "DEAD_BAND_A",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input signal to be filtered."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "The time constant for the filtering process."
+        },
+        {
+            "name": "KL",
+            "type": "REAL",
+            "description": "A scaling factor for the dead band, default value is 1.0."
+        },
+        {
+            "name": "LM",
+            "type": "REAL",
+            "description": "The maximum limit for the dead band's width."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The processed output signal after applying dead band filtering."
+        },
+        {
+            "name": "L",
+            "type": "REAL",
+            "description": "The computed width of the dead band, representing stability."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

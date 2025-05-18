@@ -1,0 +1,47 @@
+{
+    "title": "Cycle Time Measurement",
+    "description": "CYCLE_TIME monitors the cycle time of a PLC and provides the user with a\nrange of information about cycle times and run times. The total number of\ncycles is also measured. Hereby, the user can, for example ensure that a\nfunction is called every 100 cycles. Control modules can report errors if\nthe cycle time is too long and therefore the control parameters can not be\nguaranteed.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CYCLE_TIME",
+    "input": [
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean flag to reset the cycle time measurements."
+        }
+    ],
+    "output": [
+        {
+            "name": "ct_min",
+            "type": "TIME",
+            "description": "The minimum cycle time recorded."
+        },
+        {
+            "name": "ct_max",
+            "type": "TIME",
+            "description": "The maximum cycle time recorded."
+        },
+        {
+            "name": "ct_last",
+            "type": "TIME",
+            "description": "The last cycle time measured."
+        },
+        {
+            "name": "systime",
+            "type": "TIME",
+            "description": "The accumulated system time."
+        },
+        {
+            "name": "sysdays",
+            "type": "INT",
+            "description": "The number of days accounted for in system time."
+        },
+        {
+            "name": "cycles",
+            "type": "DWORD",
+            "description": "The total count of cycles that have occurred."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

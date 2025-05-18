@@ -1,0 +1,46 @@
+{
+    "title": "TELNET_VISION Framework",
+    "description": "TELNET_VISION is a framework comprising a plurality of \n\nfunction modules to enable simple means with a graphical interface based \n\non the standard TELNET.\n\nThe GUI (Graphic User Interface) uses a screen of 80 characters wide and \n\n24 lines down. At each coordinate (position) any displayable characters \n\nwith selectable color attributes can be displayed.\n\nThe horizontal axis (from left to right) is called standard with X, and \n\nincludes the positions 00-79. The vertical axis (from top to bottom) is \n\ncalled by default to Y and includes the positions 00-23. For pure \n\ncoordinates specify the location with X and Y. If an area (rectangle) are \n\nindicated, the upper-left corner and lower right corner X1/Y1 with X2, Y2 \n\ndefned.\n\nThe individual characters can be equipped with color attributes. A color \n\nattributes consist of a byte, where the left nibble (4 bits) the ink color \n\n(foreground color), and the right nibble (4 bits) the background color \n\ndefnes.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TN_FRAMEWORK",
+    "input": [
+        {
+            "name": "X1",
+            "type": "INTEGER",
+            "description": "The X-coordinate of the upper-left corner of the rectangle."
+        },
+        {
+            "name": "Y1",
+            "type": "INTEGER",
+            "description": "The Y-coordinate of the upper-left corner of the rectangle."
+        },
+        {
+            "name": "X2",
+            "type": "INTEGER",
+            "description": "The X-coordinate of the lower-right corner of the rectangle."
+        },
+        {
+            "name": "Y2",
+            "type": "INTEGER",
+            "description": "The Y-coordinate of the lower-right corner of the rectangle."
+        },
+        {
+            "name": "ColorAttribute",
+            "type": "BYTE",
+            "description": "A byte representing the color attributes where the left nibble indicates the foreground color and the right nibble indicates the background color."
+        }
+    ],
+    "output": [
+        {
+            "name": "Status",
+            "type": "STRING",
+            "description": "Indicates the current status of the TELNET_VISION framework operations."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "Returns a message indicating the result of the operation performed by the TN_FRAMEWORK.",
+        "fields": []
+    }
+}

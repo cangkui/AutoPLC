@@ -1,0 +1,20 @@
+{
+    "title": "Convert Structured Date Time to Date",
+    "description": "SDT_TO_DATE produces a date value of a structured date-time value",
+    "type": "FUNCTION",
+    "name": "SDT_TO_DATE",
+    "input": [
+        {
+            "name": "DTI",
+            "type": "SDT",
+            "description": "The structured date time input that contains the year, month, and day."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The resulting date generated from the structured date time.",
+        "fields": []
+    }
+}

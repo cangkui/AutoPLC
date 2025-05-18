@@ -1,0 +1,72 @@
+{
+    "title": "8-channel Digital Output Controller",
+    "description": "BIT_OF_DWORD extracts a bit of the DWORD at the input IN.\nBit0 für N=0, Bit1 für N=1 and so on.",
+    "type": "FUNCTION_BLOCK",
+    "name": "DEC_8",
+    "input": [
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "The input data signal that will be assigned to one of the output channels based on the address."
+        },
+        {
+            "name": "A0",
+            "type": "BOOL",
+            "description": "The least significant bit of the address that specifies which channel to control."
+        },
+        {
+            "name": "A1",
+            "type": "BOOL",
+            "description": "The middle bit of the address that specifies which channel to control."
+        },
+        {
+            "name": "A2",
+            "type": "BOOL",
+            "description": "The most significant bit of the address that specifies which channel to control."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output channel 0, which receives the value of D if the address is 0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output channel 1, which receives the value of D if the address is 1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output channel 2, which receives the value of D if the address is 2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output channel 3, which receives the value of D if the address is 3."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "Output channel 4, which receives the value of D if the address is 4."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "Output channel 5, which receives the value of D if the address is 5."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "Output channel 6, which receives the value of D if the address is 6."
+        },
+        {
+            "name": "Q7",
+            "type": "BOOL",
+            "description": "Output channel 7, which receives the value of D if the address is 7."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

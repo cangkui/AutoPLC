@@ -1,0 +1,25 @@
+{
+    "title": "Factorial Calculation Function",
+    "description": "FACT calculates the factorial of X. \nIt is defned for input values from 0 .. 12. For values less than zero and\ngreater than 12 is the result -1. For the factorial of larger numbers, the\nGAMMA function is suitable.\nFor natural numbers X: X! = 1*2*3...*(X-1)*X, 0! = 1\nFaculties of negative or non-whole numbers are not defned.",
+    "type": "FUNCTION",
+    "name": "FACT",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "The integer input for which the factorial is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "FACT",
+            "type": "DINT",
+            "description": "Returns the factorial of the input integer X, or -1 if the input is out of valid range."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "The factorial of the integer X or -1 if X is out of the acceptable range."
+    }
+}

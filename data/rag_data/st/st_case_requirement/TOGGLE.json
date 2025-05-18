@@ -1,0 +1,27 @@
+{
+    "title": "Toggle Function Block",
+    "description": "TOGGLE is a edge-triggered Toggle Flip -Flop with asynchronous reset \ninput. The TOGGLE Flip Flop invertes output Q on a rising edge of CLK. The \noutput changes on each rising edge of CLK his condition.\n 18. Signal Generators",
+    "type": "FUNCTION_BLOCK",
+    "name": "TOGGLE",
+    "input": [
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock input signal used for toggling the output state."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "Reset input signal that sets the output Q to false when high."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Current state of the output signal, toggled based on the CLK input."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

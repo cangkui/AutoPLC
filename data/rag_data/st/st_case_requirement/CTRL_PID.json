@@ -1,0 +1,92 @@
+{
+    "title": "PID Control Function Block",
+    "description": "CTRL_PID is a PID controller with dynamic anti-wind up and manual control\ninput. The PID controller operates according to the formula: \nY = KP * (DIFF + 1/Tn * INTEG(DIFF) + TV *DERIV(DIFF)) + OFFSET\nwhere DIFF = SET_POINT - ACTUAL\nIn manual mode (manual = TRUE) is: Y = MANUAL_IN+ OFFSET\nACT is the measured value for the controlled system and SET is the set￾point for the controller. The input values of LH and LL limit the output va￾lue Y. With RST, the internal integrator will always set to 0. The output LIM\nsignals that the controller has reached the limit of LL or LH. The PID con￾troller operates free-running and uses the trapezoidal rule to calculate\nwith highest accuracy and optimal speed. The default values of the input\nparameters are predefned as follows: KP = 1, TN = 1, TV = 1, LIMIT_L =\n-1000 and LIMIT_H = +1000. With the input SUP a noise reduction is set,\nthe value on input SUP determines at which control diference, the control￾ler turns on. With SUP is avoided that the output of the controller wob￾bles. The value at the input SUP should be in dimension that it suppresses\nthe noise of the controlled system and the sensors. If the input to SUP is\nset to 0.1, the controller is only at deviations greater than 0.1 active. The\nouput DIFF passes the measured and through a noise flter (DEAD_BAND)\nfltered control deviation. DIFF is normally not required in a controlled sys￾tem but can be used to infuence the control parameters. The input OFS is\nadded as the last value to output, and is used to compensate mainly of\nnoise, whose efect can be estimated on the loop. \nThe controller works with a dynamic air- Up that prevents that the integra￾tor, when reaching a output limit and further deviation, continues to run\nunlimited and afects the properties usually negative. In the introduction\nchapter of the control technology, more details can be found on anti-wind￾up. \nThe control parameters are given in the form of KP, TN and TV, and if the￾re are parameters KP, KI and KD they can be converted using the following\nformula:\nTN = KP/KI und TV = KD/KP\nThe following graph illustrates the internal structure of the controller:\nIn the following example, a PID controller is shown whose SET_POINT is ge￾nerated by module TUNE2 using buttons. Output DIFF is passedto a modu￾le PARSET2 which changes the parameters KP, TN, and TV depending on\nthe deviation at the output of DIFF.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CTRL_PID",
+    "input": [
+        {
+            "name": "ACT",
+            "type": "REAL",
+            "description": "The actual value from the process being controlled."
+        },
+        {
+            "name": "SET",
+            "type": "REAL",
+            "description": "The desired setpoint for the process variable."
+        },
+        {
+            "name": "SUP",
+            "type": "REAL",
+            "description": "A supplementary input for additional control."
+        },
+        {
+            "name": "OFS",
+            "type": "REAL",
+            "description": "Offset value for the controller output."
+        },
+        {
+            "name": "M_I",
+            "type": "REAL",
+            "description": "Manual input value for control when in manual mode."
+        },
+        {
+            "name": "MAN",
+            "type": "BOOL",
+            "description": "Manual control flag; when true, overrides the automatic control."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset flag for the PID controller."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "Proportional gain of the PID controller.",
+            "default": "1.0"
+        },
+        {
+            "name": "TN",
+            "type": "REAL",
+            "description": "Integral time constant of the PID controller.",
+            "default": "1.0"
+        },
+        {
+            "name": "TV",
+            "type": "REAL",
+            "description": "Derivative time constant of the PID controller.",
+            "default": "1.0"
+        },
+        {
+            "name": "LL",
+            "type": "REAL",
+            "description": "Lower limit for the controller output.",
+            "default": "-1000.0"
+        },
+        {
+            "name": "LH",
+            "type": "REAL",
+            "description": "Upper limit for the controller output.",
+            "default": "1000.0"
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "Output value of the PID controller."
+        },
+        {
+            "name": "DIFF",
+            "type": "REAL",
+            "description": "Difference between setpoint and actual value."
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "Indicator whether the output is within defined limits."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

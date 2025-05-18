@@ -1,0 +1,68 @@
+{
+    "title": "ESR Data Collection Function Block",
+    "description": "ESR_COLLECT collects ESR data from up to 8 ESR modules and stores the\nlog in an array. The output POS indicates the position at which in the array\nESR_OUT is currently the last message is ESR. Collects the module more\nthan 64 messages so the messages are discarded and restarted at positi￾on 0. With the asynchronous reset input, the device can be reset at any\ntime. By resetting, all the collected data will be deleted and the pointer is\nmoved to -1. The module collects data in the output array ESR_OUT and\nmoves POS the last position of the array that contains data. When there\nare no messages POS remains to -1. If the output data are read, the varia￾ble POS has to be set to -1, or if only readed a part POS can be set to the\nlast valid value.\nThe following example demonstrates how ESR_COLLECT is connected with\nESR modules.\nThe output ESR_OUT is made up as follows:\n.\nTYPE\n.ADRESS .DS .TS .DATA [0..7]\n1 Label Date TIME Status, 1 Byte ESR Error\n2 Label Date TIME Status, 1 Byte ESR Status\n3 Label Date TIME Status, 1 Byte ESR Debug\n10 Label Date TIME not used Boolean input low transition\n11 Label Date TIME not used Boolean input high transi￾tion\n20 Label Date TIME Byte 0 - 3 Real Value Real Value change\nThe ESR data includes the following:\nESR_DATA.TYP Data type, see table above\nESR_DATA.ADRESS up to 10 characters long String Identifer \nESR_DATA.DS Date stamp of type TIME DATA\nESR_DATA.TS Timestamp of type TIME (PLC Timer ) \nESR_DATA.DATA up to 8 bytes of data block",
+    "type": "FUNCTION_BLOCK",
+    "name": "ESR_COLLECT",
+    "input": [
+        {
+            "name": "ESR_0",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "First array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "ESR_1",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Second array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "ESR_2",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Third array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "ESR_3",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Fourth array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "ESR_4",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Fifth array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "ESR_5",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Sixth array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "ESR_6",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Seventh array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "ESR_7",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Eighth array of ESR data containing up to 4 elements."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "A boolean flag to reset the output position."
+        }
+    ],
+    "output": [
+        {
+            "name": "ESR_OUT",
+            "type": "ARRAY[0..31] OF esr_data",
+            "description": "Output array containing up to 32 collected ESR data elements."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "pos",
+            "type": "INT",
+            "description": "Current position index for output storage, can be modified to determine where to place the next valid ESR data."
+        }
+    ],
+    "return_value": null
+}

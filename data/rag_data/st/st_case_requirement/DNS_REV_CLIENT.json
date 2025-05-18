@@ -1,0 +1,60 @@
+{
+    "title": "DNS Reverse Client",
+    "description": "DNS_REV_CLIENT determine from the given IP address the ofcially \n\nregistered domain name. For this purpose a reverse DNS query on the \n\nconfgured IP address with a DNS server is made. With positive edge of \n\nACTIVATE the specifed IP is stored so that they no longer must be present. \n\nIf the query result in more matches, it will always use the last record. As \n\nIP4_DNS can be used any public DNS servers. If the PLC is sitting behind a \n\nDSL router, this router can be used as a DNS server through its gateway \n\naddress. Which ultimately leads to faster even with repeated requests \n\nresponse times because they are managed in the router cache. With \n\npositive results DONE = TRUE the DOMAIN contains the ofcially \n\nregistered domain name until the start of the next query by positive edge \n\nof ACTIVATE. ERROR gives ao error, the error code. (See error codes).\n\nError Codes:\n\nValue Source Description\n\nB3 B2 B1 B0\n\nnn nn nn xx IP_CONTROL Error from module IP_CONTROL\n\nxx xx xx 00 DNS_CLIENT No error: The request completed successfully\n\nxx xx xx 01 DNS_CLIENT Format error: The name server was unable to interpret the query. \n\nxx xx xx 02 DNS_CLIENT Server failure: The name server was unable to process this query\n\ndue to a problem with the nameserver.\n\nxx xx xx 03 DNS_CLIENT Name Error: Meaningful only for responses from an authoritative\n\n91 Version 1.21\n\nChapter 9. Network and Communication\n\nname server, this code signifies that the domain name referenced in\n\nthe query does not exist\n\nxx xx xx 04 DNS_CLIENT Not Implemented: The name server does not support the requested\n\nkind of query\n\nxx xx xx 05 DNS_CLIENT Refused: The name server refuses to perform the specified opera￾tion for policy reasons\n\nxx xx xx 06 DNS_CLIENT YXDomain: Name Exists when it should not\n\nxx xx xx 07 DNS_CLIENT YXRRSet. RR: Set Exists when it should not\n\nxx xx xx 08 DNS_CLIENT Nxrrset. RR: Set that should exist does not\n\nxx xx xx 09 DNS_CLIENT Server Not Authoritative for zone\n\nxx xx xx 0A DNS_CLIENT Name not contained in zone",
+    "type": "FUNCTION",
+    "name": "DNS_REV_CLIENT",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for the IP address"
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data"
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data"
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Trigger to start the function on a positive edge"
+        },
+        {
+            "name": "DOMAIN",
+            "type": "STRING",
+            "description": "Domain name or IP address as a string"
+        },
+        {
+            "name": "IP4_DNS",
+            "type": "DWORD",
+            "description": "IPv4 address of the DNS server"
+        }
+    ],
+    "output": [
+        {
+            "name": "IP4",
+            "type": "DWORD",
+            "description": "IPv4 address of the requested domain"
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates that the IP of the domain has been queried successfully"
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the result of the query"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

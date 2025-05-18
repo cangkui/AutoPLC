@@ -1,0 +1,57 @@
+{
+    "title": "Proportional-Integral Controller",
+    "description": "FT_PI is a PI controller which works following the formula:\nY = KP * IN + KI * INTEG(IN)\nThe input values ILIM_H and ILIM_L limits the working area of the internal\nintegrator. With RST, the internal Integrator can always be set to 0. The\noutput LIM indicates that the Integrator has reached one of the limits\nILIM_L oe ILIM_H. The PI controller is free running and uses the trapezoidal\nrule to calculate the integrator for the highest accuracy and optimal\nspeed. The default values of the input parameters are predefned as fol￾lows: KP = 1, CI = 1, ILIM_L= -1E38 and ILIM_H = +1E38. \nAnti Wind-Up: Control modules with Integrator tend to the so-called Wind￾Up Efect. A Wind-Up means that the integrator module continuously run\nagain because, for example, the control signal Y is at a limit and the sys￾tem can not compensate the deviation, which then leads to subsequent\ntransition into the control range until a long and time-consuming dismant￾ling of the integrator value and the scheme only respond delayed. Since\nthe integrator is only necessary to compensate the deviation for all other\ncontrol units, and the range of the integrator should be limited with the\nvalues of ILIM. The Integrator then reaches a limit and stops remaining at\nthe last valid value. For other wind- Up Action, the Integrator can be con￾trolled with the input IEN = FALSE any time separately, the Integrator only\nruns when IEN = TRUE. \nThe following graph illustrates the internal structure of the controller:\nFT_PI can be used in conjunction with the modules CTRL_IN and CTRL_OUT\nto build a PI controller.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PI",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value to the PI controller."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "The proportional gain parameter, default is 1.0."
+        },
+        {
+            "name": "KI",
+            "type": "REAL",
+            "description": "The integral gain parameter, default is 1.0."
+        },
+        {
+            "name": "ILIM_L",
+            "type": "REAL",
+            "description": "The lower limit for the integrator output, default is -1E+38."
+        },
+        {
+            "name": "ILIM_H",
+            "type": "REAL",
+            "description": "The upper limit for the integrator output, default is 1E+38."
+        },
+        {
+            "name": "IEN",
+            "type": "BOOL",
+            "description": "Indicator to enable or disable the integrator, default is TRUE."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal for the integrator."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value of the PI controller after applying the gains."
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "Indicator that shows if the integrator has reached its output limits."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

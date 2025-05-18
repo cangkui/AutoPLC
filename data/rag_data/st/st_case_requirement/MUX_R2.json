@@ -1,0 +1,29 @@
+{
+    "title": "Multiplexer Function",
+    "description": "EASTER calculates for a given year, the date of Easter Sun￾day. Most religious holidays have a fxed distance from Easter, so that in\nthe case that Easter is known for a year, these holidays can also be deter￾mined easily. EASTER is also used in the module HOLIDAY to calculate holi￾days.",
+    "type": "FUNCTION",
+    "name": "MUX_R2",
+    "input": [
+        {
+            "name": "IN0",
+            "type": "REAL",
+            "description": "First input value to be selected from."
+        },
+        {
+            "name": "IN1",
+            "type": "REAL",
+            "description": "Second input value to be selected from."
+        },
+        {
+            "name": "A",
+            "type": "BOOL",
+            "description": "Boolean selector that determines which input value to return."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The selected input value based on the condition provided by 'A'."
+    }
+}

@@ -1,3 +1,3 @@
-from portal_compiler import TIAPortalCompiler
-from api_loader import APIDataLoader
-from prompt_res_util import PromptResultUtil
+from .portal_compiler import TIAPortalCompiler
+from .api_loader import APIDataLoader
+from .prompt_res_util import PromptResultUtil

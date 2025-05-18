@@ -1,0 +1,47 @@
+{
+    "title": "Selection of Valid Inputs from Three Inputs",
+    "description": "F_TO_PT converts a frequency value of Hz in the corresponding period.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SEL2_OF_3",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "REAL",
+            "description": "The first input value."
+        },
+        {
+            "name": "IN2",
+            "type": "REAL",
+            "description": "The second input value."
+        },
+        {
+            "name": "IN3",
+            "type": "REAL",
+            "description": "The third input value."
+        },
+        {
+            "name": "D",
+            "type": "REAL",
+            "description": "The tolerance value to determine the validity of inputs."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The calculated average of the selected valid input values."
+        },
+        {
+            "name": "W",
+            "type": "INT",
+            "description": "Indicator of which inputs were valid (0 for all, 1 for IN2 and IN3, 2 for IN3 and IN1, 3 for IN1 and IN2, 4 for none)."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Error flag indicating if no valid input combinations were found."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

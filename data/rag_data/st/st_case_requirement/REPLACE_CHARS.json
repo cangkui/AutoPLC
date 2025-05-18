@@ -1,0 +1,35 @@
+{
+    "title": "Character Replacement Function",
+    "description": "REPLACE_CHARS replaces all the characters STR in String SRC with the\ncharacters at the same place in REP.\nexample: REPLACE_CHARS('abc123', '0123456789', ABCDEFGHIJ') = 'ab￾cABC'",
+    "type": "FUNCTION",
+    "name": "REPLACE_CHARS",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "The string in which the replacement will occur."
+        },
+        {
+            "name": "SRC",
+            "type": "STRING",
+            "description": "The substring to be replaced in STR."
+        },
+        {
+            "name": "REP",
+            "type": "STRING",
+            "description": "The substring that will replace occurrences of SRC."
+        }
+    ],
+    "output": [
+        {
+            "name": "REPLACE_CHARS",
+            "type": "STRING",
+            "description": "The resulting string after replacement operations."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The modified string after replacing characters according to the defined rules."
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "title": "4-bit Latch Function Block",
+    "description": "FRMP_B calculates the value of a ramp at a given time TD. The module en￾sures that no bufer overrun or underrun can take place at the output. The\noutput value is limited in all cases to 0 .. 255. TR sets the time for a full\nramp 0 .. 255 and TD is the elapsed time. If DIR = TRUE, a rising ramp is\ncalculated and if DIR = FALSE a falling edge. With the start value an edge\ncan be calculated from any starting point.",
+    "type": "FUNCTION_BLOCK",
+    "name": "LTCH_4",
+    "input": [
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "First data input for the latch."
+        },
+        {
+            "name": "D1",
+            "type": "BOOL",
+            "description": "Second data input for the latch."
+        },
+        {
+            "name": "D2",
+            "type": "BOOL",
+            "description": "Third data input for the latch."
+        },
+        {
+            "name": "D3",
+            "type": "BOOL",
+            "description": "Fourth data input for the latch."
+        },
+        {
+            "name": "L",
+            "type": "BOOL",
+            "description": "Control signal that determines if the latch is transparent."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Asynchronous reset signal that resets the output."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output corresponding to the first data input."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output corresponding to the second data input."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output corresponding to the third data input."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output corresponding to the fourth data input."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

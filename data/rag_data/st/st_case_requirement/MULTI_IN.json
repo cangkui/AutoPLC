@@ -1,0 +1,55 @@
+{
+    "title": "Multi Input Selector Function",
+    "description": "MULTI_IN is a sensor interface that accepts up to 3 sensors to check for er￾rors, and depending on the input mode, an output value is calculated.\nMode Function\n0 MULTI_in = average of the inputs in_1.. 3\n1 MULTI_in = input in_1\n2 MULTI_in = input in_2\n3 MULTI_in = input in_3\n4 MULTI_in = Default Input \n5 MULTI_in = smallest value of the inputs in_1.. 3\n6 MULTI_in = largest value of the inputs in_1 .. 3\n7 MULTI_in = mean value of the inputs in_1..3\n>7 MULTI_in = 0\nRegardless of the mode input values that are greater than IN_MAX or less\nthan IN_MIN be ignored. If no calculation is possible as defned by mode,\nthe input Default is used as a output value. Multi_in is used when diferent\nsensors measures the same value and high security and reliability is requi￾red. A possible application is to measure the outside temperature at va￾rious points and the surveillance on cable or sensor failure.",
+    "type": "FUNCTION",
+    "name": "MULTI_IN",
+    "input": [
+        {
+            "name": "in_1",
+            "type": "REAL",
+            "description": "The first input value."
+        },
+        {
+            "name": "in_2",
+            "type": "REAL",
+            "description": "The second input value."
+        },
+        {
+            "name": "in_3",
+            "type": "REAL",
+            "description": "The third input value."
+        },
+        {
+            "name": "default",
+            "type": "REAL",
+            "description": "The default value used when no inputs meet the criteria."
+        },
+        {
+            "name": "in_min",
+            "type": "REAL",
+            "description": "The minimum threshold value for validation of inputs."
+        },
+        {
+            "name": "in_max",
+            "type": "REAL",
+            "description": "The maximum threshold value for validation of inputs."
+        },
+        {
+            "name": "mode",
+            "type": "BYTE",
+            "description": "The mode which determines the operational behavior of the function."
+        }
+    ],
+    "output": [
+        {
+            "name": "MULTI_IN",
+            "type": "REAL",
+            "description": "The computed result based on the selected inputs and mode."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The resulting value after processing inputs according to the selected mode."
+    }
+}

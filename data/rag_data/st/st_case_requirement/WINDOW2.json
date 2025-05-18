@@ -1,0 +1,29 @@
+{
+    "title": "Range Checking Function",
+    "description": "CHARCODE returns the byte code of a Named Characters. A List the Codes\nwith Name located under the function charName. If no character known,\nfor the name in STR 0 is returned. If STR consists of only one character,\nthen the code of this character returned. CHARCODE uses the global va￾riables SETUP.CHARNAMES which include the list of names with codes.",
+    "type": "FUNCTION",
+    "name": "WINDOW2",
+    "input": [
+        {
+            "name": "LOW",
+            "type": "REAL",
+            "description": "The lower bound of the range."
+        },
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value to be checked against the range."
+        },
+        {
+            "name": "HIGH",
+            "type": "REAL",
+            "description": "The upper bound of the range."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the input value is within the specified range (inclusive), otherwise returns FALSE."
+    }
+}

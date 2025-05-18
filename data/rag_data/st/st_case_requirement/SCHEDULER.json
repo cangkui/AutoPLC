@@ -1,0 +1,72 @@
+{
+    "title": "Scheduler Function Block",
+    "description": "SCHEDULER is used to call time dependent program parts. For example,\ncomplex calculations that are needed only rarely, can be called at fxed in￾tervals. The outputs Q? of the module will be active only for one cycle and\nrelease the execution of the program part. The setup time T? specify at\nwhich intervals the outputs are enabled. SCHEDULER checks per CPU cy￾cle only one output, so that in maximum one output per cycle can be acti￾ve. In the extreme case when all call times T? are T#0s, in each cycle one\noutput should be set, so that frst Q0, then Q1, etc. to Q3 are set and then\nagain to start Q0. The call times can therefore up to 3 CPU cycles and dif￾fer from the predetermined value T? .",
+    "type": "FUNCTION_BLOCK",
+    "name": "SCHEDULER",
+    "input": [
+        {
+            "name": "E0",
+            "type": "BOOL",
+            "description": "Input event signal for output Q0."
+        },
+        {
+            "name": "E1",
+            "type": "BOOL",
+            "description": "Input event signal for output Q1."
+        },
+        {
+            "name": "E2",
+            "type": "BOOL",
+            "description": "Input event signal for output Q2."
+        },
+        {
+            "name": "E3",
+            "type": "BOOL",
+            "description": "Input event signal for output Q3."
+        },
+        {
+            "name": "T0",
+            "type": "TIME",
+            "description": "The time interval for activating output Q0."
+        },
+        {
+            "name": "T1",
+            "type": "TIME",
+            "description": "The time interval for activating output Q1."
+        },
+        {
+            "name": "T2",
+            "type": "TIME",
+            "description": "The time interval for activating output Q2."
+        },
+        {
+            "name": "T3",
+            "type": "TIME",
+            "description": "The time interval for activating output Q3."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output signal indicating the status of E0 after T0 has elapsed."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal indicating the status of E1 after T1 has elapsed."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output signal indicating the status of E2 after T2 has elapsed."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output signal indicating the status of E3 after T3 has elapsed."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

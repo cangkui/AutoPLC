@@ -1,0 +1,25 @@
+{
+    "title": "Character Code Retrieval",
+    "description": "CHARCODE returns the byte code of a Named Characters. A List the Codes\nwith Name located under the function charName. If no character known,\nfor the name in STR 0 is returned. If STR consists of only one character,\nthen the code of this character returned. CHARCODE uses the global va￾riables SETUP.CHARNAMES which include the list of names with codes.",
+    "type": "FUNCTION",
+    "name": "CHARCODE",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING[10]",
+            "description": "A string input with a maximum length of 10 characters whose character code needs to be retrieved."
+        }
+    ],
+    "output": [
+        {
+            "name": "CHARCODE",
+            "type": "BYTE",
+            "description": "The character code of the input string returned as a byte."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "Returns the character code of the input string as a byte."
+    }
+}

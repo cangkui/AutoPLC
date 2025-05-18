@@ -1,0 +1,52 @@
+{
+    "title": "PI Controller Function Block",
+    "description": "FT_PIWL is a PI controller with dynamic anti-wind Up and works according\nthe following formular: \nY = KP * IN + KI * INTEG(IN)\nThe input values LIM_H and LIM_L limit the range of the output Y. With\nRST, the internal Integrator can always be set to 0. The output LIM indica￾tes that the Output Y runs to one of the limits LIM_L orL IM_H. The PI con￾troller is free running and uses the trapezoidal rule to calculate the inte￾grator for the highest accuracy and optimal speed. The default values of\nthe input parameters are predefned as follows: KP = 1, CI = 1, ILIM_L=\n-1E38 and ILIM_H = +1E38. \nAnti Wind-Up: Control modules with Integrator tend to the so-called Wind￾Up Efect. A Wind-Up means that the integrator module continuously run\nagain because, for example, the control signal Y is at a limit and the sys￾tem can not compensate the deviation, which then leads to subsequent\ntransition into the control range until a long and time-consuming dismant￾ling of the integrator value and the scheme only respond delayed. Since\nthe integrator is only necessary to compensate the deviation for all other\ncontrol units, and the range of the integrator should be limited with the\nvalues of ILIM.\nThe module FT_PIWL has a so-called dynamic-wind Up Reset which resets\nreaching a limit (LIM_L, LIM_H) the Integrator to a value corresponding of\nthe output limit. After reaching a Limits the controller re-enters the work\narea must the Integrator are not frst or Down-integrated, and the control￾ler is ready for use without delay. The dynamic Anti-Wind Up Method is\nthat in most cases without drawbacks preferred method, because it does\nnot negatively afect the control and prevents the disadvantages of\nWind_Up . \nThe following graph illustrates the internal structure of the controller:\nFT_PIWL can used together with the modules CTRL_IN and CTRL_OUT to\nbuild complex controllers.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PIWL",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input signal for the PI controller."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "The proportional gain coefficient (default is 1.0)."
+        },
+        {
+            "name": "KI",
+            "type": "REAL",
+            "description": "The integral gain coefficient (default is 1.0)."
+        },
+        {
+            "name": "LIM_L",
+            "type": "REAL",
+            "description": "The lower limit for the output signal (default is -1E+38)."
+        },
+        {
+            "name": "LIM_H",
+            "type": "REAL",
+            "description": "The upper limit for the output signal (default is 1E+38)."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean flag to reset the internal state."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output signal from the PI controller."
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "Indicates whether the output signal is within the defined limits."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

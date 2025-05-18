@@ -1,0 +1,29 @@
+{
+    "title": "Linear Function Calculation",
+    "description": "F_LIN = A*X + B)\nThe function F_LIN returns the Y value of a linear equation.\nF_LIN = A*X + B",
+    "type": "FUNCTION",
+    "name": "F_LIN",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The independent variable for the linear equation."
+        },
+        {
+            "name": "A",
+            "type": "REAL",
+            "description": "The coefficient representing the slope of the linear function."
+        },
+        {
+            "name": "B",
+            "type": "REAL",
+            "description": "The constant term that represents the y-intercept of the linear function."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the linear function calculation, which is the value of A * X + B."
+    }
+}

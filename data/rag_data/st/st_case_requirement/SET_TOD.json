@@ -1,0 +1,30 @@
+{
+    "title": "Set Time of Day (TOD)",
+    "description": "SET_TOD calculates a time of day (TOD) from the input va￾lues, hours, minutes and seconds.",
+    "type": "FUNCTION",
+    "name": "SET_TOD",
+    "input": [
+        {
+            "name": "hour",
+            "type": "INT",
+            "description": "The hour component of the time, ranging from 0 to 23."
+        },
+        {
+            "name": "minute",
+            "type": "INT",
+            "description": "The minute component of the time, ranging from 0 to 59."
+        },
+        {
+            "name": "second",
+            "type": "REAL",
+            "description": "The second component of the time, which can include a fractional part for milliseconds."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "TOD",
+        "description": "Returns the time of day value calculated from the input parameters.",
+        "fields": []
+    }
+}

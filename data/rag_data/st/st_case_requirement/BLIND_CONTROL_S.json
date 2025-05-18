@@ -1,0 +1,100 @@
+{
+    "title": "Blind Control System",
+    "description": "BLIND_CONTROL_S manages and controls the position of blinds. The out￾puts MU and MD control the up and down direction of the motors. The time\n\nT_LOCKOUT is the waiting time for a change of direction between MU and\n\nMD and the times T_UP and T_DN determine how long the engine need for\n\na full movement downwards or upwards. As the run time of the engine can\n\nvary, on reaching a fnal position (Above or below) the corresponding mo￾tor is in addition to the time T_EXT controlled to ensure that the fnal posi￾tion is attained, which provides a continuous calibration of the system. For\n\nthe frst start and after a power failure, a calibration run is done automati￾cally upwards. The variable EXT_TRIG indicates from what distance from\n\nthe fnal value the run time will be extended. In automatic mode the set￾ting R_POS_TOP limits the maximum position of the blinds if RD = TRUE.\n\nFor example the blind remain at 240 if RD = TRUE and R_POS_TOP = 240,\n\nwhich may prevent freezing in winter in the up position. Similarly,\n\nR_POS_BOT and RU = TRUE are for the lowest possible position in charge,\n\nwhich can place during the summer for forced ventilation. The output of\n\nPOS is the simulated position of the blinds, 0 = down and 255 = up. S_IN\n\nand STATUS are the ESR compatible status inputs and outputs.\n\nUP DN STATUS MU MD\n\nH H 103 POS is regulated to PI auto aut\n\no\n\nL H 102 Manual operation down L H\n\nH L 101 Manual mode up H L\n\nL L - Manual Timeout L L\n\n- - 107 Lockout Time L L\n\n- - 108 Auto calibration H L\n\n- - 109 Time extension X X\n\nThe module is interconnected with other components of the shutter con￾trol:\n\n79 Version 1.00\n\nChapter 7. Blind Modules\n\nBLIND_CONTROL_S is specially designed for the control of blinds and has\n\nin contrast to shutters no angle, so the device also has no input AI and no\n\noutput ANG. BLIND_CONTROL_S can be connected of course with the other\n\nBLIND components of the library.\n\nThe module supports automatic calibration, which can cause, after a\n\npower failure, to move up all blinds, which is undesired some times in your\n\nabsence. Therefore, in case of your absence the desired position of the\n\nblinds should be given to the input PI. The blinds move to up position for\n\ncalibration, and then automatically move into the desired position. The au￾tomatic calibration however can be prevented if both inputs UP and DN\n\nare FALSE.",
+    "type": "FUNCTION",
+    "name": "BLIND_CONTROL_S",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input signal to move the blinds up."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input signal to move the blinds down."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Default position of the blinds."
+        },
+        {
+            "name": "T_UP",
+            "type": "TIME",
+            "description": "Duration for the blinds to move upwards."
+        },
+        {
+            "name": "T_DN",
+            "type": "TIME",
+            "description": "Duration for the blinds to move downwards."
+        },
+        {
+            "name": "RU",
+            "type": "BOOL",
+            "description": "Release signal for upward movement."
+        },
+        {
+            "name": "RD",
+            "type": "BOOL",
+            "description": "Release signal for downward movement."
+        },
+        {
+            "name": "T_LOCKOUT",
+            "type": "TIME",
+            "description": "Lockout time before the motor direction can be reversed."
+        },
+        {
+            "name": "T_EXT",
+            "type": "TIME",
+            "description": "Extension time to ensure motor stops at the final position."
+        },
+        {
+            "name": "EXT_TRIG",
+            "type": "BYTE",
+            "description": "Trigger indicating the distance from the final position for extension time."
+        },
+        {
+            "name": "R_POS_TOP",
+            "type": "BYTE",
+            "description": "Maximum position of the blinds when RD = TRUE."
+        },
+        {
+            "name": "R_POS_BOT",
+            "type": "BYTE",
+            "description": "Minimum position of the blinds when RU = TRUE."
+        }
+    ],
+    "output": [
+        {
+            "name": "POS",
+            "type": "BYTE",
+            "description": "Simulated position of the blinds, where 0 = down and 255 = up."
+        },
+        {
+            "name": "MU",
+            "type": "BOOL",
+            "description": "Motor up signal to control upward movement."
+        },
+        {
+            "name": "MD",
+            "type": "BOOL",
+            "description": "Motor down signal to control downward movement."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

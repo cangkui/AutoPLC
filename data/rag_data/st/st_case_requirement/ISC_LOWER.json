@@ -1,0 +1,19 @@
+{
+    "title": "Check if Character is Lowercase",
+    "description": "ISC_LOWER tests whether a sign IN is a lowercase letter, If IN is a lower\ncase the function returns TRUE, else the function returns FALSE. In exami￾ning the Global Setup EXTENDED_ASCII constant is considered. If EXTEN￾DED_ASCII = TRUE the extended ASCII character-set to be considered in\naccordance with ISO 8859-1.\nThe following Table discusses the character codes:\nCode EXTENDED_ASCII = TRUE EXTENDED_ASCII = FASLE\n0..96, 123..223, 247, 255 FALSE FALSE\n97..122 TRUE TRUE\n224..246 TRUE FALSE\n248..254 TRUE FALSE",
+    "type": "FUNCTION",
+    "name": "ISC_LOWER",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "Input variable representing the ASCII value of a character."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the input corresponds to a lowercase ASCII character, otherwise returns FALSE."
+    }
+}

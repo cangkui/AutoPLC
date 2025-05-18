@@ -1,0 +1,54 @@
+{
+    "title": "Count Manager",
+    "description": "COUNT_DR is a DWORD (32-bit) counter with counts from 0 to MX and\nthen begins again at 0. The counter can, using two edge-triggered inputs\nUP and DN, both forward and backward counting. when reaching a fnal\nvalue 0 or MX it counts again at 0 or MX. The STEP input sets the incre￾ment value of the counter. With a TRUE at input SET the counter is set to\npresent value at the IN input. A reset input RST resets the counter at any\ntime to 0.\nSET IN UP DN STEP RST CNT\nReset - - - - - 1 0\nSet 1 N - - - 0 N\nup 0 - ↑ 0 N 0 CNT + N\ndown 0 - 0 ↑ N 0 CNT - N\nIf the independent inputs UP and DN with CLK and a control input UP/DN\nshould be replaced, id can be done using two AND gates at the inputs:",
+    "type": "FUNCTION_BLOCK",
+    "name": "COUNT_DR",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Signal to initialize the count to the input value."
+        },
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "Input value used to set the count when 'SET' is true."
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Signal to increment the count."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Signal to decrement the count."
+        },
+        {
+            "name": "STEP",
+            "type": "DWORD",
+            "description": "Amount to increment or decrement the count, defaulted to 1.",
+            "fields": []
+        },
+        {
+            "name": "MX",
+            "type": "DWORD",
+            "description": "Maximum value for the count, defaulted to 16#FFFFFFFF.",
+            "fields": []
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Signal to reset the count to zero."
+        }
+    ],
+    "output": [
+        {
+            "name": "CNT",
+            "type": "DWORD",
+            "description": "Current value of the count."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

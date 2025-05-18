@@ -1,0 +1,34 @@
+{
+    "title": "Coordinate Checking Function",
+    "description": "TN_SC_XY2_ERROR checks whether the specifed coordinates \n\nare within the screen area. The area may not cross of the screen. If the \n\ncheck fails, as result is passes TRUE.\n\n196 Version 1.21\n\nChapter 12. Network Variables\n\n 12. Network Variables",
+    "type": "FUNCTION",
+    "name": "TN_SC_XY2_ERROR",
+    "input": [
+        {
+            "name": "X1",
+            "type": "INT",
+            "description": "X1 coordinate of the area"
+        },
+        {
+            "name": "Y1",
+            "type": "INT",
+            "description": "Y1 coordinate of the area"
+        },
+        {
+            "name": "X2",
+            "type": "INT",
+            "description": "X2 coordinate of the area"
+        },
+        {
+            "name": "Y2",
+            "type": "INT",
+            "description": "Y2 coordinate of the area"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the specified coordinates are out of the screen area, otherwise FALSE."
+    }
+}

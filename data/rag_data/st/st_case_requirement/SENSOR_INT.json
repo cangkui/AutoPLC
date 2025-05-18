@@ -1,0 +1,35 @@
+{
+    "title": "Sensor Intensity Calculation",
+    "description": "SENSOR_INT calculate the sensor resistance, taking into account the para￾sitic resistances, which usually afect the measurement. The A / D conver￾ter measures either current at a fxed voltage or voltage at a fxed current.\nThe resulting resistance is not only the resistance of the sensor, but is\ncomposed of the resistance of the sensor and two parasitic resistances RS\nand RP. Since the parasitic resistances remain constant, they can be com￾pensated and the real resistance of the sensor can be calculated.\nBetween the terminals A and B measured resistance (measured by current\nand voltage) is a total resistance of the sensor resistance in parallel to the\nparasitic resistance RP and the line resistance RS. RS and RP, are compen￾sated the real resistance RX is calculated. The modules can TEMP_ then be\ncalculated as the exact temperature.",
+    "type": "FUNCTION",
+    "name": "SENSOR_INT",
+    "input": [
+        {
+            "name": "Voltage",
+            "type": "REAL",
+            "description": "The voltage input to the function."
+        },
+        {
+            "name": "Current",
+            "type": "REAL",
+            "description": "The current input to the function."
+        },
+        {
+            "name": "RP",
+            "type": "REAL",
+            "description": "The parallel resistance value used in the calculation."
+        },
+        {
+            "name": "RS",
+            "type": "REAL",
+            "description": "The series resistance value used in the calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated sensor intensity value.",
+        "fields": []
+    }
+}

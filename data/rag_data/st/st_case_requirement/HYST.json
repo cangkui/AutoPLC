@@ -1,0 +1,37 @@
+{
+    "title": "Hysteresis Control Function Block",
+    "description": "HYST is a standard Hysteresis module, its function depends on the input\nvalues ON and OFF.\nIs ON > OFF then the output TRUE if IN > ON and is FALSE when IN < OFF.\nIs ON < OFF then the output TRUE if IN < ON and is FALSE when IN > OFF.\nThe output WIN is TRUE if IN is between ON and OFF, is IN is out of range\nON - OFF WIN gets FALSE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "HYST",
+    "input": [
+        {
+            "name": "In",
+            "type": "REAL",
+            "description": "The input value to be evaluated against the hysteresis thresholds."
+        },
+        {
+            "name": "ON",
+            "type": "REAL",
+            "description": "The upper threshold value for the hysteresis control."
+        },
+        {
+            "name": "OFF",
+            "type": "REAL",
+            "description": "The lower threshold value for the hysteresis control."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The output boolean indicating the active state based on hysteresis logic."
+        },
+        {
+            "name": "win",
+            "type": "BOOL",
+            "description": "A boolean output that indicates if the input is within the hysteresis range."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

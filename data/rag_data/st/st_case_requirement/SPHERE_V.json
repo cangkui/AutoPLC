@@ -1,0 +1,19 @@
+{
+    "title": "Calculate Volume of a Sphere",
+    "description": "SPHERE_V calculates the volume of a sphere with a radius of RX.",
+    "type": "FUNCTION",
+    "name": "SPHERE_V",
+    "input": [
+        {
+            "name": "rx",
+            "type": "REAL",
+            "description": "The radius of the sphere."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated volume of the sphere."
+    }
+}

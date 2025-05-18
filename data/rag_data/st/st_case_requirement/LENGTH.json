@@ -1,0 +1,92 @@
+{
+    "title": "Length Conversion Function Block",
+    "description": "LENGTH converts diferent in common used units for units of\nlength. Normally, only the input to be converted is occupied and the re￾maining inputs remain free. However, if several inputs loaded with values,\nthe values of all inputs are converted accordingly and then summed.\n1 P = 0.376065 mm (unit from the printing industry)\n1 IN = 25,4 mm\n1 FT = 0,3048 m\n1 YD = 0,9144 m\n1 MILE = 1609,344 m\n1 SM = 1852 m\n1 FM = 1,829 m",
+    "type": "FUNCTION_BLOCK",
+    "name": "LENGTH",
+    "input": [
+        {
+            "name": "m",
+            "type": "REAL",
+            "description": "Length in meters (SI base unit)."
+        },
+        {
+            "name": "p",
+            "type": "REAL",
+            "description": "Length in typographical points."
+        },
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "Length in inches."
+        },
+        {
+            "name": "ft",
+            "type": "REAL",
+            "description": "Length in feet."
+        },
+        {
+            "name": "yd",
+            "type": "REAL",
+            "description": "Length in yards."
+        },
+        {
+            "name": "mile",
+            "type": "REAL",
+            "description": "Length in miles."
+        },
+        {
+            "name": "sm",
+            "type": "REAL",
+            "description": "Length in international sea miles."
+        },
+        {
+            "name": "fm",
+            "type": "REAL",
+            "description": "Length in fathoms."
+        }
+    ],
+    "output": [
+        {
+            "name": "Ym",
+            "type": "REAL",
+            "description": "Converted length in meters."
+        },
+        {
+            "name": "Yp",
+            "type": "REAL",
+            "description": "Converted length in typographical points."
+        },
+        {
+            "name": "Yin",
+            "type": "REAL",
+            "description": "Converted length in inches."
+        },
+        {
+            "name": "Yft",
+            "type": "REAL",
+            "description": "Converted length in feet."
+        },
+        {
+            "name": "Yyd",
+            "type": "REAL",
+            "description": "Converted length in yards."
+        },
+        {
+            "name": "Ymile",
+            "type": "REAL",
+            "description": "Converted length in miles."
+        },
+        {
+            "name": "Ysm",
+            "type": "REAL",
+            "description": "Converted length in international sea miles."
+        },
+        {
+            "name": "Yfm",
+            "type": "REAL",
+            "description": "Converted length in fathoms."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

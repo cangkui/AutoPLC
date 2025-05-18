@@ -1,0 +1,32 @@
+{
+    "title": "MD5 Hash Calculation Module",
+    "description": "MD5_STR a string of the MD5 hash can be calculated by. In the STR a\n\nstring is passed to the module, and a positive edge at input \"RUN\", the\n\ncalculation starts. DONE is immediately reset at startup, and after the pro￾cess is DONE is set to TRUE. Then, at the parameter HASH the actual cal￾culated HASH value is available. (See module MD5-STREAM).",
+    "type": "FUNCTION",
+    "name": "CalculateMD5",
+    "input": [
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "Positive edge starts the calculation"
+        },
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "Text for HASH creation"
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "TRUE if calculations are complete"
+        },
+        {
+            "name": "MD5",
+            "type": "ARRAY[0..15] OF BYTE",
+            "description": "Current MD5 hash"
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

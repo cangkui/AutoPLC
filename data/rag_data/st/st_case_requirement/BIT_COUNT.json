@@ -1,0 +1,20 @@
+{
+    "title": "Count Set Bits in a DWORD",
+    "description": "BIT_COUNT determines the number of bits in IN, which have the value\nTRUE (1). The input IN is DWORD and can also process the types Byte and\nWord.",
+    "type": "FUNCTION",
+    "name": "BIT_COUNT",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "A DWORD value for which the set bits are to be counted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The total count of set bits (1s) in the input DWORD.",
+        "fields": []
+    }
+}

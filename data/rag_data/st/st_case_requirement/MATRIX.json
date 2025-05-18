@@ -1,0 +1,72 @@
+{
+    "title": "Matrix Function Block",
+    "description": "MATRIX is a matrix keyboard controller for up to 4 columns and 5 rows.\nWith each PLC cycle on the MATRIX column switch the output further for a\ncolumn so that the lines Y1 to Y4 are queried one by one. For each co￾lumn, the row inputs X1 to X5 are queried and if a button is pressed, the\ncorresponding key code is displayed on the output. The output of TP is a\ncycle set to TRUE if the output CODE indicating a new value. If the setup\nvariable RELEASE is set to TRUE, then for pressing and releasing a button\neach sent a key code. If RELEASE is set to FALSE, a key code is generated\nonly when a button is a pressed. The key code of the output is as follows:\nBit CODE Output\n7 1 when key is pressed, 0 when key is released\n6 Line number Bit 2\n5 Line number Bit 1\n4 Line number Bit 0\n3 Always 0\n2 Row number Bit 2\n1 Row Number Bit 1\n0 Row Number Bit 0\nThe matrix controller is wired as follows:\nThis simple circuit can analyze up to 20 (4 * 5) keys. However, it should be\nnoted here that only in cases a number of keys can be pressed simulta￾neously. The controller can handle with this circuit, several buttons in a co￾lumn in any doubt, but not when keys are pressed simultaneously on dife￾rent columns. The wiring may be extended by each button is decoupled\nvia diodes, and thus the in fuence of di ferent \ncolumns to one another is prevented. In the circuit with diodes, any num￾ber of keys at a time and be evaluated safely. The outputs of the matrix\ncontroller continuously scan the rows of the keyboard matrix. On every\nPLC cycle one line is read. If in a row more keys have been pressed or\nchanged, the changes are displayed as codes of the following cycles. The\nmodule stores the individual key codes and gives each cycle consisting of\nonly one code so that no code can be lost. \nThe following timing diagram shows the scanning of rows of keys:",
+    "type": "FUNCTION_BLOCK",
+    "name": "MATRIX",
+    "input": [
+        {
+            "name": "x1",
+            "type": "BOOL",
+            "description": "First input boolean signal."
+        },
+        {
+            "name": "x2",
+            "type": "BOOL",
+            "description": "Second input boolean signal."
+        },
+        {
+            "name": "x3",
+            "type": "BOOL",
+            "description": "Third input boolean signal."
+        },
+        {
+            "name": "x4",
+            "type": "BOOL",
+            "description": "Fourth input boolean signal."
+        },
+        {
+            "name": "x5",
+            "type": "BOOL",
+            "description": "Fifth input boolean signal."
+        },
+        {
+            "name": "Release",
+            "type": "BOOL",
+            "description": "A constant input signal indicating whether to release the generated code."
+        }
+    ],
+    "output": [
+        {
+            "name": "code",
+            "type": "BYTE",
+            "description": "The generated code based on the input changes."
+        },
+        {
+            "name": "TP",
+            "type": "BOOL",
+            "description": "A flag indicating whether a change has been detected."
+        },
+        {
+            "name": "y1",
+            "type": "BOOL",
+            "description": "Output signal derived from the processed code (default TRUE)."
+        },
+        {
+            "name": "y2",
+            "type": "BOOL",
+            "description": "Second output signal derived from the processed code."
+        },
+        {
+            "name": "y3",
+            "type": "BOOL",
+            "description": "Third output signal derived from the processed code."
+        },
+        {
+            "name": "y4",
+            "type": "BOOL",
+            "description": "Fourth output signal derived from the processed code."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Ceiling Function",
+    "description": "CEIL function returns the smallest integer value greater or equal than\nX.",
+    "type": "FUNCTION",
+    "name": "CEIL",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number input for which the ceiling value is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The ceiling value of the input real number X, representing the smallest integer greater than or equal to X."
+    }
+}

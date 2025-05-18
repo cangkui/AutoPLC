@@ -1,0 +1,20 @@
+{
+    "title": "Convert String to Lowercase",
+    "description": "LOWERCASE converts the String STR to lower case. During\nconversion, the Global Setup EXTENDED_ASCII constant is considered. If\nEXTENDED_ASCII = TRUE extended ASCII character set are evaluated ac￾cording to ISO 8859-1. Umlauts like Ä, Ö, Ü are considered only if the glo￾bal constant EXTENDED_ASCII = TRUE. A detailed description of the code\nchange is found in the function TO_LOWER.",
+    "type": "FUNCTION",
+    "name": "LOWERCASE",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string that needs to be converted to lowercase."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The lowercase version of the input string.",
+        "fields": []
+    }
+}

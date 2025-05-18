@@ -1,0 +1,100 @@
+{
+    "title": "Intelligent Dimmer Function Module",
+    "description": "DIMM_I is an intelligent Dimmer which automatically adjusts itself to ope￾ning or closing switches without reconfgure. The Dimmer can be set via\n\nthe setup variables. Over time T_DEBOUNCE the button is debounced. It is\n\nset by default to 10ms. The time variable T_RECONFIG decide whether a\n\nopen or close switch is connected at the Input IN. If the input is longer\n\nthan that defned T_RECONFIG defned time in a state, this is assumed to\n\nrest position. If the start limitation T_ON_MAX is exceeded, it switches the\n\noutput automatically of. The times and T_DIMM_Start T_DIMM sets the ti￾ming of the Dimmers fxed. \n\nWith the inputs of SET and RST, the output Q can be switched on or of at\n\nany time. SET relies on the output OUT through the by VAL predetermined\n\nvalue , RST sets OUT to 0 if the setup RST_OUT variable is set to TRUE.\n\nRST also switch DBL to FALSE. SET and RST may be used to connect fre\n\nalarm systems or alarm systems. WIth SET all the lights in an emergency\n\ncase can be centrally enabled or disabled with RST when leaving the buil￾ding. \n\nWhile switch on and of the last output value of the dimmer remains at the\n\noutput OUT, only a FALSE at output Q switches the light of, and a TRUE at\n\nQ switch the lamp on again. When switching from a short press limits the\n\nmodule the output OUT to at least MIN_ON and maximal MAX_ON. If, for\n\nexample, the dimmer to 0, the device automatically sets the output OUT\n\nto 50 and vice versa, the output OUT gets, if it is higher than MAX_ON, is\n\nlimited to MAX_ON.\n\nThese parameters are intended to prevent present after turning a very\n\nsmall value at the output OUT and Q active terms despite no light. By the\n\nparameter MIN_ON a minimum value of light is defned when switched on.\n\n53 Version 1.00\n\nChapter 6. Electrical Engineering\n\nConversely, for example: the light in the bedroom is prevented by\n\nMAX_ON to apply full brightness immediately after switch on. If the para￾meter SOFT_DIMM set to TRUE, the dimming starts at power on with a\n\nlong button press every time at 0. In addition to the function of the dim￾mer a double-click on the input IN is decoded to the output DBL for one\n\ncycle to TRUE. If the setup variable DBL_TOGGLE is set to TRUE, the out￾put DBL is inverted each time at a double click.\n\nThe output DBL can be used to switch additional load or events with a\n\ndouble-click. The output DBL can be switched to the input SET and the\n\ndimmer can be set to a predefned value VAL using a double-click. OUT is\n\nthe value of the dimmer and is defned as an I/O variable external. This\n\nhas the advantage that the value of the dimmer can be changed external￾ly at any time and can be reconstructed even after a power failure. OUT\n\ncan be defned if desired retentive and persistent.\n\nThe following table shows the operating status of the dimmer:\n\nIN SET RST Q DIR DBL OUT\n\nsingle 0 0 NOT Q OUT<127 - LIMIT(MIN_ON,OUT,MAX_ON)\n\ndouble 0 0 - - TOG\n\nPULSE\n\nlong 0 0 ON NOT DIR - Ramp up or down depending on DIR\n\nstart at 0 when soft_dimm = TRUE and Q = 0\n\nreverse direction if 0 or 255 is reached\n\n- 1 0 ON OUT<127 - VAL\n\n- 0 1 OFF UP OFF 0 wenn RST_OUT = TRUE",
+    "type": "FUNCTION",
+    "name": "INTELLIGENT_DIMMER",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Input for switching the output to the value specified by VAL."
+        },
+        {
+            "name": "VAL",
+            "type": "BYTE",
+            "description": "Value for the SET operation."
+        },
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Control input for buttons."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Entrance to switch off the output."
+        },
+        {
+            "name": "T_DEBOUNCE",
+            "type": "TIME",
+            "description": "Debounce time for buttons, default set to 10ms."
+        },
+        {
+            "name": "T_RESETUP",
+            "type": "TIME",
+            "description": "Reconfiguration time to determine switch state."
+        },
+        {
+            "name": "T_ON_MAX",
+            "type": "TIME",
+            "description": "Start limitation time to prevent immediate output activation."
+        },
+        {
+            "name": "T_DIMM_START",
+            "type": "TIME",
+            "description": "Reaction time to initiate dimming."
+        },
+        {
+            "name": "T_DIMM",
+            "type": "TIME",
+            "description": "Time for a dimming ramp."
+        },
+        {
+            "name": "MIN_ON",
+            "type": "BYTE",
+            "description": "Minimum value of OUT at startup, default is 50."
+        },
+        {
+            "name": "MAX_ON",
+            "type": "BYTE",
+            "description": "Maximum value of OUT at startup, default is 255."
+        },
+        {
+            "name": "SOFT_DIMM",
+            "type": "BOOL",
+            "description": "If TRUE, dimming begins after switch on at 0."
+        },
+        {
+            "name": "DBL_TOGGLE",
+            "type": "BOOL",
+            "description": "If TRUE, the output DBL is inverted at each double-click."
+        },
+        {
+            "name": "RST_OUT",
+            "type": "BOOL",
+            "description": "If TRUE, OUT is set to 0 when reset is activated."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal indicating the state of the dimmer."
+        },
+        {
+            "name": "DBL",
+            "type": "BOOL",
+            "description": "Output for the double-click signal."
+        },
+        {
+            "name": "OUT",
+            "type": "BYTE",
+            "description": "Dimmer output value which can be adjusted."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "The function executes its operations without returning a value."
+    }
+}

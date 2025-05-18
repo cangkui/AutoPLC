@@ -1,0 +1,52 @@
+{
+    "title": "32-Element Stack Function Block",
+    "description": "RES_NI calculated the resistance of a NI-resistance sensor from the input\nvalues T (temperature in°C) and R0 (resistance at 0°C).\nThe calculation is done using the formula:\nRES_NI = R0 + A*T + B*T²+C*T4\nA = 0.5485\nB = 0.665E-3\nC = 2.805E-9\nThe calculation is suitable for temperatures from -60.. +180 °C.",
+    "type": "FUNCTION_BLOCK",
+    "name": "STACK_32",
+    "input": [
+        {
+            "name": "Din",
+            "type": "DWORD",
+            "description": "The data value to be written to the stack."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal that allows the operation of the stack. If FALSE, the stack does not process read/write requests."
+        },
+        {
+            "name": "RD",
+            "type": "BOOL",
+            "description": "Read request signal. When TRUE, an element will be read from the stack if it is not empty."
+        },
+        {
+            "name": "WD",
+            "type": "BOOL",
+            "description": "Write request signal. When TRUE, the value of Din will be written to the stack if it is not full."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Asynchronous reset signal. When TRUE, it resets the stack to its initial state."
+        }
+    ],
+    "output": [
+        {
+            "name": "Dout",
+            "type": "DWORD",
+            "description": "The data value that has been read from the stack when RD is TRUE."
+        },
+        {
+            "name": "EMPTY",
+            "type": "BOOL",
+            "description": "Indicates whether the stack is empty. TRUE if it is empty, FALSE otherwise."
+        },
+        {
+            "name": "FULL",
+            "type": "BOOL",
+            "description": "Indicates whether the stack is full. TRUE if it is full, FALSE otherwise."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

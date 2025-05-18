@@ -1,0 +1,26 @@
+{
+    "title": "Convert DWORD to String",
+    "description": "DWORD_TO_STRB converts a DWORD, Word or byte in a STRING of fxed\nlength. The output string is exactly 32 characters long and is the bitwise\nnotation of the value of IN. The output string consists of the characters '0\n'and '1'. The least signifcant bit is left in the string. DWORD_TO_STRB can\nhandle input formats, Byte, Word and DWORD types. The output is inde￾pendent of the input type is always a STRING of 32 characters. If a shorter\nstring is needed, it can be cut with the standard function RIGHT() accor-\ndingly. The call RIGHT(DWORD_TO_STRB(X),8) results to a string of 8 cha￾racters to the contents of the lower bytes of X.",
+    "type": "FUNCTION",
+    "name": "DWORD_TO_STRB",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The input DWORD value that needs to be converted to a string."
+        }
+    ],
+    "output": [
+        {
+            "name": "DWORD_TO_STRB",
+            "type": "string",
+            "description": "The output string representation of the input DWORD value, containing binary characters."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The resulting binary string derived from the input DWORD.",
+        "fields": []
+    }
+}

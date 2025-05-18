@@ -1,0 +1,44 @@
+{
+    "title": "4-to-1 Multiplexer Function",
+    "description": "FT_INT is an integrator module which provides the integral of the input si￾gnal at the output. The input K is a multiplier for the output signal. Run\nswitches the integrator on if TRUE and of when FALSE. RST (reset) sets\nthe output to 0. The inputs OUT_MIN and OUT_MAX serve upper and lower\nlimits for the output of the integrator . FT_INT \nworks internally in microseconds and is thus fulfll also the requirements\nvery fast PLC controller with cycle times under one millisecond.\nA fundamental problem with integrator is the resolution.The output of type\nreal has a resolution of 7-8 points. This will result in a calculated integrati-\non step of 1 at an output value of more than one hundred million (1E8).\nThus the step can not be added up because it falls below the resolution li￾mit of a maximum of 8 points in type Real. This limitation is important\nwhen using FT_INT.\nFor example, an input signal of 0.0001 would be at a sampling time of 1\nmillisecond and a baseline of 100000 to add a value of 0.0001 * 0.001 se￾conds = 0.000001 to the baseline of 100000, which inevitably results in\nthe value of 100000 again, because the resolution of the data type Real\ncan only collect up to 8. This should be considered especially if FT_INT\nshould serve as a utility meter or similar applications.\nStructure diagram:",
+    "type": "FUNCTION",
+    "name": "MUX_4",
+    "input": [
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "First data input for the multiplexer."
+        },
+        {
+            "name": "D1",
+            "type": "BOOL",
+            "description": "Second data input for the multiplexer."
+        },
+        {
+            "name": "D2",
+            "type": "BOOL",
+            "description": "Third data input for the multiplexer."
+        },
+        {
+            "name": "D3",
+            "type": "BOOL",
+            "description": "Fourth data input for the multiplexer."
+        },
+        {
+            "name": "A0",
+            "type": "BOOL",
+            "description": "First select line for selecting the input."
+        },
+        {
+            "name": "A1",
+            "type": "BOOL",
+            "description": "Second select line for selecting the input."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The output of the multiplexer, representing the selected boolean input."
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "title": "Boolean Logic Function Block",
+    "description": "TRIANGLE_A calculates the area of any triangle. The triangle can be def￾ned by either through 2 pages and the pages spanned by the angles 1 and\n2 (S1, S2 and A), or if A = 0 then the area is calculated from three sides\n(S1, S2 and S3).\n 11. Vector Mathematics",
+    "type": "FUNCTION_BLOCK",
+    "name": "DEC_2",
+    "input": [
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "Boolean input that influences both outputs."
+        },
+        {
+            "name": "A",
+            "type": "BOOL",
+            "description": "Boolean input that determines the value of Q1 along with D."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Boolean output representing the result of D AND NOT A."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Boolean output representing the result of D AND A."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

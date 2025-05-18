@@ -1,0 +1,36 @@
+{
+    "title": "Check Date Period",
+    "description": "PERIOD ignores the\nyears in the dates D1, D2 and DX. The test is performed only for months\nand days, so this function works for each year. The test period can also af￾ter 31 Extend beyond December, so for example from 9/1 - 3/15, a typical\napplication is to determine whether there is a heating period. That PERIOD\nwork properly the two dates D1 and D2 may not be in a leap year. It can,\nfor example, always be 2001, or even any other year that is not a leap\nyear.\nPERIOD (10/1/2001, 11/11/2007, 31/03/2001) returns TRUE, because the\ntest date within the period from 10/1 - 3/31 content.",
+    "type": "FUNCTION",
+    "name": "PERIOD",
+    "input": [
+        {
+            "name": "d1",
+            "type": "DATE",
+            "description": "The start date of the period."
+        },
+        {
+            "name": "dx",
+            "type": "DATE",
+            "description": "The date to check if it falls within the period."
+        },
+        {
+            "name": "d2",
+            "type": "DATE",
+            "description": "The end date of the period."
+        }
+    ],
+    "output": [
+        {
+            "name": "PERIOD",
+            "type": "BOOL",
+            "description": "A boolean value indicating if the date dx is within the period defined by d1 and d2."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The result of whether dx is within the period between d1 and d2.",
+        "fields": []
+    }
+}

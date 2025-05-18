@@ -1,0 +1,29 @@
+{
+    "title": "Minimum of Three Real Numbers",
+    "description": "_ARRAY_SORT(ADR(Array), SI￾ZEOF(Array)), where array is the name of the array to be manipulated.\nADR() is a standard function which identifes the pointer to the array and\nSIZEOF() is a standard function, which determines the size of the array.\nThe function only returns TRUE. The array specifed by the pointer is mani￾pulated directly in memory. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "MIN3",
+    "input": [
+        {
+            "name": "in1",
+            "type": "REAL",
+            "description": "The first real number input."
+        },
+        {
+            "name": "in2",
+            "type": "REAL",
+            "description": "The second real number input."
+        },
+        {
+            "name": "in3",
+            "type": "REAL",
+            "description": "The third real number input."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The minimum value among the three input real numbers."
+    }
+}

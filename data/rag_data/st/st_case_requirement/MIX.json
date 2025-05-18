@@ -1,0 +1,29 @@
+{
+    "title": "Mixing Two Real Values",
+    "description": "MIX provides at the output a mixed ratio M value, mixed from values A and\nB. The input M passes the proportion of B in the range 0..1.\nMIX = (M-1)*A + M*B",
+    "type": "FUNCTION",
+    "name": "MIX",
+    "input": [
+        {
+            "name": "A",
+            "type": "REAL",
+            "description": "The first real value to be mixed."
+        },
+        {
+            "name": "B",
+            "type": "REAL",
+            "description": "The second real value to be mixed."
+        },
+        {
+            "name": "M",
+            "type": "REAL",
+            "description": "The mixing factor, which determines the weight of each input value in the final result."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the mixing operation, calculated as (1.0 - M) * A + M * B."
+    }
+}

@@ -1,0 +1,71 @@
+{
+    "title": "2-Point Actuator Control",
+    "description": "ACTUATOR_2P is an interface for 2-point actuators such as solenoid val￾ves. The 2-point actuator can only be on / of switching and therefore, the\n\ninput value IN is canged in a pulse / pause signal at the output OUT. The\n\ncycle time (CYCLE_TIME) determines the switching times of the output.\n\nThe sticking of the valve because of a long rest period is prevented by\n\nusing the self act time (SELF_ACT_TIME) and the count of self act cycles\n\n(SELF_ACT_CYCLES) and the pulse duration (SELF_ACT_PULSE). The cycles\n\nruns automatically and a stick of the valve can be avoided. After the inter￾val, the module checks whether SELF_ACT_TIME ARE = TRUE and = ARX is\n\nFALSE, then switches ARO for the duration of self-activation to TRUE. At\n\nthe same time ARX set to TRUE to prevent that other modules which are\n\nconnected to the same ARX go to the Autorun. The input IN value can be\n\nvaried from 0..255 If the input signal IN < SENS, the valve remains per￾manently closed (OUT = FALSE) and IN > 255 - SENS means the valve is\n\npermanently open (OUT = TRUE).\n\n12 Version 1.00\n\nChapter 4. Actuators",
+    "type": "FUNCTION",
+    "name": "ACTUATOR_2P",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "Control input, ranging from 0 to 255."
+        },
+        {
+            "name": "TEST",
+            "type": "BOOL",
+            "description": "Starts autorun when set to TRUE."
+        },
+        {
+            "name": "ARE",
+            "type": "BOOL",
+            "description": "Enable for Autorun."
+        },
+        {
+            "name": "CYCLE_TIME",
+            "type": "TIME",
+            "description": "Clock speed of the valve."
+        },
+        {
+            "name": "SENS",
+            "type": "BYTE",
+            "description": "Minimum and maximum input values."
+        },
+        {
+            "name": "SELF_ACT_TIME",
+            "type": "TIME",
+            "description": "Duration of self-activation."
+        },
+        {
+            "name": "SELF_ACT_PULSE",
+            "type": "TIME",
+            "description": "Switching time during autorun."
+        },
+        {
+            "name": "SELF_ACT_CYCLES",
+            "type": "INT",
+            "description": "Number of cycles for autorun."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "BOOL",
+            "description": "Switching signal for the valve."
+        },
+        {
+            "name": "ARO",
+            "type": "BOOL",
+            "description": "TRUE if autorun is currently active."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "ARX",
+            "type": "BOOL",
+            "description": "Autorun signal bus."
+        }
+    ],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

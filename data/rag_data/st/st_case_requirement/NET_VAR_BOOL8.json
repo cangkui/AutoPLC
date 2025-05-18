@@ -1,0 +1,108 @@
+{
+    "title": "Bidirectional Transmission of Binary Signals Using NET_VAR_BOOL8",
+    "description": "NET_VAR_BOOL8 8 binary \n\nsignals from the master to slave and vice versa. The signals IN 1..8 are collected and \n\npassed to the other side (control) on the same module at the same position as \n\nOUT1..8 again.\n\nSimultaneously, the on the opposite side (other control) passed input data passed \n\nhere as a OUT1..8 again.\n\n200 Version 1.21\n\nChapter 12. Network Variables\n\nID parameter indicates the current identification number of the module instance. If the \n\nconfiguration of the master and the slave program is differently (incorrectly) that ID \n\nnumber is passed as a fault in the module NET_VAR_CONTROL.",
+    "type": "FUNCTION",
+    "name": "NET_VAR_BOOL8_Transmitter",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "BOOL",
+            "description": "Signal input 1"
+        },
+        {
+            "name": "IN2",
+            "type": "BOOL",
+            "description": "Signal input 2"
+        },
+        {
+            "name": "IN3",
+            "type": "BOOL",
+            "description": "Signal input 3"
+        },
+        {
+            "name": "IN4",
+            "type": "BOOL",
+            "description": "Signal input 4"
+        },
+        {
+            "name": "IN5",
+            "type": "BOOL",
+            "description": "Signal input 5"
+        },
+        {
+            "name": "IN6",
+            "type": "BOOL",
+            "description": "Signal input 6"
+        },
+        {
+            "name": "IN7",
+            "type": "BOOL",
+            "description": "Signal input 7"
+        },
+        {
+            "name": "IN8",
+            "type": "BOOL",
+            "description": "Signal input 8"
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT1",
+            "type": "BOOL",
+            "description": "Signal output 1"
+        },
+        {
+            "name": "OUT2",
+            "type": "BOOL",
+            "description": "Signal output 2"
+        },
+        {
+            "name": "OUT3",
+            "type": "BOOL",
+            "description": "Signal output 3"
+        },
+        {
+            "name": "OUT4",
+            "type": "BOOL",
+            "description": "Signal output 4"
+        },
+        {
+            "name": "OUT5",
+            "type": "BOOL",
+            "description": "Signal output 5"
+        },
+        {
+            "name": "OUT6",
+            "type": "BOOL",
+            "description": "Signal output 6"
+        },
+        {
+            "name": "OUT7",
+            "type": "BOOL",
+            "description": "Signal output 7"
+        },
+        {
+            "name": "OUT8",
+            "type": "BOOL",
+            "description": "Signal output 8"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "X",
+            "type": "NET_VAR_DATA",
+            "description": "NET_VAR data structure for bidirectional signal transmission"
+        }
+    ],
+    "return_value": {
+        "type": "BYTE",
+        "description": "Identification number of the module instance. It indicates faults if there's a mismatch in configuration.",
+        "fields": [
+            {
+                "name": "ID",
+                "type": "BYTE",
+                "description": "The ID parameter for the module instance."
+            }
+        ]
+    }
+}

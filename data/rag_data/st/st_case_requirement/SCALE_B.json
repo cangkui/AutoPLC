@@ -1,0 +1,39 @@
+{
+    "title": "Scale Byte Function",
+    "description": "SCALE_B scales an input value BYTE and calculates an output value in\nREAL. The input value X is limited here to I_LO and I_HI. SCALE_D (IN, 0,\n255, 0, 100) scales an input with 8-bit resolution on the output 0..100.",
+    "type": "FUNCTION",
+    "name": "SCALE_B",
+    "input": [
+        {
+            "name": "X",
+            "type": "BYTE",
+            "description": "The input byte value to be scaled."
+        },
+        {
+            "name": "I_LO",
+            "type": "BYTE",
+            "description": "The lower limit of the input range."
+        },
+        {
+            "name": "I_HI",
+            "type": "BYTE",
+            "description": "The upper limit of the input range."
+        },
+        {
+            "name": "O_LO",
+            "type": "REAL",
+            "description": "The lower limit of the output range."
+        },
+        {
+            "name": "O_HI",
+            "type": "REAL",
+            "description": "The upper limit of the output range."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The scaled output value based on the input range and output limits."
+    }
+}

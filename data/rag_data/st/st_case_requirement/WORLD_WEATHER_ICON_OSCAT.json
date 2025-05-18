@@ -1,0 +1,48 @@
+{
+    "title": "World Weather Icon Replacement Module",
+    "description": "WORLD_WEATHER_ICON_OSCAT The module replaces the original vendor-specifc numbers on the weather \n\nicons by OSCAT standard icon numbers. Following a positive edge at \n\nACTIVATE the elements (icon numbers) in the WORLD_WEATHER_DATA \n\ndata structure is replaced. After querying the weather data using \n\nWORLD_WEATHER this module should be called subsequently. It is simply \n\nthe parameter DONE from the module WORLD_WEATHER that is \n\ninterconnected with ACTIVATE.\n\nThe following elements will be adapted:\n\nWW.WORLD_WEATHER_CUR.WEATHER_ICON\n\nWW.WORLD_WEATHER_DAY[0..4].WEATHER_ICON\n\n215 Version 1.21",
+    "type": "FUNCTION",
+    "name": "WORLD_WEATHER_ICON_OSCAT",
+    "input": [
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "A positive edge on this input starts the query to replace weather icon numbers."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "WW",
+            "type": "WORLD_WEATHER_DATA",
+            "description": "Weather data structure containing weather icons to be replaced.",
+            "fields": [
+                {
+                    "name": "WORLD_WEATHER_CUR",
+                    "type": "CURRENT_WEATHER",
+                    "description": "Current weather data including an icon number.",
+                    "fields": [
+                        {
+                            "name": "WEATHER_ICON",
+                            "type": "INT",
+                            "description": "Icon number representing the current weather condition."
+                        }
+                    ]
+                },
+                {
+                    "name": "WORLD_WEATHER_DAY",
+                    "type": "ARRAY[5] OF DAILY_WEATHER",
+                    "description": "Array containing forecasted weather data including icon numbers for the next 5 days.",
+                    "fields": [
+                        {
+                            "name": "WEATHER_ICON",
+                            "type": "INT",
+                            "description": "Icon number representing the weather condition for the day."
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "return_value": null
+}

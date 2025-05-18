@@ -1,0 +1,24 @@
+{
+    "title": "Coordinate Screen Area Check",
+    "description": "TN_SC_XY_ERROR checks whether the specifed coordinate is \n\nwithin the screen area. If the check fails, as result is passes TRUE.",
+    "type": "FUNCTION",
+    "name": "TN_SC_XY_ERROR",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "X coordinate"
+        },
+        {
+            "name": "Y",
+            "type": "INT",
+            "description": "Y coordinate"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the specified coordinate is outside the screen area, otherwise FALSE."
+    }
+}

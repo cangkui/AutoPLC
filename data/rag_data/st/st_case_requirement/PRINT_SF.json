@@ -1,0 +1,20 @@
+{
+    "title": "Dynamic String Formatting",
+    "description": "PRINT_SF a STRING can be added dynamically with a part of a string. \n\nThe position of the substring to be inserted is indicated by '~' tilde \n\ncharacter and the subsequent number defnes the parameter number. '~ \n\n1' to '~ 9' are thus processed automatically. If the insert of the substring \n\n121 Version 1.21\n\nF\n\nu\n\nn\n\nctio\n\nn\n\nD\n\ne\n\ns\n\ncriptio\n\nn\n\nF\n\nu\n\nn\n\nctio\n\nn\n\nC\n\no\n\nd\n\ne\n\nBit A\n\nc\n\nc\n\ne\n\ns\n\ns\n\n16\n\nBit A\n\nc\n\nc\n\ne\n\ns\n\ns (R\n\ne\n\ngister)\n\nR\n\ne\n\na\n\nd / Write\n\nDigital In\n\np\n\nut\n\nA\n\nn\n\nalo\n\ng In\n\np\n\nut\n\nDigital O\n\nutp\n\nut\n\nA\n\nn\n\nalo\n\ng\n\nO\n\nutp\n\nut\n\nChapter 9. Network and Communication\n\nreached the maximum number of characters, so instead of the substring \n\n'..' is inserted.\n\nVAR\n\n LITER : REAL := 545.4;\n\n FUELLZEIT : INT := 25;\n\n NAME: STRING: = 'tank content';\n\n PARA: ARRAY[1..11] OF STRING(string_length);\n\n PS: PRINT_SF;\n\nEND_VAR\n\nPARA[1]: = REAL_TO_STRING(liters); (* Parameter 1: string to convert *) \n\nPARA[2]: = INT_TO_STRING(filling time); (* Parameter 2: string to convert\n\n*) \n\nPARA[3]: = NAME; (* Parameter 3: *) \n\nPS.STR: = ' ~3: ~1 Liter, flling time: ~2 Min.' ; (* Text output-mask *) \n\nPS.PRINTF_DATA := PARA; (* Pass parameter data structure *) \n\nPS(); (* Module version *) \n\nThe string PS. STR then has the following content \n\n'Tank Capacity: 545.4 liters, filling time: 25 min'",
+    "type": "FUNCTION",
+    "name": "PRINT_SF",
+    "input": [
+        {
+            "name": "PRINTF_DATA",
+            "type": "ARRAY[1..11] OF STRING",
+            "description": "An array of strings that will be used in the dynamic string formatting."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "The formatted string after inserting the specified parameters.",
+        "fields": []
+    }
+}

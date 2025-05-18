@@ -1,0 +1,25 @@
+{
+    "title": "AGDF Function Implementation",
+    "description": "AGDF calculates the inverse Gundermann function.\nThe calculation is done using the formula:",
+    "type": "FUNCTION",
+    "name": "AGDF",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input real value for which the AGDF function will compute the result."
+        }
+    ],
+    "output": [
+        {
+            "name": "AGDF",
+            "type": "REAL",
+            "description": "The output result of the AGDF function, which is the computed natural logarithm value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The return value of the AGDF function is a REAL number representing the natural logarithm of the specified computation."
+    }
+}

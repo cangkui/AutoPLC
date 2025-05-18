@@ -1,0 +1,36 @@
+{
+    "title": "Convert Month Integer to String Representation",
+    "description": "MONTH_TO_STRING convert a month number to its equivalent string. The\ninput MTH passes the month: 1 =January, 12 = December. The input LANG\nchooses the language: 1 = English and 2 = German. LANG = 0 used as\nDefault the language specifed in the Global Setup variable\nLANGUAGE_DEFAULT. The input LX sets the length of the string to be gene￾rated: 0 = full month name, 3 = 3-letter abbreviation, all other values at\nthe input LX are undefned. \nThe strings produced by the module, and the supported languages are de￾fned in the Global Constants and can be expanded and changed. \nMONTH_TO_STRING(1,0,0) = 'January'\ndependent on the global constant LANGUAGE_DEFAULT\nMONTH_TO_STRING(1,2,0) = 'Januar'\nMONTH_TO_STRING(1,2,3) = 'Jan'",
+    "type": "FUNCTION",
+    "name": "MONTH_TO_STRING",
+    "input": [
+        {
+            "name": "MTH",
+            "type": "INT",
+            "description": "The month integer to convert, should be between 1 and 12."
+        },
+        {
+            "name": "LANG",
+            "type": "INT",
+            "description": "An integer representing the language setting for the month name. A value less than or equal to 0 indicates the default language."
+        },
+        {
+            "name": "LX",
+            "type": "INT",
+            "description": "An integer indicating the format of the month name. 0 for the default length, 3 for a three-letter abbreviation."
+        }
+    ],
+    "output": [
+        {
+            "name": "MONTH_TO_STRING",
+            "type": "string",
+            "description": "The string representation of the month in the specified language and format."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The output month name as a string.",
+        "fields": []
+    }
+}

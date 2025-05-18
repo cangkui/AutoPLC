@@ -1,0 +1,22 @@
+{
+    "title": "YAHOO_WEATHER_ICON_OSCAT Function Module",
+    "description": "YAHOO_WEATHER_ICON_OSCAT The module replaces the original vendor-specifc numbers on the weather \n\nicons by OSCAT standard icon numbers. Following a positive edge at \n\nACTIVATE the elements (icon numbers) in the YAHOO_WEATHER_DATA data \n\nstructure is replaced. After querying the weather data using \n\nYAHOO_WEATHER this module should be called subsequently. It is simply \n\nthe parameter DONE from the module YAHOO_WEATHER that is \n\ninterconnected with ACTIVATE.\n\nThe following elements will be adapted:\n\nYW.CUR_CONDITIONS_ICON\n\nYW.FORCAST_TODAY_ICON\n\nYW.FORCAST_TOMORROW_ICON",
+    "type": "FUNCTION",
+    "name": "YAHOO_WEATHER_ICON_OSCAT",
+    "input": [
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "A positive edge signal to start the query."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "YW",
+            "type": "YAHOO_WEATHER_DATA",
+            "description": "Weather data structure that contains the current and forecast icon numbers."
+        }
+    ],
+    "return_value": null
+}

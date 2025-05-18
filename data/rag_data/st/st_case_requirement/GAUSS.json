@@ -1,0 +1,29 @@
+{
+    "title": "Gaussian Function",
+    "description": "GAUSS The function calculates the Gaussian normal distribution using the followi￾ng formula:\nThe normal distribution is the density function normally distributed ran￾dom variables. With the parameters U = 0 and SI = 1, it follows the stan￾dard normal distribution.",
+    "type": "FUNCTION",
+    "name": "GAUSS",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The value at which to evaluate the Gaussian function."
+        },
+        {
+            "name": "U",
+            "type": "REAL",
+            "description": "The mean (average) of the distribution."
+        },
+        {
+            "name": "SI",
+            "type": "REAL",
+            "description": "The standard deviation of the distribution."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed value of the Gaussian function at the specified point X."
+    }
+}

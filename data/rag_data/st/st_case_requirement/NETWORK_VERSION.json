@@ -1,0 +1,26 @@
+{
+    "title": "Network Version Function",
+    "description": "NETWORK_VERSION provides if IN = FALSE the current version number as\n\nDWORD. If IN is set to TRUE then the release date of the current version as\n\na DWORD is returned.",
+    "type": "FUNCTION",
+    "name": "NETWORK_VERSION",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "If TRUE, the function returns the release date; if FALSE, it returns the current version number."
+        }
+    ],
+    "output": [
+        {
+            "name": "Version",
+            "type": "DWORD",
+            "description": "The current version number or release date as a DWORD."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Returns the library version number or the release date as a DWORD.",
+        "fields": []
+    }
+}

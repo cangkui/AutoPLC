@@ -1,0 +1,32 @@
+{
+    "title": "First-order Transfer Function with Time Constant",
+    "description": "ISC_CTRL tests whether a sign IN is a control character, if IN is a controll\ncharacter, the function returns TRUE, if not the function returns FALSE.\nControl characters are all characters with code < 32 or 127.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PT1",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input signal for the transfer function."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "The time constant for the transfer function."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "The gain factor applied to the input signal. Default value is 1.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The output signal of the transfer function."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

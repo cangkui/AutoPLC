@@ -1,0 +1,101 @@
+{
+    "title": "NET_VAR_REAL8 Function Module",
+    "description": "NET_VAR_REAL8 is used for bidirectional transmission of eight REAL￾values from the master to slave and vice versa. The REAL values IN1..8 are \n\ncollected and passed to the other side (control) on the same module at the same \n\nposition as OUT1..8 again.\n\nSimultaneously, the on the opposite side (other control) passed input REAL values \n\nare passed here as a OUT1..8 again.\n\nID parameter indicates the current identification number of the module instance. If the \n\nconfiguration of the master and the slave program is differently (incorrectly) that ID \n\nnumber is passed as a fault in the module NET_VAR_CONTROL.",
+    "type": "FUNCTION",
+    "name": "NET_VAR_REAL8",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "REAL",
+            "description": "First input REAL value"
+        },
+        {
+            "name": "IN2",
+            "type": "REAL",
+            "description": "Second input REAL value"
+        },
+        {
+            "name": "IN3",
+            "type": "REAL",
+            "description": "Third input REAL value"
+        },
+        {
+            "name": "IN4",
+            "type": "REAL",
+            "description": "Fourth input REAL value"
+        },
+        {
+            "name": "IN5",
+            "type": "REAL",
+            "description": "Fifth input REAL value"
+        },
+        {
+            "name": "IN6",
+            "type": "REAL",
+            "description": "Sixth input REAL value"
+        },
+        {
+            "name": "IN7",
+            "type": "REAL",
+            "description": "Seventh input REAL value"
+        },
+        {
+            "name": "IN8",
+            "type": "REAL",
+            "description": "Eighth input REAL value"
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT1",
+            "type": "REAL",
+            "description": "First output REAL value"
+        },
+        {
+            "name": "OUT2",
+            "type": "REAL",
+            "description": "Second output REAL value"
+        },
+        {
+            "name": "OUT3",
+            "type": "REAL",
+            "description": "Third output REAL value"
+        },
+        {
+            "name": "OUT4",
+            "type": "REAL",
+            "description": "Fourth output REAL value"
+        },
+        {
+            "name": "OUT5",
+            "type": "REAL",
+            "description": "Fifth output REAL value"
+        },
+        {
+            "name": "OUT6",
+            "type": "REAL",
+            "description": "Sixth output REAL value"
+        },
+        {
+            "name": "OUT7",
+            "type": "REAL",
+            "description": "Seventh output REAL value"
+        },
+        {
+            "name": "OUT8",
+            "type": "REAL",
+            "description": "Eighth output REAL value"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "X",
+            "type": "NET_VAR_DATA",
+            "description": "NET_VAR data structure for bidirectional communication"
+        }
+    ],
+    "return_value": {
+        "type": "BYTE",
+        "description": "ID indicating the current identification number of the module instance"
+    }
+}

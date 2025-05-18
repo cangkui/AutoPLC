@@ -1,0 +1,57 @@
+{
+    "title": "CYCLE_4 Function Block",
+    "description": "CHARNAME determines the character name for a character code.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CYCLE_4",
+    "input": [
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable flag that allows the state machine to operate."
+        },
+        {
+            "name": "T0",
+            "type": "TIME",
+            "description": "Duration for waiting in state 0."
+        },
+        {
+            "name": "T1",
+            "type": "TIME",
+            "description": "Duration for waiting in state 1."
+        },
+        {
+            "name": "T2",
+            "type": "TIME",
+            "description": "Duration for waiting in state 2."
+        },
+        {
+            "name": "T3",
+            "type": "TIME",
+            "description": "Duration for waiting in state 3."
+        },
+        {
+            "name": "S0",
+            "type": "BOOL",
+            "description": "Control signal to reset the state machine to state 0."
+        },
+        {
+            "name": "SX",
+            "type": "INT",
+            "description": "Input for directly controlling the state when greater than 0."
+        },
+        {
+            "name": "SL",
+            "type": "BOOL",
+            "description": "Status flag to indicate that the state should be forced based on SX."
+        }
+    ],
+    "output": [
+        {
+            "name": "STATE",
+            "type": "INT",
+            "description": "Current state of the state machine."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

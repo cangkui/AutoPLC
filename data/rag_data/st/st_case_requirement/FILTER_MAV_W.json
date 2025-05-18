@@ -1,0 +1,32 @@
+{
+    "title": "Moving Average Filter",
+    "description": "FILTER_MAV_W is a flter with moving average. The flter with moving ave￾rage (also Moving Average Filter called) the average of N successive rea￾dings is output as an average. \nY:= (X0 + X1 + … + Xn-1) / N\nX0 is the value of X in the current cycle, X1 is the value in the previous cy￾cle, etc. The number of values over which the average has to be calcula￾ted is specifed at the input N. The range of values of N is between 1 and\n32",
+    "type": "FUNCTION_BLOCK",
+    "name": "FILTER_MAV_W",
+    "input": [
+        {
+            "name": "X",
+            "type": "WORD",
+            "description": "Input variable which is a word value to be averaged."
+        },
+        {
+            "name": "N",
+            "type": "UINT",
+            "description": "Input variable that specifies the number of samples to average. It is limited to a maximum of 32."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset variable that initializes the moving average calculation when set to TRUE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "WORD",
+            "description": "Output variable which holds the current average value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

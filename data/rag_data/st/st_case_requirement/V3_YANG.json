@@ -1,0 +1,20 @@
+{
+    "title": "Calculate Angle from Vector",
+    "description": "FINDB searched for the presence of STR2 in STR1 and returns\nthe last position of STR2 in STR1.\nIf STR2 is not found, a 0 is returned.",
+    "type": "FUNCTION",
+    "name": "V3_YANG",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "A 3-dimensional vector for which the angle will be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed angle in radians based on the Y component of the vector.",
+        "fields": []
+    }
+}

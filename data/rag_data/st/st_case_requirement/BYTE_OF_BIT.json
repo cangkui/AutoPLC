@@ -1,0 +1,61 @@
+{
+    "title": "Conversion of Individual Boolean Values to a Single Byte",
+    "description": "BYTE_OF_BIT uses one byte of 8 individual bits (B0 .. B7) together.",
+    "type": "FUNCTION",
+    "name": "BYTE_OF_BIT",
+    "input": [
+        {
+            "name": "B0",
+            "type": "BOOL",
+            "description": "The least significant bit of the byte."
+        },
+        {
+            "name": "B1",
+            "type": "BOOL",
+            "description": "The second least significant bit of the byte."
+        },
+        {
+            "name": "B2",
+            "type": "BOOL",
+            "description": "The third least significant bit of the byte."
+        },
+        {
+            "name": "B3",
+            "type": "BOOL",
+            "description": "The fourth bit of the byte."
+        },
+        {
+            "name": "B4",
+            "type": "BOOL",
+            "description": "The fifth bit of the byte."
+        },
+        {
+            "name": "B5",
+            "type": "BOOL",
+            "description": "The sixth bit of the byte."
+        },
+        {
+            "name": "B6",
+            "type": "BOOL",
+            "description": "The seventh bit of the byte."
+        },
+        {
+            "name": "B7",
+            "type": "BOOL",
+            "description": "The most significant bit of the byte."
+        }
+    ],
+    "output": [
+        {
+            "name": "Byte_of_bit",
+            "type": "BYTE",
+            "description": "The resulting byte composed of the input boolean values."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The final byte representation of the boolean inputs.",
+        "fields": []
+    }
+}

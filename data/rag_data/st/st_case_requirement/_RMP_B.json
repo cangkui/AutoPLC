@@ -1,0 +1,32 @@
+{
+    "title": "Ramp Control Block",
+    "description": "_RMP_B Is an 8-bit ramp generator. The ramp is generated in an externally\ndeclared variable. The ramp is rising when DIR = TRUE and falling if DIR =\nFALSE. Reaching a fnal value of the ramp, the generator remains at this\nvalue. With the input E the ramp can be stopped at any time, when E =\nTRUE the ramp runs. The input TR shows the time which is needed to cy￾cle through 0-255 or the other way around.",
+    "type": "FUNCTION_BLOCK",
+    "name": "_RMP_B",
+    "input": [
+        {
+            "name": "DIR",
+            "type": "BOOL",
+            "description": "Indicates the direction of the ramp. 'true' means ramping up."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal for the ramp control. Defaults to TRUE."
+        },
+        {
+            "name": "TR",
+            "type": "TIME",
+            "description": "Timing reference to control the ramping duration."
+        }
+    ],
+    "output": [
+        {
+            "name": "RMP",
+            "type": "BYTE",
+            "description": "Output value representing the current state of the ramp."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

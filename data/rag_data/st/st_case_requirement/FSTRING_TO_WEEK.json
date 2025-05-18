@@ -1,0 +1,31 @@
+{
+    "title": "Convert String to Week Representation",
+    "description": "FSTRING_TO_WEEK decode a list of days on the form 'MO,TU,3'in a Bitpat￾tern (bit6 = MO...Bit0 = So) For the evaluation each of the frst two letters\nof the list elements are evaluated, the rest are ignored. If the string con￾tains spaces they will be removed. The days of the week can be present in\nboth upper-or lowercase. LANG specifes the language used, 1 = English, 2\n= German, 0 is the default language defned in the setup.\nMo = 1; Di, Tu = 2; We, Mi = 3; Th, Do = 4; Fr = 5; Sa = 6; So, Su = 7\nSince the function evaluates only the frst two characters, the weekdays\nmay also be spelled out (Monday) format.\nAs an alternative form, the weekday can be specifed as number 1..7.\nThe list includes the weekdays unsorted and separated by commas.\nFSTRING_TO_WEEK ('Mo,Tu,Sa',2) = 2#01100010.",
+    "type": "FUNCTION",
+    "name": "FSTRING_TO_WEEK",
+    "input": [
+        {
+            "name": "WEEK",
+            "type": "STRING[60]",
+            "description": "A string containing the weekdays separated by commas."
+        },
+        {
+            "name": "LANG",
+            "type": "INT",
+            "description": "An integer representing the language index for weekday conversion."
+        }
+    ],
+    "output": [
+        {
+            "name": "FSTRING_TO_WEEK",
+            "type": "BYTE",
+            "description": "A byte value representing the converted weekdays."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "Returns a byte value that encodes the weekdays from the input string.",
+        "fields": []
+    }
+}

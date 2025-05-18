@@ -1,0 +1,74 @@
+{
+    "title": "MODBUS Ethernet Server Function Module",
+    "description": "MB_SERVER The module provides access from external to local MODBUS data tables via \n\nEthernet. It supports commands in categories 0,1,2. The parameters IP_C, \n\nS_BUF, R_BUF this form the interface to the module IP_CONTROL and used \n\nhere for processing and coordination. The desired port number (for \n\nMODBUS default is 502) must be specifed on IP_CONTROL centrally. The IP \n\naddress is not required on IP_CONTROL, as this one operates in the \n\nPASSIVE mode. The DATA structure is designed as a WORD array and \n\ncontains the MODBUS data. DATA_SIZE specifes the size of DATA . By \n\nENABLE, the module is released, and by remove of the release a possibly \n\nstill active query is ended. For devices that support MODBUS with UDP = \n\nTRUE this mode can be activated. A negative command execution is \n\nreported by ERROR (see ERROR table).\n\nWIth entries in the data structure VMAP, virtual data areas are created, \n\nand the access to certain function codes and data regions is \n\nparameterized. Thus, it is very easy to map virtual address spaces into a \n\n116 Version 1.21\n\nChapter 9. Network and Communication\n\ncoherent Data block (DATA), or write data areas. Or provide areas, that \n\nare connected to output peripherals, with a watchdog.\n\nThe handling of the VMAP data is described in more detail in the module \n\nMB_VMAP.\n\nERROR:\n\nValue Source Description\n\nB3 B2 B1 B0\n\nnn nn nn xx IP_CONTROL Error from module IP_CONTROL\n\nxx xx xx 00 MB_SERVER NO ERROR:\n\nxx xx xx 01 MB_SERVER ILLEGAL FUNCTION:\n\nxx xx xx 02 MB_SERVER ILLEGAL DATA ADDRESS:\n\nxx xx xx 03 MB_SERVER ILLEGAL DATA VALUE:\n\nSupported function codes and parameters used:\n\n1 x Coils Read Coils\n\n2 x Input Discrete Read Discrete Inputs\n\n3 x Holding Register Read Holding Registers\n\n4 x Input Register Read Input Register\n\n5 x Coils Write Single Coil\n\n6 x Holding Register Write Single Register\n\n117 Version 1.21\n\nF\n\nu\n\nn\n\nctio\n\nn\n\nC\n\no\n\nd\n\ne\n\nBit A\n\nc\n\nc\n\ne\n\ns\n\ns\n\n16\n\nBit A\n\nc\n\nc\n\ne\n\ns\n\ns (R\n\ne\n\ngister)\n\nGro\n\nu\n\np\n\nF\n\nu\n\nn\n\nctio\n\nn\n\nD\n\ne\n\ns\n\ncriptio\n\nn\n\nChapter 9. Network and Communication\n\n15 x Coils Write Multiple Coils\n\n16 x Holding Register Write Multiple Register\n\n22 x Holding Register Mask Write Register\n\n23 x Holding Register Read/Write Multiple Register",
+    "type": "FUNCTION",
+    "name": "MB_SERVER",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for IP control."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "VMAP",
+            "type": "ARRAY",
+            "description": "Virtual address table containing VMAP_DATA.",
+            "fields": [
+                {
+                    "name": "VMAP_DATA",
+                    "type": "VMAP_DATA",
+                    "description": "Data structure representing virtual mappings."
+                }
+            ]
+        },
+        {
+            "name": "DATA",
+            "type": "ARRAY",
+            "description": "Array of MODBUS registers.",
+            "fields": [
+                {
+                    "name": "WORD",
+                    "type": "WORD",
+                    "description": "MODBUS data words."
+                }
+            ]
+        },
+        {
+            "name": "DATA_SIZE",
+            "type": "INT",
+            "description": "Number of data words in DATA."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Flag to release the module."
+        },
+        {
+            "name": "UDP",
+            "type": "BOOL",
+            "description": "Indicates whether to use UDP mode (TRUE for UDP)."
+        }
+    ],
+    "output": [
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the status of command execution."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

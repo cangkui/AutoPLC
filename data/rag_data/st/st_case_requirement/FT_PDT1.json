@@ -1,0 +1,37 @@
+{
+    "title": "PT1 Differentiator Function Block",
+    "description": "AGDF calculates the inverse Gundermann function.\nThe calculation is done using the formula:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PDT1",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input signal to be processed."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "The proportional gain factor, default value is 1.0."
+        },
+        {
+            "name": "TV",
+            "type": "REAL",
+            "description": "The time constant for the differentiator, default value is 1.0."
+        },
+        {
+            "name": "T1",
+            "type": "REAL",
+            "description": "The time constant for the PT1 filter, default value is 1.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output of the function block, which is the combined result of the processed input."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

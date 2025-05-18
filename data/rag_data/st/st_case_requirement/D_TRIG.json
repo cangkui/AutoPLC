@@ -1,0 +1,27 @@
+{
+    "title": "D_TRIG Function Block",
+    "description": "D_TRIG triggers on any change in the DWORD-input IN. If the input \nvalue has changed, the output Q for a PLC cycle is set to TRUE and the \noutput X indicates how much has changed in the IN input. The input and \noutput are of type DWORD. The input can also process WORD and BYTE \ntypes. With output X it should be noted that DWORD is unsigned and \ntherefore a change of -1 at the input is not -1, but the number 2^32-2 at \nthe output. With the standard function DWORD_TO_INT the output X can \nbe converted to an integer, which displays also negative changes correctly.\nThe following example shows the application of D_TRIG when the input\nchanges value from 5 to 2:",
+    "type": "FUNCTION_BLOCK",
+    "name": "D_TRIG",
+    "input": [
+        {
+            "name": "in",
+            "type": "DWORD",
+            "description": "Current input value to be monitored."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output flag indicating whether the input has changed since the last scan."
+        },
+        {
+            "name": "X",
+            "type": "DWORD",
+            "description": "Output value that represents the difference between the current input and the last input."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

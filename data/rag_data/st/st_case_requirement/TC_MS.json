@@ -1,0 +1,16 @@
+{
+    "title": "Timer Counter Function Block",
+    "description": "TC_MS determines the last cycle time, that is the time since the last call of\nthe module has passed. The time comes in milliseconds.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TC_MS",
+    "input": [],
+    "output": [
+        {
+            "name": "TC",
+            "type": "DWORD",
+            "description": "The calculated time difference in milliseconds between the current timer value and the last timer value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

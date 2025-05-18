@@ -1,0 +1,42 @@
+{
+    "title": "Selective Output Block for Three Inputs",
+    "description": "ARRAY_MAX(ADR(Array), SIZEOF(Array)), where array is the name of the\narray to be manipulated. ADR() is a standard function which identifes the\npointer to the array and SIZEOF() is a standard function, which determines\nthe size of the array. In order to determine the maximum, the array refe￾renced by the pointer is scanned directly in memory. The function\nARRAY_MAX does not change the content of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SEL2_OF_3B",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "BOOL",
+            "description": "First boolean input."
+        },
+        {
+            "name": "IN2",
+            "type": "BOOL",
+            "description": "Second boolean input."
+        },
+        {
+            "name": "IN3",
+            "type": "BOOL",
+            "description": "Third boolean input."
+        },
+        {
+            "name": "TD",
+            "type": "TIME",
+            "description": "Time duration for the delay timer."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output boolean indicating the result of the OR logic on the inputs."
+        },
+        {
+            "name": "W",
+            "type": "BOOL",
+            "description": "Output boolean representing the state of the timer output."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

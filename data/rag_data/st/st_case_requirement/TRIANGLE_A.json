@@ -1,0 +1,35 @@
+{
+    "title": "Calculate Area of Triangle",
+    "description": "TRIANGLE_A calculates the area of any triangle. The triangle can be def￾ned by either through 2 pages and the pages spanned by the angles 1 and\n2 (S1, S2 and A), or if A = 0 then the area is calculated from three sides\n(S1, S2 and S3).\n 11. Vector Mathematics",
+    "type": "FUNCTION",
+    "name": "TRIANGLE_A",
+    "input": [
+        {
+            "name": "S1",
+            "type": "REAL",
+            "description": "Length of the first side of the triangle."
+        },
+        {
+            "name": "A",
+            "type": "REAL",
+            "description": "Included angle in degrees. If A is 0, Heron's formula is used."
+        },
+        {
+            "name": "S2",
+            "type": "REAL",
+            "description": "Length of the second side of the triangle."
+        },
+        {
+            "name": "S3",
+            "type": "REAL",
+            "description": "Length of the third side of the triangle."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated area of the triangle.",
+        "fields": []
+    }
+}

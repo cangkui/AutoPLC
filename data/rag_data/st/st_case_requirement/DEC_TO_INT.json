@@ -1,0 +1,20 @@
+{
+    "title": "Decimal String to Integer Conversion",
+    "description": "DEC_TO_INT converts a decimal encoded string into a byte\nvalue. Here only decimal characters '0 '.. '9' and '-' are interpreted, others\nin DEC occurring characters are ignored .",
+    "type": "FUNCTION",
+    "name": "DEC_TO_INT",
+    "input": [
+        {
+            "name": "DEC",
+            "type": "STRING[10]",
+            "description": "The input decimal string to be converted to an integer."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The integer value resulting from the conversion of the input decimal string.",
+        "fields": []
+    }
+}

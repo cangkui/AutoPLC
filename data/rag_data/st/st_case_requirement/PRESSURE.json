@@ -1,0 +1,72 @@
+{
+    "title": "Pressure Conversion Function Block",
+    "description": "PRESSURE converts diferent, in practice common units, for\npressure. Normally, only the input to be converted is occupied and the re￾maining inputs remain free. However, if several inputs loaded with values,\nthe values of all inputs are converted accordingly and then summed.\n1 MWS = 1 meter of water = 0.0980665 Bar\n1 Torr = 1 mm Hg = 0.133322 bar = 101325/760 Pa\n1 ATT = 1 kp / cm ² = 0.980665 bar\n1 ATM = 1.01325 Bar\n1 PA = 1 N / m²\n1 BAR = 105 Pa",
+    "type": "FUNCTION_BLOCK",
+    "name": "PRESSURE",
+    "input": [
+        {
+            "name": "mws",
+            "type": "REAL",
+            "description": "Pressure in millimeters of water column."
+        },
+        {
+            "name": "torr",
+            "type": "REAL",
+            "description": "Pressure in torr."
+        },
+        {
+            "name": "att",
+            "type": "REAL",
+            "description": "Pressure in technical atmospheres."
+        },
+        {
+            "name": "atm",
+            "type": "REAL",
+            "description": "Pressure in standard atmospheres."
+        },
+        {
+            "name": "pa",
+            "type": "REAL",
+            "description": "Pressure in pascals."
+        },
+        {
+            "name": "bar",
+            "type": "REAL",
+            "description": "Pressure in bar."
+        }
+    ],
+    "output": [
+        {
+            "name": "Ymws",
+            "type": "REAL",
+            "description": "Converted pressure in millimeters of water column."
+        },
+        {
+            "name": "Ytorr",
+            "type": "REAL",
+            "description": "Converted pressure in torr."
+        },
+        {
+            "name": "Yatt",
+            "type": "REAL",
+            "description": "Converted pressure in technical atmospheres."
+        },
+        {
+            "name": "Yatm",
+            "type": "REAL",
+            "description": "Converted pressure in standard atmospheres."
+        },
+        {
+            "name": "Ypa",
+            "type": "REAL",
+            "description": "Converted pressure in pascals."
+        },
+        {
+            "name": "Ybar",
+            "type": "REAL",
+            "description": "Converted pressure in bar."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

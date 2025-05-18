@@ -1,0 +1,26 @@
+{
+    "title": "Calculate Day of Date",
+    "description": "DAY_OF_DATE day since 1.1.1970. The result of\nthe function is of type DINT because the entire DATE Range Includes\n49,710 days.",
+    "type": "FUNCTION",
+    "name": "DAY_OF_DATE",
+    "input": [
+        {
+            "name": "idate",
+            "type": "DATE",
+            "description": "The date for which the day of the date is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "DAY_OF_DATE",
+            "type": "DINT",
+            "description": "The calculated day of the date as a DINT value, which accommodates a range of 49710 days."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "The computed day of the date returned as a DINT value.",
+        "fields": []
+    }
+}

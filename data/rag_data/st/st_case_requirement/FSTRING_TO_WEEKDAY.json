@@ -1,0 +1,24 @@
+{
+    "title": "String to Weekday Conversion",
+    "description": "FSTRING_TO_WEEKDAY decodes a weekday in the form 'MO' to an integer,\n1 = MO ... 7 = Sun. For the analysis the frst two letters of the string WDAY\nare evaluated, all others are ignored. If the string contains spaces they will\nbe removed. The days of the week can be present in both upper-or lower￾case. Since the function evaluates only the frst two characters, the week￾days may also be spelled out (Monday) format.\nMo = 1; Di, Tu = 2; We, Mi = 3; Th, Do = 4; Fr = 5; Sa = 6; So, Su = 7\nAs an alternative form, the weekday can be specifed as number 1..7.\nLANG specifes the used language, 1 = English, 2 = German, 0 = defned\ndefault language in the Setup.",
+    "type": "FUNCTION",
+    "name": "FSTRING_TO_WEEKDAY",
+    "input": [
+        {
+            "name": "WDAY",
+            "type": "STRING[20]",
+            "description": "A string representation of the weekday to be converted."
+        },
+        {
+            "name": "LANG",
+            "type": "INT",
+            "description": "An integer representing the language index to be used for weekday conversion. 0 refers to the default language."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "An integer representing the corresponding weekday (1 to 7) if a match is found, otherwise the result of STRING_TO_INT on WDAY."
+    }
+}

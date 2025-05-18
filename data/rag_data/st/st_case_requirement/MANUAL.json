@@ -1,0 +1,35 @@
+{
+    "title": "Manual Control Logic Function",
+    "description": "MANUAL can override an input signal IN with TRUE or FALSE.\nIN ON OFF Q\n0 0 0 0\n1 0 0 1\n- - 1 0 Manual operation position OFF\n- 1 0 1 Manual operation position ON\nThe typical use of MANUAL by means of a switch with 3 positions (OFF,\nAUTO, ON) where the connections are OFF at OFF and On at On and AUTO\nof the switch remains open.\nThe following diagram shows the possible connection of a switch with 3\npositions:",
+    "type": "FUNCTION",
+    "name": "ManualControlLogic",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input signal indicating the current state. This signal is involved in the logical operation."
+        },
+        {
+            "name": "ON",
+            "type": "BOOL",
+            "description": "Input signal that, when TRUE, contributes to activating the manual control."
+        },
+        {
+            "name": "OFF",
+            "type": "BOOL",
+            "description": "Input signal that, when TRUE, deactivates the manual control."
+        }
+    ],
+    "output": [
+        {
+            "name": "MANUAL",
+            "type": "BOOL",
+            "description": "Output of the function indicating the state of the manual control, TRUE if the manual control is active."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns the state of the MANUAL control determined by the logical conditions of the input parameters."
+    }
+}

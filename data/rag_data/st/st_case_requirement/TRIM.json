@@ -1,0 +1,26 @@
+{
+    "title": "String Trimming Function",
+    "description": "TRIM function removes all spaces from STR.",
+    "type": "FUNCTION",
+    "name": "TRIM",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string from which leading spaces need to be removed."
+        }
+    ],
+    "output": [
+        {
+            "name": "TRIM",
+            "type": "string",
+            "description": "The output string after leading spaces have been stripped away."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The trimmed string that results from the removal of leading spaces.",
+        "fields": []
+    }
+}

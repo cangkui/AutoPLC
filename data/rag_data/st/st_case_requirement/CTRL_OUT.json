@@ -1,0 +1,52 @@
+{
+    "title": "Control Output Function Block",
+    "description": "CTRL_OUT adds to the CI input the value of OFFSET and returns the result\nto Y if MANUAL = FALSE. If MANUAL is TRUE at output Y the input value of\nMAN_IN + OFFSET is issued. Y is always limited to the boundaries defned\nby LIM_L and LIM_H. If Y reaches one of the limits, then the output LIM is\nTRUE. CTRL_OUT can be used to build own rule modules.\nBlock diagram of CTRL_OUT:",
+    "type": "FUNCTION_BLOCK",
+    "name": "CTRL_OUT",
+    "input": [
+        {
+            "name": "CI",
+            "type": "REAL",
+            "description": "Input signal value used for output calculation."
+        },
+        {
+            "name": "OFFSET",
+            "type": "REAL",
+            "description": "Value to be added to the output signal."
+        },
+        {
+            "name": "MAN_IN",
+            "type": "REAL",
+            "description": "Manual input value to be used if manual mode is activated."
+        },
+        {
+            "name": "LIM_L",
+            "type": "REAL",
+            "description": "Lower limit for the output signal."
+        },
+        {
+            "name": "LIM_H",
+            "type": "REAL",
+            "description": "Upper limit for the output signal."
+        },
+        {
+            "name": "MANUAL",
+            "type": "BOOL",
+            "description": "Flag to indicate whether to use manual input."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The calculated output value after applying offset and limits."
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "Flag indicating if the output is within the defined limits."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

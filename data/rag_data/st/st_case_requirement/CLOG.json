@@ -1,0 +1,31 @@
+{
+    "title": "Complex Logarithm Calculation",
+    "description": "CLOG calculates the natural logarithm of a complex number raised to E.\nCLOG(X) = LOG(e)(X).",
+    "type": "FUNCTION",
+    "name": "CLOG",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "A complex number represented by its real and imaginary parts."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "COMPLEX",
+        "description": "The complex logarithm of the input number, represented in its real and imaginary parts.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the complex logarithm."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the complex logarithm."
+            }
+        ]
+    }
+}

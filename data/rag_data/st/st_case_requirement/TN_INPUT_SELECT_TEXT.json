@@ -1,0 +1,105 @@
+{
+    "title": "Text Selection Management",
+    "description": "TN_INPUT_SELECT_TEXT is used to manage a selection of \n\ntexts. This must be set *.IN_TYPE = 2.\n\n180 Version 1.21\n\nChapter 11. Telnet-Vision\n\nThe item will be provided as *.in_X and *.in_Y. Every entry line can be \n\nprovided with a title text. With *.in_Title_Y_Ofset and *.in_Title_X_Ofset \n\nthe position relative to the element coordinates is expressed. The color \n\ncan be determined with *.by_Title_Attr, and the text by *.st_Title_String. If \n\na tool tip should appear at the element *. st_Input_ToolTip the text hast to \n\nbe specifed.\n\nThe selection of texts will be handed over in *.st_Input_Data. The text \n\nelement should be separated from each other by the character '#'.\n\nIf the Element has the focus, by using the spacebar (space) can be \n\nchanged between the individual texts. The text-element is connected by \n\nmeans *.st_Input_Mask, meaning that the output text length are afected \n\nlater.\n\nBy pressing the Enter / Return key the input text is issued at \n\n*.st_Input_String and *.bo_Input_Entered ist set to TRUE. The input fag \n\nmust be reset after receive by the user.",
+    "type": "FUNCTION",
+    "name": "TN_INPUT_SELECT_TEXT",
+    "input": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen interface for the text selection."
+        },
+        {
+            "name": "Xus_TN_INPUT_CONTROL",
+            "type": "us_TN_INPUT_CONTROL",
+            "description": "Control structure for managing input options."
+        },
+        {
+            "name": "in_Type",
+            "type": "INT",
+            "description": "Type of the input selection; must be set to 2."
+        },
+        {
+            "name": "in_Y",
+            "type": "INT",
+            "description": "Y-coordinate positioning for the input selection."
+        },
+        {
+            "name": "in_X",
+            "type": "INT",
+            "description": "X-coordinate positioning for the input selection."
+        },
+        {
+            "name": "by_Attr_mF",
+            "type": "INT",
+            "description": "Attribute value for the foreground color."
+        },
+        {
+            "name": "by_Attr_oF",
+            "type": "INT",
+            "description": "Attribute value for the background color."
+        },
+        {
+            "name": "st_Input_ToolTip",
+            "type": "STRING",
+            "description": "Tooltip text for the input element."
+        },
+        {
+            "name": "in_Input_Option",
+            "type": "INT",
+            "description": "Option for input selection."
+        },
+        {
+            "name": "in_Title_Y_Ofset",
+            "type": "INT",
+            "description": "Y-offset for the title text relative to the input element."
+        },
+        {
+            "name": "in_Title_X_Ofset",
+            "type": "INT",
+            "description": "X-offset for the title text relative to the input element."
+        },
+        {
+            "name": "by_Title_Attr",
+            "type": "INT",
+            "description": "Attribute for the title text."
+        },
+        {
+            "name": "st_Title_String",
+            "type": "STRING",
+            "description": "Title text to display for this input."
+        },
+        {
+            "name": "st_Input_Mask",
+            "type": "STRING",
+            "description": "Mask for the input string."
+        },
+        {
+            "name": "st_Input_Data",
+            "type": "STRING",
+            "description": "Selection of texts separated by '#'."
+        }
+    ],
+    "output": [
+        {
+            "name": "st_Input_String",
+            "type": "STRING",
+            "description": "Output string of the current input selection."
+        },
+        {
+            "name": "bo_Input_Entered",
+            "type": "BOOL",
+            "description": "Boolean indicating if the input was entered (set to TRUE when Enter/Return is pressed)."
+        },
+        {
+            "name": "st_Input_Mask",
+            "type": "STRING",
+            "description": "The mask affecting the output text length."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

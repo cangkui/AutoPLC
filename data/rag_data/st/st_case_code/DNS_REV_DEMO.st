@@ -1,0 +1,14 @@
+FUNCTION DNS_REV_DEMO
+VAR
+    DNS_REV_CLIENT : DNS_REV_CLIENT;
+    IP_C : IP_C;
+    S_BUF : NETWORK_BUFFER;
+    R_BUF : NETWORK_BUFFER;
+    IP_CONTROL : IP_CONTROL;
+    activate : BOOL := TRUE;
+    done : BOOL;
+    error : DWORD;
+    domain : STRING;
+END_VAR
+
+END_FUNCTION

@@ -1,0 +1,52 @@
+{
+    "title": "Flow Control Function Block",
+    "description": "FLOW_CONTROL switches a valve at the output Q when the input IN =\nTRUE. In addition, the valve can also be switched via the input RE. REQ =\nTRUE turns the valve on for the time T_AUTO and will be locked for the\ntime T_DELAY. after the time T_DELAY the valve can be turned on again on\nREQ. During this lock period T_DELAY the valve may be controlled by the\ninput IN. An ESR compatible status output STATUS indicates the status of\nthe module. Both the REQ and IN can only switch the output Q when the\ninput ENQ is set to True.\nStatus = 100 Ready\nStatus = 101 Valve on by a TRUE at IN\nStatus = 102 Valve on by a TRUE at REQ\nStatus = 103 Reset is executed\nThe diagram illustrates the structure of inferential FLOW_CONTROL:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FLOW_CONTROL",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input boolean signal that influences the flow control."
+        },
+        {
+            "name": "REQ",
+            "type": "BOOL",
+            "description": "Request boolean signal that triggers the timing and operations."
+        },
+        {
+            "name": "ENQ",
+            "type": "BOOL",
+            "description": "Enquiry boolean signal that enables or disables certain operations."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal that clears the state of the function block."
+        },
+        {
+            "name": "T_AUTO",
+            "type": "TIME",
+            "description": "The automatic timing duration for the timer, defaulting to 60 minutes."
+        },
+        {
+            "name": "T_DELAY",
+            "type": "TIME",
+            "description": "The delay duration applied after the automatic timing, defaulting to 1380 minutes."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output boolean signal that indicates the state of the flow control."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "Status code reflecting the current state of the function block."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

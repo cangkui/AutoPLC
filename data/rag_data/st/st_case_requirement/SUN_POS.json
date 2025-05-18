@@ -1,0 +1,42 @@
+{
+    "title": "Sun Position Calculation",
+    "description": "SUN_POS calculated the position of the sun (B, H) at the current time. The\ntime is expressed as Universal Time (UTC). Any possible local time must\nfrst be converted to UTC. At the sun position HR, the atmospheric refracti￾on for 1010mbar and 10°C is already taken into account. The accuracy is\nbetter than 0.1 degrees for the period from 2000 to 2050. Possible appli￾cations of SUN_POS are the tracking of solar panels or a sun dependent\ntracking of the slats of blinds. SUN_POS is a complicated algorithm, but\ndelivers the exact values. To keep the load of a PLC as low as possible, the\ncalculation can be performed, for example, only every 10 seconds, which\ncorresponds to an uncertainty of 0.04 degrees. The output B passes the\nsolar angle in degrees from north (south = 180 °). H is the Astronomical\nangle above the horizon (the horizon = 0 °). HR is the sun above the hori￾zon to the atmospheric corrected by the refraction (refraction). An obser￾ver on the Earth sees the sun in a, by the refraction raised position, of the\nhorizon, which will cause the sun is shining already, but it is still slightly\nbelow the horizon.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SUN_POS",
+    "input": [
+        {
+            "name": "latitude",
+            "type": "REAL",
+            "description": "Latitude of the geographical position."
+        },
+        {
+            "name": "longitude",
+            "type": "REAL",
+            "description": "Longitude of the geographical position."
+        },
+        {
+            "name": "utc",
+            "type": "DT",
+            "description": "World time in UTC."
+        }
+    ],
+    "output": [
+        {
+            "name": "B",
+            "type": "REAL",
+            "description": "Solar zenith angle in degrees."
+        },
+        {
+            "name": "H",
+            "type": "REAL",
+            "description": "Solar altitude angle in degrees."
+        },
+        {
+            "name": "HR",
+            "type": "REAL",
+            "description": "Hour angle in degrees."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

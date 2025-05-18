@@ -1,0 +1,24 @@
+{
+    "title": "FILL Function",
+    "description": "FILL creates a string consisting of the symbol C with the length L.\nFILL(49,5) = '11111'\nThe FILL function evaluates the Global Setup constant STRING_LENGTH\nand limits the maximum length L of the string to STRING_LENGTH.",
+    "type": "FUNCTION",
+    "name": "FILL",
+    "input": [
+        {
+            "name": "C",
+            "type": "BYTE",
+            "description": "A byte value to be converted to a string."
+        },
+        {
+            "name": "L",
+            "type": "INT",
+            "description": "An integer specifying how many times the character should be appended, limited to a maximum of 80 characters."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The resulting concatenated string after processing the input byte and limit."
+    }
+}

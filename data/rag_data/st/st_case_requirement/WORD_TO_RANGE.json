@@ -1,0 +1,36 @@
+{
+    "title": "Convert WORD to Range",
+    "description": "WORD_TO_RANGE converts a WORD value to a REAL value. An input value\nof 0 corresponds to the real value of LOW and an input value of 65535 cor￾responds to the input value of HIGH.\nTo convert a WORD value of 0..65535 in a percentage of 0..100, the modu￾le is called as follows:\nWORD_TO_RANGE(X,100,0)\n 20. Sensors",
+    "type": "FUNCTION",
+    "name": "WORD_TO_RANGE",
+    "input": [
+        {
+            "name": "X",
+            "type": "WORD",
+            "description": "The WORD value to be converted into the specified range."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower bound of the range to which the WORD value will be mapped."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper bound of the range to which the WORD value will be mapped."
+        }
+    ],
+    "output": [
+        {
+            "name": "WORD_TO_RANGE",
+            "type": "REAL",
+            "description": "The resulting REAL value after mapping the WORD input into the specified range."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The mapped REAL value based on the input WORD and specified range.",
+        "fields": []
+    }
+}

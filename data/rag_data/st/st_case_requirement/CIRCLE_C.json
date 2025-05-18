@@ -1,0 +1,24 @@
+{
+    "title": "Circle Calculation Function",
+    "description": "CIRCLE_C calculates the arc length of an arc with the angle AX and radius\nRX. If the angle is set AX = 360 so the circumference is calculated.",
+    "type": "FUNCTION",
+    "name": "CIRCLE_C",
+    "input": [
+        {
+            "name": "Rx",
+            "type": "REAL",
+            "description": "The radius of the circle."
+        },
+        {
+            "name": "Ax",
+            "type": "REAL",
+            "description": "The axis factor used in the calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed value from the formula that involves the radius and axis factor."
+    }
+}

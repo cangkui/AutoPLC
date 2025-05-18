@@ -1,0 +1,90 @@
+{
+    "title": "Scale Input Values by a Factor",
+    "description": "TREND monitors the input X and time at the output Q to see if X increases\n(Q = TRUE) or X decrease (Q = FALSE). If X does not change, Q remains at\nits last value. If X increases, the output TU gets for one cycle to TRUE and\nat the output D the result X - LAST_X is displayed. If X is less than LAST_X\nso TD gets TRUE for one cycle and the output D is LAST_X - X passed.\nLAST_X is an internal value of the module and is the value of X in the last\ncycle.",
+    "type": "FUNCTION",
+    "name": "SCALE_X4",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "BOOL",
+            "description": "First Boolean input to select between IN1_MIN and IN1_MAX."
+        },
+        {
+            "name": "IN2",
+            "type": "BOOL",
+            "description": "Second Boolean input to select between IN2_MIN and IN2_MAX."
+        },
+        {
+            "name": "IN3",
+            "type": "BOOL",
+            "description": "Third Boolean input to select between IN3_MIN and IN3_MAX."
+        },
+        {
+            "name": "IN4",
+            "type": "BOOL",
+            "description": "Fourth Boolean input to select between IN4_MIN and IN4_MAX."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Scaling factor applied to the sum of inputs."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "Offset added to the scaled sum."
+        },
+        {
+            "name": "IN1_MIN",
+            "type": "REAL",
+            "description": "Minimum value for IN1 when the corresponding input is true."
+        },
+        {
+            "name": "IN1_MAX",
+            "type": "REAL",
+            "description": "Maximum value for IN1 when the corresponding input is false."
+        },
+        {
+            "name": "IN2_MIN",
+            "type": "REAL",
+            "description": "Minimum value for IN2 when the corresponding input is true."
+        },
+        {
+            "name": "IN2_MAX",
+            "type": "REAL",
+            "description": "Maximum value for IN2 when the corresponding input is false."
+        },
+        {
+            "name": "IN3_MIN",
+            "type": "REAL",
+            "description": "Minimum value for IN3 when the corresponding input is true."
+        },
+        {
+            "name": "IN3_MAX",
+            "type": "REAL",
+            "description": "Maximum value for IN3 when the corresponding input is false."
+        },
+        {
+            "name": "IN4_MIN",
+            "type": "REAL",
+            "description": "Minimum value for IN4 when the corresponding input is true."
+        },
+        {
+            "name": "IN4_MAX",
+            "type": "REAL",
+            "description": "Maximum value for IN4 when the corresponding input is false."
+        }
+    ],
+    "output": [
+        {
+            "name": "SCALE_X4",
+            "type": "REAL",
+            "description": "The result of the scaled sum of the selected input values."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The final computed value after scaling the sum and adding the offset."
+    }
+}

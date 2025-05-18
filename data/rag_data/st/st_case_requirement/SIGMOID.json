@@ -1,0 +1,26 @@
+{
+    "title": "Sigmoid Function",
+    "description": "SIGMOID = 1 / (1 + EXP(-X))\nThe Sigmoid is often used as activation function. By its behavior the\nSigmoid is qualifed for soft switching transitions.\nThe following chart illustrates the progress of the Sigmoid :",
+    "type": "FUNCTION",
+    "name": "SIGMOID",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the sigmoid function is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "SIGMOID",
+            "type": "REAL",
+            "description": "The output of the sigmoid function calculated based on the input value X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated sigmoid value based on the input X, returning 1.0, 0.0, or the computed value based on the sigmoid formula.",
+        "fields": []
+    }
+}

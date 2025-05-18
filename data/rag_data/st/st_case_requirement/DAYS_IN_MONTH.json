@@ -1,0 +1,20 @@
+{
+    "title": "Calculate Days in Month",
+    "description": "DAYS_IN_MONTH function calculates the number of days in the current\nmonth.",
+    "type": "FUNCTION",
+    "name": "DAYS_IN_MONTH",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The input date for which the number of days in the month needs to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The number of days in the month corresponding to the provided date.",
+        "fields": []
+    }
+}

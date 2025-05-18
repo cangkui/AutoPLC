@@ -1,0 +1,50 @@
+{
+    "title": "Draw Line Function",
+    "description": "TN_SC_LINE is used to draw horizontal and vertical lines. By \n\nmeans of the X1/Y1 and X2/Y2 coordinates defnes the beginning and the \n\nend of the line. The line type is passed by Iin_BORDER and the color code \n\nwith Iby_ATTR. If when drawing a line and another line of this type cut, \n\nautomatically the appropriate crossing sign is used. \n\n188 Version 1.21\n\nChapter 11. Telnet-Vision\n\nBorder types:\n\n1 = line with single line\n\n2 = line with double line\n\n> 2 = line is drawn with the specifed character in Iin_BORDER",
+    "type": "FUNCTION",
+    "name": "TN_SC_LINE",
+    "input": [
+        {
+            "name": "Iin_Y1",
+            "type": "INT",
+            "description": "Y1 coordinate of the line"
+        },
+        {
+            "name": "Iin_X1",
+            "type": "INT",
+            "description": "X1 coordinate of the line"
+        },
+        {
+            "name": "Iin_Y2",
+            "type": "INT",
+            "description": "Y2 coordinate of the line"
+        },
+        {
+            "name": "Iin_X2",
+            "type": "INT",
+            "description": "X2 coordinate of the line"
+        },
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color code of the line"
+        },
+        {
+            "name": "Iby_BORDER",
+            "type": "BYTE",
+            "description": "Type of line"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Structure for screen representation that may be modified during the drawing process",
+            "fields": []
+        }
+    ],
+    "return_value": {
+        "type": "VOID",
+        "description": "Indicates successful execution of line drawing operation"
+    }
+}

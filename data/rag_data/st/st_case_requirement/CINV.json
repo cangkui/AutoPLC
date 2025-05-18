@@ -1,0 +1,31 @@
+{
+    "title": "Complex Inverse Function",
+    "description": "CINV calculated the reciprocal of a complex number, CINV = 1/X",
+    "type": "FUNCTION",
+    "name": "CINV",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "Input variable of type complex representing the complex number for which the inverse is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The inverse of the input complex number.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the inverse complex number."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the inverse complex number."
+            }
+        ]
+    }
+}

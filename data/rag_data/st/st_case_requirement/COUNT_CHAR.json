@@ -1,0 +1,24 @@
+{
+    "title": "Count Character in String",
+    "description": "COUNT_CHAR determines how often the sign of CHR in the string STR oc￾curs. To search for special characters and control characters, the search\ncharacter CHR is specifed as BYTE.",
+    "type": "FUNCTION",
+    "name": "COUNT_CHAR",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "Input variable of type STRING with the specified length."
+        },
+        {
+            "name": "chr",
+            "type": "BYTE",
+            "description": "Input variable of type BYTE representing the character to count."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "Returns the count of occurrences of the specified character in the string."
+    }
+}

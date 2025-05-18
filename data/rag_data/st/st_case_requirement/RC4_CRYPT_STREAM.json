@@ -1,0 +1,37 @@
+{
+    "title": "RC4 Data Encryption Stream Module",
+    "description": "RC4_CRYPT_STREAM uses the RC4 data encryption to process\n\nan almost arbitrarily long data stream. This standard is used for example\n\nin an SSH, HTTPS, and WEP or WPA, and is thus widely used. The algorithm\n\ncan in principle operate at up to 2048 bit key, but this is limited to the mo-\n\n82 Version 1.21\n\nChapter 8. Converter\n\ndule on a 40-character key (but it can always be adjusted to up to 250\n\ncharacters). Thus, it presents a key length of 320 bits, which are designed\n\nfor applications on a PLC more than adequate. The maximum length of the\n\nstream is on this module is limited to 2^32 (4 gigabyte). The module can\n\nbe used for encryption as well as to decrypt RC4 data. 64 bytes per cycle\n\ncan still be processed, they will be processed in serial block mode. The\n\ndata been encrypted or decrypted, remains in the module BUF for further\n\nprocessing, and must, of course, processed previously by the user before\n\neach new block of data.",
+    "type": "FUNCTION",
+    "name": "RC4_CRYPT_STREAM",
+    "input": [
+        {
+            "name": "mode",
+            "type": "INT",
+            "description": "Operation mode: 1 for initialization, 2 for data block processing, 3 for completion."
+        },
+        {
+            "name": "KEY",
+            "type": "STRING(40)",
+            "description": "A 320-bit long secret key for the encryption/decryption process."
+        },
+        {
+            "name": "BUF",
+            "type": "ARRAY[0..63] OF BYTES",
+            "description": "Data block to process (maximum size of 64 bytes per cycle)."
+        },
+        {
+            "name": "SIZE",
+            "type": "UDINT",
+            "description": "Number of data bytes to process."
+        }
+    ],
+    "output": [
+        {
+            "name": "POS",
+            "type": "UDINT",
+            "description": "Start address (base 0) of the requested data block after processing."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

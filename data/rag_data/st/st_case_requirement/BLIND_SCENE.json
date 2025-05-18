@@ -1,0 +1,77 @@
+{
+    "title": "Blind Control Module",
+    "description": "BLIND_SCENE stores up to 16 scenes consisting of relevant current blind\n\nposition and angle, and can restore these scenes during retrieval. Every\n\nscene can be active or inactive, depending on whether saving the scene\n\nthe input ENABLE was TRUE or not (ENABLE = TRUE means active). A sce￾ne is retrieved by the number of the scene (0 .. 15) is applied at the input\n\nSCENE and simultaneously ENABLE is set to TRUE. A scene can only be ac￾cessed if both the inputs UP and DN are the same TRUE (automatic mode).\n\nThis ensures that an active scene always overridden by the manual mode\n\nof operation is.\n\nThe following table illustrates the operation of BLIND_SCENE:\n\nUP DN ENABLE SWRITE SCENE QU QD PO AO\n\n1 1 0 0 - 1 1 PI AI no scene\n\n- - 1 1 y - - - - write scene number y\n\n- - 0 1 y - - - - disable scene number y\n\n1 1 1 0 y 1 1 - - recall scene number y\n\nThe input S_IN and output STATUS are ESR compliant inputs and outputs,\n\nthrough input S_IN upstream modules report their status to the module,\n\nthis status will be forwarded to the output of STATUS, and own status mes￾sages issued also on STATUS.\n\nSTATUS Meaning\n\n160 .. 175 scenes 0..15 active\n\n176 Scene written\n\n88 Version 1.00\n\nChapter 7. Blind Modules\n\nNNN forwarded messages\n\nThe following graphic shows the application of BLIND_SCENE with other\n\nmodules to control a blind:",
+    "type": "FUNCTION",
+    "name": "BLIND_SCENE",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input UP signal to enable the upward movement of the blind."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input DOWN signal to enable the downward movement of the blind."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input from upstream modules."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Input value of the blind position in automatic mode."
+        },
+        {
+            "name": "AI",
+            "type": "BYTE",
+            "description": "Input value of the blade angle in automatic mode."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Enable input for saving the scene."
+        },
+        {
+            "name": "SWRITE",
+            "type": "BOOL",
+            "description": "Write input to save the current scene."
+        },
+        {
+            "name": "SCENE",
+            "type": "BYTE",
+            "description": "Number of the scene to be saved or recalled."
+        }
+    ],
+    "output": [
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor up signal indicating the blind is moving up."
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor down signal indicating the blind is moving down."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output representing the status of the module."
+        },
+        {
+            "name": "PO",
+            "type": "BYTE",
+            "description": "Output value of the blind position in automatic mode."
+        },
+        {
+            "name": "AO",
+            "type": "BYTE",
+            "description": "Output value of the blade angle in automatic mode."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

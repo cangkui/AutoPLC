@@ -1,0 +1,19 @@
+{
+    "title": "Convert Light Color to Dark Color",
+    "description": "TN_SC_SHADOW_ATTR converts a light color to a dark color.",
+    "type": "FUNCTION",
+    "name": "TN_SC_SHADOW_ATTR",
+    "input": [
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color Information representing the light color to be converted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The resulting dark color corresponding to the input light color."
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "title": "Find Position of Substring",
+    "description": "FINDP searches in a string STR starting at position POS for a string SRC. If\nSRC found in the string so the position of the frst character of SRC in STR\nis returned. If the string starting at position POS is not found, an 0 is retur￾ned. If an empty string is specifed as the search string, the module deli￾vers the result 0.",
+    "type": "FUNCTION",
+    "name": "FINDP",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The string in which to search for the substring."
+        },
+        {
+            "name": "src",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The substring that is being searched for in the main string."
+        },
+        {
+            "name": "pos",
+            "type": "INT",
+            "description": "The position from which to start searching in the main string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The position of the first occurrence of the substring; returns 0 if the substring is not found.",
+        "fields": []
+    }
+}

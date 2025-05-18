@@ -1,0 +1,19 @@
+{
+    "title": "Set R2 Parameters",
+    "description": "INC_DEC is a decoder for incremental encoder. Encoder (rotation encoder)\ndeliver two overlapping pulses, channel A and channel B. By the two chan￾nels, the direction and angle of rotation is decoded. INC_DEC detect each\nedge of the encoder, so 4 times the resolution is achieved. The output DIR\nshows the direction of rotation, and at the output CNT is an integer value\nprovided, which outputs the number of counted pulses. For a full rotation\nof an encoder with 100 pulses CNT counts to 400, because each edge is\ncounted at both channels, so 4 times the resolution is achieved. A RST in￾put allows any time to set the counter to 0. The counter counts up when\nDIR = TRUE, and down if DIR = FALSE.\nIn the following",
+    "type": "FUNCTION",
+    "name": "R2_SET",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input parameter representing a real number value to set RX."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL2",
+        "description": "Returns the modified R2 entity which includes RX set to the input value and R1 set to 0.0."
+    }
+}

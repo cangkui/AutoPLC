@@ -1,0 +1,25 @@
+{
+    "title": "Find Character in String",
+    "description": "FIND_CHAR searches the string STR starting at position POS and returns\nthe position at which the frst character is not a control character. Control\ncharacters are all characters whose value is less than 32 or 127. In exami￾ning the Global Setup EXTENDED_ASCII constant is considered. If EXTEN￾DED_ASCII = TRUE the extended ASCII character-set to be considered in\naccordance with ISO 8859-1. Umlauts like Ä, Ö, Ü are considered only if\nthe global constant EXTENDED_ASCII = TRUE. If EXTENDED_ASCII = FAL￾SE characters of the extended character set with a value > 127 interpre￾ted as control characters.",
+    "type": "FUNCTION",
+    "name": "FIND_CHAR",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The string in which to search for the character."
+        },
+        {
+            "name": "pos",
+            "type": "INT",
+            "description": "The starting position in the string from which to begin the search."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The index of the found character if it meets the criteria; otherwise, 0.",
+        "fields": []
+    }
+}

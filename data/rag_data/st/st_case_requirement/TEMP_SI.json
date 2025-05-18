@@ -1,0 +1,29 @@
+{
+    "title": "Calculate Temperature Adjustment",
+    "description": "TEMP_SI calculates the temperature of a resistor sensor input values from\nthe RES (resistance in ohms) and RS, Resistance at TS in °C. It is specifed\nin contrast to the modules TEMP_NI and TEMP_PT with their R0 at 0°, the\nresistance RS is given in SI sensors at diferent temperatures (eg 25° C for\nKTY10). Therefore, the module has an input for RS and another for TS.\nThe calculation is done using the formula:\nRES_SI = RS + A*(T-TS) + B*(T-TS)²\nA = 7.64E-3; B = 1.66E-5\nThe calculation is suitable for temperatures from -50.. +150 °C.\n 21. Measuring Modules",
+    "type": "FUNCTION",
+    "name": "TEMP_SI",
+    "input": [
+        {
+            "name": "Res",
+            "type": "REAL",
+            "description": "The resistance value input for the temperature calculation."
+        },
+        {
+            "name": "RS",
+            "type": "REAL",
+            "description": "The reference resistance used in the formula."
+        },
+        {
+            "name": "TS",
+            "type": "REAL",
+            "description": "The target temperature that influences the adjustment calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed adjusted temperature based on the inputs provided."
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "title": "Linear Interpolation Function",
+    "description": "BIT_LOAD_W copies the bit at input VAL to the bit in position N in WORD\nIN. The least signifcant bit B0 is described by the position 0.",
+    "type": "FUNCTION",
+    "name": "F_LIN2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The independent variable for which the interpolation is calculated."
+        },
+        {
+            "name": "X1",
+            "type": "REAL",
+            "description": "The X coordinate of the first point."
+        },
+        {
+            "name": "Y1",
+            "type": "REAL",
+            "description": "The Y coordinate of the first point."
+        },
+        {
+            "name": "X2",
+            "type": "REAL",
+            "description": "The X coordinate of the second point."
+        },
+        {
+            "name": "Y2",
+            "type": "REAL",
+            "description": "The Y coordinate of the second point."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The interpolated Y value corresponding to the input X value.",
+        "fields": []
+    }
+}

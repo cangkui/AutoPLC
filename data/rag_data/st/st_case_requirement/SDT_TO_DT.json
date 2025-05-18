@@ -1,0 +1,20 @@
+{
+    "title": "Conversion from SDT to DT",
+    "description": "SDT_TO_DT generates a date-time value of a structured date-time value",
+    "type": "FUNCTION",
+    "name": "SDT_TO_DT",
+    "input": [
+        {
+            "name": "DTI",
+            "type": "SDT",
+            "description": "Input parameter of type SDT that holds the structured date time information."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DT",
+        "description": "The resulting date time value in DT format after conversion from the SDT input.",
+        "fields": []
+    }
+}

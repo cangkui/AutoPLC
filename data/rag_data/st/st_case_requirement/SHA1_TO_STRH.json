@@ -1,0 +1,25 @@
+{
+    "title": "SHA1 to Hex String Converter",
+    "description": "SHA1_TO_STRH SHA1 byte array to a hex string.",
+    "type": "FUNCTION",
+    "name": "SHA1_TO_HEX_STRING",
+    "input": [
+        {
+            "name": "input_md5",
+            "type": "ARRAY[0..19] OF BYTE",
+            "description": "An array containing the SHA1 hash in byte format."
+        }
+    ],
+    "output": [
+        {
+            "name": "output_string",
+            "type": "STRING (40)",
+            "description": "A hexadecimal string representation of the SHA1 byte array."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING (40)",
+        "description": "The resulting hexadecimal string converted from the input SHA1 byte array."
+    }
+}

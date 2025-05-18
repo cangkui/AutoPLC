@@ -1,0 +1,25 @@
+{
+    "title": "Read and Compute Data with Bit Manipulation",
+    "description": "RDMDW charges pseudo - random number with 32 bits in length in the for￾mat DWORD. This is the PLC's internal timer that is read and is transferred\ninto a pseudo random number. Since RDMDW as a function and was not\nwritten as a function module, it can not save data between 2 calls and\nshould therefore be used with caution. If RDMDW called only once per cy￾cle, it produces reasonable good results. But when it is repeatedly called\nwithin a cycle, it delivers the same number, most likely because of the PLC\ntimer is still on the same value. If the function is repeatedly used within a\ncycle, so it must be passed with each call a diferent number of starts\n(LAST). If it be called only once per cycle, it is sufcient to call RDMDW(0).\nAs a starting number for each call, the last number accounted by RDMDW\nbe used. That result from RDMDW is a random 32-bit wide bit pattern.",
+    "type": "FUNCTION",
+    "name": "RDMDW",
+    "input": [
+        {
+            "name": "last",
+            "type": "DWORD",
+            "description": "The DWORD value used for bit counting and subsequent mathematical operations."
+        }
+    ],
+    "output": [
+        {
+            "name": "RDMDW",
+            "type": "DWORD",
+            "description": "The resulting DWORD after applying bit manipulation and mathematical computations based on the input value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The final computed DWORD value returned from the function."
+    }
+}

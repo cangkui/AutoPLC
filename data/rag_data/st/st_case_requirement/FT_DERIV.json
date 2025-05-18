@@ -1,0 +1,32 @@
+{
+    "title": "Finite Time Derivative Calculation",
+    "description": "FT_DERIV is a D-link, or LZI-transfer element, which has a diferentiating\ntransfer behavior. At the output of FT_DERIV the derivative is over time T\nin seconds. When the input signal increases in one second from 3 to 4\nthen the output 1 * K (K *  X /  T = 1 * (4-3) / 1 = 1\nIn other words, the derivative of the input signal, the instantaneous slope\nof the input signal. With the input RUN the FT_DERIV can be enabled or di￾sabled. FT_DERIV works internally in microseconds and fulfll also the re￾quirements of very fast PLC controller with cycle times under a millise￾cond.\nStructure diagram:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_DERIV",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "Current input value to be differentiated."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Scaling factor for the derivative calculation, default is 1.0."
+        },
+        {
+            "name": "run",
+            "type": "BOOL",
+            "description": "Boolean to indicate if the calculation should be performed, default is TRUE."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "Calculated derivative value based on the input."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

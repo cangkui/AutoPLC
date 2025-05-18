@@ -1,0 +1,20 @@
+{
+    "title": "Convert Hour to Time of Day",
+    "description": "HOUR_TO_TOD calculate a time of day (TIMEOFDAY) from the\ninput value in hours as REAL.",
+    "type": "FUNCTION",
+    "name": "HOUR_TO_TOD",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input time in hours that needs to be converted to Time of Day."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "TOD",
+        "description": "Returns the equivalent Time of Day representation of the input hours.",
+        "fields": []
+    }
+}

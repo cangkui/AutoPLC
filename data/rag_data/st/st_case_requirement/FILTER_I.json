@@ -1,0 +1,27 @@
+{
+    "title": "Filter Function Block",
+    "description": "FILTER_I is a flter of the frst degree for 16-bit INT data. The main applica￾tion is the fltering of sensor signals for noise reduction. The basic functio￾nality of a flter of the frst degree can be found in the module FT_PT1.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FILTER_I",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "An integer input value to be filtered."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "A time duration used to control the filtering process."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "INT",
+            "description": "The filtered output value computed from the input."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

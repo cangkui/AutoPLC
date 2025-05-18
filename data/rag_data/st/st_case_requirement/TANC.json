@@ -1,0 +1,25 @@
+{
+    "title": "Tangent Over X Function",
+    "description": "TANC TANC function calculates the following formula:\nwith TANC(0) = 1.",
+    "type": "FUNCTION",
+    "name": "TANC",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input real number which the tangent is computed from."
+        }
+    ],
+    "output": [
+        {
+            "name": "TANC",
+            "type": "REAL",
+            "description": "The output real number resulting from the computation of TAN(X) / X or 1.0 if X is zero."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the tangent function divided by the input value, or 1.0 if the input is zero."
+    }
+}

@@ -1,0 +1,21 @@
+FUNCTION TEMP_NTC : REAL
+VAR_INPUT
+    RES : REAL;
+    RN : REAL;
+    B : REAL;
+END_VAR
+IF res > 0.0 THEN
+	TEMP_NTC := B * 298.15 / (B + LN(RES / RN) * 298.15) -273.15;
+END_IF;
+
+
+(* revision history
+
+hm 30. dec. 2008	rev 1.0
+	original version
+
+hm	11. mar. 2009	rev 1.1
+	changed real constants to use dot syntax
+
+*)
+END_FUNCTION

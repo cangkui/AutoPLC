@@ -1,0 +1,28 @@
+{
+    "title": "IS_ALPHA Function",
+    "description": "IS_ALPHA tests whether the string STR contains only letters. If an incorrect,\nnon-alphanumeric character is found the function returns FALSE. If only letters\nare included in STR is the result of TRUE. Letters are the characters A..Z and\na..z. In examining the Global Setup EXTENDED_ASCII constant is considered. If\nEXTENDED_ASCII = TRUE the extended ASCII character-set to be considered in\naccordance with ISO 8859-1. Umlauts like Ä, Ö, Ü are considered only if the glo￾bal constant EXTENDED_ASCII = TRUE.",
+    "type": "FUNCTION",
+    "name": "IS_ALPHA",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING",
+            "description": "The input string to be checked for alphabetic characters. It is defined with a specified maximum length.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "IS_ALPHA",
+            "type": "BOOL",
+            "description": "A boolean value indicating whether the string consists solely of alphabetic characters.",
+            "fields": []
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The return value of the function, indicating the result of the alphabet check.",
+        "fields": []
+    }
+}

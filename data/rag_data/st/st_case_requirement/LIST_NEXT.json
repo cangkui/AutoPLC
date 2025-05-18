@@ -1,0 +1,38 @@
+{
+    "title": "List Next Function Block",
+    "description": "LIST_NEXT always delivers the next item from a list. The list is a STRING\nwhose elements are separated with the character SEP. The frst element\nof the list has the position 1. After the frst call to LIST_NEXT or a reset, at\noutput LEL the frst element of the list is passed. For each subsequent call\nthe module returns the next element of the list. When the end of the list is\nreached, an empty string Issued and set the output NUL = TRUE. With the\ncommand RST = TRUE, the list can be edited again and again.",
+    "type": "FUNCTION_BLOCK",
+    "name": "LIST_NEXT",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The separator byte used to delimit items in the list."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean flag to reset the position in the list to the beginning."
+        }
+    ],
+    "output": [
+        {
+            "name": "LEL",
+            "type": "STRING(LIST_LENGTH)",
+            "description": "The output string containing the next list element extracted from the input list."
+        },
+        {
+            "name": "NUL",
+            "type": "BOOL",
+            "description": "A boolean flag indicating whether the list is empty or fully processed."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "LIST",
+            "type": "STRING(LIST_LENGTH)",
+            "description": "The input string representing the entire list to be processed."
+        }
+    ],
+    "return_value": null
+}

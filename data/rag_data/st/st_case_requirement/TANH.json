@@ -1,0 +1,19 @@
+{
+    "title": "Hyperbolic Tangent Function (TANH)",
+    "description": "TANH calculates the Tangent Hyperbolic according to the following \nformula:",
+    "type": "FUNCTION",
+    "name": "TANH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the hyperbolic tangent is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The hyperbolic tangent of the input value X."
+    }
+}

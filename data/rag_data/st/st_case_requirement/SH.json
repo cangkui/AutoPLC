@@ -1,0 +1,32 @@
+{
+    "title": "Simple Signal Handler Function Block",
+    "description": "SH is a Sample and Hold module. It saves on each rising edge of CLK, the\ninput signal IN at the output OUT. After each update of TRIG OUT is TRUE\nfor one cycle. \nThe following",
+    "type": "FUNCTION_BLOCK",
+    "name": "SH",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "Input Real Variable that receives the signal to be processed."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock Input Variable that triggers the processing of the input signal."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "Output Real Variable that reflects the captured input value when triggered."
+        },
+        {
+            "name": "trig",
+            "type": "BOOL",
+            "description": "Output BOOL Variable that indicates whether the input has been captured or not."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

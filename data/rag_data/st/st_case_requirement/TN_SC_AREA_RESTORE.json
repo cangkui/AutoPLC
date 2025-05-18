@@ -1,0 +1,19 @@
+{
+    "title": "Telnet-Vision Area Restore Function",
+    "description": "TN_SC_AREA_RESTORE enables recovery of previously saved \n\nscreen area. The screen data in Xus_TN_SCREEN.bya_BACKUP [x] is \n\nrestored using the stored coordinates. This is done mainly done after the \n\ncall from the module MENU-BAR amd MENU-POPUP, to restore the modifed \n\nscreen.",
+    "type": "FUNCTION",
+    "name": "TN_SC_AREA_RESTORE",
+    "input": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Input parameter representing the screen data containing the backup to be restored."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value. The function performs restoration on the provided screen data."
+    }
+}

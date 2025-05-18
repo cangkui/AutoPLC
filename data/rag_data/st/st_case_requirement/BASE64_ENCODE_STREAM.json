@@ -1,0 +1,46 @@
+{
+    "title": "Base64 Encode Stream Function",
+    "description": "BASE64_ENCODE_STREAM arbitrarily long byte data stream accor￾ding to BASE64 can be encoded. In one pass, up to 48 bytes are conver￾ted, in turn, result more than 64 bytes. Here, the source data is passed to\n\nthe encoder over BUF1 in the data-stream manner as individual blocks of\n\ndata, and in coded form re-issued in BUF2. The user has to provide the fur￾ther processing of the BUF2 data before the next block of data is conver￾ted. The number of bytes in BUF2 is issued by SIZE2 from the module.",
+    "type": "FUNCTION",
+    "name": "BASE64_ENCODE_STREAM",
+    "input": [
+        {
+            "name": "SIZE1",
+            "type": "INT",
+            "description": "Number of bytes in the BUF1 to encode."
+        },
+        {
+            "name": "BUF1",
+            "type": "ARRAY",
+            "description": "Data to convert.",
+            "fields": [
+                {
+                    "name": "0..47",
+                    "type": "BYTES",
+                    "description": "Array of bytes containing the data to be Base64 encoded."
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "SIZE2",
+            "type": "INT",
+            "description": "Number of bytes in the encoded BUF2 results."
+        },
+        {
+            "name": "BUF2",
+            "type": "ARRAY",
+            "description": "BASE64 converted data.",
+            "fields": [
+                {
+                    "name": "0..63",
+                    "type": "BYTES",
+                    "description": "Array of bytes containing the Base64 encoded data."
+                }
+            ]
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

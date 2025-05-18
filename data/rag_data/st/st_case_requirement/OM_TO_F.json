@@ -1,0 +1,20 @@
+{
+    "title": "Convert Omega to Frequency",
+    "description": "OM_TO_F calculates the frequency in Hz of the angular frequency Omega.",
+    "type": "FUNCTION",
+    "name": "OM_TO_F",
+    "input": [
+        {
+            "name": "OM",
+            "type": "REAL",
+            "description": "The input value representing Omega (angular velocity) in real number format."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The function returns the computed frequency as a real number value.",
+        "fields": []
+    }
+}

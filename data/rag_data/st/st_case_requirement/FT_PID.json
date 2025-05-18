@@ -1,0 +1,62 @@
+{
+    "title": "PID Controller Function Block",
+    "description": "FT_PID is a PID controller of the following formula works:\nY = KP * ( IN + 1/TN * INTEG(IN) + TV *DERIV(IN))\nThe control parameters are given in the form of KP, TN and TV, and if the￾re are parameters KP, KI and KD they can be converted using the following\nformula:\nTN = KP/KI und TV = KD/KP\nThe input values ILIM_H and ILIM_L limit the working area of the internal\nintegrator. With RST, the internal integrator will always set to 0. The out￾put LIM signals that the integrator runs one of the limits or ILIM_L ILIM_H.\nThe PI controller is free running and uses the trapezoidal rule to calculate\nthe integrator for the highest accuracy and optimal speed. The default va￾lues of the input parameters are predefned as follows: KP = 1, TN = 1s,\nTV = 1s, ILIM_L =-1E38 and ILIM_H = +1 E38.\n Anti Wind-Up: Control modules with Integrator tend to the so-called Wind￾Up Efect. A Wind-Up means that the integrator module continuously run\nagain because, for example, the control signal Y is at a limit and the sys￾tem can not compensate the deviation, which then leads to subsequent\ntransition into the control range until a long and time-consuming dismant￾ling of the integrator value and the scheme only respond delayed. Since\nthe integrator is only necessary to compensate the deviation for all other\ncontrol units, and the range of the integrator should be limited with the\nvalues of ILIM. The Integrator then reaches a limit and stops remaining at\nthe last valid value. For other wind- Up Action, the Integrator can be con￾trolled with the input IEN = FALSE any time separately, the Integrator only\nruns when IEN = TRUE. \nThe following graph illustrates the internal structure of the controller:\nFT_PD can be used in conjunction with the modules CTRL_IN and\nCTRL_OUT to establish a PD controller.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PID",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value to the PID controller."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "Proportional gain coefficient."
+        },
+        {
+            "name": "TN",
+            "type": "REAL",
+            "description": "Integral time constant."
+        },
+        {
+            "name": "TV",
+            "type": "REAL",
+            "description": "Derivative time constant."
+        },
+        {
+            "name": "ILIM_L",
+            "type": "REAL",
+            "description": "Lower limit for the integrator output."
+        },
+        {
+            "name": "ILIM_H",
+            "type": "REAL",
+            "description": "Upper limit for the integrator output."
+        },
+        {
+            "name": "IEN",
+            "type": "BOOL",
+            "description": "Enable flag for the integrator."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset flag for the integrator."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value of the PID controller."
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "Flag indicating whether the integrator has hit its limits."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

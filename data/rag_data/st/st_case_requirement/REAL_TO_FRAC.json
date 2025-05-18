@@ -1,0 +1,47 @@
+{
+    "title": "Convert Real Number to Fraction",
+    "description": "REAL_TO_FRAC converts a foating point number (REAL) in a fraction. The\nfunction returns the data type is a FRACTION of the structure with 2 va￾lues. With the input X, the maximum size of the counter can be specifed.\nData type FRACTION:\n*.NUMERATOR : INT (Numerator of the fraction)\n*.DENOMINATOR : INT (Denominator of the fraction)",
+    "type": "FUNCTION",
+    "name": "REAL_TO_FRAC",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number to be converted into a fraction."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The maximum allowed size of the denominator."
+        }
+    ],
+    "output": [
+        {
+            "name": "NUMERATOR",
+            "type": "DINT",
+            "description": "The calculated numerator of the resulting fraction."
+        },
+        {
+            "name": "DENOMINATOR",
+            "type": "DINT",
+            "description": "The calculated denominator of the resulting fraction."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "FRACTION",
+        "description": "The fraction representation of the given real number containing numerator and denominator.",
+        "fields": [
+            {
+                "name": "NUMERATOR",
+                "type": "DINT",
+                "description": "The numerator value of the fraction."
+            },
+            {
+                "name": "DENOMINATOR",
+                "type": "DINT",
+                "description": "The denominator value of the fraction."
+            }
+        ]
+    }
+}

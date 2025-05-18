@@ -1,0 +1,30 @@
+{
+    "title": "Saturation Vapor Pressure Calculation",
+    "description": "SDD calculates the saturation vapor pressure for water vapor in air. The\n\ntemperature T is given in Celsius. The result can be calculated for air over\n\nice (ICE = TRUE) and for air to water (ICE = FALSE). The scope of the func-\n\n38 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\ntion is -30°C to 70°C over water and at -60°C to 0°C on ice. The calculati￾on is performed according to the Magnus formula.",
+    "type": "FUNCTION",
+    "name": "SDD",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Air temperature in °C."
+        },
+        {
+            "name": "ICE",
+            "type": "BOOL",
+            "description": "TRUE for air over ice and FALSE for air over water."
+        }
+    ],
+    "output": [
+        {
+            "name": "saturation_vapor_pressure",
+            "type": "REAL",
+            "description": "Saturation vapor pressure in Pa."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated saturation vapor pressure."
+    }
+}

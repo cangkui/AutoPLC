@@ -1,0 +1,30 @@
+{
+    "title": "Complex Power Calculation",
+    "description": "CPOW calculates the power of two Complex numbers, CPOW = X^Y.",
+    "type": "FUNCTION",
+    "name": "CPOW",
+    "input": [
+        {
+            "name": "X",
+            "type": "Complex",
+            "description": "The base complex number that is to be raised to a power."
+        },
+        {
+            "name": "Y",
+            "type": "Complex",
+            "description": "The exponent complex number that indicates the power to which X is raised."
+        }
+    ],
+    "output": [
+        {
+            "name": "CPOW",
+            "type": "complex",
+            "description": "The result of raising the complex number X to the power of the complex number Y."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The calculated complex power result of X raised to Y."
+    }
+}

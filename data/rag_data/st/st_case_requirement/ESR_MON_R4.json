@@ -1,0 +1,88 @@
+{
+    "title": "Event Status Report (ESR) Monitoring",
+    "description": "SECOND extracts the seconds portion of the day",
+    "type": "FUNCTION_BLOCK",
+    "name": "ESR_MON_R4",
+    "input": [
+        {
+            "name": "R0",
+            "type": "REAL",
+            "description": "First real input value."
+        },
+        {
+            "name": "R1",
+            "type": "REAL",
+            "description": "Second real input value."
+        },
+        {
+            "name": "R2",
+            "type": "REAL",
+            "description": "Third real input value."
+        },
+        {
+            "name": "R3",
+            "type": "REAL",
+            "description": "Fourth real input value."
+        },
+        {
+            "name": "DT_in",
+            "type": "DT",
+            "description": "Input data type for the event report."
+        },
+        {
+            "name": "a0",
+            "type": "STRING(10)",
+            "description": "Address associated with R0."
+        },
+        {
+            "name": "a1",
+            "type": "STRING(10)",
+            "description": "Address associated with R1."
+        },
+        {
+            "name": "a2",
+            "type": "STRING(10)",
+            "description": "Address associated with R2."
+        },
+        {
+            "name": "a3",
+            "type": "STRING(10)",
+            "description": "Address associated with R3."
+        },
+        {
+            "name": "s0",
+            "type": "REAL",
+            "description": "State value 0."
+        },
+        {
+            "name": "s1",
+            "type": "REAL",
+            "description": "State value 1."
+        },
+        {
+            "name": "s2",
+            "type": "REAL",
+            "description": "State value 2."
+        },
+        {
+            "name": "s3",
+            "type": "REAL",
+            "description": "State value 3."
+        }
+    ],
+    "output": [
+        {
+            "name": "ESR_Flag",
+            "type": "BOOL",
+            "description": "Indicates whether any input has changed and a new event status report has been generated."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "ESR_Out",
+            "type": "ARRAY[0..3] OF esr_data",
+            "description": "Array that contains the event status report data."
+        }
+    ],
+    "return_value": null
+}

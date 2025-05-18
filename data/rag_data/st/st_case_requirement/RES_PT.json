@@ -1,0 +1,30 @@
+{
+    "title": "Resistance Temperature Detector Calculation",
+    "description": "RES_PT calculates the resistance of a PT resistance sensor from the input\nvalues T (temperature in °C) and R0 (resistance at 0°C).\nThe calculation is done using the formula:\nfor temperatures > 0 °C\nRES_PT = R0 * (1 + A*T + B*T²)\nand for temperatures below 0 ° C\nRES_PT = R0 * (1 + A*T + B*T² + C*(T-100)*T³\nA = 3.90802E-3\nB = -5.80195E-7\nC = -427350E-12\nThe calculation is suitable for temperatures from -200.. +850°C.",
+    "type": "FUNCTION",
+    "name": "RES_PT",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "The temperature in degrees Celsius for which the resistance is to be calculated."
+        },
+        {
+            "name": "R0",
+            "type": "REAL",
+            "description": "The reference resistance of the Pt100 sensor at 0 degrees Celsius."
+        }
+    ],
+    "output": [
+        {
+            "name": "RES_PT",
+            "type": "REAL",
+            "description": "The calculated resistance of the Pt100 sensor based on the input temperature and reference resistance."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The resistance value computed from the input parameters for a Pt100 sensor."
+    }
+}

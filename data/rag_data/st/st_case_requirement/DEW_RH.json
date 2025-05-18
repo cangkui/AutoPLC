@@ -1,0 +1,31 @@
+{
+    "title": "Relative Humidity Calculation",
+    "description": "DEW_RH calculates the relative humidity in % (50 = 50%)\n\nfrom the water vapor concentration (VC) and temperature (T in ° C) . The\n\nwater vapor concentration is measured in grams / m³. DEW_CON can be\n\nused for calculations in both directions (heat up and cool down). If cooled\n\ntoo much, then the maximum relative humidity limited to 100%. For calcu￾lation of the dew point of the module DEW_TEMP is recommended.\n\nIn the following example, the case will be calculated when air is cooled\n\nfrom 30°C and relative humidity of 50% by 6 degrees. The module\n\nDEW_CON provides the moisture concentration in the outlet air of 30° and\n\nDEW_RH calculates the resulting relative humidity RH of 69.7%. These cal￾culations are important when air is cooled or heated. In air conditioning\n\nsystems a resulting relative humidity of 100% hast to be avoided due to\n\ncondensation and the resulting problems.\n\nSee also the modules DEW_CON and DEW_TEMP.",
+    "type": "FUNCTION",
+    "name": "DEW_RH",
+    "input": [
+        {
+            "name": "VC",
+            "type": "REAL",
+            "description": "Water vapor concentration in air, measured in grams/m³."
+        },
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Temperature in degrees Celsius."
+        }
+    ],
+    "output": [
+        {
+            "name": "REAL",
+            "type": "REAL",
+            "description": "Relative humidity in percentage (%)."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated relative humidity.",
+        "fields": []
+    }
+}

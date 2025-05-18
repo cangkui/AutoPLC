@@ -1,0 +1,32 @@
+{
+    "title": "Calendar Calculation Function Block",
+    "description": "CALENDAR_CALC automatically calculates all the values in a CALENDAR\nstructure based on the value of the type UTC in the structure. XCAL is a\nPointer an external or global variable of type CALENDAR. CALENDAR_CALC\ncan thus deliver calendar values based on the structure XCAL throughout\nthe module. CALENDAR_CALC determines at each change of the value UTC\nin XCAL automatically all other values in the structure. Alone the value of\nUTC in a structure must be fed by the RTC module. The defnition of the\nstructured type CALENDAR you can fnd in section data structures. The\ncontinuous calculation of the sun position can weigh heavily on a PLC wi￾thout FPU, which is why the current sun position is calculated only once\nevery 25 seconds if SPE = TRUE. This corresponds to an accuracy of 0.1\ndegrees which is quite sufcient for normal applications. If SPE is FALSE,\nthe position of the sun is not calculated. By an external array HOLIDAYS of\ntype HOLYDAY_DATA, the user can specify specifc holidays according to\nhis needs, for more information on the defnition of public holidays see the\nmodule data structures. \nIf several structures of the type CALENDAR are required (for example, or\nvarious local and UTC times) then more modules CALENDAR_CALC can be\nused with diferent structures of TYPE CALENDAR in accordance .\nThe following example shows how the module SYSRTCGETTIME reads the\nRTC of the CPU and writes the current time in SYSTEMCAL.UTC. CALEN￾DAR_CALC checks every cycle if the value in .UTC has changed and if so it\ncalculates the other values of the structure automatically. The output\nWDAY shows how the structure reads data for further processing. CALEN￾DAR_CALC accounts of the setup data from the data structure (OFFSET\nDST_EN, LONGITUDE, LATITUDE).\nIn the external array HOLIDAYS up to 30 holidays can be defned. For ex￾amples, see the description of the data type HOLIDAY_DATA. This array of\nHOLIDAY_DATA must be defned outside of the module and be pre-assi￾gned as a variable with the holiday dates.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CALENDAR_CALC",
+    "input": [
+        {
+            "name": "SPE",
+            "type": "BOOL",
+            "description": "A boolean flag that enables the calculation of the sun's position every 25 seconds if set to TRUE."
+        },
+        {
+            "name": "H",
+            "type": "REAL",
+            "description": "Twilight offset parameter for sunrise/sunset calculations, defaults to -0.8333."
+        }
+    ],
+    "output": [
+        {
+            "name": "XCAL",
+            "type": "CALENDAR",
+            "description": "The calendar data structure that contains local date, time, holidays, and sun information."
+        },
+        {
+            "name": "HOLIDAYS",
+            "type": "ARRAY[0..29] OF HOLIDAY_DATA",
+            "description": "An array of holiday data to be used for local holiday calculations."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

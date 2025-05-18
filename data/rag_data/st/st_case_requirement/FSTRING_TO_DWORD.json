@@ -1,0 +1,26 @@
+{
+    "title": "String to DWORD Conversion Function",
+    "description": "FSTRING_TO_DWORD converts a formatted string to a 32bit Value. It sup￾ports following input formats:\n2#0101 (binary), 8#345 (octal), 16#2a33 (hexadecimal) and 234 (deci￾mal).",
+    "type": "FUNCTION",
+    "name": "FSTRING_TO_DWORD",
+    "input": [
+        {
+            "name": "IN",
+            "type": "STRING[40]",
+            "description": "The input string which can represent a number in binary, octal, hexadecimal, or decimal format."
+        }
+    ],
+    "output": [
+        {
+            "name": "FSTRING_TO_DWORD",
+            "type": "DWORD",
+            "description": "The DWORD representation of the input string after conversion from its specified format."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Returns the converted DWORD value from the input string.",
+        "fields": []
+    }
+}

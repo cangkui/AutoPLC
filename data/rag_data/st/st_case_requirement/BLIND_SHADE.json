@@ -1,0 +1,115 @@
+{
+    "title": "Blind Shade Control",
+    "description": "BLIND_SHADE calculate the appropriate angle of the slats from the current\n\nposition of the sun to guarantee an optimum shading. The slats are\n\ntracked to the sun, th ensure over the course of the day always shading.\n\n93 Version 1.00\n\nChapter 7. Blind Modules\n\nWith the input ENABLE the function is activated when UP and DN (automa￾tic mode) are active. The module evaluate the INPUT SUN, which displays\n\nsunshine when TRUE. If SUN or ENABLE gets FALSE then the device swit￾ches of automatically. SUNRISE_OFFSET defne after which time lag after\n\nsunrise, the shading is active. SUNSET_PRESET determines a what time\n\nbefore sunset the shading is stopped. The shading is active if SUN = TRUE,\n\nENABLE = TRUE, UP = TRUE, DN = TRUE, and the horizontal sun angle is\n\nwithin the range DIRECTION - ANGLE_OFFSET and DIRECTION +\n\nANGLE_OFFSET, and the day time is within the area defned by SUNRISE,\n\nSUNRISE_OFFSET, SUNSET SUNSET_PRESET. DIRECTION specifes the ori￾entation of the facade, 180° means façade is south, 90° in the east and\n\n270° in the west. With the setup variable SHADE_DELAY is determined\n\nhow long after SUN is FALSE the shading remains active. The default value\n\nis 60 seconds. SHADE_DELAY prevents the case of constantly running up\n\nand down while partial cloud cover the blind. When using BLIND_SHADE\n\nmake sure that the cycle time for the module is smaller as T_ANGLE / 512\n\n* SENS. SENS is here the SENS value of the BLIND_CONTROLLERS. If the\n\ncycle time is too large, the blind will start irregular driving. The setup va￾riable BLIND_POS specifes how far the blind can drive down when shado￾wing.\n\nThe following graphic describes the geometry of blind:\n\n94 Version 1.00\n\nChapter 7. Blind Modules\n\nThe following chart shows an east to south-facing facade with DIRECTION\n\n= 135° and ANGLE_OFFSET = 65°:\n\nThe shading function calculates the angle of slats so that the slats only\n\nclose as far as the sun is shaded, but still as much light as possible enters\n\nthe room. With the values DIRECTION and ANGLE_OFFSET the horizontal\n\nangle of the sun which requires a shading is calculated. Depending on the\n\nthickness of the wall and the width of the window the ANGLE_OFFSET can\n\nbe set so that unnecessary shading is avoided. By DIRECTION of the direc￾tion of the facade is specifed. Using the dimensions of the slats, width and\n\ndistance in millimeters (SLAT_WIDTH and SLAT_SPACING) the module cal￾cuates how far the slats should be tilted to avoid the sun. The target is to\n\ntilt the slats as far as absolutely necessary in order to guarantee optimal\n\nlighting conditions. To not infuence the mood and light conditions at sunri￾se and sunset, an OFFSET of the sunrise and a PRESET before the sunset\n\ncan be adjusted. With an ofset of 30 minutes and a preset of 60 minutes,\n\nfor example, the shading started 30 minutes after sunrise and already f￾nished 60 minutes before sunset. The input SUN of the module is to\n\nconnect a solar intensity sensor or any suitable sensor which interrupts the\n\nfunction if there is no solar radiation. \n\nThe following graphic illustrates the shading:\n\nThe input and output S_IN STATUS are ESR compliant outputs and inputs.\n\nIn Input S_IN the upstream functions report their status to the module, this\n\nstatus will be forwarded to the output of STATUS, and own status messa￾ges also issued on STATUS. BLIND_SHADE report on the output STATUS the\n\nSTATUS 151 when the shade is active.\n\nThe following example shows the application of BLIND_SHADE within a\n\nblind control:\n\n95 Version 1.00\n\nChapter 7. Blind Modules",
+    "type": "FUNCTION",
+    "name": "BLIND_SHADE",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input signal indicating if the motor should move up."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input signal indicating if the motor should move down."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Blind position in automatic mode."
+        },
+        {
+            "name": "AI",
+            "type": "BYTE",
+            "description": "Slat angle in automatic mode."
+        },
+        {
+            "name": "SUN",
+            "type": "BOOL",
+            "description": "Input signal from the solar sensor, indicating sunshine presence."
+        },
+        {
+            "name": "CX",
+            "type": "CALENDAR",
+            "description": "Current time and calendar data."
+        },
+        {
+            "name": "SUNRISE_OFFSET",
+            "type": "TIME",
+            "description": "Delay after sunrise before shading is activated."
+        },
+        {
+            "name": "SUNSET_PRESET",
+            "type": "TIME",
+            "description": "Time before sunset when shading stops."
+        },
+        {
+            "name": "DIRECTION",
+            "type": "REAL",
+            "description": "Facade orientation, with 180° being the south facade."
+        },
+        {
+            "name": "ANGLE_OFFSET",
+            "type": "REAL",
+            "description": "Horizontal aperture shading angle offset."
+        },
+        {
+            "name": "SLAT_WIDTH",
+            "type": "REAL",
+            "description": "Width of the slats in millimeters."
+        },
+        {
+            "name": "SLAT_SPACING",
+            "type": "REAL",
+            "description": "Distance between the slats in millimeters."
+        },
+        {
+            "name": "SHADE_DELAY",
+            "type": "TIME",
+            "description": "Delay time for the shading after solar presence ends."
+        },
+        {
+            "name": "SHADE_POS",
+            "type": "BYTE",
+            "description": "Position for shading."
+        }
+    ],
+    "output": [
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor up signal indicating the motor should move up."
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor down signal indicating the motor should move down."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        },
+        {
+            "name": "PO",
+            "type": "BYTE",
+            "description": "Blind position in automatic mode after function execution."
+        },
+        {
+            "name": "AO",
+            "type": "BYTE",
+            "description": "Slat angle in automatic mode after function execution."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Exponential Function Base 10 Calculation",
+    "description": "SPEED converts various common units in the units for speed.\nNormally, only the input to be converted is occupied and the remaining in-\nputs remain free. However, if several inputs loaded with values, the values\nof all inputs are converted accordingly and then summed.\n1 ms = meters / second = 3.6 km / h\n1 kmh = kilometers / hour = 1 / 3, 6 m / s\n1 knot = knot = 1 nautical mile / hour = 0.5144 m / s\nMh = 1 mile per hour = 0.44704 m / s",
+    "type": "FUNCTION",
+    "name": "EXP10",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number input for which the base 10 exponential is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The output is the result of the base 10 exponential function for the input X."
+    }
+}

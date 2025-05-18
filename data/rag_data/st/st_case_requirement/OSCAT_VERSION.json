@@ -1,0 +1,20 @@
+{
+    "title": "OSCAT_VERSION Function",
+    "description": "OSCAT_VERSION iprovides if IN = FALSE the current version number as\nDWORD. If IN is set to TRUE then the release date of the current version as\na DWORD is returned.",
+    "type": "FUNCTION",
+    "name": "OSCAT_VERSION",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "A boolean input parameter that determines which version number to return."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The DWORD value representing the OSCAT version based on the input parameter.",
+        "fields": []
+    }
+}

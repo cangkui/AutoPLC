@@ -1,0 +1,62 @@
+{
+    "title": "Signal Processing Block",
+    "description": "GEN_SIN is a sine wave generator with programmable period, adjustable\namplitude and signal ofset. A special feature is a adjustable delay so that\nwith multiple generators overlapping signals can be generated. A Binary\nOutput Q passes a logical signal, which is generated phase equal to the\nsine signal. The input DL is a delay for the output signal. The Delay is spe￾cifed with DL * PT. A DL of 0.5 delays the signal by half a period. \nThe following example shows GEN_SIN with a trace recording of the sine\nsignal and the binary output Q.\nThe above example generates a sine wave with 0.1 Hz (PT = 10 s) and a\nlower peak value of 0 and upper peak value of 10.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SIGNAL_4",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "BOOL",
+            "description": "Boolean input representing the first signal."
+        },
+        {
+            "name": "IN2",
+            "type": "BOOL",
+            "description": "Boolean input representing the second signal."
+        },
+        {
+            "name": "IN3",
+            "type": "BOOL",
+            "description": "Boolean input representing the third signal."
+        },
+        {
+            "name": "IN4",
+            "type": "BOOL",
+            "description": "Boolean input representing the fourth signal."
+        },
+        {
+            "name": "TS",
+            "type": "TIME",
+            "description": "Timestamp indicating the time at which the signals are processed."
+        },
+        {
+            "name": "S1",
+            "type": "BYTE",
+            "description": "Byte pattern for the first signal, initialized to 16#FF."
+        },
+        {
+            "name": "S2",
+            "type": "BYTE",
+            "description": "Byte pattern for the second signal, initialized to 16#F0."
+        },
+        {
+            "name": "S3",
+            "type": "BYTE",
+            "description": "Byte pattern for the third signal, initialized to 16#AA."
+        },
+        {
+            "name": "S4",
+            "type": "BYTE",
+            "description": "Byte pattern for the fourth signal, initialized to 16#A0."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output boolean indicating whether an alarm condition is present."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

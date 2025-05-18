@@ -1,0 +1,24 @@
+{
+    "title": "Calculate Circle Segment Area",
+    "description": "CIRCLE_SEG calculates the area of a\ncircle segment is enclosed by a Sektantli￾nie and the circle.",
+    "type": "FUNCTION",
+    "name": "CIRCLE_SEG",
+    "input": [
+        {
+            "name": "RX",
+            "type": "REAL",
+            "description": "The radius of the circle."
+        },
+        {
+            "name": "HX",
+            "type": "REAL",
+            "description": "The height of the circle segment."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The area of the circle segment calculated using the provided radius and height."
+    }
+}

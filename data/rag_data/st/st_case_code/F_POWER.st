@@ -1,0 +1,8 @@
+FUNCTION F_POWER : REAL
+VAR_INPUT
+    a : REAL;
+    x : REAL;
+    n : REAL;
+END_VAR
+F_POWER := a * EXPT(X, N);
+END_FUNCTION

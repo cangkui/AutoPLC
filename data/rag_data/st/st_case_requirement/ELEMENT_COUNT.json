@@ -1,0 +1,30 @@
+{
+    "title": "ELEMENT_COUNT Function",
+    "description": "ELEMENT_COUNT determines the number of items in a list.\n\nIf the parameter ELEMENT is an empty string 0 is passed as result. If at\n\nleast one character is in ELEMENT it is evaluated as a single element and\n\nELEMENT_COUNT = 1 is passed to output.",
+    "type": "FUNCTION",
+    "name": "ELEMENT_COUNT",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "Separation character of the elements"
+        },
+        {
+            "name": "ELEMENT",
+            "type": "STRING",
+            "description": "Input list of elements, where items are separated by the SEP character. The length of the string can vary."
+        }
+    ],
+    "output": [
+        {
+            "name": "result",
+            "type": "INT",
+            "description": "Number of items in the list. Returns 0 for empty input, and 1 for a single character."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "Returns the count of elements in the input list."
+    }
+}

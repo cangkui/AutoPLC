@@ -1,0 +1,20 @@
+{
+    "title": "Integer Floor Function",
+    "description": "FLOOR function returns the greatest integer value less or equal to X.",
+    "type": "FUNCTION",
+    "name": "FLOOR",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number input for which the floor value needs to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The integer floor value of the input real number X.",
+        "fields": []
+    }
+}

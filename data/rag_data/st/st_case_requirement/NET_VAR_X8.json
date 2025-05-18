@@ -1,0 +1,106 @@
+{
+    "title": "NET_VAR_X8 Function Module",
+    "description": "NET_VAR_X8 is used for bidirectional transmission of each two REAL, \n\nDINT, UINT, DWORD values from the master to slave and vice versa. The signals \n\nIN1..8 are collected and passed to the other side (control) on the same module at the \n\nsame position as OUT1..8 again.\n\n204 Version 1.21\n\nChapter 12. Network Variables\n\nSimultaneously, the input data on the opposite side (other control) is passed here as \n\nBUF_OUT again.\n\nID parameter indicates the current identification number of the module instance. If the \n\nconfiguration of the master and the slave program is differently (incorrectly) that ID \n\nnumber is passed as a fault in the module NET_VAR_CONTROL.\n\n205 Version 1.21\n\nChapter 13. Weather Data\n\n 13. Weather Data",
+    "type": "FUNCTION",
+    "name": "NET_VAR_X8",
+    "input": [
+        {
+            "name": "IN_REAL1",
+            "type": "REAL",
+            "description": "First input REAL value"
+        },
+        {
+            "name": "IN_REAL2",
+            "type": "REAL",
+            "description": "Second input REAL value"
+        },
+        {
+            "name": "IN_DINT1",
+            "type": "DINT",
+            "description": "First input DINT value"
+        },
+        {
+            "name": "IN_DINT2",
+            "type": "DINT",
+            "description": "Second input DINT value"
+        },
+        {
+            "name": "IN_UDINT1",
+            "type": "DINT",
+            "description": "First input UDINT value"
+        },
+        {
+            "name": "IN_UDINT2",
+            "type": "DINT",
+            "description": "Second input UDINT value"
+        },
+        {
+            "name": "IN_DWORD1",
+            "type": "DINT",
+            "description": "First input DWORD value"
+        },
+        {
+            "name": "IN_DWORD2",
+            "type": "DINT",
+            "description": "Second input DWORD value"
+        },
+        {
+            "name": "ID",
+            "type": "BYTE",
+            "description": "Identification number of the module instance"
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT_REAL1",
+            "type": "REAL",
+            "description": "First output REAL value"
+        },
+        {
+            "name": "OUT_REAL2",
+            "type": "REAL",
+            "description": "Second output REAL value"
+        },
+        {
+            "name": "OUT_DINT1",
+            "type": "DINT",
+            "description": "First output DINT value"
+        },
+        {
+            "name": "OUT_DINT2",
+            "type": "DINT",
+            "description": "Second output DINT value"
+        },
+        {
+            "name": "OUT_UDINT1",
+            "type": "DINT",
+            "description": "First output UDINT value"
+        },
+        {
+            "name": "OUT_UDINT2",
+            "type": "DINT",
+            "description": "Second output UDINT value"
+        },
+        {
+            "name": "OUT_DWORD1",
+            "type": "DINT",
+            "description": "First output DWORD value"
+        },
+        {
+            "name": "OUT_DWORD2",
+            "type": "DINT",
+            "description": "Second output DWORD value"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "X",
+            "type": "NET_VAR_DATA",
+            "description": "NET_VAR data structure for bidirectional data transmission"
+        }
+    ],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

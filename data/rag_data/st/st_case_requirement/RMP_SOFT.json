@@ -1,0 +1,37 @@
+{
+    "title": "Ramping Soft Signal Control",
+    "description": "RMP_SOFT smooths the ramp of an input signal VAL. The signal Out follows\nthe input signal VAL, where increase time as well as fall time can be limi￾ted by PT_ON and PT_OFF . The rise time and fall time of the ramps are de￾fned by setup parameter in the module RMP_SOFT. The setup time PT_ON\nspecifes how long the ramp takes of 0..255. A ramp that is limited by the\nVAL, is accordingly shorter. PT_OFF defnes accordingly the falling ramp. If\nthe input IN is set to FALSE, VAL corresponds to a value of 0, so by swit￾ching the input IN between 0 and VAL it can be switched.",
+    "type": "FUNCTION_BLOCK",
+    "name": "RMP_SOFT",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Boolean input that triggers the ramping action."
+        },
+        {
+            "name": "VAL",
+            "type": "BYTE",
+            "description": "The target value to ramp towards."
+        },
+        {
+            "name": "PT_ON",
+            "type": "TIME",
+            "description": "The ramping time when increasing the output value."
+        },
+        {
+            "name": "PT_OFF",
+            "type": "TIME",
+            "description": "The ramping time when decreasing the output value."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "BYTE",
+            "description": "The output value that gets ramped up or down based on the input conditions."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

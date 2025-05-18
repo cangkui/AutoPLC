@@ -1,0 +1,26 @@
+{
+    "title": "TN_SC_WRITE_EOS Function Module",
+    "description": "TN_SC_WRITE_EOS passes at the end position of the last, with \n\nTN_SC_WRITE or TN_SC_WRITE_EOS issued text, the text Ist_STRING with \n\nthe color of Iby_ATTR.\n\nThis allows to continuous passes texts without the need to always pass the \n\nnew coordinates.",
+    "type": "FUNCTION",
+    "name": "TN_SC_WRITE_EOS",
+    "input": [
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color code representing the font color."
+        },
+        {
+            "name": "Ist_STRING",
+            "type": "STRING",
+            "description": "The text to be written to the screen."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen structure that holds the current state of the display."
+        }
+    ],
+    "return_value": null
+}

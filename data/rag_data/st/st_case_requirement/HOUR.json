@@ -1,0 +1,19 @@
+{
+    "title": "Get Hour from TIME_OF_DAY",
+    "description": "HOUR function extracts the current hour of the day.",
+    "type": "FUNCTION",
+    "name": "HOUR",
+    "input": [
+        {
+            "name": "itod",
+            "type": "TIME_OF_DAY",
+            "description": "The input variable representing the time of day from which the hour will be extracted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The hour value extracted from the input TIME_OF_DAY, represented as an integer."
+    }
+}

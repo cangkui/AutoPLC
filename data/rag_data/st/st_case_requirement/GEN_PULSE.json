@@ -1,0 +1,32 @@
+{
+    "title": "Pulse Generator Function Block",
+    "description": "GEN_PULSE (ENQ: = TRUE, PTH: = T # 0s, PTL:\n= T # 0s) generates an output signal which has one cycle TRUE and one\ncycle FALSE. The Default ENQ value is TRUE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "GEN_PULSE",
+    "input": [
+        {
+            "name": "ENQ",
+            "type": "BOOL",
+            "description": "Enable input for the pulse generator, should be set to TRUE to generate pulses."
+        },
+        {
+            "name": "PTH",
+            "type": "TIME",
+            "description": "Time duration for which the output should be held in the 'high' state."
+        },
+        {
+            "name": "PTL",
+            "type": "TIME",
+            "description": "Time duration for which the output should be in the 'low' state before switching back to 'high'."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output pulse signal, toggles between TRUE and FALSE based on the elapsed time."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

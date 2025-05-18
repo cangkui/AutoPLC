@@ -1,0 +1,44 @@
+{
+    "title": "Override Calculation Function",
+    "description": "OVERRIDE supplies at the output Y the input value (X1, X2, X3), whose ab￾solute value is the largest of all. The inputs X1, X2 and X3 may each indivi￾dually be enabled with the inputs E1, E2 and E3. if one of the input signals\nE1, E2 or E3 to FALSE, the corresponding input X1, X2 or X3 is not conside￾red. One of many possible applications of OVERRIDE is for example, the\nquery of three sensors with the highest value overrides the others. With\nthe inputs of E in the diagnosis case, each sensor can be queried indivi￾dually, or a defective sensor can be switched of.",
+    "type": "FUNCTION",
+    "name": "OVERRIDE",
+    "input": [
+        {
+            "name": "X1",
+            "type": "REAL",
+            "description": "The first input value used in the override calculation."
+        },
+        {
+            "name": "X2",
+            "type": "REAL",
+            "description": "The second input value used in the override calculation."
+        },
+        {
+            "name": "X3",
+            "type": "REAL",
+            "description": "The third input value used in the override calculation."
+        },
+        {
+            "name": "E1",
+            "type": "BOOL",
+            "description": "Enable flag for the first input value."
+        },
+        {
+            "name": "E2",
+            "type": "BOOL",
+            "description": "Enable flag for the second input value."
+        },
+        {
+            "name": "E3",
+            "type": "BOOL",
+            "description": "Enable flag for the third input value."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated override value based on the input parameters."
+    }
+}

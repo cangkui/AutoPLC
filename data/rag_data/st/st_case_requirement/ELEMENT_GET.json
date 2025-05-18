@@ -1,0 +1,36 @@
+{
+    "title": "ELEMENT_GET Function",
+    "description": "ELEMENT_GET passes the item at the position POS from a list. The list con￾sists of strings which are separated by the separation character SEP. The\n\nfrst element of the list has the position 0",
+    "type": "FUNCTION",
+    "name": "ELEMENT_GET",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The separation character of the elements."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The zero-based index of the item to retrieve."
+        },
+        {
+            "name": "ELEMENT",
+            "type": "STRING",
+            "description": "The input list of elements, consisting of strings separated by the separation character."
+        }
+    ],
+    "output": [
+        {
+            "name": "STRING",
+            "type": "STRING",
+            "description": "The output string corresponding to the element at the specified position."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "Returns the element found at the specified position in the input list.",
+        "fields": []
+    }
+}

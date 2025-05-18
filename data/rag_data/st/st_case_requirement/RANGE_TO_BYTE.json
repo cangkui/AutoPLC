@@ -1,0 +1,29 @@
+{
+    "title": "Range to Byte Conversion",
+    "description": "RANGE_TO_BYTE converts a real value in a BYTE value. An input value of X\ncorresponds to the value of LOW is converted it into an output value of 0\nand an input value X of the input value corresponds to HIGH is converted\ninto an output value of 255. The input X is limited to the range from LOW\nto HIGH, an overfow of the output BYTE can therefore not happen.",
+    "type": "FUNCTION",
+    "name": "RANGE_TO_BYTE",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number input that is to be converted to a byte."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower bound of the range."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper bound of the range."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The resulting byte value after the conversion from the real number based on the defined range."
+    }
+}

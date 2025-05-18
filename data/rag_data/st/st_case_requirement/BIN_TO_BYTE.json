@@ -1,0 +1,26 @@
+{
+    "title": "Binary to Byte Conversion",
+    "description": "BIN_TO_BYTE converts a binary encoded string in a BYTE va￾lue. There, this method only binary characters are '0 'and '1' is interpre￾ted, others in BIN occurring characters are ignored.",
+    "type": "FUNCTION",
+    "name": "BIN_TO_BYTE",
+    "input": [
+        {
+            "name": "BIN",
+            "type": "STRING(12)",
+            "description": "A binary string consisting of '0's and '1's with a maximum length of 12 characters."
+        }
+    ],
+    "output": [
+        {
+            "name": "BIN_TO_BYTE",
+            "type": "BYTE",
+            "description": "The resulting byte value obtained from the binary string."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The byte value that represents the input binary string.",
+        "fields": []
+    }
+}

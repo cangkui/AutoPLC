@@ -1,0 +1,52 @@
+{
+    "title": "Integrator Function Block",
+    "description": "FT_INT is an integrator module which provides the integral of the input si￾gnal at the output. The input K is a multiplier for the output signal. Run\nswitches the integrator on if TRUE and of when FALSE. RST (reset) sets\nthe output to 0. The inputs OUT_MIN and OUT_MAX serve upper and lower\nlimits for the output of the integrator . FT_INT \nworks internally in microseconds and is thus fulfll also the requirements\nvery fast PLC controller with cycle times under one millisecond.\nA fundamental problem with integrator is the resolution.The output of type\nreal has a resolution of 7-8 points. This will result in a calculated integrati-\non step of 1 at an output value of more than one hundred million (1E8).\nThus the step can not be added up because it falls below the resolution li￾mit of a maximum of 8 points in type Real. This limitation is important\nwhen using FT_INT.\nFor example, an input signal of 0.0001 would be at a sampling time of 1\nmillisecond and a baseline of 100000 to add a value of 0.0001 * 0.001 se￾conds = 0.000001 to the baseline of 100000, which inevitably results in\nthe value of 100000 again, because the resolution of the data type Real\ncan only collect up to 8. This should be considered especially if FT_INT\nshould serve as a utility meter or similar applications.\nStructure diagram:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_INT",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value to be integrated."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "The integration factor, default is set to 1."
+        },
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "A boolean indicating whether the integration should run or not, default is TRUE."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A reset flag that, when TRUE, resets the output to zero."
+        },
+        {
+            "name": "OUT_MIN",
+            "type": "REAL",
+            "description": "The minimum limit for the output, default is set to -1E+37."
+        },
+        {
+            "name": "OUT_MAX",
+            "type": "REAL",
+            "description": "The maximum limit for the output, default is set to 1E+37."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "REAL",
+            "description": "The result of the integration process."
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "A boolean indicating if the output has reached a limit."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

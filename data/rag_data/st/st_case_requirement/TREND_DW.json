@@ -1,0 +1,37 @@
+{
+    "title": "Trend Detection Function Block",
+    "description": "TREND_DW monitors the input X and time at the output Q to see if X incre￾ases (Q = TRUE) or X decrease (Q = FALSE). If X does not change, Q re￾mains at its last value. If X increases, the output TU gets for one cycle to\nTRUE and at the output D the result X - LAST_X is displayed. If X is less\nthan LAST_X so TD gets TRUE for one cycle and the output D is LAST_X - X\npassed. LAST_X is an internal value of the module and is the value of X in\nthe last cycle.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TREND_DW",
+    "input": [
+        {
+            "name": "X",
+            "type": "DWORD",
+            "description": "The input value to be monitored for trend detection."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Indicates whether the input value 'X' has changed."
+        },
+        {
+            "name": "TU",
+            "type": "BOOL",
+            "description": "True if an upward trend is detected (X has increased)."
+        },
+        {
+            "name": "TD",
+            "type": "BOOL",
+            "description": "True if a downward trend is detected (X has decreased)."
+        },
+        {
+            "name": "D",
+            "type": "DWORD",
+            "description": "The difference in value between the current and last input value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

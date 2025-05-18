@@ -1,0 +1,25 @@
+{
+    "title": "Toggle Bit in Word",
+    "description": "BIT_TOGGLE_W inverts a specifed bit POS at IN.\nBIT_TOGGLE_W(2#0000_1111, 2) = 2#0000_1011\nBIT_TOGGLE_W(2#0000_1111, 7) = 2#1000_1111",
+    "type": "FUNCTION",
+    "name": "BIT_TOGGLE_W",
+    "input": [
+        {
+            "name": "IN",
+            "type": "WORD",
+            "description": "The WORD input value whose specific bit is to be toggled."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position of the bit to be toggled, where 0 represents the least significant bit."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "The resulting WORD after toggling the specified bit.",
+        "fields": []
+    }
+}

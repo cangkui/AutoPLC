@@ -1,0 +1,42 @@
+{
+    "title": "J-K Flip-Flop Function Block",
+    "description": "FF_JKE is an edge-triggered JK-fop-fop with asynchronous Set and Reset\ninputs. The JK-Flip-Flop sets the output Q when with a rising edge of the\nCLK the Input J is TRUE. Q is FALSE when on a rising clock edge the input K\nis TRUE. If the two inputs J and K on a rising clock edge are TRUE, the out￾put will be negated. It switches the output signal in each cycle. \nD\nCLK\nRST\nQ\nSET",
+    "type": "FUNCTION_BLOCK",
+    "name": "FF_JKE",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Input to set the flip-flop to high."
+        },
+        {
+            "name": "J",
+            "type": "BOOL",
+            "description": "Input that determines the next state of Q when activated."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock signal that synchronizes state changes."
+        },
+        {
+            "name": "K",
+            "type": "BOOL",
+            "description": "Input that determines the next state of Q when activated."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Input to reset the flip-flop to low."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Current state of the flip-flop output."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

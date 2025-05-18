@@ -1,0 +1,92 @@
+{
+    "title": "Control Set Parameters for PID and PI Controllers",
+    "description": "RES_NI calculated the resistance of a NI-resistance sensor from the input\nvalues T (temperature in°C) and R0 (resistance at 0°C).\nThe calculation is done using the formula:\nRES_NI = R0 + A*T + B*T²+C*T4\nA = 0.5485\nB = 0.665E-3\nC = 2.805E-9\nThe calculation is suitable for temperatures from -60.. +180 °C.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CONTROL_SET2",
+    "input": [
+        {
+            "name": "KS",
+            "type": "REAL",
+            "description": "Gain factor for the system."
+        },
+        {
+            "name": "TU",
+            "type": "REAL",
+            "description": "Time constant for the system."
+        },
+        {
+            "name": "TG",
+            "type": "REAL",
+            "description": "Transport delay time."
+        },
+        {
+            "name": "PI",
+            "type": "BOOL",
+            "description": "Flag to indicate if PI control is to be used."
+        },
+        {
+            "name": "PID",
+            "type": "BOOL",
+            "description": "Flag to indicate if PID control is to be used."
+        },
+        {
+            "name": "P_K",
+            "type": "REAL",
+            "description": "Proportional gain for the PI controller, default is 1.0."
+        },
+        {
+            "name": "PI_K",
+            "type": "REAL",
+            "description": "Proportional gain for the PID controller, default is 0.9."
+        },
+        {
+            "name": "PI_TN",
+            "type": "REAL",
+            "description": "Integral time for the PI controller, default is 3.33."
+        },
+        {
+            "name": "PID_K",
+            "type": "REAL",
+            "description": "Proportional gain for the PI controller, default is 1.2."
+        },
+        {
+            "name": "PID_TN",
+            "type": "REAL",
+            "description": "Integral time for the PID controller, default is 2.0."
+        },
+        {
+            "name": "PID_TV",
+            "type": "REAL",
+            "description": "Derivative time for the PID controller, default is 0.5."
+        }
+    ],
+    "output": [
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "Calculated proportional gain."
+        },
+        {
+            "name": "TN",
+            "type": "REAL",
+            "description": "Calculated integral time."
+        },
+        {
+            "name": "TV",
+            "type": "REAL",
+            "description": "Calculated derivative time."
+        },
+        {
+            "name": "KI",
+            "type": "REAL",
+            "description": "Calculated integral gain."
+        },
+        {
+            "name": "KD",
+            "type": "REAL",
+            "description": "Calculated derivative gain."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,57 @@
+{
+    "title": "DLOG_STORE_FILE_CSV Module",
+    "description": "DLOG_STORE_FILE_CSV is for logging (recording) of the \n\nprocess values in a CSV formatted fle. The data can be passed with the \n\nmodules DLOG_DINT, DLOG_REAL, DLOG_STRING, DLOG_DT. The \n\nparameter TRIG_M (positive pulse) is used to manually trigger (start) the \n\nstorage of process data. With Parameters TRIG_T an automatic time￾controlled release can be realized. If the current date / time value divided \n\nby the parameterized TRIG_T value with residual value is 0, then a Save is \n\nperformed. \n\nThis also ensures that the store is always performed at the same time",
+    "type": "FUNCTION",
+    "name": "DLOG_STORE_FILE_CSV",
+    "input": [
+        {
+            "name": "X",
+            "type": "DLOG_DATA",
+            "description": "The DLOG data structure containing the process values to be logged."
+        },
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "A boolean flag to enable or disable data recording."
+        },
+        {
+            "name": "TRIG_M",
+            "type": "BOOL",
+            "description": "A manual trigger that starts the storage of process data upon receiving a positive pulse."
+        },
+        {
+            "name": "TRIG_T",
+            "type": "UDINT",
+            "description": "An automatic trigger for cyclic storage based on time intervals."
+        },
+        {
+            "name": "FILE NAME",
+            "type": "STRING",
+            "description": "The name of the file (including path if necessary) where the data will be stored."
+        },
+        {
+            "name": "DTI",
+            "type": "DT",
+            "description": "The current date and time value to be used in data processing."
+        },
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The ASCII code of the delimiter used to separate recorded elements in the CSV file."
+        }
+    ],
+    "output": [
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "An error code indicating the status of the logging operation."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "A code indicating the type of problem encountered."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,25 @@
+{
+    "title": "Shift Right Operation",
+    "description": "EVEN = TRUE if the input IN is even and FALSE for odd IN.",
+    "type": "FUNCTION",
+    "name": "SHR1",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The input DWORD value to be shifted."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of bits to shift the input value to the right."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The result of the logical right shift operation on the input value.",
+        "fields": []
+    }
+}

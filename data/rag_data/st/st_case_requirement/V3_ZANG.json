@@ -1,0 +1,20 @@
+{
+    "title": "Calculate Angle from Z-Axis",
+    "description": "MULTIME function multiplies a time value with a multiplier.",
+    "type": "FUNCTION",
+    "name": "V3_ZANG",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "A 3D vector containing the X, Y, and Z components."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The angle in radians between the vector and the Z-axis.",
+        "fields": []
+    }
+}

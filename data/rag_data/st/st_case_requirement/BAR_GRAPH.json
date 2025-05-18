@@ -1,0 +1,97 @@
+{
+    "title": "Bar Graph Function Block",
+    "description": "BAR_GRAPH is a level Detector, which activates depending on the input\nvalue an output. The threshold for the LOW and HIGH Outputs can be set\nby the setup variables TRIGGER_LOW and TRIGGER_HIGH. LOW is TRUE if\nX is less than TRIGGER_LOW and HIGH is true if X is greater or equal than\nTRIGGER_HIGH. If the setup variables ALARM_LOW and / or ALARM_HIGH\nset to TRUE, the output ALARM set to TRUE if the value will be lower than\nTRIGGER_LOW or exceed of TRIGGER_HIGH , and the output LOW or HIGH\nand ALARM remains TRUE until the input RST is TRUE and the alarm is re￾seted. The outputs Q1 to Q6 divide the area between between\nTRIGGER_LOW and TRIGGER_HIGH in seven equal areas. If the setup varia￾ble LOG_SCALE is set, the area between TRIGGER_LOW and\nTRIGGER_HIGH is divided logarithmically. \nThe output Status is an ESR compliant output and forwards states and\nalarms to ESR components.\nStatus\n110 Input is between Trigger_Low and Trigger_High.\n111 Input lower than Trigger_Low , Output LOW is TRUE\n112 Input higher than Trigger_High , Output HIGH is TRUE.\n1 Input lower than Trigger_low and Alarm_Lowis TRUE\n2 Input higher than Trigger_high and Alarm_High is TRUE\nThe following example shows a signal characteristic of n Bar_Graph:",
+    "type": "FUNCTION_BLOCK",
+    "name": "BAR_GRAPH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The current value to be evaluated against the trigger thresholds."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "Reset signal to clear alarms and output states."
+        },
+        {
+            "name": "trigger_Low",
+            "type": "REAL",
+            "description": "The lower threshold for triggering the alarm and bar graph outputs."
+        },
+        {
+            "name": "trigger_High",
+            "type": "REAL",
+            "description": "The upper threshold for triggering the alarm and bar graph outputs."
+        },
+        {
+            "name": "Alarm_low",
+            "type": "BOOL",
+            "description": "Indicates if a low alarm is enabled."
+        },
+        {
+            "name": "Alarm_high",
+            "type": "BOOL",
+            "description": "Indicates if a high alarm is enabled."
+        },
+        {
+            "name": "log_scale",
+            "type": "BOOL",
+            "description": "Indicates if a logarithmic scale should be applied to the graph representation."
+        }
+    ],
+    "output": [
+        {
+            "name": "LOW",
+            "type": "BOOL",
+            "description": "Indicates if the value is below the low trigger threshold."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Status of the first bar in the graph."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Status of the second bar in the graph."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Status of the third bar in the graph."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "Status of the fourth bar in the graph."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "Status of the fifth bar in the graph."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "Status of the sixth bar in the graph."
+        },
+        {
+            "name": "HIGH",
+            "type": "BOOL",
+            "description": "Indicates if the value is above the high trigger threshold."
+        },
+        {
+            "name": "Alarm",
+            "type": "BOOL",
+            "description": "Indicates if any alarm condition has been triggered."
+        },
+        {
+            "name": "Status",
+            "type": "BYTE",
+            "description": "Current status code indicating the state of the evaluation."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,30 @@
+{
+    "title": "Temperature Calculation from NTC Resistance",
+    "description": "TEMP_NTC\nInput RES: REAL (measured resistance in ohms)\nRN: REAL (resistance of the sensor at 25°C)\nB: REAL (specifcation of the sensor)\nOutput REAL (measured temperature)\nTEMP_NTC calculates from the measured resistance and the parameters of\nthe sensor, the measured temperature. RN is the resistance of the sensor\nat 25°C, and B depends on the sensor and the specifcation of the sensor.\nThe module calculates the temperature according to the following formu￾la:",
+    "type": "FUNCTION",
+    "name": "TEMP_NTC",
+    "input": [
+        {
+            "name": "RES",
+            "type": "REAL",
+            "description": "The resistance value of the NTC thermistor."
+        },
+        {
+            "name": "RN",
+            "type": "REAL",
+            "description": "The nominal resistance of the thermistor at a reference temperature."
+        },
+        {
+            "name": "B",
+            "type": "REAL",
+            "description": "The material constant used in the calculation for the NTC thermistor."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated temperature in degrees Celsius based on the thermistor resistance.",
+        "fields": []
+    }
+}

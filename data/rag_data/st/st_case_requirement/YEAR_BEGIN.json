@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Beginning of Year Date",
+    "description": "YEAR_BEGIN calculate the date of the frst January for the year Y.",
+    "type": "FUNCTION",
+    "name": "YEAR_BEGIN",
+    "input": [
+        {
+            "name": "y",
+            "type": "INT",
+            "description": "The year for which to calculate the beginning date."
+        }
+    ],
+    "output": [
+        {
+            "name": "YEAR_BEGIN",
+            "type": "DATE",
+            "description": "The date representing the beginning of the specified year."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The calculated beginning date of the year based on the provided input year."
+    }
+}

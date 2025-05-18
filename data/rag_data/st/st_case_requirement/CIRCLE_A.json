@@ -1,0 +1,24 @@
+{
+    "title": "Calculate Area of a Circle",
+    "description": "CIRCLE_A calculates the area of a circle segment with the angle AX and ra￾dius RX. If the angle is set AX = 360 so the circle area is calculated.",
+    "type": "FUNCTION",
+    "name": "CIRCLE_A",
+    "input": [
+        {
+            "name": "rx",
+            "type": "REAL",
+            "description": "The radius of the circle."
+        },
+        {
+            "name": "ax",
+            "type": "REAL",
+            "description": "A constant multiplier factor that influences the area calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated area of the circle based on the provided radius and constant factor."
+    }
+}

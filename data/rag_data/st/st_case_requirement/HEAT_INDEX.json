@@ -1,0 +1,29 @@
+{
+    "title": "Heat Index Calculation",
+    "description": "HEAT_INDEX calculates at high temperatures and high humidity wind chill.\n\nThe function is defned for temperatures above 20 ° C and relative humidi￾ty > 10%. For values outside the defned range, the input temperature is\n\npassed out.",
+    "type": "FUNCTION",
+    "name": "HEAT_INDEX",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Temperature in degrees Celsius (°C)"
+        },
+        {
+            "name": "RH",
+            "type": "REAL",
+            "description": "Relative Humidity percentage (%)"
+        }
+    ],
+    "output": [
+        {
+            "name": "Heat Temperature Index",
+            "type": "REAL",
+            "description": "The calculated Heat Temperature Index based on the provided temperature and humidity inputs."
+        }
+    ],
+    "return_value": {
+        "type": "REAL",
+        "description": "The Heat Temperature Index or the input temperature if the conditions are not met."
+    }
+}

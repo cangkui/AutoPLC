@@ -1,0 +1,30 @@
+{
+    "title": "Convert BYTE to Range",
+    "description": "BYTE_TO_RANGE convert a BYTE value to a REAL. An input value of 0 cor￾responds to the REAL value of LOW and an input value of 255 corresponds\nto the input value of HIGH.\nTo convert a BYTE value of 0 .255 to a percent of 0 .100 the module is cal￾led, as follows:\nBYTE_TO_RANGE (X,0,100)",
+    "type": "FUNCTION",
+    "name": "BYTE_TO_RANGE",
+    "input": [
+        {
+            "name": "X",
+            "type": "BYTE",
+            "description": "The BYTE value to be converted, which should be in the range of 0 to 255."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower boundary of the desired range."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper boundary of the desired range."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The scaled value in the range defined by low and high based on the input BYTE value.",
+        "fields": []
+    }
+}

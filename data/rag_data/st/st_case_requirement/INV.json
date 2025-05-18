@@ -1,0 +1,20 @@
+{
+    "title": "Inverse Function",
+    "description": "INV calculates the inverse of X:",
+    "type": "FUNCTION",
+    "name": "INV",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the inverse is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed inverse of the input value X.",
+        "fields": []
+    }
+}

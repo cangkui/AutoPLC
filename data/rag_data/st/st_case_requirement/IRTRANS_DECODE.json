@@ -1,0 +1,50 @@
+{
+    "title": "IRTRANS_DECODE Function Module",
+    "description": "IRTRANS_DECODE receives the data from the module IRTRANS_SERVER\n\npresent in BUFFER, checks if a valid data package is available and deco￾des the name of the remote control and the name of the button form the\n\ndata packet. If a valid data packet has been decoded, the name of the re￾mote control is passed at the output DEV and the name of the button on\n\nthe output KEY. The output CMD signals that the new output data are pre￾sent. The ERROR output is then set when a data packet was received that\n\nis not in the correct format.\n\nThe format is defned as follows:\n\n'Name of the remote control', 'Name of the key code' $R$N\n\nA data packet consists of the name of the remote control, followed by a\n\ncomma and then the name of the key codes. The data packet is a comple￾ted by Carriage Return and a Line Feed . \n\nTo ensure that IRTRANS_DECODE works in the IRTrans confguration the\n\nCheck box BROADCAST IR RELAY must be checked and in the correspon￾ding Device database under the DEFAULT ACTION the String '%r%c\\r\\n'\n\nmust be registered. IRTRANS_DECODE evaluates just this String and deco￾des %r as the name and %c as pressed a button of the remote control.",
+    "type": "FUNCTION",
+    "name": "IRTRANS_DECODE",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "struct",
+            "description": "Data structure for parameterization.",
+            "fields": []
+        },
+        {
+            "name": "R_BUF",
+            "type": "struct",
+            "description": "Data structure for receiving data.",
+            "fields": [
+                {
+                    "name": "data",
+                    "type": "STRING",
+                    "description": "Buffer that contains the received data."
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "CMD",
+            "type": "BOOL",
+            "description": "TRUE if valid data are present at the output."
+        },
+        {
+            "name": "DEV",
+            "type": "STRING",
+            "description": "Name of the remote control."
+        },
+        {
+            "name": "KEY",
+            "type": "STRING",
+            "description": "Name of the key codes."
+        },
+        {
+            "name": "ERROR",
+            "type": "BOOL",
+            "description": "TRUE if an invalid data packet is present."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

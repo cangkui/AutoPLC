@@ -1,0 +1,47 @@
+{
+    "title": "8-bit Shift Register Function Block",
+    "description": "CIRCLE_C calculates the arc length of an arc with the angle AX and radius\nRX. If the angle is set AX = 360 so the circumference is calculated.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SHR_8PLE",
+    "input": [
+        {
+            "name": "Din",
+            "type": "BOOL",
+            "description": "Input data bit to be shifted into the register."
+        },
+        {
+            "name": "Dload",
+            "type": "BYTE",
+            "description": "Byte value to load into the register when load signal is active."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock signal which triggers the shifting operation."
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Direction of shift; TRUE for shift up, FALSE for shift down."
+        },
+        {
+            "name": "load",
+            "type": "BOOL",
+            "description": "Signal to load Dload value into the register."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to clear the register."
+        }
+    ],
+    "output": [
+        {
+            "name": "DOut",
+            "type": "BOOL",
+            "description": "Output data bit, represents the bit shifted out of the register."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

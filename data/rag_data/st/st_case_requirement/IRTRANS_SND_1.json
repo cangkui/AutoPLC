@@ -1,0 +1,52 @@
+{
+    "title": "IRTrans Remote Command Sender",
+    "description": "IRTRANS_SND_1 allows you to send a remote command to the IRTrans. If IN\n\nTRUE the specifed device and key code in setup is sent to the IRTrans\n\nwhich outputs in turn as a real remote control commands. With T_REPEAT\n\nthe repeat time for sending can be specifed . If IN remains constant to\n\nTRUE so always this key code sent repeated after the time T_REPEAT. At\n\noutput KEY in active control \"1\" is passed. KEY = 0 means that the IN is\n\nnot active.",
+    "type": "FUNCTION",
+    "name": "IRTRANS_SND_1",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Indicates whether to send the key code (TRUE to send key code)"
+        },
+        {
+            "name": "T_REPEAT",
+            "type": "TIME",
+            "description": "The time interval for re-sending the key code"
+        },
+        {
+            "name": "IP_C",
+            "type": "struct",
+            "description": "Data structure for parameterization",
+            "fields": []
+        },
+        {
+            "name": "S_BUF",
+            "type": "struct",
+            "description": "Data structure for network buffer to transmit data",
+            "fields": []
+        },
+        {
+            "name": "DEV_CODE",
+            "type": "STRING",
+            "description": "The name of the remote control to be decoded"
+        },
+        {
+            "name": "KEY_CODE",
+            "type": "STRING",
+            "description": "The key code to be decoded"
+        }
+    ],
+    "output": [
+        {
+            "name": "KEY",
+            "type": "BYTE",
+            "description": "The output of the currently active key codes. KEY = 0 means that the IN is not active."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "title": "Calculate Resistance Based on Temperature Differences",
+    "description": "RES_SI calculates the resistance of a SI-resistance sensor from the input\nvalues T (temperature in °C) and RS, resistance at TS in °C. In contrast to\nthe modules RES_NI and RES_PT which R0 is given at 0°C, the resistance\nspecifed for RS for SI sensors at diferent temperatures (eg 25°C for\nKTY10). Therefore, the module has an input for RS and another for TS.\nThe calculation is done using the formula:\nRES_SI = RS + A*(T-TS) + B*(T-TS)²\nA = 7.64E-3\nB = 1.66E-5\nThe calculation is suitable for a temperature range of -50 .. +150°C.",
+    "type": "FUNCTION",
+    "name": "RES_SI",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "The current temperature value."
+        },
+        {
+            "name": "RS",
+            "type": "REAL",
+            "description": "The base resistance value."
+        },
+        {
+            "name": "TS",
+            "type": "REAL",
+            "description": "The reference temperature value."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated resistance value based on the inputs and constants.",
+        "fields": []
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "title": "TN_SC_FILL Function Module",
+    "description": "TN_SC_FILL is used to draw a rectangular area, that is flled \n\nwith the specifed character in Iby_FILL.",
+    "type": "FUNCTION",
+    "name": "TN_SC_FILL",
+    "input": [
+        {
+            "name": "Iin_Y1",
+            "type": "INT",
+            "description": "Y1 coordinate of the area"
+        },
+        {
+            "name": "Iin_X1",
+            "type": "INT",
+            "description": "X1 coordinate of the area"
+        },
+        {
+            "name": "Iin_Y2",
+            "type": "INT",
+            "description": "Y2 coordinate of the area"
+        },
+        {
+            "name": "Iin_X2",
+            "type": "INT",
+            "description": "X2 coordinate of the area"
+        },
+        {
+            "name": "Iby_CHAR",
+            "type": "BYTE",
+            "description": "Character to fill the area"
+        },
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color code to fill the area"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "In/out parameter representing the screen object to be updated with the filling"
+        }
+    ],
+    "return_value": null
+}

@@ -1,0 +1,36 @@
+{
+    "title": "Comparison Function",
+    "description": "CMP compares two REAL values if the frst N points are equal.",
+    "type": "FUNCTION",
+    "name": "CMP",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The first real number to be compared."
+        },
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The second real number to be compared."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "An integer that determines the precision for the comparison."
+        }
+    ],
+    "output": [
+        {
+            "name": "CMP",
+            "type": "BOOL",
+            "description": "The result of the comparison; TRUE if the absolute difference between X and Y is less than the computed threshold, FALSE otherwise."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The Boolean result indicating if X and Y are considered equal within the defined precision.",
+        "fields": []
+    }
+}

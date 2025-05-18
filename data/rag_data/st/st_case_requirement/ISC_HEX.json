@@ -1,0 +1,19 @@
+{
+    "title": "Check if a Byte is a Valid Hex Character",
+    "description": "ISC_HEX tests whether a sign IN is a hex character, If IN is a sign 0..9, A..F,\na..f the function returns TRUE if the function returns FALSE.\nThe signs are 0..9 are the codes (48..57)\nThe characters A..F are the codes (65..70)\nThe characters a..f are the codes (97..102)",
+    "type": "FUNCTION",
+    "name": "ISC_HEX",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The input byte to be checked if it is a valid hexadecimal character."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the input byte is a valid hexadecimal character, FALSE otherwise."
+    }
+}

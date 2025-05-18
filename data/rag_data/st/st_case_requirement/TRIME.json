@@ -1,0 +1,19 @@
+{
+    "title": "Trimming Leading and Trailing Spaces from a String",
+    "description": "TRIME function removes spaces at the beginning and the end of STR.\nSpaces within the string are ignored, even if they occur repeatedly.",
+    "type": "FUNCTION",
+    "name": "TRIME",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string that needs to be trimmed."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The trimmed version of the input string, with leading and trailing spaces removed."
+    }
+}

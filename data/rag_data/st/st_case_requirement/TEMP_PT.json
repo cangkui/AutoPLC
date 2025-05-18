@@ -1,0 +1,30 @@
+{
+    "title": "Calculate Temperature from Resistance",
+    "description": "TEMP_PT calculates the temperature of a PT-resistance from the RES sen￾sor input values (measured resistance value) and R0 (resistance at 0°C). If\nthe inputs has a temperature outside the range of -200.. + 850°C, at the\noutput the temperature output +10000.0°C is passed.\nThe calculation is done using the formula:\nfor temperatures > 0 °C\nRES_PT = R0 * (1 + A*T + B*T²)\nand for temperatures below 0 ° C\nRES_PT = R0 * (1 + A*T + B*T² + C*(T-100)*T³\nA = 3.90802E-3; B = -5.80195E-7; C = -427350E-12",
+    "type": "FUNCTION",
+    "name": "TEMP_PT",
+    "input": [
+        {
+            "name": "Res",
+            "type": "REAL",
+            "description": "The resistance value to be used for temperature calculation."
+        },
+        {
+            "name": "R0",
+            "type": "REAL",
+            "description": "The reference resistance value used for comparison."
+        }
+    ],
+    "output": [
+        {
+            "name": "TEMP_PT",
+            "type": "REAL",
+            "description": "The calculated temperature in degrees Celsius based on the input resistance."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the computed temperature value."
+    }
+}

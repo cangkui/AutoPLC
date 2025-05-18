@@ -1,0 +1,27 @@
+{
+    "title": "DT Simulation Function Block",
+    "description": "DT_SIMU simulates on output DTS a date value that starts with the initial\nvalue of START and continues with the speed SPEED. If SPEED intthe input\nvalue not used, the device operates with the internal standard value 1.0\nand the DTS output is running forward at 1 second/second. With the input\nSPEED at the output DTS an arbitrarily fast or slow clock can be simulated.\nThe module can be used in the simulation environment to simulate an RTC\nand also adjust the speed of the RTC for testing. If the input SPEED = 0,\nthe output DTS at each PLC cycle is further increased by a second.",
+    "type": "FUNCTION_BLOCK",
+    "name": "DT_SIMU",
+    "input": [
+        {
+            "name": "START",
+            "type": "DT",
+            "description": "The starting date and time value for the simulation."
+        },
+        {
+            "name": "SPEED",
+            "type": "REAL",
+            "description": "The speed factor that modifies the time increment, with a default value of 1.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "DTS",
+            "type": "DT",
+            "description": "The updated date and time value after applying the simulation logic."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

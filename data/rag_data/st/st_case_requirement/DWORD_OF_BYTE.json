@@ -1,0 +1,34 @@
+{
+    "title": "Convert Bytes to DWORD",
+    "description": "DWORD_OF_BYTE creates from 4 individual bytes (B0 .. B3) a DWORD.\nA DWORD is composed as follows: B3-B2-B1-B0.",
+    "type": "FUNCTION",
+    "name": "DWORD_OF_BYTE",
+    "input": [
+        {
+            "name": "B3",
+            "type": "BYTE",
+            "description": "The highest byte of the DWORD."
+        },
+        {
+            "name": "B2",
+            "type": "BYTE",
+            "description": "The second highest byte of the DWORD."
+        },
+        {
+            "name": "B1",
+            "type": "BYTE",
+            "description": "The third byte of the DWORD."
+        },
+        {
+            "name": "B0",
+            "type": "BYTE",
+            "description": "The lowest byte of the DWORD."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The combined DWORD value generated from the four input BYTE values."
+    }
+}

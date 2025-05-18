@@ -1,0 +1,34 @@
+{
+    "title": "Moon Phase Calculation",
+    "description": "MOON_PHASE is used to calculate the moon phase pf the specified \n\ndate. At parameter XDT the current date and time is passed, and always recalculated \n\nafter delay of the time parameter \"UPDATE\". The default value for UPDATE is 1 hour \n\nand the scaling factor is 12.\n\nA moon phase takes about 29.53 days, and goes through the typical conditions of \n\nthis new moon to full moon (resp. increasing and decreasing moon). This cycle can \n\nbe scaled by SCALE to a desired value between 0 and 255.",
+    "type": "FUNCTION",
+    "name": "MOON_PHASE",
+    "input": [
+        {
+            "name": "XDT",
+            "type": "DT",
+            "description": "The date and time for which the moon phase is to be calculated."
+        },
+        {
+            "name": "SCALE",
+            "type": "BYTE",
+            "description": "The scaling factor used to adjust the output moon phase value."
+        },
+        {
+            "name": "UPDATE",
+            "type": "TIME",
+            "description": "The time interval after which the moon phase is recalculated. Default value is 1 hour."
+        }
+    ],
+    "output": [
+        {
+            "name": "PHASE",
+            "type": "BYTE",
+            "description": "The scaled value representing the current moon phase."
+        }
+    ],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value; it updates the output parameter 'PHASE'."
+    }
+}

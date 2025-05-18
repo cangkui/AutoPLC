@@ -1,0 +1,36 @@
+{
+    "title": "Get Element from String List",
+    "description": "LIST_GET delivers the item at the position POS from a list. The list consists\nof Strings (elements) that begin with the separation character SEP. The\nfrst element of the list has the position 1.",
+    "type": "FUNCTION",
+    "name": "LIST_GET",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The separator used to delimit elements in the input string list."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position of the element to be retrieved from the list (0-based index)."
+        }
+    ],
+    "output": [
+        {
+            "name": "LIST_GET",
+            "type": "string",
+            "description": "The output string containing the retrieved element from the input list based on the specified position."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "LIST",
+            "type": "STRING(LIST_LENGTH)",
+            "description": "The input/output string list from which the element will be retrieved."
+        }
+    ],
+    "return_value": {
+        "type": "string",
+        "description": "Returns the string representation of the element at the specified position in the list."
+    }
+}

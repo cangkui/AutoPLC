@@ -1,0 +1,19 @@
+{
+    "title": "Check if a String is Alphanumeric",
+    "description": "IS_ALNUM test if in the string STR are only letters or numbers. If an incor￾rect, non-alphanumeric character is found the function returns FALSE. STR\ncontains only letters or numbers, the result is TRUE. Letters are the cha￾racters A..Z and a..Z, and numbers are the signs 0..9. In examining the\nGlobal Setup constant EXTENDED_ASCII is considered. If EXTENDED_ASCII\n= TRUE the extended ASCII character-set to be considered in accordance\nwith ISO 8859-1. Umlauts like Ä, Ö, Ü are considered only if the global con￾stant EXTENDED_ASCII = TRUE.",
+    "type": "FUNCTION",
+    "name": "IS_ALNUM",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The input string to be checked for alphanumeric characters."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns true if the string is alphanumeric and not empty; otherwise returns false."
+    }
+}

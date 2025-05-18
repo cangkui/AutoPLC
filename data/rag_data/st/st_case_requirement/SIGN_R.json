@@ -1,0 +1,19 @@
+{
+    "title": "Sign Function",
+    "description": "SIGN_R function returns TRUE if the input value is negative. The input\nvalues are of type REAL.",
+    "type": "FUNCTION",
+    "name": "SIGN_R",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The real number input for which the sign is to be determined."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The return value indicating the sign of the input number. TRUE if negative, FALSE otherwise."
+    }
+}

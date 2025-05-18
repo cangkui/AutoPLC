@@ -1,0 +1,158 @@
+{
+    "title": "Scale B8 Function",
+    "description": "FIND_CTRL searches the string str starting at position POS and returns the\nposition at which the next control character is. Control characters are all\ncharacters whose value is less than 32 or 127.",
+    "type": "FUNCTION",
+    "name": "SCALE_B8",
+    "input": [
+        {
+            "name": "in1",
+            "type": "BYTE",
+            "description": "First input value to be scaled."
+        },
+        {
+            "name": "in2",
+            "type": "BYTE",
+            "description": "Second input value to be scaled."
+        },
+        {
+            "name": "in3",
+            "type": "BYTE",
+            "description": "Third input value to be scaled."
+        },
+        {
+            "name": "in4",
+            "type": "BYTE",
+            "description": "Fourth input value to be scaled."
+        },
+        {
+            "name": "in5",
+            "type": "BYTE",
+            "description": "Fifth input value to be scaled."
+        },
+        {
+            "name": "in6",
+            "type": "BYTE",
+            "description": "Sixth input value to be scaled."
+        },
+        {
+            "name": "in7",
+            "type": "BYTE",
+            "description": "Seventh input value to be scaled."
+        },
+        {
+            "name": "in8",
+            "type": "BYTE",
+            "description": "Eighth input value to be scaled."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Scaling factor applied to the normalized sum."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "Offset added to the scaled result."
+        },
+        {
+            "name": "in1_min",
+            "type": "REAL",
+            "description": "Minimum value for the first input."
+        },
+        {
+            "name": "in1_max",
+            "type": "REAL",
+            "description": "Maximum value for the first input. Defaults to 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "in2_min",
+            "type": "REAL",
+            "description": "Minimum value for the second input."
+        },
+        {
+            "name": "in2_max",
+            "type": "REAL",
+            "description": "Maximum value for the second input. Defaults to 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "in3_min",
+            "type": "REAL",
+            "description": "Minimum value for the third input."
+        },
+        {
+            "name": "in3_max",
+            "type": "REAL",
+            "description": "Maximum value for the third input. Defaults to 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "in4_min",
+            "type": "REAL",
+            "description": "Minimum value for the fourth input."
+        },
+        {
+            "name": "in4_max",
+            "type": "REAL",
+            "description": "Maximum value for the fourth input. Defaults to 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "in5_min",
+            "type": "REAL",
+            "description": "Minimum value for the fifth input."
+        },
+        {
+            "name": "in5_max",
+            "type": "REAL",
+            "description": "Maximum value for the fifth input. Defaults to 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "in6_min",
+            "type": "REAL",
+            "description": "Minimum value for the sixth input."
+        },
+        {
+            "name": "in6_max",
+            "type": "REAL",
+            "description": "Maximum value for the sixth input. Defaults to 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "in7_min",
+            "type": "REAL",
+            "description": "Minimum value for the seventh input."
+        },
+        {
+            "name": "in7_max",
+            "type": "REAL",
+            "description": "Maximum value for the seventh input. Defaults to 1000.0.",
+            "fields": []
+        },
+        {
+            "name": "in8_min",
+            "type": "REAL",
+            "description": "Minimum value for the eighth input."
+        },
+        {
+            "name": "in8_max",
+            "type": "REAL",
+            "description": "Maximum value for the eighth input. Defaults to 1000.0.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "SCALE_B8",
+            "type": "REAL",
+            "description": "The scaled output value resulting from the scaling operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The resulting scaled value after applying the function's calculations."
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "title": "Blind Actuator Function Module",
+    "description": "BLIND_ACTUATOR is a blind / shutter actuator to simulate the position and\n\nthe angle of the slats. The inputs UP and DN are mutually interlocked, so\n\nthat QU and QD can never be active at the same time. With time T_LOCK￾OUT the minimum pause is set between a change of direction. Additionally\n\nBLIND_ACTUATOR provides two outputs with the type Byte which simulate\n\nthe position of fn and the position of the shutter. For accurate simulation,\n\nadjust the setup times and T_UD T_ANGLE accordingly. T_UD sets the time\n\nto drive from \"closed\" needed to \"open\" (up position). T_ANGLE specifes\n\nthe time for adjusting the fn from \"vertical\" to horizontal. The actuator en￾sures that frst the fn be placed horizontally and then starting the \"open\"\n\naction of the shutter. Conversely, when \"close\" the shutter the fn set ver￾tically before the down movement begins. POS = 0 means blinds shut\n\ndown, and POS means = 255 blind is up. Intermediate positions are in ac￾cordance with intermediate values 0 ..255 The angle of the blades is issu￾ed by the output ANG, with mean ANG = 0 is invertical position and ANG\n\n= 255 is the horizontal position, values 0-255 indicate the appropriate an-\n\n74 Version 1.00\n\nChapter 7. Blind Modules\n\ngle. By outputs POS and ANG the information on the position of the shut￾ter control is provided. ANG and POS may only provide useful results if the\n\ntimes T_UD and T_ANGLE are precisely adapted to the corresponding\n\nblind. The actuator may, if T_ANGLE is set to T#0s, be used for all types of\n\nroller shutters. The inputs T_UD, T_ANGLE T_LOCKOUT and have the follo￾wing default values: \n\nT_UD = T#10S\n\nT_ANGLE = T#3S\n\nT_LOCKOUT = T#100MS\n\nThe input and output S_IN STATUS are ESR compliant outputs and inputs.\n\nIn Input S_IN the upstream functions report their status to the module, this\n\nstatus will be forwarded to the output of STATUS, and own status messa￾ges also issued on STATUS. If a status message is present at the input it\n\nwill overwrite the own status messages, an error will be put out with hig￾hest priority.\n\nSTATUS Meaning\n\n0 no message\n\n1 Error, UP and DN active simultaneously\n\n101 Manual UP\n\n102 Manual DN\n\nNNN forwarded message\n\nThe following graphic shows the internal structure and function of the mo￾dule:",
+    "type": "FUNCTION",
+    "name": "BLIND_ACTUATOR",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input signal to move the shutter up."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input signal to move the shutter down."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input."
+        },
+        {
+            "name": "T_UD",
+            "type": "TIME",
+            "description": "Runtime for moving the shutter up/down."
+        },
+        {
+            "name": "T_ANGLE",
+            "type": "TIME",
+            "description": "Duration for adjusting the angle of the slats."
+        },
+        {
+            "name": "T_LOCKOUT",
+            "type": "TIME",
+            "description": "Delay time between changes in direction."
+        }
+    ],
+    "output": [
+        {
+            "name": "POS",
+            "type": "BYTE",
+            "description": "Position of the shutter; 0 = bottom, 255 = top."
+        },
+        {
+            "name": "ANG",
+            "type": "BYTE",
+            "description": "Angle of the slats; 0 = vertical, 255 = horizontal."
+        },
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor signal to move up."
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor signal to move down."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

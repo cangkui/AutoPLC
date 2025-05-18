@@ -1,0 +1,41 @@
+{
+    "title": "Bit Load Function",
+    "description": "HOUR_OF_DT extracts the hour from a current DT value.\nHOUR_OF_DT(DT#2008-6-6-10:22:20) = 10",
+    "type": "FUNCTION",
+    "name": "BIT_LOAD_B2",
+    "input": [
+        {
+            "name": "I",
+            "type": "BYTE",
+            "description": "The BYTE value to manipulate."
+        },
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "Condition to determine which operation to perform."
+        },
+        {
+            "name": "P",
+            "type": "INT",
+            "description": "The number of bit positions to shift in the operations."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of bits to be loaded or shifted."
+        }
+    ],
+    "output": [
+        {
+            "name": "BIT_LOAD_B2",
+            "type": "BYTE",
+            "description": "The resulting BYTE value after performing the bitwise operations."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "Computed BYTE value after bit manipulation based on inputs.",
+        "fields": []
+    }
+}

@@ -1,0 +1,81 @@
+{
+    "title": "3D Vector Addition",
+    "description": "DEC_TO_BYTE converts a decimal encoded string into a byte\nvalue. Here only decimal characters '0 '.. '9' are interpreted, others in DEC\noccurring characters are ignored .",
+    "type": "FUNCTION",
+    "name": "V3_ADD",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The first input vector for the addition operation.",
+            "fields": [
+                {
+                    "name": "X",
+                    "type": "REAL",
+                    "description": "The X component of the vector A."
+                },
+                {
+                    "name": "Y",
+                    "type": "REAL",
+                    "description": "The Y component of the vector A."
+                },
+                {
+                    "name": "Z",
+                    "type": "REAL",
+                    "description": "The Z component of the vector A."
+                }
+            ]
+        },
+        {
+            "name": "B",
+            "type": "Vector_3",
+            "description": "The second input vector for the addition operation.",
+            "fields": [
+                {
+                    "name": "X",
+                    "type": "REAL",
+                    "description": "The X component of the vector B."
+                },
+                {
+                    "name": "Y",
+                    "type": "REAL",
+                    "description": "The Y component of the vector B."
+                },
+                {
+                    "name": "Z",
+                    "type": "REAL",
+                    "description": "The Z component of the vector B."
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "V3_ADD",
+            "type": "Vector_3",
+            "description": "The resultant vector from the addition of vectors A and B.",
+            "fields": [
+                {
+                    "name": "X",
+                    "type": "REAL",
+                    "description": "The X component of the resultant vector."
+                },
+                {
+                    "name": "Y",
+                    "type": "REAL",
+                    "description": "The Y component of the resultant vector."
+                },
+                {
+                    "name": "Z",
+                    "type": "REAL",
+                    "description": "The Z component of the resultant vector."
+                }
+            ]
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "The function does not return a value, but modifies the output parameter V3_ADD."
+    }
+}

@@ -1,0 +1,81 @@
+{
+    "title": "HEAT_METER",
+    "description": "HEAT_METER is a calorimeter. The amount of heat Y is measured in joules.\n\nThe inputs of TF and TR are the forward and return temperature of the me￾dium. At the input LPH the fow rate in liters/hour, resp. the fow rate per\n\npulse of E is specifed. The property of E is determined by the Setup Varia￾ble PULSE_MODE. PULSE_MODE = FALSE means the amount of heat is ad￾ded continuously as long as E is set to TRUE. PULSE_MODE = TRUE means\n\nthe amount of heat with each rising edge of E is added up. The\n\nPULSE_MODE is turned on the use of heat meters, while indicating the fow\n\nrate in liters per pulse at the input LPH and the heat meter is connected\n\nat the input E. If no fow meter is present, the the pump signal is connec￾ted at input E and at the input LPH given the pump capacity in liters per\n\nhour. When using a fow meter with analog output is the output to be con￾verted to liters per hour and sent to the input LPH, the input E will be set\n\nto TRUE. With the setup variables CP, DENSITY and CONTENT the 2nd\n\ncomponent of the medium is specifed. For operation with pure water no\n\ndetails of CP, DENSITY and CONTENT are necessary. [fzy] If a mixture of\n\nwater and a 2nd media is present, with CP the specifc heat capacity in\n\nJ/KgK, with DENSITY the density in KG/l and with CONTENT the portion of\n\nthe 2nd component is specifed. A proportion of 0.5 means 50% and 1\n\nwould be equivalent to 100%. The setup variables RETURN_METER is spe￾cifed whether the fow meter sits in forward or reverse. RETRUN_METER =\n\nTRUE for return measurement and FALSE for fow measurement. The out￾put C of the module represents the current consumption. The current con￾sumption is measured in joules/hour, and is determined at the intervals of\n\nAVG_TIME. \n\nThe module has the following default values that are active when the cor￾responding values are not set by the user:\n\nPULSE_MODE = FALSE\n\nRETURN_METER = FALSE\n\nAVG_TIME = T#5s",
+    "type": "FUNCTION",
+    "name": "HEAT_METER",
+    "input": [
+        {
+            "name": "TF",
+            "type": "REAL",
+            "description": "Forward temperature in °C"
+        },
+        {
+            "name": "TR",
+            "type": "REAL",
+            "description": "Return temperature in °C"
+        },
+        {
+            "name": "LPH",
+            "type": "REAL",
+            "description": "Flow in L/h or L/pulse"
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable Signal"
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Asynchronous reset input"
+        },
+        {
+            "name": "CP",
+            "type": "REAL",
+            "description": "Specific heat capacity of the second component"
+        },
+        {
+            "name": "DENSITY",
+            "type": "REAL",
+            "description": "Density of the second component"
+        },
+        {
+            "name": "CONTENT",
+            "type": "REAL",
+            "description": "Share of the second component, where 1 = 100%"
+        },
+        {
+            "name": "PULSE_MODE",
+            "type": "BOOL",
+            "description": "Pulse counter if TRUE"
+        },
+        {
+            "name": "RETURN_METER",
+            "type": "BOOL",
+            "description": "Flow meter in the return if TRUE"
+        },
+        {
+            "name": "AVG_TIME",
+            "type": "TIME",
+            "description": "Time interval for current consumption"
+        }
+    ],
+    "output": [
+        {
+            "name": "C",
+            "type": "REAL",
+            "description": "Current consumption in joules/hour"
+        },
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "Amount of heat in joules"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the current consumption calculated based on the inputs",
+        "fields": []
+    }
+}

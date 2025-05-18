@@ -1,0 +1,32 @@
+{
+    "title": "Latch Function Block",
+    "description": "LTCH is a transparent storage element ( Latch ). As long as L is true, Q fol￾lows the input D and the falling edge of L stores the output Q the current\ninput signal to D. With the asynchronous reset input of the Latch will be\ndeleted at any time regardless of L.",
+    "type": "FUNCTION_BLOCK",
+    "name": "LTCH",
+    "input": [
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "The data input that is transferred to the output Q when the latch is transparent."
+        },
+        {
+            "name": "L",
+            "type": "BOOL",
+            "description": "The latch control input that determines whether the latch is transparent."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "The asynchronous reset input that forces the output Q to FALSE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The output of the latch that reflects the state based on the inputs D and L."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

@@ -2,10 +2,11 @@ import os
 import json
 from typing import List, Dict, Tuple
 import dotenv
+from common import ROOTPATH
 
 dotenv.load_dotenv()
 
-RAG_DATA_DIR = os.path.join(os.getenv("ROOTPATH"), "data/rag_data")
+RAG_DATA_DIR = os.path.join(ROOTPATH, "data/rag_data")
 
 class APIDataLoader():
     api_detail_dict: dict = None

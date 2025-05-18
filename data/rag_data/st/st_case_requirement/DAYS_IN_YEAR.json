@@ -1,0 +1,19 @@
+{
+    "title": "Calculate Days in Year",
+    "description": "DAYS_IN_YEAR function calculates the number of days in the current\nyear.",
+    "type": "FUNCTION",
+    "name": "DAYS_IN_YEAR",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The date for which the number of days in the year needs to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The number of days in the year corresponding to the given date (365 or 366)."
+    }
+}

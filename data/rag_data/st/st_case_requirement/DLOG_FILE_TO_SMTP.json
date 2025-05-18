@@ -1,0 +1,97 @@
+{
+    "title": "DLOG_FILE_TO_SMTP",
+    "description": "DLOG_FILE_TO_SMTP is used to automatically transfer the of \n\nDLOG_STORE_FILE_CSV generated fles as e-mail to an e-mail server.\n\nThe module uses internally the SMTP_CLIENT for sending.\n\nThe SERVER parameter contains the name of the SMTP server and \n\noptionally the user name and password and a port number. If you pass a \n\nuser name and password, the procedure is according to standard SMTP.\n\nSERVER: URL",
+    "type": "FUNCTION",
+    "name": "DLOG_FILE_TO_SMTP",
+    "input": [
+        {
+            "name": "SERVER",
+            "type": "STRING",
+            "description": "URL of the SMTP server, option to include username, password, and port number."
+        },
+        {
+            "name": "MAIL_FROM",
+            "type": "STRING",
+            "description": "Return address of the email sender. Can include a display name."
+        },
+        {
+            "name": "MAILTO",
+            "type": "STRING",
+            "description": "Recipient addresses formatted into groups: To, Cc, Bc."
+        },
+        {
+            "name": "SUBJECT",
+            "type": "STRING",
+            "description": "Subject text of the email."
+        },
+        {
+            "name": "FILES",
+            "type": "STRING",
+            "description": "Files to be sent via email."
+        },
+        {
+            "name": "X",
+            "type": "DLOG_DATA",
+            "description": "DLOG data structure."
+        },
+        {
+            "name": "FILE_DELETE",
+            "type": "BOOL",
+            "description": "Indicates if the files should be deleted after transfer."
+        },
+        {
+            "name": "TIMEOUT",
+            "type": "TIME",
+            "description": "Monitoring time for the transfer."
+        },
+        {
+            "name": "DTI",
+            "type": "DT",
+            "description": "Current date-time when the email is sent."
+        },
+        {
+            "name": "DTI_OFFSET",
+            "type": "INT",
+            "description": "Time zone offset from UTC in minutes."
+        },
+        {
+            "name": "RETRY",
+            "type": "INT",
+            "description": "Number of repetitions for SMTP transfer on failure."
+        },
+        {
+            "name": "RETRY_TIME",
+            "type": "TIME",
+            "description": "Waiting period before repeating the SMTP transfer."
+        },
+        {
+            "name": "Dns_ip4",
+            "type": "DWORD",
+            "description": "IP4 address of the DNS server."
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the transfer completed successfully without error."
+        },
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates if the transfer is currently active."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code if an error occurs during transfer."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Type of problem that occurred during transfer."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

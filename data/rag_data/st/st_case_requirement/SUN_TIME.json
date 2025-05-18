@@ -1,0 +1,52 @@
+{
+    "title": "Calculation of Solar Times",
+    "description": "SUN_TIME is a astro timer. It calculates sunrise and \nsunset for any day, defned by the input UTC. In addition to sunrise and \nsunset, the time of the solar azimuth (daily peak in the south) and the \nsolar angle above the horizon in the azimuth is calculated. This SUN_TIME \nwill work regardless of the site all the time is calculated in UTC (Universal \nTime) and can again be converted to local time as needed. In addition, to \nthe times of sunrise and sunset, the module also calculates the angle of \nthe sun above the horizon SUN_DECLINATION. SUN_TIME uses a complex \nalgorithm to minimize the loading of a PLC as low as possible, the values \nshould be calculated with SUN_TIME only once per day. SUN_TIME is used \nfor the control of blinds, in order to pull up just before sunrise and enjoy in \nthe bedroom the twilight. Other applications are include controlling \nirrigation in horticulture to using the sunrise and sunset or even for \ntracking solar panels. Further calculations of Sun's position is provided by \nthe module SUN_POS. SUN_TIME is only in latitudes between 65°S and \n65°North is available. The output MIDDAY passes, at what time the sun is \nthe south and SUN_DECLINATION stating the angle above the horizon in \ndegrees.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SUN_TIME",
+    "input": [
+        {
+            "name": "LATITUDE",
+            "type": "REAL",
+            "description": "Latitude of geographical position in degrees."
+        },
+        {
+            "name": "LONGITUDE",
+            "type": "REAL",
+            "description": "Longitude of geographical position in degrees."
+        },
+        {
+            "name": "UTC",
+            "type": "DATE",
+            "description": "World time in UTC format."
+        },
+        {
+            "name": "H",
+            "type": "REAL",
+            "description": "Height above horizon for sunrise, default value is -0.83333333333."
+        }
+    ],
+    "output": [
+        {
+            "name": "MIDDAY",
+            "type": "TOD",
+            "description": "Astrological midday in hours when sun stands at south direction."
+        },
+        {
+            "name": "SUN_RISE",
+            "type": "TOD",
+            "description": "Sunrise time for the current day in local time."
+        },
+        {
+            "name": "SUN_SET",
+            "type": "TOD",
+            "description": "Sunset time for the current day in local time."
+        },
+        {
+            "name": "SUN_DECLINATION",
+            "type": "REAL",
+            "description": "Sun declination above horizon at midday in degrees."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

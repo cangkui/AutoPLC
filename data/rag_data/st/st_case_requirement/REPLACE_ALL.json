@@ -1,0 +1,35 @@
+{
+    "title": "Replace All Occurrences of a Substring",
+    "description": "REPLACE_ALL replaces all occurring strings SRC in the string STR with REP.\nAn empty string SRC gives no results.",
+    "type": "FUNCTION",
+    "name": "REPLACE_ALL",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The original string in which occurrences of the source substring will be replaced."
+        },
+        {
+            "name": "src",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The substring that needs to be replaced in the original string."
+        },
+        {
+            "name": "rep",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The substring that will replace each occurrence of the source substring."
+        }
+    ],
+    "output": [
+        {
+            "name": "REPLACE_ALL",
+            "type": "string",
+            "description": "The modified string after all occurrences of the source substring have been replaced."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The final string resulting from the replacement of all occurrences."
+    }
+}

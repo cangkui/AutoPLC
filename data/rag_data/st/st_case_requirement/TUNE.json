@@ -1,0 +1,82 @@
+{
+    "title": "Tuning Function Block",
+    "description": "TUNE sets, using up and down buttons, an output signal Y. By correspon￾ding setup variables, the increment will be programmed individually. An\nupper and lower limit for the output Y can be specifed by LIMIT_L and LI￾MIT_H . with the buttons SU and SD up or down steps are generated. If a\nkey is held down longer than the time T1, then the output Y is continuously\nadjusted up or down. The speed, which with the output is adjusted here, is\ngiven by S1. S1 and S2 indicate the units per second. Is a button held\ndown longer than the time T2, the device automatically switches to a se￾cond speed S2. With the inputs RST and SET the output can at any time be\nadjusted by RST_VAL resp. SET_VAL to a predetermined value.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TUNE",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "A boolean flag to set the value of Y to SET_val."
+        },
+        {
+            "name": "SU",
+            "type": "BOOL",
+            "description": "A boolean flag indicating a request to increment the value of Y slowly."
+        },
+        {
+            "name": "SD",
+            "type": "BOOL",
+            "description": "A boolean flag indicating a request to decrement the value of Y slowly."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean flag to reset the value of Y to RST_val."
+        },
+        {
+            "name": "SS",
+            "type": "REAL",
+            "description": "A real number representing the step size for slow adjustments, default value is 0.1."
+        },
+        {
+            "name": "Limit_L",
+            "type": "REAL",
+            "description": "The lower limit for the output value Y."
+        },
+        {
+            "name": "LIMIT_H",
+            "type": "REAL",
+            "description": "The upper limit for the output value Y, default value is 100.0."
+        },
+        {
+            "name": "RST_val",
+            "type": "REAL",
+            "description": "The value to set Y to when RST is true."
+        },
+        {
+            "name": "SET_val",
+            "type": "REAL",
+            "description": "The value to set Y to when SET is true, default value is 100.0."
+        },
+        {
+            "name": "T1",
+            "type": "TIME",
+            "description": "The duration for the slow ramp operation, default value is 500 ms."
+        },
+        {
+            "name": "T2",
+            "type": "TIME",
+            "description": "The duration for the fast ramp operation, default value is 2 s."
+        },
+        {
+            "name": "S1",
+            "type": "REAL",
+            "description": "The step size for the slow ramp up operation, default value is 2.0."
+        },
+        {
+            "name": "S2",
+            "type": "REAL",
+            "description": "The step size for the fast ramp up operation, default value is 10.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value that is adjusted based on the input states and limits."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

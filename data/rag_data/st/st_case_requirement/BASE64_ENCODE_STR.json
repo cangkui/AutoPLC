@@ -1,0 +1,32 @@
+{
+    "title": "BASE64 Encoding Function Module",
+    "description": "BASE64_ENCODE_STR a standard text can be converted to a BASE64\n\nencoded text. With a positive edge of RUN the process starts. Here DONE\n\nis immediately reseted, if it has been set by a previous conversion. The\n\nBASE64 encoded text is passed on STR1, and after the conversion the BA￾SE64 text is available in STR2, and DONE is set to TRUE.",
+    "type": "FUNCTION",
+    "name": "BASE64_ENCODE_STR",
+    "input": [
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "A positive edge signal that initiates the BASE64 conversion."
+        },
+        {
+            "name": "STR1",
+            "type": "STRING(144)",
+            "description": "The standard text input that is to be converted to BASE64 format."
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the BASE64 conversion has been completed successfully."
+        },
+        {
+            "name": "STR2",
+            "type": "STRING(192)",
+            "description": "The resulting BASE64 encoded text after the conversion."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

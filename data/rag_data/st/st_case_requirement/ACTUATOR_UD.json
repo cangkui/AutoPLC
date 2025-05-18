@@ -1,0 +1,86 @@
+{
+    "title": "Actuator Control Module",
+    "description": "ACTUATOR_UD is a reversing contactor interface with locking and confgu￾rable timing. With additional return inputs a activation was prevented as\n\nlong as a relais stuck. The module has an automatic and a manual mode.\n\nIn automatic mode (ON = TRUE and Manual = FALSE), the input of the UD\n\ndecides about the direction and ON/OFF. As soon as the manual input is\n\nTRUE starts the Manual mode and outputs will follow only the inputs UP\n\nand DN. UP and DN may never be both TRUE, if happens both outputs gets\n\nFALSE. With a safety-switch-of input OFF the outputs are switched of in\n\nboth the manual and in automatic mode at any time. \n\nTwo return inputs YUP_IN and YDN_IN serve as separate inputs for the\n\nstate of the relays due to the avoid activating the output of a other relais\n\nin case of a failure of one relay module. This error is reported through er￾ror messages at the output STATUS. The feedback function is only availa￾ble if the confg variable OUT_RETURN is set to TRUE. Status reports all ac￾tivities of the module in order to provide them for a data record. The sta￾tus output is ESR compatible and combinable with other ESR modules\n\n18 Version 1.00\n\nChapter 4. Actuators\n\nfrom our library. \n\nThe output status reports two errors: \n\n1: YUP can not be set because YDN_IN TRUE.\n\n2: YDN can not be set because YUP_IN TRUE.\n\nThe Confg variables TON and TOFF defne a minimum ontime and a dead\n\ntime between two output impulses and therefore large motors or transmis￾sions can be switched, even if they needs a start and stop time.\n\nManual UP DN ON UD OFF YUP YDN Status\n\n1 0 0 - - 0 0 0 102\n\n1 1 0 - - 0 1 0 103\n\n1 0 1 - - 0 0 1 104\n\n1 1 1 - - 0 0 0 102\n\n0 - - 1 1 0 1 0 111\n\n0 - - 1 0 0 0 1 112\n\n- - - - - 1 0 0 101\n\n1 0 0 0 - 0 0 0 110\n\n0 - - 0 - - 0 0 110",
+    "type": "FUNCTION",
+    "name": "ACTUATOR_UD",
+    "input": [
+        {
+            "name": "UD",
+            "type": "BOOL",
+            "description": "Direction input in Auto Mode (UP = TRUE)"
+        },
+        {
+            "name": "ON",
+            "type": "BOOL",
+            "description": "Indicates if the module is in Auto Mode (TRUE when in Auto Mode)"
+        },
+        {
+            "name": "MANUAL",
+            "type": "BOOL",
+            "description": "TRUE if Manual Mode is selected"
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Enable UP direction in Manual Mode"
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Enable DN direction in Manual Mode"
+        },
+        {
+            "name": "OFF",
+            "type": "BOOL",
+            "description": "Safety switch input (TRUE = outputs FALSE)"
+        },
+        {
+            "name": "YUP_IN",
+            "type": "BOOL",
+            "description": "Return input for UP relay"
+        },
+        {
+            "name": "YDN_IN",
+            "type": "BOOL",
+            "description": "Return input for DN relay"
+        }
+    ],
+    "output": [
+        {
+            "name": "YUP",
+            "type": "BOOL",
+            "description": "Output for direction UP"
+        },
+        {
+            "name": "YDN",
+            "type": "BOOL",
+            "description": "Output for direction DN"
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status and error output"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "SOUND",
+            "type": "TIME",
+            "description": "Minimum on-time configuration"
+        },
+        {
+            "name": "TOFF",
+            "type": "TIME",
+            "description": "Minimum off-time configuration"
+        },
+        {
+            "name": "OUT_RETURN",
+            "type": "BOOL",
+            "description": "Switches the return inputs YUP_IN and YDN_IN"
+        }
+    ],
+    "return_value": {
+        "type": "VOID",
+        "description": "The function does not return a value."
+    }
+}

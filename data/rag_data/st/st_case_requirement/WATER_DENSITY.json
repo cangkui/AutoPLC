@@ -1,0 +1,31 @@
+{
+    "title": "Water Density Calculation",
+    "description": "WATER_DENSITY calculates the density of liquid water, not frozen\n\nor evaporated water. WATER_DENSITY calculates the density of air-free wa￾ter when SAT = FALSE, and air-saturated water when SAT = TRUE. The cal￾culated values are calculated using an approximate formula and results\n\nvalues with an accuracy greater than 0.01% in the temperature range of 0\n\n- 100°C at a constant pressure of 1013 mBar.\n\nThe deviation of the density of air saturated with water is corrected accor￾ding to the formula of Bignell.\n\nThe dependence of the density of water pressure is relatively low at about\n\n0.046 kg/m³ per 1 bar pressure increase, in the range up to 50 bar. The\n\nlow pressure dependence has practical applications, no signifcant infu￾ence.\n\n45 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "WATER_DENSITY",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Temperature of the water in degrees Celsius."
+        },
+        {
+            "name": "SAT",
+            "type": "BOOL",
+            "description": "Indicates if the water is saturated with air (TRUE) or not (FALSE)."
+        }
+    ],
+    "output": [
+        {
+            "name": "density",
+            "type": "REAL",
+            "description": "Calculated water density in grams per liter."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the calculated density of liquid water.",
+        "fields": []
+    }
+}

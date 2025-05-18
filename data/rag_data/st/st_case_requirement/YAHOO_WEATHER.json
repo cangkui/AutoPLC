@@ -1,0 +1,70 @@
+{
+    "title": "Yahoo Weather Data Retrieval",
+    "description": "YAHOO_WEATHER (weather data)\n\nINPUT ACTIVATE: BOOL (positive edge starts the query)\n\nUNITS: BOOL (FALSE = Celsius, TRUE = Fahrenheit)\n\nLOCATION: STRING (20) (location specifed by LOCATION-ID)\n\nOUTPUT BUSY: BOOL (Query is active)\n\nDONE: BOOL (Query completed without errors)\n\nERROR_C: DWORD (Error code)\n\nERROR_T: BYTE (error type)\n\nThe module loads the current weather data for the specifed location using \n\nan RSS feed (XML data structure) of http://weather.yahooapis.com down, \n\nanalyzes the XML data and provides the essential data processed from the \n\nYAHOO_WEATHER data structure. With a positive edge of ACTIVATE, the \n\nquery started and process a DNS query with the following HTTP-GET. After \n\nsuccessful receipt of data by XML_READER all elements are processed and \n\nif necessary stored in the data structure in converted form. With UNITS \n\nmay still be selected between Fahrenheit and Celsius as a unit. By \n\nspecifying the precise LOCATION_ID the location of the weather is \n\nindicated. While the query is active, BUSY = TRUE is passed. After \n\nsuccessful completion of the query DONE = TRUE is shown. If occur in the \n\nquery, then this error is reported under ERROR_C in combination with \n\nERROR_T.\n\nERROR_T:\n\n207 Version 1.21\n\nChapter 13. Weather Data\n\nValue Properties\n\n1 The exact meaning of ERROR_C can be read at module DNS_CLIENT\n\n2 The exact meaning of ERROR_C can be read at module HTTP_GET\n\nFind the Location ID of a specifc place:\n\nUse your Internet browser the page http://weather.yahoo.com/ and in the \n\nfeld: \"Enter city or zip code\" and enter the name of the desired location \n\nand search. \n\nAfter being selected in the browser window displays the current weather \n\ninformation of the specifed location. In the URL (web link) line is now the \n\nlocation ID can be seen.\n\nThus, the desired settlement \"Wien (Vienna)\" returns the Location ID \n\n\"551801\". \n\nThis code must be passed on the module as parameters.",
+    "type": "FUNCTION",
+    "name": "GetWeatherData",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for the connection."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "YW",
+            "type": "YAHOO_WEATHER",
+            "description": "Data structure for holding the weather data."
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Positive edge that starts the query."
+        },
+        {
+            "name": "UNITS",
+            "type": "BOOL",
+            "description": "Unit selection for temperature (FALSE for Celsius, TRUE for Fahrenheit)."
+        },
+        {
+            "name": "LOCATION",
+            "type": "STRING(20)",
+            "description": "Location specified by LOCATION-ID."
+        }
+    ],
+    "output": [
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates if the query is active."
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the query has completed without errors."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code associated with any query issues."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Error type associated with the operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "No return value expected from the function."
+    }
+}

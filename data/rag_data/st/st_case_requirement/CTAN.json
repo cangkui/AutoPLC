@@ -1,0 +1,37 @@
+{
+    "title": "Complex Tangent Function",
+    "description": "CTAN calculates the tangent of a complex number",
+    "type": "FUNCTION",
+    "name": "CTAN",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "A complex number for which the tangent is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "CTAN",
+            "type": "complex",
+            "description": "The complex tangent of the input number X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The return value is the complex tangent of the input complex number X.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the complex tangent result."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the complex tangent result."
+            }
+        ]
+    }
+}

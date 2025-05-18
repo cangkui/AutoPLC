@@ -1,0 +1,26 @@
+{
+    "title": "Lambert W Function Calculation",
+    "description": "LAMBERT_W function is defned for x > = -1/e. When the value is be￾low the range the is result -1000. The range of LAMBERT_W function is >=\n-1.",
+    "type": "FUNCTION",
+    "name": "LAMBERT_W",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the Lambert W function is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "LAMBERT_W",
+            "type": "REAL",
+            "description": "The calculated Lambert W value. Returns -1000.0 for invalid inputs and 0 for an input of 0."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The return value of the Lambert W function computation.",
+        "fields": []
+    }
+}

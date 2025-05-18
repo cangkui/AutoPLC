@@ -1,0 +1,37 @@
+{
+    "title": "HYST_1 Function Block",
+    "description": "TC_MS determines the last cycle time, that is the time since the last call of\nthe module has passed. The time comes in milliseconds.",
+    "type": "FUNCTION_BLOCK",
+    "name": "HYST_1",
+    "input": [
+        {
+            "name": "In",
+            "type": "REAL",
+            "description": "The input value to be evaluated against the threshold limits."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper threshold for the hysteresis comparison."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower threshold for the hysteresis comparison."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Boolean output indicating if the input is above the high threshold."
+        },
+        {
+            "name": "win",
+            "type": "BOOL",
+            "description": "Boolean output indicating whether the input is within the hysteresis window."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

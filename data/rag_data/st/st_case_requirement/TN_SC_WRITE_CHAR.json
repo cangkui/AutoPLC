@@ -1,0 +1,33 @@
+{
+    "title": "TN_SC_WRITE_CHAR Function Module",
+    "description": "TN_SC_WRITE_CHAR passes the character Iby_CHAR at the \n\ngiven coordinates Iin_Y, Iin_X, and does not change the color information \n\nat the specifed position.\n\n194 Version 1.21\n\nChapter 11. Telnet-Vision",
+    "type": "FUNCTION",
+    "name": "TN_SC_WRITE_CHAR",
+    "input": [
+        {
+            "name": "Iin_Y",
+            "type": "INT",
+            "description": "Y coordinate where the character will be written"
+        },
+        {
+            "name": "Iin_X",
+            "type": "INT",
+            "description": "X coordinate where the character will be written"
+        }
+    ],
+    "output": [
+        {
+            "name": "Iby_CHAR",
+            "type": "BYTE",
+            "description": "The character that is passed to the specified coordinates"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen structure that contains the display information"
+        }
+    ],
+    "return_value": null
+}

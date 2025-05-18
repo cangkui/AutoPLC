@@ -1,0 +1,37 @@
+{
+    "title": "Calculate Square Root of a Complex Number",
+    "description": "CSQRT calculates the square root of a complex number",
+    "type": "FUNCTION",
+    "name": "CSQRT",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "The complex number for which the square root needs to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "CSQRT",
+            "type": "complex",
+            "description": "The computed square root of the input complex number."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The square root of the input complex number returned by the function.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the square root of the complex number."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the square root of the complex number."
+            }
+        ]
+    }
+}

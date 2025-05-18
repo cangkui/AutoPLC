@@ -1,0 +1,37 @@
+{
+    "title": "Average Calculation Function Block",
+    "description": "FT_AVG calculates a moving average over each of\nthe last N values. By the input RST, the stored values can be deleted. N is\ndefned from 0 .. 32. N = 0 means that the output signal = input signal. N\n= 5 is the average over the last 5 values. The average is calculated over a\nmaximum of 32 values. With input E can be control when the input is read.\nThis allows a simple way to connect a sample and a hold module, such as\nSH_1 with FT_AVG can be linked. The frst call to FT_AVG the bufer load\nthe input signal to avoid that a Ramp-up takes place. \nThe following example reads SH_1 once a second the input value Signal_In\nand passes these values once per second to FT_AVG, which then forms out\nof the last 8 values the mean value.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_AVG",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input real value to be averaged."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal to control the calculation of the average, defaults to TRUE."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of cycles for which the average is calculated, limited to a maximum of 32."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to initialize the buffer with the actual input value instead of zero."
+        }
+    ],
+    "output": [
+        {
+            "name": "AVG",
+            "type": "REAL",
+            "description": "The computed average of the input values over the specified cycles."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

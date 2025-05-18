@@ -1,0 +1,27 @@
+{
+    "title": "PWM_DC Function Block",
+    "description": "PWM_DC is a Duty - cycle modulated frequency generator. The generator\ngenerates a fxed frequency F with a duty cycle (TON / TOFF) which can be\nmodulated (adjusted) by the input DC. A value of 0.5 at the input DC ge￾nerates a duty cycle of 50%. \nThe following image shows an output signal with a duty - cycle 2 / 1, which\ncorresponds to a DC (ratio) of 0.67.",
+    "type": "FUNCTION_BLOCK",
+    "name": "PWM_DC",
+    "input": [
+        {
+            "name": "F",
+            "type": "REAL",
+            "description": "The frequency of the PWM signal in Hz."
+        },
+        {
+            "name": "DC",
+            "type": "REAL",
+            "description": "The duty cycle of the PWM signal, specified as a fraction (0.0 to 1.0)."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The output state of the PWM signal, where TRUE indicates the pulse is active."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

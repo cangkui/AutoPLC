@@ -1,0 +1,32 @@
+{
+    "title": "Sample Time Trigger Function Block",
+    "description": "SCALE_B scales an input value BYTE and calculates an output value in\nREAL. The input value X is limited here to I_LO and I_HI. SCALE_D (IN, 0,\n255, 0, 100) scales an input with 8-bit resolution on the output 0..100.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SH_1",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input value to be output when the trigger condition is met."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The time period that must elapse before the output is updated."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The output value that reflects the input when the trigger condition is met."
+        },
+        {
+            "name": "Trig",
+            "type": "BOOL",
+            "description": "A boolean flag that indicates whether the output has been updated."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

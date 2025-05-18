@@ -1,0 +1,52 @@
+{
+    "title": "Interlock Control Logic",
+    "description": "BIT_TOGGLE_DW inverts a specifed bit at IN.\nBIT_TOGGLE_DW(2#0000_1111, 2) = 2#0000_1011\nBIT_TOGGLE_DW(2#0000_1111, 7) = 2#1000_1111",
+    "type": "FUNCTION_BLOCK",
+    "name": "INTERLOCK_4",
+    "input": [
+        {
+            "name": "I0",
+            "type": "BOOL",
+            "description": "Input signal 0, a boolean value indicating one of the interlock conditions."
+        },
+        {
+            "name": "I1",
+            "type": "BOOL",
+            "description": "Input signal 1, a boolean value indicating one of the interlock conditions."
+        },
+        {
+            "name": "I2",
+            "type": "BOOL",
+            "description": "Input signal 2, a boolean value indicating one of the interlock conditions."
+        },
+        {
+            "name": "I3",
+            "type": "BOOL",
+            "description": "Input signal 3, a boolean value indicating one of the interlock conditions."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal, a boolean value that activates the interlock processing when true."
+        },
+        {
+            "name": "MODE",
+            "type": "INT",
+            "description": "Mode selector, an integer value that determines the operation behavior of the interlock logic."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUT",
+            "type": "BYTE",
+            "description": "Output byte that represents the processed input signals based on the selected mode."
+        },
+        {
+            "name": "TP",
+            "type": "BOOL",
+            "description": "Transition signal, a boolean value that indicates if there is a change in the output state compared to the previous cycle."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

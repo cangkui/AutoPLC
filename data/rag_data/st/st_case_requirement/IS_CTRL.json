@@ -1,0 +1,19 @@
+{
+    "title": "Control Character String Checker",
+    "description": "IS_CTRL tests whether the string STR are only control characters included.\nIf another character is found the function returns FALSE. If in STR are only\ncontrol characters included, the function returns TRUE. Control characters\nare the characters with the decimal 0..31 and 127",
+    "type": "FUNCTION",
+    "name": "IS_CTRL",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "The input string to be checked for control characters."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The function returns TRUE if the string consists only of control characters, otherwise FALSE."
+    }
+}

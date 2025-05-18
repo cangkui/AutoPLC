@@ -1,0 +1,29 @@
+{
+    "title": "Convert Geographic Coordinates to Decimal Degrees",
+    "description": "GEO_TO_DEG calculates an angle expressed in degrees from the input\ndata level. Minutes, seconds.\nGEO_TO_DEG (2,59,60.0) is 3.0 degrees",
+    "type": "FUNCTION",
+    "name": "GEO_TO_DEG",
+    "input": [
+        {
+            "name": "D",
+            "type": "INT",
+            "description": "The degree component of the geographic coordinate"
+        },
+        {
+            "name": "M",
+            "type": "INT",
+            "description": "The minute component of the geographic coordinate"
+        },
+        {
+            "name": "SEC",
+            "type": "REAL",
+            "description": "The second component of the geographic coordinate"
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The resulting decimal degrees calculated from the input geographic coordinates"
+    }
+}

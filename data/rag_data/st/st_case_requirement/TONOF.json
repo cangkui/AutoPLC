@@ -1,0 +1,32 @@
+{
+    "title": "TONOF Function Block",
+    "description": "TONOF creates a ON delay T1 and an OFF delay T2\nThe rising edge of the input signal IN is delayed by T1 and the falling edge\nof IN is delayed by T2.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TONOF",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "The boolean input signal that triggers the timer."
+        },
+        {
+            "name": "T_ON",
+            "type": "TIME",
+            "description": "The time duration for which the output remains active when the input is true."
+        },
+        {
+            "name": "T_OFF",
+            "type": "TIME",
+            "description": "The time duration for which the output remains inactive when the input is false."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The boolean output signal indicating the state after applying the timing logic."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,20 @@
+{
+    "title": "String Lowercase Check",
+    "description": "IS_LOWER tests whether the string STR only lowercase letters are inclu￾ded. If anything other than a small letter found the function returns FALSE.\nIf in STR are only lowercase letters included, the function returns TRUE. In\nexamining the Global Setup EXTENDED_ASCII constant is considered. If\nEXTENDED_ASCII = TRUE the extended ASCII character-set to be conside-\nred in accordance with ISO 8859-1. Umlauts like Ä, Ö, Ü are considered\nonly if the global constant EXTENDED_ASCII = TRUE.",
+    "type": "FUNCTION",
+    "name": "IS_LOWER",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string that needs to be checked for lowercase characters."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns true if all characters in the string are lowercase; otherwise, false.",
+        "fields": []
+    }
+}

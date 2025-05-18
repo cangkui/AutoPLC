@@ -1,0 +1,45 @@
+{
+    "title": "Scale a Value between Two Ranges",
+    "description": "SCALE_D scales an input value DWORD and calculates an output value in\nREAL. The input value X is limited here to I_LO and I_HI. SCALE_D (IN, 0,\n8191, 0, 100) scales an input with 14 bit resolution to the output 0..100.\nSCALE_D can also be negative and have a negative slope work at output\nvalues, and the values I_LO and I_HI must always be specifed that ILO <\nI_HI is.",
+    "type": "FUNCTION",
+    "name": "SCALE_D",
+    "input": [
+        {
+            "name": "X",
+            "type": "DWORD",
+            "description": "The input value to be scaled."
+        },
+        {
+            "name": "I_LO",
+            "type": "DWORD",
+            "description": "The lower limit of the input range."
+        },
+        {
+            "name": "I_HI",
+            "type": "DWORD",
+            "description": "The upper limit of the input range."
+        },
+        {
+            "name": "O_LO",
+            "type": "REAL",
+            "description": "The lower limit of the output range."
+        },
+        {
+            "name": "O_HI",
+            "type": "REAL",
+            "description": "The upper limit of the output range."
+        }
+    ],
+    "output": [
+        {
+            "name": "SCALE_D",
+            "type": "REAL",
+            "description": "The scaled output value based on the input range and output range."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The function returns the scaled value."
+    }
+}

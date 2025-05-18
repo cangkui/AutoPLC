@@ -1,0 +1,19 @@
+{
+    "title": "Calculate the Gold Value",
+    "description": "GOLD calculates the result of the golden feature. GOLD (1) gives the gol￾den ratio, and GOLD (0) returns 1. GOLD (X) * GOLD (-X) is always 1. GOLD\n(X) is the positive result of the quadratic equation and -GOLD(-X) is the ne￾gative result of the quadratic equation.\nThe calculation is done using the formula:",
+    "type": "FUNCTION",
+    "name": "GOLD",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input real number for which the Gold value will be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated Gold value based on the input X."
+    }
+}

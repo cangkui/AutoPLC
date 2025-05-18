@@ -1,0 +1,32 @@
+{
+    "title": "FT_TN8 Function Block",
+    "description": "MANUAL can override an input signal IN with TRUE or FALSE.\nIN ON OFF Q\n0 0 0 0\n1 0 0 1\n- - 1 0 Manual operation position OFF\n- 1 0 1 Manual operation position ON\nThe typical use of MANUAL by means of a switch with 3 positions (OFF,\nAUTO, ON) where the connections are OFF at OFF and On at On and AUTO\nof the switch remains open.\nThe following diagram shows the possible connection of a switch with 3\npositions:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_TN8",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The real input value that will be processed by the function block."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "The time interval that determines how frequently the input is sampled."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The real output value which corresponds to the last sampled input."
+        },
+        {
+            "name": "trig",
+            "type": "BOOL",
+            "description": "A boolean output that indicates if the input was processed and the output was updated."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

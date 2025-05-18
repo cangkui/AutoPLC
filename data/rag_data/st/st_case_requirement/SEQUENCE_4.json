@@ -1,0 +1,127 @@
+{
+    "title": "Sequential Control Block for Multiple Inputs",
+    "description": "FIND_CTRL searches the string str starting at position POS and returns the\nposition at which the next control character is. Control characters are all\ncharacters whose value is less than 32 or 127.",
+    "type": "FUNCTION_BLOCK",
+    "name": "SEQUENCE_4",
+    "input": [
+        {
+            "name": "in0",
+            "type": "BOOL",
+            "description": "Boolean input control for step 0."
+        },
+        {
+            "name": "in1",
+            "type": "BOOL",
+            "description": "Boolean input control for step 1."
+        },
+        {
+            "name": "in2",
+            "type": "BOOL",
+            "description": "Boolean input control for step 2."
+        },
+        {
+            "name": "in3",
+            "type": "BOOL",
+            "description": "Boolean input control for step 3."
+        },
+        {
+            "name": "start",
+            "type": "BOOL",
+            "description": "Start signal to initiate the sequence."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "Reset signal to reset the sequence and outputs."
+        },
+        {
+            "name": "wait0",
+            "type": "TIME",
+            "description": "Wait time for step 0."
+        },
+        {
+            "name": "delay0",
+            "type": "TIME",
+            "description": "Delay time after step 0."
+        },
+        {
+            "name": "wait1",
+            "type": "TIME",
+            "description": "Wait time for step 1."
+        },
+        {
+            "name": "delay1",
+            "type": "TIME",
+            "description": "Delay time after step 1."
+        },
+        {
+            "name": "wait2",
+            "type": "TIME",
+            "description": "Wait time for step 2."
+        },
+        {
+            "name": "delay2",
+            "type": "TIME",
+            "description": "Delay time after step 2."
+        },
+        {
+            "name": "wait3",
+            "type": "TIME",
+            "description": "Wait time for step 3."
+        },
+        {
+            "name": "delay3",
+            "type": "TIME",
+            "description": "Delay time after step 3."
+        },
+        {
+            "name": "stop_on_error",
+            "type": "BOOL",
+            "description": "Flag to stop the sequence on the first error detected."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output for step 0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output for step 1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output for step 2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output for step 3."
+        },
+        {
+            "name": "QX",
+            "type": "BOOL",
+            "description": "Combined output status indicating active steps."
+        },
+        {
+            "name": "run",
+            "type": "BOOL",
+            "description": "Indicates whether the sequence is currently running."
+        },
+        {
+            "name": "step",
+            "type": "INT",
+            "description": "Current step in the sequence, initialized to -1 indicating no active step."
+        },
+        {
+            "name": "status",
+            "type": "BYTE",
+            "description": "Status of the sequence execution."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

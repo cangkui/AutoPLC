@@ -1,0 +1,26 @@
+{
+    "title": "Gamma Function Calculation",
+    "description": "GAMMA calculates the gamma function after approximation\nof NEMES.\nThe gamma function can be used for Integer X as replacement for the Fa￾culty.",
+    "type": "FUNCTION",
+    "name": "GAMMA",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the Gamma function is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "GAMMA",
+            "type": "REAL",
+            "description": "The computed Gamma value based on the input X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the Gamma function calculation.",
+        "fields": []
+    }
+}

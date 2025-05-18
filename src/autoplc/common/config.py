@@ -61,6 +61,10 @@ class Config:
         return self._config["environment"]["scl_code_dir"]
     
     @property
+    def CODESYS_DIR(self) -> str:
+        return self._config["environment"]["coedsys_dir"]
+    
+    @property
     def model(self) -> str:
         return self._config["model"]["name"]
     

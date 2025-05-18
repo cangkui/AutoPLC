@@ -1,0 +1,24 @@
+{
+    "title": "Beta Function Calculation",
+    "description": "BETA computes the Euler Beta function.",
+    "type": "FUNCTION",
+    "name": "BETA",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number input representing the first parameter for the beta function calculation."
+        },
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "A real number input representing the second parameter for the beta function calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the beta function calculation, which is a real number."
+    }
+}

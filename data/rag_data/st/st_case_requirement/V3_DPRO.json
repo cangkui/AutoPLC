@@ -1,0 +1,24 @@
+{
+    "title": "Vector Dot Product Calculation",
+    "description": "FIND_CTRL searches the string str starting at position POS and returns the\nposition at which the next control character is. Control characters are all\ncharacters whose value is less than 32 or 127.",
+    "type": "FUNCTION",
+    "name": "V3_DPRO",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The first 3-dimensional vector used in the dot product calculation."
+        },
+        {
+            "name": "B",
+            "type": "Vector_3",
+            "description": "The second 3-dimensional vector used in the dot product calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The resulting dot product of vectors A and B."
+    }
+}

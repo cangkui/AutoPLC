@@ -1,0 +1,37 @@
+{
+    "title": "GEN_RDT Function Block",
+    "description": "GEN_RDT generates pulses with a defned pulse width and random spa￾cing. The output pulses with the pulse width TP_Q be generated at random\nintervals TX. TX fuctuates randomly between time MIN_TIME_MS and\nMAX_TIME_MS. The module generates output pulses at XQ only when the\nENABLE input is TRUE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "GEN_RDT",
+    "input": [
+        {
+            "name": "Enable",
+            "type": "BOOL",
+            "description": "A boolean to enable or disable the function block operation."
+        },
+        {
+            "name": "Min_Time_ms",
+            "type": "TIME",
+            "description": "The minimum time interval (Taktzeit) for the output generation."
+        },
+        {
+            "name": "Max_Time_ms",
+            "type": "TIME",
+            "description": "The maximum time interval (Taktzeit) for the output generation."
+        },
+        {
+            "name": "TP_Q",
+            "type": "TIME",
+            "description": "The duration for which the output should remain in the TRUE state."
+        }
+    ],
+    "output": [
+        {
+            "name": "xQ",
+            "type": "BOOL",
+            "description": "A boolean output that indicates the state of the output based on the timing conditions."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

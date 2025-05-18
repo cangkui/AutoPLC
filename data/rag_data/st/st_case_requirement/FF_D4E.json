@@ -1,0 +1,62 @@
+{
+    "title": "FF_D4E Function Block",
+    "description": "FINDB searched for the presence of STR2 in STR1 and returns\nthe last position of STR2 in STR1.\nIf STR2 is not found, a 0 is returned.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FF_D4E",
+    "input": [
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "Input boolean signal that sets output Q0."
+        },
+        {
+            "name": "D1",
+            "type": "BOOL",
+            "description": "Input boolean signal that sets output Q1."
+        },
+        {
+            "name": "D2",
+            "type": "BOOL",
+            "description": "Input boolean signal that sets output Q2."
+        },
+        {
+            "name": "D3",
+            "type": "BOOL",
+            "description": "Input boolean signal that sets output Q3."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock signal that triggers the setting of outputs."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal that clears all outputs."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output boolean signal representing the state set by D0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output boolean signal representing the state set by D1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output boolean signal representing the state set by D2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Output boolean signal representing the state set by D3."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

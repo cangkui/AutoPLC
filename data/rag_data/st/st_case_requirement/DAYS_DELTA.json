@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Days Delta",
+    "description": "DAYS_DELTA calculates the diference between two data in\ndays.",
+    "type": "FUNCTION",
+    "name": "DAYS_DELTA",
+    "input": [
+        {
+            "name": "date_1",
+            "type": "DATE",
+            "description": "The first date for comparison."
+        },
+        {
+            "name": "date_2",
+            "type": "DATE",
+            "description": "The second date for comparison."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "The difference in days between date_1 and date_2.",
+        "fields": []
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "title": "AIN Function for Analog Input Conversion",
+    "description": "AIN\nfunction is confgured by setup parameters and calculates the output va￾lues of the A/D converter according to, so that after the AIN module a\nREAL value is available, which corresponds to the real measured value.\nFurthermore, the module can extract and convert a Sign- Bit at any point.\nBy double-clicking on the module, several setup variables can be defned.\nBits defnes how many bits of the input DWORD to be processed. For a 12\nbit converter, this value is 12. Then only the bits 0 - 11 are scored. Sign\ndefnes whether a sign bit is present and where it is found in the input\nword. Sign = 255 means that no sign bit is present and 15 means that bit\n15 in the DWORD contains the sign. The default value for SIGN is 255.\nLOW and HIGH defne the smallest and largest output value. If a Sign- Bit\nis defned ( SIGN < 255), then LOW and HIGH must be positive. Without\nSign- Bit they can be either positive or negative.",
+    "type": "FUNCTION",
+    "name": "AIN",
+    "input": [
+        {
+            "name": "in",
+            "type": "DWORD",
+            "description": "The digital input value to be converted."
+        },
+        {
+            "name": "Bits",
+            "type": "BYTE",
+            "description": "The number of bits that represent the valid portion of the digital input."
+        },
+        {
+            "name": "sign",
+            "type": "BYTE",
+            "description": "The position of the sign bit in the input value; defaults to 255 indicating no sign bit."
+        },
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower limit of the output range."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper limit of the output range; defaults to 10.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "AIN",
+            "type": "REAL",
+            "description": "The converted real value based on the input and specified parameters."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The resulting real value after conversion from the digital input."
+    }
+}

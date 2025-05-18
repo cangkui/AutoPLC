@@ -1,0 +1,40 @@
+{
+    "title": "Bit Load Function",
+    "description": "INC adds to the input X the Value D and ensures that the output INC is not\ndoes not exceed the value of M. If the result from the addition of X and D\nis greater than M, then it starts again at 0. The feature is especially useful\nwhen addressing arrays and bufers. Even the positioning of absolute en￾coders it can be used. INC can be used to decrementieren with a negative\nD, while INC will ensure that the result is not below zero. If subtract 1 from\nzero INC starts again at M.\nINC: = X + D, because D can take the maximum value M.\nIf INC > M so INC starts again at 0.\nIf INC < 0 so INC starts again at M",
+    "type": "FUNCTION",
+    "name": "BIT_LOAD_W2",
+    "input": [
+        {
+            "name": "I",
+            "type": "WORD",
+            "description": "The input word to be manipulated."
+        },
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "Control signal that determines the bit loading operation; TRUE for right operations, FALSE for left operations."
+        },
+        {
+            "name": "P",
+            "type": "INT",
+            "description": "The number of positions to shift or rotate the word."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "Specifies the number of positions for loading bits."
+        }
+    ],
+    "output": [
+        {
+            "name": "BIT_LOAD_W2",
+            "type": "WORD",
+            "description": "The result of the bit manipulation operation on the input word."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "The manipulated word after applying the specified bit operations."
+    }
+}

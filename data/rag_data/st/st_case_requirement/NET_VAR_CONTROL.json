@@ -1,0 +1,57 @@
+{
+    "title": "NET_VAR_CONTROL",
+    "description": "NET_VAR_CONTROL coordinates the data exchange between the two \n\ncontrollers and the satellite components NET_VAR_*. With ACTIVATE = TRUE, the \n\ndata exchange will be released. The module must be invoked on both controllers, \n\nwith the parameter MASTER must be assigned once with TRUE and once must be \n\nFALSE. Thus determines which side the active connection will establish. With UDP \n\n(FALSE / TRUE) can be specified whether a UDP or TCP connection is used. The the \n\nIP address of the other side must be specified in REMOTE-IP4, and alternatively, the \n\nport address (default port is 10000). The SCAN TIME determines a data refresh \n\ninterval (default is T # 1s). WIth WATCHDOG the monitoring time is set (default is T # \n\n2s). When data exchange runs, the parameter RUN = TRUE. If the data exchange is \n\nlonger than the watchdog time not possible, RUN = FALSE and an error is passed. \n\nThe error will not be acknowledged, because the module automatically tries to \n\nrestore the data exchange. Once no more error exists, RUN = TRUE and the error \n\ncode is cleared.\n\nERROR: (regarded as a HEX value!)\n\nDWORD Message Type Description\n\n199 Version 1.21\n\nChapter 12. Network Variables\n\nB3 B2 B1 B0\n\nXX .. .. .. Connection establish Connect Error - See module IP_CONTROL\n\n.. XX .. .. Send data Transmission error - See module IP_CONTROL\n\n.. .. XX .. Receive data Receive Error - See module IP_CONTROL\n\n.. .. .. XX Configuration error ID number of the module",
+    "type": "FUNCTION",
+    "name": "NET_VAR_CONTROL",
+    "input": [
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Enables the exchange of data."
+        },
+        {
+            "name": "MASTER",
+            "type": "BOOL",
+            "description": "Determines if this side is the master (TRUE) or slave (FALSE)."
+        },
+        {
+            "name": "UDP",
+            "type": "BOOL",
+            "description": "Specifies the connection type: FALSE for TCP, TRUE for UDP."
+        },
+        {
+            "name": "REMOTE_IP4",
+            "type": "DWORD",
+            "description": "IP4-address of the other SPS."
+        },
+        {
+            "name": "REMOTE_PORT",
+            "type": "WORD",
+            "description": "PORT number of the other PLC (default port is 10000)."
+        },
+        {
+            "name": "SCAN_TIME",
+            "type": "TIME",
+            "description": "Update time for data refresh (default is T#1s)."
+        },
+        {
+            "name": "WATCHDOG",
+            "type": "TIME",
+            "description": "Monitoring time (default is T#2s)."
+        }
+    ],
+    "output": [
+        {
+            "name": "RUN",
+            "type": "BOOL",
+            "description": "Indicates active data exchange - no error."
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code regarding the data exchange as a HEX value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

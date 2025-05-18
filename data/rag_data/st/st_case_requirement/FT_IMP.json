@@ -1,0 +1,32 @@
+{
+    "title": "First-Order Transfer Function Implementation",
+    "description": "FT_IMP is a high-pass flter with time constant T and multiplier K. An ab￾rupt change at the input is visible at the output, but after the time T the\nvalue is already smoother by 63% and after 3 * T by 95%. Thus, after an\nabrupt change of the input signal from 0 to 10, the output passes 10 at\nthe beginning and reduces after 1* T to 3.7 and after 3 * T to 0.5 and then\ngradually to 0.\nStructure diagram:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_IMP",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input signal to the transfer function."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "The time constant of the transfer function."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "The scaling factor applied to the output, default is 1.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The output signal after applying the transfer function."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

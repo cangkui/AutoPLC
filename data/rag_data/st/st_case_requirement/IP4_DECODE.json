@@ -1,0 +1,25 @@
+{
+    "title": "IP Address Decoder",
+    "description": "IP4_DECODE decodes the in STR stored string as a IP v4 address and re￾turns it as a DWORD. A return of 0 means an invalid address or an address\n\nof '0.0.0.0 ' was evaluated. IP4 may be used for evaluating a Subnet Mask\n\nof the IP v4 format.",
+    "type": "FUNCTION",
+    "name": "IP4_DECODE",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING(15)",
+            "description": "A string that contains the IPv4 address."
+        }
+    ],
+    "output": [
+        {
+            "name": "DWORD",
+            "type": "DWORD",
+            "description": "The decoded IPv4 address."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Returns the decoded IPv4 address as a DWORD. A return value of 0 indicates that the address is invalid or '0.0.0.0'."
+    }
+}

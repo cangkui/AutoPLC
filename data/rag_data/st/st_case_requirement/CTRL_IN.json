@@ -1,0 +1,30 @@
+{
+    "title": "Control Input Function",
+    "description": "CTRL_IN calculates the process deviation (SET_POINT _ ACTUAL) and pas￾ses them at the output. If the diference is less than the value at the input\nNOISE of the output remains at 0. CTRL_IN can be used to build own rule\nmodules.\nBlock diagram of CTRL_IN:",
+    "type": "FUNCTION",
+    "name": "CTRL_IN",
+    "input": [
+        {
+            "name": "SET_POINT",
+            "type": "REAL",
+            "description": "The desired target value that the system aims to achieve."
+        },
+        {
+            "name": "ACTUAL",
+            "type": "REAL",
+            "description": "The current value of the system that is being evaluated."
+        },
+        {
+            "name": "NOISE",
+            "type": "REAL",
+            "description": "The acceptable range of fluctuation around the set point which will be considered as 'noise'."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated process error after applying the dead zone function.",
+        "fields": []
+    }
+}

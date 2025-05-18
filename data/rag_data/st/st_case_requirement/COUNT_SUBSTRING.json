@@ -1,0 +1,24 @@
+{
+    "title": "Count Substring Occurrences",
+    "description": "DWORD_OF_BYTE creates from 4 individual bytes (B0 .. B3) a DWORD.\nA DWORD is composed as follows: B3-B2-B1-B0.",
+    "type": "FUNCTION",
+    "name": "COUNT_SUBSTRING",
+    "input": [
+        {
+            "name": "SEARCH",
+            "type": "STRING",
+            "description": "The substring to search for within the main string."
+        },
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "The main string in which substring occurrences will be counted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The total number of occurrences of the substring within the main string."
+    }
+}

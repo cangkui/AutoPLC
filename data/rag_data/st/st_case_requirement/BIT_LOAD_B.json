@@ -1,0 +1,36 @@
+{
+    "title": "Bit Load Function",
+    "description": "BIT_LOAD_B copies the bit at VAL to the bit in the position N in byte IN.\nThe least signifcant bit B0 is described by the position 0.",
+    "type": "FUNCTION",
+    "name": "BIT_LOAD_B",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The input BYTE value that will be modified."
+        },
+        {
+            "name": "VAL",
+            "type": "BOOL",
+            "description": "A boolean flag that determines whether to set or clear the bit at the specified position."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position of the bit in the BYTE that needs to be set or cleared."
+        }
+    ],
+    "output": [
+        {
+            "name": "BIT_LOAD_B",
+            "type": "BYTE",
+            "description": "The modified BYTE after the bit operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The value of the modified BYTE after the operation.",
+        "fields": []
+    }
+}

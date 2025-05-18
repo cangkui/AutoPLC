@@ -1,0 +1,106 @@
+{
+    "title": "Oil and Gas Burner Control Module",
+    "description": "BURNER is a control interface for oil or gas burner operating at kilowatt\n\nhour meter and counter. The module controls a two-stage burner with op￾tional fuel oil warming. The input IN is the control input that starts the bur￾ner only when the input OVER_TEMP is FALSE. OVER_TEMP is the boiler\n\nthermostat protection, which gets TRUE, if the boiler temperature has rea￾ched the maximum temperature. A burner start begins with the fuel oil\n\n26 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\nwarming, by PRE_HEAT gets TRUE. Then it waits for a signal at the input\n\nOIL_TEMP. If the signal OIL_TEMP is within the PRE_HEAT_TIME not TRUE\n\nand the oil temperature is not reached, the start sequence is interrupted\n\nand the output FAIL is set to TRUE. At the same time the error is spent at\n\nthe Output STATUS. After fuel oil warming the motor gets on and sets the\n\nfan in operation. Then after a defned time the ignition is switched and the\n\noil valve is opened. If no response of the fame sensor after specifed time\n\n(SAFETY_TIME), the module shows a failure. A fault is signaled even if the\n\nfame sensor responds before the ignition. If after a successful ignition, the\n\nfame breaks of and the set-variable MULTIPLE_IGNITION = TRUE, imme￾diately a ignition is started. A second stage is activated automatically after\n\nthe time STAGE2_DELAY when the input STAGE2 is TRUE.\n\nIf a fault occurs, then the module is locked for a fxed time LOCKOUT_TIME \n\nand only after this time a RST can start the operation again. During the \n\nLOCKOUT_TIME, the RST Input must be FALSE. A TRUE at input OVER_TEMP \n\nstops immediately every action and reports the error 9.\n\nThe status output indicates the current state of the module:\n\n 110 = Wait for Start signal ( Standby ) \n\n111 = startup sequence is executed\n\n112 = burner runs on stage 1\n\n113 = burner runs at stage 2\n\nA number of error conditions are provided at the output STATUS, if an error \n\nis present:\n\n1 = fuel oil warming has not responded within the PRE_HEAT_TIME\n\n2 = fame sensor is active during fuel oil warming (PRE_HEAT_TIME)\n\n3 = fame sensor is active during the aeration period \n\n(PRE_VENTILATION_TIME)\n\n4 = safety time ( Safety_Time) was passed without a fame \n\n5 = fame stops in operation\n\n9 = boiler overheating contact has tripped\n\nTrace recording of a normal boot sequence:\n\n27 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\nThe signal IN starts the sequence with the output PRE_HEAT. After rea￾ching the oil temperature (OIL_TEMP = TRUE), the engine started and the\n\nPRE_VENTILATION_TIME (time from engine start until oil valve is open)\n\nawaited. After an adjustable time (PPR_IGNITION_TIME) before opening the\n\noil valve, the ignition is turned on. The ignition is then on until the\n\nPOST_IGNITION_TIME has expired. The operating time per stage is measu￾red independently in seconds.\n\nIN over\n\ntem\n\np\n\nOil\n\ntem\n\np\n\nFlam\n\ne\n\nRst mo￾tor\n\nOil\n\ncoil\n\nPre\n\nhea\n\nt\n\nig￾nite\n\nSta￾tus\n\nfail\n\n0 0 - - 0 0 0 0 0 110 0 Wait mode\n\n1 0 0 0 0 0 0 1 0 111 0 fuel oil warming period\n\n1 0 1 0 0 1 0 1 0 111 0 aeration period\n\n1 0 1 0 0 1 0 1 1 111 0 pre ignition period\n\n1 0 1 0 0 1 1 1 1 111 0 Open valve stage 1\n\n1 0 1 1 0 1 1 1 1 112 0 Flame burns post ignition period\n\n1 0 1 1 0 1 1 1 0 112 0 Burner is running\n\n1 0 1 0 0 1 1 1 1 111 0 Post-ignition after fame stops\n\n- 1 - - - - - - - 9 1 Boiler overheating\n\n1 0 1 1 0 1 0 1 0 3 1 foreign light failure\n\nThe following time diagram explains the various setup times and the \n\nsequence:\n\nThe timing diagram refects the exact time line:\n\nt1 = pre-heating (PRE_HEAT_TIME)\n\nt2 = prepurge (PRE_VENT_Time)\n\nt3 = pre ignition time (PRE_IGNITE_TIME)\n\n28 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition\n\nt4 = safety time (SAFETY_TIME)\n\nt5 = post ignition time (POST_IGNITE_TIME)\n\nt6 = delay for stage 2 (STAGE2_DELAY)",
+    "type": "FUNCTION",
+    "name": "BURNER",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Control input that starts the burner; must be TRUE to begin the sequence."
+        },
+        {
+            "name": "Stage2",
+            "type": "BOOL",
+            "description": "Control input for activating stage 2 of the burner."
+        },
+        {
+            "name": "OVER_TEMP",
+            "type": "BOOL",
+            "description": "Temperature limit of the boiler; TRUE if the boiler temperature has reached the maximum."
+        },
+        {
+            "name": "OIL_TEMP",
+            "type": "BOOL",
+            "description": "Thermostat signal indicating the readiness of fuel oil warming."
+        },
+        {
+            "name": "FLAME",
+            "type": "BOOL",
+            "description": "Flame sensor signal; TRUE if the flame is detected."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset input for failure reset; used to clear faults."
+        },
+        {
+            "name": "RST_TIMER",
+            "type": "BOOL",
+            "description": "Reset input for the service counter."
+        }
+    ],
+    "output": [
+        {
+            "name": "MOTOR",
+            "type": "BOOL",
+            "description": "Control signal for the motor to start the fan."
+        },
+        {
+            "name": "COIL1",
+            "type": "BOOL",
+            "description": "Control signal for oil valve level 1."
+        },
+        {
+            "name": "COIL2",
+            "type": "BOOL",
+            "description": "Control signal for oil valve stage 2."
+        },
+        {
+            "name": "PRE_HEAT",
+            "type": "BOOL",
+            "description": "Indicates that fuel oil warming is in progress."
+        },
+        {
+            "name": "IGNITE",
+            "type": "BOOL",
+            "description": "Signal that triggers the ignition process."
+        },
+        {
+            "name": "KWH",
+            "type": "REAL",
+            "description": "Kilo watt hour meter indicating the energy usage."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "Status output indicating the current state of the burner module."
+        },
+        {
+            "name": "FAIL",
+            "type": "BOOL",
+            "description": "Indicates fault presence; TRUE if an error has occurred."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "RUNTIME1",
+            "type": "UDINT",
+            "description": "Operating time level 1 measured in seconds."
+        },
+        {
+            "name": "RUNTIME2",
+            "type": "UDINT",
+            "description": "Operating time level 2 measured in seconds."
+        },
+        {
+            "name": "CYCLES",
+            "type": "UDINT",
+            "description": "Number of burner starts measured."
+        }
+    ],
+    "return_value": {
+        "type": "VOID",
+        "description": "No return value; the function modifies the outputs based on the inputs and internal state."
+    }
+}

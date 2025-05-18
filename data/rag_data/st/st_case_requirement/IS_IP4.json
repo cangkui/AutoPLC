@@ -1,0 +1,25 @@
+{
+    "title": "IP Address Validation Function",
+    "description": "IS_IP4 checks if the string str contains a valid IP v4 address, if not FALSE is\n\nreturned. A valid IP v4 address consists of 4 numbers from 0 - 255 and\n\nthey are separated each with one point. The address 0.0.0.0 is there clas￾sifed as wrong.\n\nIS_IP4(0.0.0.0) = FALSE\n\nIS_IP4(255.255.255.255) = TRUE\n\nIS_IP4(256.255.255.255) = FALSE\n\nIS_IP4(0.1.2.) = FALSE\n\nIS_IP4(0.1.2.3.) = FALSE\n\n78 Version 1.21\n\nChapter 8. Converter",
+    "type": "FUNCTION",
+    "name": "IS_IP4",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "The string to be tested for a valid IPv4 address."
+        }
+    ],
+    "output": [
+        {
+            "name": "BOOL",
+            "type": "BOOL",
+            "description": "Returns TRUE if STR contains a valid IPv4 address, otherwise returns FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "A boolean value indicating the validity of the IPv4 address."
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "title": "HTML Encode Function",
+    "description": "HTML_ENCODE converts in HTML reserved characters to form &Name;. If the\n\ninput M is set to TRUE also all the characters with the code 160-255 and\n\n128 are implemented in the &Name convention.\n\nCaution should be exercised in the use of character sets because they are\n\nnot the same on all systems and deviations are common in special charac￾ters. Thus, for example, not all systems the € character at position 128 in\n\nthe character map.\n\nThe reserved characters in HTML are:\n\n& Is encoded as &amp;\n\n> Is encoded as &gt;\n\n< Is encoded as &lt;\n\n\" is coded as &quot;\n\nHtml_encode converts the string '1 > than 0 'into '1 is &gt; than 0'.\n\n76 Version 1.21\n\nChapter 8. Converter",
+    "type": "FUNCTION",
+    "name": "HTML_ENCODE",
+    "input": [
+        {
+            "name": "String",
+            "type": "STRING",
+            "description": "The input string to be encoded."
+        },
+        {
+            "name": "mode",
+            "type": "BOOL",
+            "description": "If TRUE, encodes additional characters (code 160-255 and 128) to HTML entities."
+        }
+    ],
+    "output": [
+        {
+            "name": "encoded_string",
+            "type": "STRING",
+            "description": "The encoded string with HTML reserved characters converted to HTML entities."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "The result of the HTML encoding process.",
+        "fields": []
+    }
+}

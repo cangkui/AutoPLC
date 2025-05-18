@@ -1,0 +1,38 @@
+{
+    "title": "Telnet Receive Function",
+    "description": "TN_RECEIVE receives input data from the Telnet client, and \n\nevaluates the key codes.\n\nIf the key code in the range 32-126 it shall be stored as ASCII code under \n\nXus_TN_SCREEN, by_Input_ASCII_Code. In addition, \n\nXus_TN_SCREEN.bo_Input_ASCII_IsNum = TRUE if this corresponds to a \n\nnumber between 0 and 9.\n\nIf the key code is of the following extended code then this is fled under \n\nXus_TN_SCREEN,by_Input_Exten_Code.\n\nExten_code Button name\n\n65 Cursor up\n\n66 Cursor down\n\n67 Cursor RIGHT\n\n68 Cursor left\n\n72 Pos1\n\n75 End\n\n80 F1\n\n81 F2\n\n82 F3\n\n83 F4\n\n8 Backspace\n\n182 Version 1.21\n\nChapter 11. Telnet-Vision\n\n9 Tabulator\n\n13 Return (Enter)\n\n27 Escape",
+    "type": "FUNCTION",
+    "name": "TN_RECEIVE",
+    "input": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "us_TN_SCREEN",
+            "description": "Structure to hold the result of the Telnet input processing.",
+            "fields": [
+                {
+                    "name": "by_Input_ASCII_Code",
+                    "type": "int",
+                    "description": "The ASCII code received from the Telnet client."
+                },
+                {
+                    "name": "bo_Input_ASCII_IsNum",
+                    "type": "bool",
+                    "description": "Indicates if the received ASCII code corresponds to a numeric value (0-9)."
+                },
+                {
+                    "name": "by_Input_Exten_Code",
+                    "type": "int",
+                    "description": "An extended code representing specific function keys."
+                }
+            ]
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer that holds the data received from the Telnet client."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": null
+}

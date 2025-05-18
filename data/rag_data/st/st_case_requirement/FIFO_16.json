@@ -1,0 +1,52 @@
+{
+    "title": "FIFO 16-Element Queue",
+    "description": "SIGNAL generates an output signal Q that corresponds to the bit pattern in\nSIG. This is Bitpattern is passed in TS long steps. By diferent bit patterns\nin SIG, various output signals are generated. If the input IN connected to\nTRUE, the module begins to put on output Q in accordance with the SIG\nprovided Bitpattern . By adapting the Bitpattern diferent output signals\nare generated. A Pattern of 10101010, generates an output signal with\n50% Duty Cycle and a frequency that is 1/2*S. A Pattern 11110000 by con￾trast, generates an output signal of 50% and a frequency of 1/8*TS. The\nstart of an output signal is random. The Bit sequence starts at any bit\nwhen the input IN goes to TRUE. If at the input TS no time given then the\nmodule internally uses a default of 1024ms per cycle (a cycle is the cycle\nof all 8 bits of a sequence). Typical applications for SIGNAL is the signal ge￾neration for sirens or signal lamps. \nThe following graph illustrates the functioning of signal for\nSIG = 2#1111_0000:",
+    "type": "FUNCTION_BLOCK",
+    "name": "FIFO_16",
+    "input": [
+        {
+            "name": "Din",
+            "type": "DWORD",
+            "description": "The data input that will be stored in the FIFO queue."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable input for the FIFO operations. When TRUE, the operation proceeds."
+        },
+        {
+            "name": "RD",
+            "type": "BOOL",
+            "description": "Read command input. When TRUE, it indicates a read operation should occur."
+        },
+        {
+            "name": "WD",
+            "type": "BOOL",
+            "description": "Write command input. When TRUE, it indicates a write operation should occur."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset input. When TRUE, it resets the FIFO queue to its initial state."
+        }
+    ],
+    "output": [
+        {
+            "name": "Dout",
+            "type": "DWORD",
+            "description": "The data output from the FIFO queue when a read operation is performed."
+        },
+        {
+            "name": "EMPTY",
+            "type": "BOOL",
+            "description": "Indicates whether the FIFO queue is empty. TRUE if empty, FALSE otherwise."
+        },
+        {
+            "name": "FULL",
+            "type": "BOOL",
+            "description": "Indicates whether the FIFO queue is full. TRUE if full, FALSE otherwise."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

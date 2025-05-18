@@ -1,0 +1,26 @@
+{
+    "title": "Check Uppercase Character",
+    "description": "ISC_UPPER tests whether a sign IN is a captial letter, if IN is a capital let￾ter, the function returns TRUE, if not the function returns FALSE. In exami￾ning the Global Setup EXTENDED_ASCII constant is considered. If EXTEN￾DED_ASCII = TRUE the extended ASCII character-set to be considered in\naccordance with ISO 8859-1.\nThe The following table describes the character codes:\nCode EXTENDED_ASCII=TRUE EXTENDED_ASCII = FASLE\n0..64,91..191,215, 223..255 FALSE FALSE\n65..90 TRUE TRUE\n192..214 TRUE FALSE\n216..222 TRUE FALSE",
+    "type": "FUNCTION",
+    "name": "ISC_UPPER",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The byte value to be checked for uppercase character status."
+        }
+    ],
+    "output": [
+        {
+            "name": "ISC_UPPER",
+            "type": "BOOL",
+            "description": "Returns TRUE if the input byte corresponds to an uppercase ASCII character; otherwise, FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The result indicating whether the input byte is an uppercase letter, based on ASCII definitions.",
+        "fields": []
+    }
+}

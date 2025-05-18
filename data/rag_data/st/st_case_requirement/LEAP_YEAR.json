@@ -1,0 +1,25 @@
+{
+    "title": "Leap Year Determination Function",
+    "description": "LEAP_YEAR tests if the input year is a leap year and passs\nTRUE if true. The test is valid for the time window from 1970 to 2099. In\nthe year 2100 a leap year is indicated although this is not one. However,\nsince the range of dates according to IEC61131-3 extends only to the year\n2106 this correction will be omitted.",
+    "type": "FUNCTION",
+    "name": "LEAP_YEAR",
+    "input": [
+        {
+            "name": "yr",
+            "type": "INT",
+            "description": "The year for which the leap year status is to be determined."
+        }
+    ],
+    "output": [
+        {
+            "name": "LEAP_YEAR",
+            "type": "BOOL",
+            "description": "Returns TRUE if the year is a leap year, FALSE otherwise."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates whether the year is a leap year."
+    }
+}

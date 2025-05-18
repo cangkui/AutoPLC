@@ -1,0 +1,29 @@
+{
+    "title": "Cauchy Distribution Calculation",
+    "description": "CAUCHYCD calculated the distribution function after Cauchy.",
+    "type": "FUNCTION",
+    "name": "CAUCHYCD",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number representing the first parameter of the Cauchy distribution."
+        },
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "A real number representing the second parameter of the Cauchy distribution."
+        },
+        {
+            "name": "U",
+            "type": "REAL",
+            "description": "A real number representing the scale parameter of the Cauchy distribution."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated value of the Cauchy distribution based on the inputs X, T, and U."
+    }
+}

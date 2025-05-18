@@ -1,0 +1,47 @@
+{
+    "title": "Telnet Vision Write Function",
+    "description": "TN_SC_WRITE_C is at the given coordinates Iin_Y, Iin_Y \n\nIst_STRING the text with the color of Iby_ATTR. The text is adapted before \n\noutput on the length Iin_LENGTH, and by Iin_OPTION, the text position is \n\ndetermined.\n\nIin_OPTION\n\n0 = right fll with spaces eg 'TEST '\n\n1 = left fll with blanks eg ' TEST '\n\n2 = center and fll with blanks eg ' TEST '",
+    "type": "FUNCTION",
+    "name": "TN_SC_WRITE_C",
+    "input": [
+        {
+            "name": "Iin_Y",
+            "type": "INT",
+            "description": "Y coordinate for text position"
+        },
+        {
+            "name": "Iin_X",
+            "type": "INT",
+            "description": "X coordinate for text position"
+        },
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color code for the text"
+        },
+        {
+            "name": "Ist_STRING",
+            "type": "STRING",
+            "description": "Text string to be displayed"
+        },
+        {
+            "name": "Iin_LENGTH",
+            "type": "INT",
+            "description": "Length to which the text will be adjusted"
+        },
+        {
+            "name": "Iin_OPTION",
+            "type": "INT",
+            "description": "Option for text positioning: 0 for right, 1 for left, 2 for center"
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen object that may be modified by the function"
+        }
+    ],
+    "return_value": null
+}

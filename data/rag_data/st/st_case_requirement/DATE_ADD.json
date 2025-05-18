@@ -1,0 +1,39 @@
+{
+    "title": "Date Addition Function",
+    "description": "DATE_ADD add days, weeks, months, and add years to a\ndate. First the module adds the specifed days and weeks, then months\nand fnally the years. \nThe input values can be both positive as well be negative. So it can also\nbe subtracted from a date.\nNote that especially for negative input values the sum of negative values,\ni.e. -3000 days does not run below 1.1.1970 because this would have an\noverfow of data type DATE and undefned values are obtained.",
+    "type": "FUNCTION",
+    "name": "DATE_ADD",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The initial date to which the adjustments will be made."
+        },
+        {
+            "name": "D",
+            "type": "INT",
+            "description": "The number of days to add to the initial date."
+        },
+        {
+            "name": "W",
+            "type": "INT",
+            "description": "The number of weeks to add to the initial date."
+        },
+        {
+            "name": "M",
+            "type": "INT",
+            "description": "The number of months to add to the initial date."
+        },
+        {
+            "name": "Y",
+            "type": "INT",
+            "description": "The number of years to add to the initial date."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The resulting date after the specified additions."
+    }
+}

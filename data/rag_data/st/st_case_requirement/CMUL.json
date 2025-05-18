@@ -1,0 +1,36 @@
+{
+    "title": "Complex Number Multiplication",
+    "description": "CMUL Multiplies two complex numbers X and Y.",
+    "type": "FUNCTION",
+    "name": "CMUL",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "The first complex number to be multiplied."
+        },
+        {
+            "name": "Y",
+            "type": "COMPLEX",
+            "description": "The second complex number to be multiplied."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The result of multiplying the two complex numbers.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the resulting complex number."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the resulting complex number."
+            }
+        ]
+    }
+}

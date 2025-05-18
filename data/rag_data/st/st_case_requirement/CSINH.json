@@ -1,0 +1,37 @@
+{
+    "title": "Complex Hyperbolic Sine Function",
+    "description": "CSINH calculates the hyperbolic sine of a complex number",
+    "type": "FUNCTION",
+    "name": "CSINH",
+    "input": [
+        {
+            "name": "X",
+            "type": "COMPLEX",
+            "description": "A complex number for which the hyperbolic sine is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "CSINH",
+            "type": "complex",
+            "description": "The complex hyperbolic sine of the input complex number."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The calculated complex hyperbolic sine value.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "float",
+                "description": "The real part of the complex hyperbolic sine."
+            },
+            {
+                "name": "im",
+                "type": "float",
+                "description": "The imaginary part of the complex hyperbolic sine."
+            }
+        ]
+    }
+}

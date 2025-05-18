@@ -1,0 +1,31 @@
+{
+    "title": "Calculate Array Trend",
+    "description": "ARRAY_TREND calculates the trend development of all va￾lues of an arbitrary array of REAL. When called a pointer to the array and\nits size in bytes is passed to the function. Under CoDeSys the call reads:\nARRAY_TREND(ADR(Array), SIZEOF(Array)), where array is the name of the\narray to be manipulated. ADR() is a standard function, which identifes the\npointer to the array and SIZEOF() is a standard function, which determines\nthe size of the array. In order to determine the trend, the array referenced\nby the pointer is scanned directly in memory. The function ARRAY_TREND\ndoes not change the content of the array. This type of processing arrays is\nvery efcient because no additional memory is required and no surrender\nvalues must be copied. The trend is determined by subtract the average\nof the lower half of the values of the array from the average of the values\nof the upper half of the array.",
+    "type": "FUNCTION",
+    "name": "ARRAY_TREND",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY[0..32000] OF REAL",
+            "description": "Pointer to the array of real numbers whose trend needs to be calculated."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The total number of elements in the array."
+        }
+    ],
+    "output": [
+        {
+            "name": "ARRAY_TREND",
+            "type": "REAL",
+            "description": "The calculated trend value of the array, which is the average based on the input size."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Average trend of the array values.",
+        "fields": []
+    }
+}

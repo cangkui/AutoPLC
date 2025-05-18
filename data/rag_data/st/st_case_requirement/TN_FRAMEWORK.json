@@ -1,0 +1,44 @@
+{
+    "title": "Telnet-Vision Framework Function Module",
+    "description": "TN_FRAMEWORK is a frame structure, which provides a \n\nfnished maturity model for TELNET-Vision .\n\nThe following tasks and functions are treated.\n\nConnection setup and breakdown with Telnet Client\n\nSend and receive data\n\nData structures for graphics functions\n\nINPUT_CONTROL elements\n\nIntelligent automatic updating of the Telnet display\n\nMenu bar display\n\nDirect access to all data structures for user program\n\n173 Version 1.21\n\nChapter 11. Telnet-Vision",
+    "type": "FUNCTION",
+    "name": "TN_FRAMEWORK",
+    "input": [
+        {
+            "name": "Xus_TN_INPUT_CONTROL",
+            "type": "Us_TN_INPUT_CONTROL",
+            "description": "Input control elements to manage Telnet operations."
+        },
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen structure for displaying the Telnet interface."
+        },
+        {
+            "name": "Xus_TN_MENU",
+            "type": "us_TN_MENU",
+            "description": "Menu structure for user navigation and options."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data over the network."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data from the network."
+        },
+        {
+            "name": "IP_C",
+            "type": "IP_CONTROL",
+            "description": "Parameters for IP configuration and control."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value as this function performs operations without returning data."
+    }
+}

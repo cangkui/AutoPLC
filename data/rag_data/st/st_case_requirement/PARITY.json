@@ -1,0 +1,26 @@
+{
+    "title": "Calculate Parity",
+    "description": "PARITY calculates even parity over the input byte IN. The output is TRUE if\nthe number of true bits in the byte (IN) is odd.",
+    "type": "FUNCTION",
+    "name": "PARITY",
+    "input": [
+        {
+            "name": "in",
+            "type": "DWORD",
+            "description": "The DWORD input value for which the parity is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "PARITY",
+            "type": "BOOL",
+            "description": "The result indicating the parity of the input value, TRUE if the number of set bits is odd, otherwise FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns the parity result of the input value.",
+        "fields": []
+    }
+}

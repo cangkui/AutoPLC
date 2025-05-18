@@ -1,0 +1,25 @@
+{
+    "title": "Binomial Coefficient Calculation",
+    "description": "BINOM calculates the binominal coefcient N over K for integer N and K.",
+    "type": "FUNCTION",
+    "name": "BINOM",
+    "input": [
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The total number of elements from which the selection is made."
+        },
+        {
+            "name": "K",
+            "type": "INT",
+            "description": "The number of elements to choose from the total elements."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DINT",
+        "description": "The computed binomial coefficient value.",
+        "fields": []
+    }
+}

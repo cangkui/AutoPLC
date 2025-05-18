@@ -1,0 +1,20 @@
+{
+    "title": "Extract Second from Date and Time",
+    "description": "SECOND_OF_DT extracts the second from a current DT value.\nSECOND_OF_DT(DT#2008-6-6-10:22:20) = 20",
+    "type": "FUNCTION",
+    "name": "SECOND_OF_DT",
+    "input": [
+        {
+            "name": "XDT",
+            "type": "DT",
+            "description": "The date and time value from which the second component will be extracted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "An integer representing the second component extracted from the input date and time.",
+        "fields": []
+    }
+}

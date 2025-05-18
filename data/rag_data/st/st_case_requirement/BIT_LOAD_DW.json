@@ -1,0 +1,36 @@
+{
+    "title": "BIT_LOAD_DW Function",
+    "description": "BIT_LOAD_DW copies the VAL bit at the input to the bit in position N in\nDWORD IN. The least signifcant bit B0 is described by the position 0.",
+    "type": "FUNCTION",
+    "name": "BIT_LOAD_DW",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The input DWORD value to be manipulated."
+        },
+        {
+            "name": "VAL",
+            "type": "BOOL",
+            "description": "A boolean flag that determines whether to set (TRUE) or clear (FALSE) a bit in the input DWORD."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position of the bit in the DWORD to be manipulated, where 0 is the least significant bit."
+        }
+    ],
+    "output": [
+        {
+            "name": "BIT_LOAD_DW",
+            "type": "DWORD",
+            "description": "The resulting DWORD after the bit manipulation operation has been applied."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Returns the modified DWORD after adjusting the specified bit according to the VAL parameter.",
+        "fields": []
+    }
+}

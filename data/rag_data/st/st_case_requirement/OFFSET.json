@@ -1,0 +1,75 @@
+{
+    "title": "Offset Calculation Function",
+    "description": "OFFSET addes diferent ofsets to an input signal depending on \nthe binary value of O1.. O4. The ofsets can be added individually or \nsimultaneously. With the input D a Default value instead of the input X can \nbe switched to the adder. The ofset and Default value be defned through \nthe setup variables.\nThe following example illustrates the operation of ofset:",
+    "type": "FUNCTION",
+    "name": "OFFSET",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The initial value to which offsets may be applied."
+        },
+        {
+            "name": "O1",
+            "type": "BOOL",
+            "description": "A boolean indicating whether to add 'Offset_1' to the result."
+        },
+        {
+            "name": "O2",
+            "type": "BOOL",
+            "description": "A boolean indicating whether to add 'Offset_2' to the result."
+        },
+        {
+            "name": "O3",
+            "type": "BOOL",
+            "description": "A boolean indicating whether to add 'Offset_3' to the result."
+        },
+        {
+            "name": "O4",
+            "type": "BOOL",
+            "description": "A boolean indicating whether to add 'Offset_4' to the result."
+        },
+        {
+            "name": "D",
+            "type": "BOOL",
+            "description": "A boolean flag that, if true, will cause the function to return the 'default' value instead of the calculated offset value."
+        },
+        {
+            "name": "Offset_1",
+            "type": "REAL",
+            "description": "The offset value to add if 'O1' is true."
+        },
+        {
+            "name": "Offset_2",
+            "type": "REAL",
+            "description": "The offset value to add if 'O2' is true."
+        },
+        {
+            "name": "Offset_3",
+            "type": "REAL",
+            "description": "The offset value to add if 'O3' is true."
+        },
+        {
+            "name": "Offset_4",
+            "type": "REAL",
+            "description": "The offset value to add if 'O4' is true."
+        },
+        {
+            "name": "default",
+            "type": "REAL",
+            "description": "The default value that will be returned if 'D' is true."
+        }
+    ],
+    "output": [
+        {
+            "name": "OFFSET",
+            "type": "REAL",
+            "description": "The resulting offset value after applying the initial value and any additional offsets, or the default value if 'D' is true."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the final offset value calculated based on the specified conditions."
+    }
+}

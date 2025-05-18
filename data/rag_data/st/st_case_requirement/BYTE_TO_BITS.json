@@ -1,0 +1,57 @@
+{
+    "title": "Byte to Bits Conversion",
+    "description": "BYTE_TO_BITS split a byte (IN) into its individual bits (B0 .. B7). The input\nIN is defned as a DWORD to handle either byte, word, or DWORD at the\ninput. If a Word or DWORD used at the input, only the bits 0th .7 are pro￾cessed. A DWORD can then, using the default command SHR , be shifted\nby 8 bits to the right and then the next byte can be processed.",
+    "type": "FUNCTION_BLOCK",
+    "name": "BYTE_TO_BITS",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "A single BYTE input that will be converted to individual bits."
+        }
+    ],
+    "output": [
+        {
+            "name": "B0",
+            "type": "BOOL",
+            "description": "Output representing the least significant bit (bit 0) of the input BYTE."
+        },
+        {
+            "name": "B1",
+            "type": "BOOL",
+            "description": "Output representing the second least significant bit (bit 1) of the input BYTE."
+        },
+        {
+            "name": "B2",
+            "type": "BOOL",
+            "description": "Output representing the third least significant bit (bit 2) of the input BYTE."
+        },
+        {
+            "name": "B3",
+            "type": "BOOL",
+            "description": "Output representing the fourth least significant bit (bit 3) of the input BYTE."
+        },
+        {
+            "name": "B4",
+            "type": "BOOL",
+            "description": "Output representing the fifth least significant bit (bit 4) of the input BYTE."
+        },
+        {
+            "name": "B5",
+            "type": "BOOL",
+            "description": "Output representing the sixth least significant bit (bit 5) of the input BYTE."
+        },
+        {
+            "name": "B6",
+            "type": "BOOL",
+            "description": "Output representing the seventh least significant bit (bit 6) of the input BYTE."
+        },
+        {
+            "name": "B7",
+            "type": "BOOL",
+            "description": "Output representing the most significant bit (bit 7) of the input BYTE."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

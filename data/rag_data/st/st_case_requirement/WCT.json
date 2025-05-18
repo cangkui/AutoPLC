@@ -1,0 +1,30 @@
+{
+    "title": "Wind Chill Temperature Calculation",
+    "description": "WCT calculates the wind chill temperature depending on the wind speed in\n\nkm/h and the outside temperature °C. The wind chill temperature is def￾ned only for wind speeds greater than 5 km/h and temperatures below 10\n\n°C. For values outside the defned range, the input temperature is output.\n\n46 Version 1.00\n\nChapter 6. Electrical Engineering\n\n 6. Electrical Engineering",
+    "type": "FUNCTION",
+    "name": "WCT",
+    "input": [
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Outdoor temperature in °C."
+        },
+        {
+            "name": "V",
+            "type": "REAL",
+            "description": "Wind speed in km/h."
+        }
+    ],
+    "output": [
+        {
+            "name": "REAL",
+            "type": "REAL",
+            "description": "Wind chill temperature. If input values are outside the defined range, the input temperature is output."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated wind chill temperature."
+    }
+}

@@ -1,0 +1,127 @@
+{
+    "title": "Parameter Set Function Block",
+    "description": "CTRL_IN calculates the process deviation (SET_POINT _ ACTUAL) and pas￾ses them at the output. If the diference is less than the value at the input\nNOISE of the output remains at 0. CTRL_IN can be used to build own rule\nmodules.\nBlock diagram of CTRL_IN:",
+    "type": "FUNCTION_BLOCK",
+    "name": "PARSET",
+    "input": [
+        {
+            "name": "A0",
+            "type": "BOOL",
+            "description": "Boolean input to select the first set of parameters."
+        },
+        {
+            "name": "A1",
+            "type": "BOOL",
+            "description": "Boolean input to select the second set of parameters."
+        },
+        {
+            "name": "X01",
+            "type": "REAL",
+            "description": "The first parameter of set 0."
+        },
+        {
+            "name": "X02",
+            "type": "REAL",
+            "description": "The second parameter of set 0."
+        },
+        {
+            "name": "X03",
+            "type": "REAL",
+            "description": "The third parameter of set 0."
+        },
+        {
+            "name": "X04",
+            "type": "REAL",
+            "description": "The fourth parameter of set 0."
+        },
+        {
+            "name": "X11",
+            "type": "REAL",
+            "description": "The first parameter of set 1."
+        },
+        {
+            "name": "X12",
+            "type": "REAL",
+            "description": "The second parameter of set 1."
+        },
+        {
+            "name": "X13",
+            "type": "REAL",
+            "description": "The third parameter of set 1."
+        },
+        {
+            "name": "X14",
+            "type": "REAL",
+            "description": "The fourth parameter of set 1."
+        },
+        {
+            "name": "X21",
+            "type": "REAL",
+            "description": "The first parameter of set 2."
+        },
+        {
+            "name": "X22",
+            "type": "REAL",
+            "description": "The second parameter of set 2."
+        },
+        {
+            "name": "X23",
+            "type": "REAL",
+            "description": "The third parameter of set 2."
+        },
+        {
+            "name": "X24",
+            "type": "REAL",
+            "description": "The fourth parameter of set 2."
+        },
+        {
+            "name": "X31",
+            "type": "REAL",
+            "description": "The first parameter of set 3."
+        },
+        {
+            "name": "X32",
+            "type": "REAL",
+            "description": "The second parameter of set 3."
+        },
+        {
+            "name": "X33",
+            "type": "REAL",
+            "description": "The third parameter of set 3."
+        },
+        {
+            "name": "X34",
+            "type": "REAL",
+            "description": "The fourth parameter of set 3."
+        },
+        {
+            "name": "TC",
+            "type": "TIME",
+            "description": "Time duration for the ramping process."
+        }
+    ],
+    "output": [
+        {
+            "name": "P1",
+            "type": "REAL",
+            "description": "Output parameter corresponding to the first selected set value."
+        },
+        {
+            "name": "P2",
+            "type": "REAL",
+            "description": "Output parameter corresponding to the second selected set value."
+        },
+        {
+            "name": "P3",
+            "type": "REAL",
+            "description": "Output parameter corresponding to the third selected set value."
+        },
+        {
+            "name": "P4",
+            "type": "REAL",
+            "description": "Output parameter corresponding to the fourth selected set value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

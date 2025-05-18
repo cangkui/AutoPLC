@@ -1,0 +1,30 @@
+{
+    "title": "Power Calculation Function",
+    "description": "F_POWER = A * X^N)\nF_Power calculate the power function according to the equation F_POWER\n= A * Xn .",
+    "type": "FUNCTION",
+    "name": "F_POWER",
+    "input": [
+        {
+            "name": "a",
+            "type": "REAL",
+            "description": "The coefficient to multiply with the result of the exponentiation."
+        },
+        {
+            "name": "x",
+            "type": "REAL",
+            "description": "The base value which will be raised to the power of n."
+        },
+        {
+            "name": "n",
+            "type": "REAL",
+            "description": "The exponent value to which the base x will be raised."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the calculation, which is the coefficient multiplied by the base raised to the exponent.",
+        "fields": []
+    }
+}

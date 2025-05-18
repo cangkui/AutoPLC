@@ -1,0 +1,34 @@
+{
+    "title": "DLOG_DINT Function Module",
+    "description": "DLOG_DINT is for logging (recording) of a process value of type DINT, and \n\ncan only be used in combination with a DLOG_STORE_* module, as this coordinates \n\nof the data structure X to record the data. At recording formats that support a process \n\nvalue name, such as at DLOG_STORE_FILE_CSV a name can be provided at \n\nCOLUMN\". If with DELTA parameter a value not equal 0 is specified, the automatic \n\ndata logging is enabled via differential monitoring. Changing the value of VALUE to \n\n+ / - DELTA automatically stores a record. This feature can be applied in parallel to \n\nthe central trigger on the DLOG_STORE_ * module.",
+    "type": "FUNCTION",
+    "name": "DLOG_DINT",
+    "input": [
+        {
+            "name": "X",
+            "type": "DLOG_DATA",
+            "description": "DLOG data structure for recording data."
+        },
+        {
+            "name": "VALUE",
+            "type": "DINT",
+            "description": "The process value to be logged."
+        },
+        {
+            "name": "COLUMN",
+            "type": "STRING (40)",
+            "description": "The name of the process value for logging, relevant for formats that support a process value name."
+        },
+        {
+            "name": "DELTA",
+            "type": "DINT",
+            "description": "The difference value that triggers automatic logging if it is not equal to 0."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "The function does not return a value."
+    }
+}

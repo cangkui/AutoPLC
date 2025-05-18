@@ -1,0 +1,59 @@
+{
+    "title": "Proportional-Integral Controller Function Block",
+    "description": "FT_PIW can used together with the modules CTRL_IN and CTRL_OUT to\nbuild complex controllers.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_PIW",
+    "input": [
+        {
+            "name": "IN",
+            "type": "REAL",
+            "description": "The input value to be controlled."
+        },
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "The proportional gain for the controller.",
+            "fields": []
+        },
+        {
+            "name": "KI",
+            "type": "REAL",
+            "description": "The integral gain for the controller.",
+            "fields": []
+        },
+        {
+            "name": "LIM_L",
+            "type": "REAL",
+            "description": "The lower limit for the output.",
+            "fields": []
+        },
+        {
+            "name": "LIM_H",
+            "type": "REAL",
+            "description": "The upper limit for the output.",
+            "fields": []
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal for the integrator.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output value of the controller.",
+            "fields": []
+        },
+        {
+            "name": "LIM",
+            "type": "BOOL",
+            "description": "Indicator that output is at limit.",
+            "fields": []
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

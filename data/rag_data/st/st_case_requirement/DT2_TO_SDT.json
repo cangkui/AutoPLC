@@ -1,0 +1,114 @@
+{
+    "title": "Convert DATE and TOD to Structured Date Time (SDT)",
+    "description": "ATANH calculates the Arcus Hyperbolic tangent as follows:",
+    "type": "FUNCTION",
+    "name": "DT2_TO_SDT",
+    "input": [
+        {
+            "name": "DI",
+            "type": "DATE",
+            "description": "Input variable of type DATE representing the date to convert."
+        },
+        {
+            "name": "TI",
+            "type": "TOD",
+            "description": "Input variable of type TOD representing the time of day to convert."
+        }
+    ],
+    "output": [
+        {
+            "name": "SDT",
+            "type": "SDT",
+            "description": "Output structure containing the converted date and time components.",
+            "fields": [
+                {
+                    "name": "YEAR",
+                    "type": "INT",
+                    "description": "The year extracted from the DATE."
+                },
+                {
+                    "name": "MONTH",
+                    "type": "INT",
+                    "description": "The month extracted from the DATE."
+                },
+                {
+                    "name": "DAY",
+                    "type": "INT",
+                    "description": "The day of the month extracted from the DATE."
+                },
+                {
+                    "name": "WEEKDAY",
+                    "type": "INT",
+                    "description": "The weekday corresponding to the DATE (0 = Sunday, 1 = Monday, etc.)."
+                },
+                {
+                    "name": "MS",
+                    "type": "INT",
+                    "description": "The milliseconds component extracted from the TOD."
+                },
+                {
+                    "name": "SECOND",
+                    "type": "INT",
+                    "description": "The seconds component extracted from the TOD."
+                },
+                {
+                    "name": "MINUTE",
+                    "type": "INT",
+                    "description": "The minutes component extracted from the TOD."
+                },
+                {
+                    "name": "HOUR",
+                    "type": "INT",
+                    "description": "The hours component extracted from the TOD."
+                }
+            ]
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "SDT",
+        "description": "Returns the structured date time containing all the extracted date and time information.",
+        "fields": [
+            {
+                "name": "YEAR",
+                "type": "INT",
+                "description": "The year of the structured date time."
+            },
+            {
+                "name": "MONTH",
+                "type": "INT",
+                "description": "The month of the structured date time."
+            },
+            {
+                "name": "DAY",
+                "type": "INT",
+                "description": "The day of the structured date time."
+            },
+            {
+                "name": "WEEKDAY",
+                "type": "INT",
+                "description": "The weekday of the structured date time."
+            },
+            {
+                "name": "MS",
+                "type": "INT",
+                "description": "The milliseconds of the structured date time."
+            },
+            {
+                "name": "SECOND",
+                "type": "INT",
+                "description": "The seconds of the structured date time."
+            },
+            {
+                "name": "MINUTE",
+                "type": "INT",
+                "description": "The minutes of the structured date time."
+            },
+            {
+                "name": "HOUR",
+                "type": "INT",
+                "description": "The hours of the structured date time."
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "title": "MD5 to Hex String Converter",
+    "description": "MD5_TO_STRH converts the MD5 byte array to a hex\n\nstring.",
+    "type": "FUNCTION",
+    "name": "MD5_TO_STRH",
+    "input": [
+        {
+            "name": "MD5",
+            "type": "ARRAY[0..15] OF BYTE",
+            "description": "An array representing the MD5 hash value in byte format."
+        }
+    ],
+    "output": [
+        {
+            "name": "hexString",
+            "type": "STRING(32)",
+            "description": "The hexadecimal string representation of the MD5 hash."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

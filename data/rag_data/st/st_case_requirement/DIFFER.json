@@ -1,0 +1,29 @@
+{
+    "title": "Difference Check Function",
+    "description": "DIFFER is TRUE if in1 and in2 difer by more than X from each\nother.",
+    "type": "FUNCTION",
+    "name": "DIFFER",
+    "input": [
+        {
+            "name": "in1",
+            "type": "REAL",
+            "description": "The first real number input for the difference calculation."
+        },
+        {
+            "name": "in2",
+            "type": "REAL",
+            "description": "The second real number input for the difference calculation."
+        },
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The threshold value. The function checks if the absolute difference exceeds this value."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the absolute difference between in1 and in2 is greater than X; otherwise, returns FALSE."
+    }
+}

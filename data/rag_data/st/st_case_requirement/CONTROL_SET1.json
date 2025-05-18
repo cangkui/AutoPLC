@@ -1,0 +1,87 @@
+{
+    "title": "Control Set 1 Configuration",
+    "description": "BYTE_OF_BIT uses one byte of 8 individual bits (B0 .. B7) together.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CONTROL_SET1",
+    "input": [
+        {
+            "name": "Kt",
+            "type": "REAL",
+            "description": "The gain factor that affects the control outputs."
+        },
+        {
+            "name": "Tt",
+            "type": "REAL",
+            "description": "The time constant used for calculating integral and derivative parameters."
+        },
+        {
+            "name": "PI",
+            "type": "BOOL",
+            "description": "Boolean flag to indicate if a PI controller is used."
+        },
+        {
+            "name": "PID",
+            "type": "BOOL",
+            "description": "Boolean flag to indicate if a PID controller is used."
+        },
+        {
+            "name": "P_K",
+            "type": "REAL",
+            "description": "Proportional gain for the basic control (default = 0.5)."
+        },
+        {
+            "name": "PI_K",
+            "type": "REAL",
+            "description": "Proportional gain for the PI controller (default = 0.45)."
+        },
+        {
+            "name": "PI_TN",
+            "type": "REAL",
+            "description": "Time constant for the integral part of the PI controller (default = 0.83)."
+        },
+        {
+            "name": "PID_K",
+            "type": "REAL",
+            "description": "Proportional gain for the PID controller (default = 0.6)."
+        },
+        {
+            "name": "PID_TN",
+            "type": "REAL",
+            "description": "Time constant for the integral part of the PID controller (default = 0.5)."
+        },
+        {
+            "name": "PID_TV",
+            "type": "REAL",
+            "description": "Time constant for the derivative part of the PID controller (default = 0.125)."
+        }
+    ],
+    "output": [
+        {
+            "name": "KP",
+            "type": "REAL",
+            "description": "Calculated proportional gain based on the selected controller."
+        },
+        {
+            "name": "TN",
+            "type": "REAL",
+            "description": "Calculated time constant for the integral component."
+        },
+        {
+            "name": "TV",
+            "type": "REAL",
+            "description": "Calculated time constant for the derivative component."
+        },
+        {
+            "name": "KI",
+            "type": "REAL",
+            "description": "Calculated integral gain based on KP and TN."
+        },
+        {
+            "name": "KD",
+            "type": "REAL",
+            "description": "Calculated derivative gain based on KP and TV."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

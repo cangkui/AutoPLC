@@ -1,0 +1,75 @@
+{
+    "title": "Weather Data Retrieval",
+    "description": "WORLD_WEATHER_DATA (Weather data)\n\nINPUT ACTIVATE: BOOL (positive edge starts the query)\n\nLATITUDE: REAL (latitude of the reference location)\n\n LONGITUDE : REAL (longitude of the reference location) \n\n211 Version 1.21\n\nChapter 13. Weather Data\n\nKEY: STRING (30) (API-Key)\n\nOUTPUT BUSY: BOOL (Query is active)\n\nDONE: BOOL (Query completed without errors)\n\nERROR_C: DWORD (Error code)\n\nERROR_T: BYTE (error type)\n\nThe module loads the current weather data for the specifed location of \n\nhttp://worldweather.com down, analyzes the data and stores the essential \n\ndata processed in the WORLD_WEATHER_DATA data structure.\n\nFollowing values are stored from the current day.\n\nObservation time (UTC) Temperature (°C), Unique Weather code \n\nWeather description text, wind speed in miles per hour, wind speed in kilometer per \n\nhour, wind direction in degree, 16-point wind direction compass, precipitation amount \n\nin millimeter, Humidity (%), Visibility (km) Atmospheric pressure in milibars \n\n, Cloud cover (%)\n\nFrom the current day and the next four days the following values \n\nare stored.\n\nDate For which the weather is forecasted, \n\nDay and night temperature in °C (Celsius) and °F (Fahrenheit) \n\nWind speed in mph (miles per hour) and kmph (kilometers per hour) \n\n16-point compass wind direction, A unique weather condition code; \n\nWeather description text , Precipitation Amount (millimetre)\n\nWith a positive edge of ACTIVATE, the query started and process a DNS \n\nquery with the following HTTP-GET. After successful receiving all data \n\nelements are processed and if necessary stored in the data structure in \n\nconverted form. By the parameters of latitude and longitude the exact \n\nplace (geographical position) of the weather is indicated. While the query \n\nis active, BUSY = TRUE is passed. After successful completion of the query \n\n212 Version 1.21\n\nChapter 13. Weather Data\n\nDONE = TRUE is shown. If an error occurs during the query it is reported in \n\nERROR_C in combination with ERROR_T.\n\nERROR_T:\n\nValue Properties\n\n1 The exact meaning of ERROR_C can be read at module DNS_CLIENT\n\n2 The exact meaning of ERROR_C can be read at module HTTP_GET\n\nCreating a new API KEY:\n\nUse your Internet browser and call the page http://www.worldweatheronline.-\n\ncom, call the \"Free sign up\" registration dialog, and fill out the required fields. After\n\nregistering, an email is sent, in turn, has to be confirmed, and subsequently secon ad\n\ne-mail is sent with the personal API key. This API Key must be passed to the module￾KEY API parameters.\n\nDetermine Latitude and longitude of a specific place:\n\nUse your Internet browser to access http://www.mygeoposition.com/ page, \n\nand enter the name of the desired location and search the location using \n\n\"calculate the spatial data\" . Then the desired location is shown on the \n\nmap, including the latitude and longitude needed in decimal notation. The \n\ndetermined position has to be passed to the block parameters, latitude \n\nand longitude. \n\n213 Version 1.21\n\nChapter 13. Weather Data",
+    "type": "FUNCTION",
+    "name": "RetrieveWeatherData",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for the function module."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Network buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Network buffer for receiving data."
+        },
+        {
+            "name": "WW",
+            "type": "WORLD_WEATHER_DATA",
+            "description": "Data structure to store the processed weather data."
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Trigger to start the query on a positive edge."
+        },
+        {
+            "name": "LATITUDE",
+            "type": "REAL",
+            "description": "Latitude of the reference location."
+        },
+        {
+            "name": "LONGITUDE",
+            "type": "REAL",
+            "description": "Longitude of the reference location."
+        },
+        {
+            "name": "KEY",
+            "type": "STRING(30)",
+            "description": "API-Key for accessing the weather data."
+        }
+    ],
+    "output": [
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates if the query is currently active."
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the query completed successfully without errors."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code indicating the type of error encountered."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Type of error encountered during the query."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

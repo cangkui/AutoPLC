@@ -1,0 +1,76 @@
+{
+    "title": "DLOG_FILE_TO_FTP Module",
+    "description": "DLOG_FILE_TO_FTP is used to automatically transfer the by \n\nDLOG_STORE_FILE_CSV generated from fles to an FTP-server. The FTP_URL \n\nparameter contains the name of the FTP server and optionally the user \n\nname and password, an access path and an additional port number for the \n\ndata channel. If no Username or password is transferred, the device \n\nautomatically tries to register as \"Anonymous\". The parameter FTP_ACTIV \n\ndetermined whether the FTP server is operated in active or passive mode. \n\nIn the ACTIV mode, the FTP server tries to establish the data channel for \n\ncontrol, however these may cause problems by security software, frewall, \n\netc. because it could block the connection request. For this purpose, in the \n\nfrewall a corresponding exception rule has to be defned. In the passive \n\nmode, this problem is alleviated since the controller establishes the \n\nconnection, and can easily pass through the frewall. The control channel is \n\nalways set up on port 20, and the data channel via standard PORT21, but \n\nthis is in turn is depending whether active or passive mode is used, or \n\noptional PORT number in the FTP-URL is specifed. With the parameter \n\nFILE_DELETE can be determined whether the source fle should be deleted \n\nafter successful transfer. This works on FTP and even on the control side. \n\nIn specifying FTP directories the behavior depends on FTP server, whether \n\nthey exist in this case or are created automatically. Normally, these should \n\nbe already available. The size of fles is no limit per se, but there are \n\npractical limits: Space on PLC, FTP storage and the transmission time. With \n\ndns_ip4 the IP address of the DNS server must be specifed, if in the FTP \n\nURL a DNS name is given, alternatively, an IP address can be entered in \n\nthe FTP URL. At parameters PLC_IP4 the own IP addresses has to be \n\nsupplied. If errors occur during transmission these are passed to the \n\noutput ERROR_C and ERROR_T. As long as the transfer is running, BUSY = \n\n64 Version 1.21\n\nChapter 7. Data Logger\n\nTRUE, and after an error-free completion of the operation, DONE = TRUE. \n\nOnce a new transfer is started, DONE, ERROR_T and ERROR_C are reseted.\n\nIf parameter RETRY = 0, then the FTP transfer was repeated until it \n\ncompletes successfully. If RETRY state at a value > 0, the FTP transfer is \n\njust as often repeated in transmission failure. Then this job is simply \n\ndiscarded and the process continues with the next fle. With RETRY-TIME \n\nthe waiting time between the repetitions can be defned.\n\nThe module has integrated the IP_CONTROL and must not be externally \n\nlinked to this, as it by default would be necessary.\n\nBackground: http://de.wikipedia.org/wiki/File_Transfer_Protocol \n\nURL examples:\n\nftp://username:password@servername:portnummer/directory/\n\nftp://username:password@servername\n\nftp://username:password @ servername / directory /\n\nftp://servername\n\nftp://username:password@192.168.1.1/directory/\n\nftp://192.168.1.1\n\n65 Version 1.21\n\nChapter 7. Data Logger\n\nERROR_T:\n\nValue Properties\n\n1 Problem: DNS_CLIENT\n\nThe exact meaning of ERROR_C can be read at module DNS_CLIENT\n\n2 Problem: FTP control channel\n\nThe exact meaning of ERROR_C can be read at module IP_CONTROL\n\n3 Problem: FTP data channel\n\nThe exact meaning of ERROR_C can be read at module IP_CONTROL\n\n4 Problem: FILE_SERVER\n\nThe exact meaning of ERROR_C can be read at block FILE_SERVER\n\n5 Problem: END - TIMEOUT\n\nERROR_C contains the left WORD of the step number, and the right WORD has the re￾sponse code received by the FTP server.\n\nThe parameters must be considered first as a HEX value, divided into two WORDS, and\n\nthen be considered as a decimal value.",
+    "type": "FUNCTION",
+    "name": "DLOG_FILE_TO_FTP",
+    "input": [
+        {
+            "name": "FTP_URL",
+            "type": "STRING",
+            "description": "FTP access path including optional username, password, and port number."
+        },
+        {
+            "name": "FTP_ACTIV",
+            "type": "BOOL",
+            "description": "Determines whether the FTP server operates in active (1) or passive (0) mode."
+        },
+        {
+            "name": "FILE_DELETE",
+            "type": "BOOL",
+            "description": "Specifies whether to delete the source file after successful transfer."
+        },
+        {
+            "name": "TIMEOUT",
+            "type": "TIME",
+            "description": "The timeout duration for the FTP connection."
+        },
+        {
+            "name": "RETRY",
+            "type": "INT",
+            "description": "The number of times to retry the FTP transfer in case of failure."
+        },
+        {
+            "name": "RETRY_TIME",
+            "type": "TIME",
+            "description": "The waiting time before each retry attempt."
+        },
+        {
+            "name": "Dns_ip4",
+            "type": "DWORD",
+            "description": "The IP address of the DNS server."
+        },
+        {
+            "name": "DLOG_DATA",
+            "type": "STRUCT",
+            "description": "The DLOG data structure that encapsulates the data to be logged.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the transfer completed without error."
+        },
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates if the transfer is currently active."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code representing the type of error encountered during transfer."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Indicates the specific problem encountered during the operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "No return value as this function handles the FTP transfer process internally."
+    }
+}

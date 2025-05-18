@@ -1,0 +1,24 @@
+{
+    "title": "Combine Two Bytes into a Word",
+    "description": "WORD_OF_BYTE composes a Word of 2 separate bytes B0 and B1.",
+    "type": "FUNCTION",
+    "name": "WORD_OF_BYTE",
+    "input": [
+        {
+            "name": "B1",
+            "type": "BYTE",
+            "description": "The first byte to be combined, which will be shifted left by 8 bits."
+        },
+        {
+            "name": "B0",
+            "type": "BYTE",
+            "description": "The second byte to be combined, which will remain in its original position."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "The resulting WORD obtained by combining B1 and B0."
+    }
+}

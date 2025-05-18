@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Beginning of Month from a Given Date",
+    "description": "MONTH_BEGIN calculates the date of frst Day of the current month and\ncurrent year.\nMONTH_BEGIN(D#2008-2-13) = D#2008-2-1",
+    "type": "FUNCTION",
+    "name": "MONTH_BEGIN",
+    "input": [
+        {
+            "name": "idate",
+            "type": "DATE",
+            "description": "The input date from which the beginning of the month is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "MONTH_BEGIN",
+            "type": "DATE",
+            "description": "The calculated beginning date of the month derived from the input date."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DATE",
+        "description": "The date representing the start of the month for the given input date."
+    }
+}

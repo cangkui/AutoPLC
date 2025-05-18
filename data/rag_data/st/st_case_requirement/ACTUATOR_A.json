@@ -1,0 +1,65 @@
+{
+    "title": "ACTUATOR_A Function Module",
+    "description": "ACTUATOR_A is used to control actuators with analog input. The module\n\nhas two inputs (I1 and I2) that cover the range 0..255 the entire output\n\nrange of Y. The output Y is of type WORD, and its operating range is prede￾termined by the setup values OUT_MIN and OUT_MAX. An input value of 0\n\nproduces the output value OUT_MIN and an input value of 255 creates the\n\nvalue OUT_MAX, diferent input values produce corresponding output va￾lues between OUT_MIN and OUT_MAX. The module can be directly used to\n\ncontrol DA converters with 16 bit input. The input IS selects between two\n\ninputs I1 and I2, thus can, for example, switch between manual and auto￾matic operation. Another input DX switches when a rising edge immedia￾tely to self-activation. If SELF_ACT_TIME > t # 0s then the self-activation\n\nafter the time SELF_ACT_TIME is repeated automatically, while the output\n\nY is switched for the time RUNTIME to OUT_MIN, then for the same time on\n\nOUT_MAX and then returns back to the normal control value. The input RV\n\ncan invert the output, Y = OUT_MAX if I = 0 and Y = OUT_MIN when I =\n\n255. In this way, simply the direction of the servo motor to be reversed.\n\nIS IS IS Y\n\n0 0 0 Y = (OUT_MAX-OUT_MIN) * I1 /\n\n255 +OUT_MIN\n\n1 0 0 Y = (OUT_MAX-OUT_MIN) * I2 /\n\n15 Version 1.00\n\nChapter 4. Actuators\n\n255 +OUT_MIN\n\n0 1 0 Y = OUT_MAX - (OUT_MAX￾OUT_MIN) * I1 /255\n\n1 1 0 Y = OUT_MAX - (OUT_MAX￾OUT_MIN) * I2 /255\n\n- -  starts a self activation cycle",
+    "type": "FUNCTION",
+    "name": "ACTUATOR_A",
+    "input": [
+        {
+            "name": "I1",
+            "type": "BYTE",
+            "description": "Control signal 1"
+        },
+        {
+            "name": "IS",
+            "type": "BOOL",
+            "description": "Input selection"
+        },
+        {
+            "name": "I2",
+            "type": "BYTE",
+            "description": "Control signal 2"
+        },
+        {
+            "name": "RV",
+            "type": "BOOL",
+            "description": "Reversal of direction for output Y"
+        },
+        {
+            "name": "DX",
+            "type": "BOOL",
+            "description": "Self-activation"
+        },
+        {
+            "name": "RUNTIME",
+            "type": "TIME",
+            "description": "Runtime of the servo motor"
+        },
+        {
+            "name": "SELF_ACT_TIME",
+            "type": "TIME",
+            "description": "Time for automatic movement"
+        },
+        {
+            "name": "OUT_MIN",
+            "type": "DWORD",
+            "description": "Output value at I = 0"
+        },
+        {
+            "name": "OUT_MAX",
+            "type": "DWORD",
+            "description": "Output value at I = 255"
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "WORD",
+            "description": "Control signal for the servo motor"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "WORD",
+        "description": "Control signal for the servo motor"
+    }
+}

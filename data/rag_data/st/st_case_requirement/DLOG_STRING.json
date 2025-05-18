@@ -1,0 +1,27 @@
+{
+    "title": "DLOG_STRING Function Module",
+    "description": "DLOG_STRING is for logging (recording) of a process value of type DINT, \n\nand can only be used in combination with a DLOG_STORE_* module, as this \n\ncoordinates of the data structure X to record the data. At recording formats that \n\nsupport a process value name, such as at DLOG_STORE_FILE_CSV a name can be \n\nprovided at COLUMN\".",
+    "type": "FUNCTION",
+    "name": "DLOG_STRING",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "The string representation of the process value to be logged."
+        },
+        {
+            "name": "COLUMN",
+            "type": "STRING(40)",
+            "description": "The name of the process value for logging purposes."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "X",
+            "type": "DLOG_DATA",
+            "description": "The DLOG data structure used for recording."
+        }
+    ],
+    "return_value": null
+}

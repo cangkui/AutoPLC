@@ -1,0 +1,30 @@
+{
+    "title": "Calculate Minimum Value in an Array",
+    "description": "ARRAY_MIN calculates the minimum value of any array of\nREAL. When called the function passed a Pointer to the array and its size\nin bytes. Under CoDeSys the call reads: ARRAY_MIN(ADR(Array),\nSIZEOF(Array)), where array is the name of the array to be manipulated.\nADR() is a standard function, which identifes the pointer to the array and\nSIZEOF() is a standard function, which determines the size of the array. In\norder to determine the maximum, the array referenced by the pointer is\nscanned directly in memory. The function ARRAY _ MIN does not change\nthe contents of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "ARRAY_MIN",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY[0..32000] OF REAL",
+            "description": "Pointer to the array of real numbers from which the minimum value will be computed."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The size of the array indicating the number of elements to be considered for the minimum calculation."
+        }
+    ],
+    "output": [
+        {
+            "name": "array_min",
+            "type": "REAL",
+            "description": "The minimum value found in the specified array of real numbers."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the minimum value found within the input array."
+    }
+}

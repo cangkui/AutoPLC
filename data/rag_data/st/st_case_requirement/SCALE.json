@@ -1,0 +1,39 @@
+{
+    "title": "Scale Function",
+    "description": "SCALE multiplies the input X with K, and adds the ofset O. The calculated\nvalue will be limited to the values of MN and MX and the result is passed\nto output.\nSCALE = LIMIT(MN, X * K + O, MX)",
+    "type": "FUNCTION",
+    "name": "SCALE",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value that will be scaled."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "The scaling factor applied to the input value."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "The offset to be added to the scaled input value."
+        },
+        {
+            "name": "MX",
+            "type": "REAL",
+            "description": "The maximum limit for the scaled value."
+        },
+        {
+            "name": "MN",
+            "type": "REAL",
+            "description": "The minimum limit for the scaled value."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The scaled value limited between MN and MX."
+    }
+}

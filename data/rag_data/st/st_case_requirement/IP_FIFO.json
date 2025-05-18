@@ -1,0 +1,38 @@
+{
+    "title": "IP FIFO Management Module",
+    "description": "IP_FIFO_DATA (IP-FIFO management data)\n\nID: BYTE (current ID assigned by IP_FIFO module)\n\nSTATE: BYTE (control commands and status messages)\n\n108 Version 1.21\n\nChapter 9. Network and Communication\n\n109 Version 1.21\n\nChapter 9. Network and Communication\n\nThis module is used in combination with IP_CONTROL for resource mana￾gement. This makes it possible that client applications request exclusive \n\naccess permissions and can also give back. By the FIFO is ensured that \n\neach participant equally often gets the resource access assigned.\n\nIn the frst call of the module automatically a new unique application ID is \n\nassigned, which one the administration in FIFO is managed. The STATE pa￾rameter is changed by the application as well as from IP_FIFO module. \n\nEach application may register by default only once in the FIFO.\n\nSTATE:\n\nValue State Message\n\n0 no action\n\n1 Privilege request\n\n2 Privilege request has been accepted in FIFO\n\n3 Privilege obtained (allowing resource access)\n\n4 Privilege remove\n\n5 Privilege was again removed from FIFO\n\nProcedure:\n\n1. application set the STATE to 1\n\n2. Access permission are required as is the STATE = 2\n\n3. if resource is free, and access rights are present, then \n\n STATE=3\n\n4. If the application has the resource resp. the access needs\n\n not anymore the application sets STATE to 4. Thereafter \n\n IP_FIFO releases the resource again and set STATE to 0.\n\n5. Process is repeated (same or other application)",
+    "type": "FUNCTION",
+    "name": "IP_FIFO_Management",
+    "input": [
+        {
+            "name": "IP_FIFO_DATA",
+            "type": "struct",
+            "description": "Management data for IP FIFO",
+            "fields": [
+                {
+                    "name": "ID",
+                    "type": "BYTE",
+                    "description": "Current ID assigned by IP_FIFO module"
+                },
+                {
+                    "name": "STATE",
+                    "type": "BYTE",
+                    "description": "Control commands and status messages"
+                }
+            ]
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "struct",
+        "description": "Return value indicating the state of the resource access",
+        "fields": [
+            {
+                "name": "STATE_MESSAGE",
+                "type": "BYTE",
+                "description": "Message indicating the current state of the resource access"
+            }
+        ]
+    }
+}

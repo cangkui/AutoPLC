@@ -1,0 +1,20 @@
+{
+    "title": "Negation Function",
+    "description": "NEGX returns the negated input value (-x).",
+    "type": "FUNCTION",
+    "name": "NEGX",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input parameter which is a real number to be negated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The negated value of the input X.",
+        "fields": []
+    }
+}

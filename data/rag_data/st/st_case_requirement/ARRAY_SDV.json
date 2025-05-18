@@ -1,0 +1,24 @@
+{
+    "title": "Standard Deviation Calculation",
+    "description": "ARRAY_SDV calculates the standard deviation (Standard De￾viation) value of an arbitrary array of REAL. When called a pointer to the\narray and its size in bytes is passed to the function. Under CoDeSys the\ncall reads: ARRAY_SDV(ADR(Array), SIZEOF(Array)), where array is the\nname of the array to be manipulated. ADR() is a standard function, which\nidentifes the pointer to the array and SIZEOF() is a standard function,\nwhich determines the size of the array. In order to determine the maxi￾mum, the array referenced by the pointer is scanned directly in memory.\nThe function ARRAY_SDV does not change the contents of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "ARRAY_SDV",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY[0..32000] OF REAL",
+            "description": "A pointer to an array of real numbers whose standard deviation is to be calculated."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The size of the array, indicating the number of elements in the input array."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated standard deviation of the input array of real numbers."
+    }
+}

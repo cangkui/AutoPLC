@@ -1,0 +1,19 @@
+{
+    "title": "Calculate Day of Year",
+    "description": "DAY_OF_YEAR function calculates the day of the year from the input\ndate IDATE. Leap years are taken into account according to the Gregorian\ncalendar. The function is defned for the years 1970 - 2099.",
+    "type": "FUNCTION",
+    "name": "DAY_OF_YEAR",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The input date from which the day of the year needs to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The calculated day of the year as an integer value."
+    }
+}

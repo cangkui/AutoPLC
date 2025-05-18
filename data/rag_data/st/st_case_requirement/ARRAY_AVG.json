@@ -1,0 +1,31 @@
+{
+    "title": "Array Average Calculation",
+    "description": "ARRAY_AVG calculates the median value of an arbitrary ar￾ray ofREAL. When called, a pointer to the array and its size in bytes is pas￾sed to the function. Under CoDeSys the call reads:\nARRAY_AVG(ADR(Array), SIZEOF(Array)), where array is the name of the\narray to be manipulated. ADR() is a standard function which identifes the\npointer to the array and SIZEOF() is a standard function, which determines\nthe size of the array. In order to determine the maximum, the array refe￾renced by the pointer is scanned directly in memory. The function\nARRAY_AVG does not change the content of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "ARRAY_AVG",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY [0..32000] OF REAL",
+            "description": "A pointer to the array of REAL numbers for which the average is to be calculated."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The number of elements in the array indicated by the pointer."
+        }
+    ],
+    "output": [
+        {
+            "name": "ARRAY_AVG",
+            "type": "REAL",
+            "description": "The computed average of the REAL numbers in the array."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The average value of the elements in the array.",
+        "fields": []
+    }
+}

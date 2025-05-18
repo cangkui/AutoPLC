@@ -1,0 +1,47 @@
+{
+    "title": "GEN_SQR Function Block",
+    "description": "GEN_SQR is a sqare wave generator with programmable period, adjustable\namplitude and signal ofset and duty cycle DC ( Duty Cycle ). A special\nfeature is a adjustable delay so that with multiple generators overlapping\nsignals can be generated.\nThe following",
+    "type": "FUNCTION_BLOCK",
+    "name": "GEN_SQR",
+    "input": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The period time for the square wave generation."
+        },
+        {
+            "name": "AM",
+            "type": "REAL",
+            "description": "The amplitude of the output signal. Default is 1.0."
+        },
+        {
+            "name": "OS",
+            "type": "REAL",
+            "description": "The offset value added to the output signal."
+        },
+        {
+            "name": "DC",
+            "type": "REAL",
+            "description": "The duty cycle of the square wave. Default is 0.5."
+        },
+        {
+            "name": "DL",
+            "type": "REAL",
+            "description": "The dead time. This is used to control the timing of the edges in the output signal."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "A boolean output indicating the current state of the square wave signal."
+        },
+        {
+            "name": "Out",
+            "type": "REAL",
+            "description": "The generated output value of the square wave signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

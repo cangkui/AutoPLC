@@ -1,0 +1,24 @@
+{
+    "title": "Decrement Function",
+    "description": "DT_TO_SDT converts a date value into a structured date day of type SDT.",
+    "type": "FUNCTION",
+    "name": "DEC1",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "An integer input value that will be decremented."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "An integer input value used for calculation when X is zero."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The decremented integer value based on the conditions provided. Returns N - 1 if X is 0, otherwise returns X - 1."
+    }
+}

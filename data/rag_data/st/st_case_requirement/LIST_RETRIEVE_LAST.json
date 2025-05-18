@@ -1,0 +1,31 @@
+{
+    "title": "Retrieve Last Element from a List",
+    "description": "LIST_RETRIEVE_LAST passes the last item from a list and deletes the corre￾sponding item in the list. The list consists of Strings (elements) that begin\nwith the separation character SEP.",
+    "type": "FUNCTION",
+    "name": "LIST_RETRIEVE_LAST",
+    "input": [
+        {
+            "name": "SEP",
+            "type": "BYTE",
+            "description": "The byte value used as a separator in the list."
+        }
+    ],
+    "output": [
+        {
+            "name": "LIST_RETRIEVE_LAST",
+            "type": "string",
+            "description": "The substring extracted from the list after the last occurrence of the separator."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "LIST",
+            "type": "STRING[LENGTH := LIST_LENGTH]",
+            "description": "The input-output list of characters from which the last element is to be retrieved. This list will be modified to terminate at the last separator."
+        }
+    ],
+    "return_value": {
+        "type": "string",
+        "description": "Returns the last element in the list found after the last separator."
+    }
+}

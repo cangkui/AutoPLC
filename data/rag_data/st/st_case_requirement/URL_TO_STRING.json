@@ -1,0 +1,25 @@
+{
+    "title": "URL to String Converter",
+    "description": "URL_TO_STRING generates from stored data in IN with type URL a Unifed\n\nResource Locator as String . \n\nA URL is as follows:\n\nprotokoll://user:passwort @ domain :port/path?query#anchor",
+    "type": "FUNCTION",
+    "name": "URL_TO_STRING",
+    "input": [
+        {
+            "name": "IN",
+            "type": "STRING",
+            "description": "Unified Resource Locator to be converted into a string."
+        }
+    ],
+    "output": [
+        {
+            "name": "URL",
+            "type": "URL",
+            "description": "Converted Unified Resource Locator as a string."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "The converted Unified Resource Locator as a string."
+    }
+}

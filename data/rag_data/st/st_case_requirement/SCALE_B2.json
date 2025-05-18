@@ -1,0 +1,61 @@
+{
+    "title": "Scale Function for B2 Inputs",
+    "description": "BIT_TOGGLE_B inverts a specifed bit at IN.\nBIT_TOGGLE_W(2#0000_1111, 2) = 2#0000_1011\nBIT_TOGGLE_W(2#0000_1111, 7) = 2#1000_1111",
+    "type": "FUNCTION",
+    "name": "SCALE_B2",
+    "input": [
+        {
+            "name": "in1",
+            "type": "BYTE",
+            "description": "First input value to be scaled."
+        },
+        {
+            "name": "in2",
+            "type": "BYTE",
+            "description": "Second input value to be scaled."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Scaling factor applied to the combined inputs."
+        },
+        {
+            "name": "O",
+            "type": "REAL",
+            "description": "Offset added to the result after scaling."
+        },
+        {
+            "name": "in1_min",
+            "type": "REAL",
+            "description": "Minimum value for the first input used in scaling."
+        },
+        {
+            "name": "in1_max",
+            "type": "REAL",
+            "description": "Maximum value for the first input used in scaling. Defaults to 1000.0."
+        },
+        {
+            "name": "in2_min",
+            "type": "REAL",
+            "description": "Minimum value for the second input used in scaling."
+        },
+        {
+            "name": "in2_max",
+            "type": "REAL",
+            "description": "Maximum value for the second input used in scaling. Defaults to 1000.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "SCALE_B2",
+            "type": "REAL",
+            "description": "The scaled output value calculated from the input parameters."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the scaling operation applied to the inputs.",
+        "fields": []
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Calculate the Inverse Hyperbolic Cotangent",
+    "description": "ACOTH calculates the arc cotangent hyperbolic with following formula:",
+    "type": "FUNCTION",
+    "name": "ACOTH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the inverse hyperbolic cotangent is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated inverse hyperbolic cotangent of the input value X."
+    }
+}

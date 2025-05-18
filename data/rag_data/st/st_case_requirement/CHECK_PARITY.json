@@ -1,0 +1,24 @@
+{
+    "title": "Check Parity",
+    "description": "CHECK_PARITY checks an input byte IN and an associated paritybit P to\neven parity. The output is TRUE if the number of bits in the byte IN have\nthe value TRUE together with the parity-bit results is an even number.",
+    "type": "FUNCTION",
+    "name": "CHECK_PARITY",
+    "input": [
+        {
+            "name": "in",
+            "type": "DWORD",
+            "description": "A DWORD input whose parity is to be checked."
+        },
+        {
+            "name": "p",
+            "type": "BOOL",
+            "description": "A boolean parameter that is used to adjust the final parity result."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The computed parity result, where TRUE indicates odd parity and FALSE indicates even parity."
+    }
+}

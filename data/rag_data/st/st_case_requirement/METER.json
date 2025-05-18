@@ -1,0 +1,47 @@
+{
+    "title": "METER Function Block",
+    "description": "METER is a meter, the two independent inputs (M1 and M2) are added up\nover time. The counting is controlled the inputs I1 and I2. With the reset\ninput RST the counter can be reset at any time. The value of M1 is added\nto the output value per second as long as I1 is TRUE analogous the value\nof M2 is added per second to output value if I2 is TRUE. If I1 and I2 TRUE,\nthe value of M1 + M2 is added per seconds once to the output. The input\nD Splits the output MX. Thus i.e. watt-hours can be counted instead of\nwatt-seconds. The module uses internally the OSCAT specifc data type\nREAL2 which allows a resolution of 15 digits. This the module can capture\nsmallest consumption levels at the inputs of M1 and M2 with short cycle ti￾mes and add them up to high overall values at the output MX. The resolu￾tion of the block can be determined as follows. MX is defned as I/O and\nmust be placed on an external variable of type REAL. The external variable\ncan be declared as retentive and/or persistent in order to obtain the value\nin case of power failure.\nMX/10^15 corresponds to the minimum resolution at the inputs M1 and\nM2.",
+    "type": "FUNCTION_BLOCK",
+    "name": "METER",
+    "input": [
+        {
+            "name": "M1",
+            "type": "REAL",
+            "description": "First measurement input."
+        },
+        {
+            "name": "M2",
+            "type": "REAL",
+            "description": "Second measurement input."
+        },
+        {
+            "name": "I1",
+            "type": "BOOL",
+            "description": "Boolean indicator for the first measurement."
+        },
+        {
+            "name": "I2",
+            "type": "BOOL",
+            "description": "Boolean indicator for the second measurement."
+        },
+        {
+            "name": "D",
+            "type": "REAL",
+            "description": "Divisor used for calculations, defaults to 1.0."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to initialize measured values."
+        }
+    ],
+    "output": [
+        {
+            "name": "MX",
+            "type": "REAL",
+            "description": "Current output value reflecting the consumption measurement."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

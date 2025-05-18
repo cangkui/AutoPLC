@@ -1,0 +1,19 @@
+{
+    "title": "Decimal to DWORD Conversion Function",
+    "description": "DEC_TO_DWORD converts a decimal encoded string into a\nbyte value. Here only decimal characters '0 '.. '9' are interpreted, others in\nDEC occurring characters are ignored .",
+    "type": "FUNCTION",
+    "name": "DEC_TO_DWORD",
+    "input": [
+        {
+            "name": "DEC",
+            "type": "STRING[20]",
+            "description": "A string of up to 20 characters representing a decimal number."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The resulting DWORD value obtained from the decimal string conversion."
+    }
+}

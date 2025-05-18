@@ -1,0 +1,25 @@
+{
+    "title": "Hexadecimal to Byte Conversion",
+    "description": "HEX_TO_BYTE in a BYTE value.\nHere only hexadecimal characters '0'..'9', 'a..f' and 'A'.. 'F' are interpreted,\nothers occurring in HEX characters are ignored.",
+    "type": "FUNCTION",
+    "name": "HEX_TO_BYTE",
+    "input": [
+        {
+            "name": "HEX",
+            "type": "STRING(5)",
+            "description": "A string representing the hexadecimal value to be converted to a byte."
+        }
+    ],
+    "output": [
+        {
+            "name": "HEX_TO_BYTE",
+            "type": "BYTE",
+            "description": "The resulting byte value obtained from the conversion of the hexadecimal string."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The output byte value derived from the hexadecimal input string."
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "title": "Linear Interpolation Function",
+    "description": "LINEAR_INT is a linear interpolation module. A characteristic is described\nby a maximum of 20 coordinate values (X, Y) and is cut up to 19 linear\nsegments. The defnition of the coordinate values is passed in an array\nwhich describes the characteristic with individual X, Y describes value\npairs. The value pairs must be sorted by the x_value. If an X value is called\noutside range which is described by the value pairs, then the frst respecti￾ve last linear segment is extrapolated and the corresponding value Issued.\nTo keep the number of defnition points fexible, at the input PTS is given\nthe number of points. The possible score is in the range from 3 to 20, whe￾rein each individual dot is shown with X-and Y-value.",
+    "type": "FUNCTION",
+    "name": "LINEAR_INT",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value for which the linear interpolation is to be calculated."
+        },
+        {
+            "name": "XY",
+            "type": "ARRAY[1..20, 0..1] OF REAL",
+            "description": "A two-dimensional array containing the points for interpolation, where each row represents a point with X and Y coordinates."
+        },
+        {
+            "name": "Pts",
+            "type": "INT",
+            "description": "The number of points defined in the XY array that should be used for interpolation."
+        }
+    ],
+    "output": [
+        {
+            "name": "LINEAR_INT",
+            "type": "REAL",
+            "description": "The result of the linear interpolation calculation for the given input X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The real number result obtained from the linear interpolation."
+    }
+}

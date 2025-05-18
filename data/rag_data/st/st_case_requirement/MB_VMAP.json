@@ -1,0 +1,50 @@
+{
+    "title": "Modbus Virtual Address Mapping",
+    "description": "MB_VMAP The module allows the conversion of virtual addresses at a real address \n\nspace in the MODBUS DATA Structure. Virtual address ranges are defned \n\nin the VMAP data array. If the module is called and found that nothing in \n\nthe VMAP data is entered, automatically a block is created, allowing full \n\naccess to all the MODBUS data. In each address block also a watchdog \n\ntimer is maintained that sets each time you access this block on the timer \n\nto zero. Thus, simply by comparing the TIME_OUT value to a cutof value, \n\nat communication error (no update) can be responded.\n\nBy the parameter FC is detected the functional code and whether the \n\nregister (16 bit) or individual bits must be processed. The bit number \n\ncorresponds to the function code. This means that Bit5 = 1 in FC the \n\nfunction code 5 (Write Single Coil) enables. By V_ADR by the virtual start \n\naddress is specifed (At 16bit commands this is a register address and at \n\n118 Version 1.21\n\nChapter 9. Network and Communication\n\nbit commands an absolute bit number within a defned block.) The \n\nparameter V_CNT defnes the number of data points (unit 16-bit or bits \n\ndepending on the function code). The overall size is given by \n\nMODBUS_ARRAY SIZE (number WORDS). By using these parameters, the \n\nmodule searched the VMAP data table for a matching block of data, and \n\npasses from the correct data block P_ADR as a result. The value \n\ncorresponds to the real index for MODBUS_DATA array. At a function code \n\nwith bit access in addition the bit position within P_ADR is passed as well. \n\nA potential error occurring in the analysis is reported for the parameter \n\n\"error\" (see error table). The watchdog timer is reseted at each access to a \n\nfunction code from the group of write commands. \n\nIf no special treatment required, so in VMAP are not settings \n\nrequired, and then MODBUS_ARRAY is mapped 1:1 with the \n\naccess.\n\nERROR:\n\nValue Description\n\n0 No error\n\n1 Invalid function code\n\n2 Invalid Data Address\n\n! Note the special treatment of function code 23!\n\nThe Modbus Function Code 23 is a combined command, because it \n\nconsists of two actions. First register are written and then the register are \n\nread. Found that the write or read parameter is not allowed, so neither of \n\nthese actions is performed.\n\nTo distinguish between reading and writing by VMAP, the read command is \n\nchecked in VMAP at FC 23 as BIT23 (Read/Write Multiple registers), and the \n\nwrite command on the other hand, is tested in Bit16 (Write multiple \n\nregisters).",
+    "type": "FUNCTION",
+    "name": "MB_VMAP",
+    "input": [
+        {
+            "name": "FC",
+            "type": "INT",
+            "description": "Function number that determines the operation to be performed."
+        },
+        {
+            "name": "V_ADR",
+            "type": "INT",
+            "description": "Virtual address range start address."
+        },
+        {
+            "name": "V_CNT",
+            "type": "INT",
+            "description": "Number of data points in the virtual address space."
+        },
+        {
+            "name": "SIZE",
+            "type": "INT",
+            "description": "Number of MODBUS registers in the DATA structure."
+        }
+    ],
+    "output": [
+        {
+            "name": "P_ADR",
+            "type": "INT",
+            "description": "Real address space: start address."
+        },
+        {
+            "name": "P_BIT",
+            "type": "INT",
+            "description": "Real address range: bit position."
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the result of the operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

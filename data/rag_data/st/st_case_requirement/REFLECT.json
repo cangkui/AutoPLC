@@ -1,0 +1,30 @@
+{
+    "title": "Reflect Function",
+    "description": "REFLECT reverses the order specifed by the number of L BitsBits in a\nDWORD. The most signifcant bits than specifed by the length L remain\nunchanged.",
+    "type": "FUNCTION",
+    "name": "REFLECT",
+    "input": [
+        {
+            "name": "D",
+            "type": "DWORD",
+            "description": "The DWORD value to be reflected."
+        },
+        {
+            "name": "L",
+            "type": "INT",
+            "description": "The length defining how many bits to reflect from the DWORD value."
+        }
+    ],
+    "output": [
+        {
+            "name": "REFLECT",
+            "type": "DWORD",
+            "description": "The resulting DWORD value after the reflection operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The resulting DWORD value from the reflection process."
+    }
+}

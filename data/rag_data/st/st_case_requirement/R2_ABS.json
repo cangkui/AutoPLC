@@ -1,0 +1,31 @@
+{
+    "title": "Absolute Value Function for REAL2",
+    "description": "COSH calculates the hyperbolic cosine using the formula:",
+    "type": "FUNCTION",
+    "name": "R2_ABS",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL2",
+            "description": "Input parameter of type REAL2 containing the values to compute the absolute value from."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL2",
+        "description": "The output result of type REAL2 that holds the absolute values of the input's components.",
+        "fields": [
+            {
+                "name": "RX",
+                "type": "REAL",
+                "description": "The absolute value of the RX component of the input REAL2."
+            },
+            {
+                "name": "R1",
+                "type": "REAL",
+                "description": "The absolute value of the R1 component of the input REAL2."
+            }
+        ]
+    }
+}

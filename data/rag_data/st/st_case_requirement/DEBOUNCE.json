@@ -1,0 +1,32 @@
+{
+    "title": "Debounce Function Module",
+    "description": "DEBOUNCE can debounce the signal from a switch or button and pass it\n\ndebounced to the output Q . If PM = FALSE, the output Q follows the input\n\nsignal IN debounced, if PM = TRUE at the input IN a leading edge is detec-\n\n49 Version 1.00\n\nChapter 6. Electrical Engineering\n\nted and the output Q remains only for one cycle to TRUE. The debounce\n\ntime for the input IN is set by the time TD.",
+    "type": "FUNCTION",
+    "name": "DEBOUNCE",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input signal from the switch or push button."
+        },
+        {
+            "name": "TD",
+            "type": "TIME",
+            "description": "Debounce time for the input signal."
+        },
+        {
+            "name": "PM",
+            "type": "BOOL",
+            "description": "Operation mode: TRUE for pulse mode operation, FALSE for standard debounced output."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Debounced output signal."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

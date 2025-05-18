@@ -1,0 +1,60 @@
+{
+    "title": "INI Parser File Module",
+    "description": "INI_PARSER_FILE enables the analysis of the elements of an \n\narbitrarily large INI fle which is read into the read data bufer block by \n\nblock for automatically processing. The name of the fle is passed in \n\nparameter \"FILENAME\". The search for elements always begins on the \n\ngiven depended \"OFFSET\", and hence is very easy to look only at certain \n\npositions, or to repeat the search from a specifc section to browse not \n\nalways the entire byte array. At the initial search should start default to \n\nOFFSET 0 (but may not!). When querying sections and keys, there are \n\nvarious procedures. Either it is queried to a Section and evaluates all of \n\nthe following keys by individual queries, or to use in very large \n\ninitialization fle the classic enumeration (listing), which means it will be \n\nreport serially all the elements, and processed by the application.\n\n164 Version 1.21\n\nChapter 10. File-System\n\nSection Search:\n\nTo determine the OFFSET of a specifc Section, STR must declare the name \n\nof the Section and the ofset can be set to a position that is located before \n\nof the searched section. Should only the nearest available section be \n\nfound, at STR an empty sting must be passed. The search query is started \n\nby RUN = 1. The search will take diferent time, depending on the \n\nstructure and size of the INI data, it takes an indefnite number of cycles \n\nuntil a positive or negative result is achieved. Once the search is fnished, \n\nthe INI_PARSER_BUF sets the parameters of RUN to 0. RESULT passes the \n\nresult of the search to output. Upon successful search the name of the \n\nsection is shown at parameters KEY. And then the OFFSET parameter \n\npoints to the end of the section line. Thus, immediately after that the key \n\nevaluation can be continued, without having to manually change the \n\nOFFSET. \n\nKey Search:\n\nBefore a Key is evaluated, the OFFSET must have a correct value, this can \n\nbe done by manual set of OFFSET or by a previously executed Section \n\nsearch. Before running the query at STR the name of the key must be are \n\npassed. If an empty string STR is handed over, the next key found is \n\nreturned. RUN = 2 means the query can be started. Once the search is \n\nfnished, it sets the parameters of RUN to 0. With RESULT the search \n\nresults will be issued. When in a query the key identifed a new Section, \n\nthis is reported by RESULT = 11. Upon successful search the output of the \n\nparameter KEY is the name of the found key , and VALUE is the key value. \n\nAnd then the OFFSET parameter points to the end of the key line. Thus, \n\nimmediately after the next Key evaluation be continued, without having to \n\nmanually change the OFFSET. \n\nEnumeration - see next item:\n\nFor very large amount of data of an initialization fle to be evaluated, with \n\na enumeration (list) the user program can be build simple, and the \n\nevaluation be carried out more quickly because here no line must be used \n\nmore than once. Before the start OFFSET must have a reasonable value, \n\nthe default case to 0. With RUN = 3 the evaluation is started. Once a \n\nsection or a key is found, it is also issued immediately. In a section KEY \n\nprints the name of the Section and RESULT = 1. With a found KEY, KEY has \n\nthe key name and VALUE is the key value, and RESULT= 2.\n\nIf in a query, the end of the data array is reached, this will be reported by \n\nRESULT = 10.\n\n165 Version 1.21\n\nChapter 10. File-System\n\nIf the fle access is no longer needed, the user must close the fle be either \n\nby use of AUTO_CLOSE or MODE 5 (close fle) of the FILE_SERVER.\n\nRUN: Feature List\n\nRUN Function\n\n0 No function to perform - and last function is complete\n\n1 Evaluate specific section or evaluate next found section \n\n2 evaluate specific Key or Key found next \n\n3 evaluate next found element (section or key) \n\nRESULT: Result - Feedback\n\nRESULT Description\n\n1 Section found\n\n2 Key found\n\n5 Current query is still running - call module further cyclical!\n\n10 Nothing found - reached the end of data\n\n11 Key not found - reached the end of Section\n\n166 Version 1.21\n\nChapter 11. Telnet-Vision\n\n 11. Telnet-Vision",
+    "type": "FUNCTION",
+    "name": "INI_PARSER_FILE",
+    "input": [
+        {
+            "name": "FILENAME",
+            "type": "STRING",
+            "description": "The name of the INI file to be processed."
+        },
+        {
+            "name": "RUN",
+            "type": "BYTE",
+            "description": "Command code for the current action: 1 for section search, 2 for key search, 3 for enumeration."
+        },
+        {
+            "name": "OFFSET",
+            "type": "UDINT",
+            "description": "Current file offset for the query, indicating where to start searching within the INI file."
+        },
+        {
+            "name": "STR",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The string representing the name of the section or key to search for."
+        },
+        {
+            "name": "FSD",
+            "type": "FILE_SERVER_DATA",
+            "description": "The file interface for handling the INI file data."
+        },
+        {
+            "name": "PT",
+            "type": "NETWORK_BUFFER",
+            "description": "The buffer for reading data from the INI file."
+        }
+    ],
+    "output": [
+        {
+            "name": "RESULT",
+            "type": "BYTE",
+            "description": "The result of the search query, indicating the outcome of the operation."
+        },
+        {
+            "name": "KEY",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The name of the found section or key during the search."
+        },
+        {
+            "name": "VALUE",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The value associated with the found key."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

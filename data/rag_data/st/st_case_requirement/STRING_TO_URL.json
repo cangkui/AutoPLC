@@ -1,0 +1,76 @@
+{
+    "title": "STRING_TO_URL Function",
+    "description": "STRING_TO_URL split a URL ( Uniform Resource Locator ) into its com￾ponents and stores it in the data type URL. If in STR no path or protocoll is\n\nspecifed, so the function sets the missing values automatically with the\n\nspecifed replacement values. \n\nA URL is as follows:\n\nProtocol : / / user : Password @ domain : port / path ? query # anchor",
+    "type": "FUNCTION",
+    "name": "STRING_TO_URL",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING",
+            "description": "The input URL string that is to be split into its components."
+        },
+        {
+            "name": "DEFAULT_PROTOCOL",
+            "type": "STRING",
+            "description": "The replacement protocol to use if none is specified in the input URL."
+        },
+        {
+            "name": "DEFAULT_PATH",
+            "type": "STRING",
+            "description": "The alternate path to use if none is specified in the input URL."
+        }
+    ],
+    "output": [
+        {
+            "name": "URL",
+            "type": "URL",
+            "description": "The data type that holds the components of the split URL."
+        }
+    ],
+    "return_value": {
+        "type": "URL",
+        "description": "The resulting split components of the URL.",
+        "fields": [
+            {
+                "name": "protocol",
+                "type": "STRING",
+                "description": "The protocol used in the URL."
+            },
+            {
+                "name": "user",
+                "type": "STRING",
+                "description": "The user name component of the URL, if specified."
+            },
+            {
+                "name": "password",
+                "type": "STRING",
+                "description": "The password component of the URL, if specified."
+            },
+            {
+                "name": "domain",
+                "type": "STRING",
+                "description": "The domain name of the URL."
+            },
+            {
+                "name": "port",
+                "type": "INTEGER",
+                "description": "The port number specified in the URL, if any."
+            },
+            {
+                "name": "path",
+                "type": "STRING",
+                "description": "The path component of the URL."
+            },
+            {
+                "name": "query",
+                "type": "STRING",
+                "description": "The query component of the URL, if any."
+            },
+            {
+                "name": "anchor",
+                "type": "STRING",
+                "description": "The anchor component of the URL, if any."
+            }
+        ]
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "title": "Random Number Generation Function",
+    "description": "HOUR_TO_TIME calculates a time value (TIME) from the input\nvalue in hours as REAL.",
+    "type": "FUNCTION",
+    "name": "RDM2",
+    "input": [
+        {
+            "name": "last",
+            "type": "INT",
+            "description": "An integer input used to generate the random number."
+        },
+        {
+            "name": "low",
+            "type": "INT",
+            "description": "The lower bound of the range for the random number generation."
+        },
+        {
+            "name": "high",
+            "type": "INT",
+            "description": "The upper bound of the range for the random number generation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The generated random integer within the specified range from 'low' to 'high'."
+    }
+}

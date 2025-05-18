@@ -1,0 +1,35 @@
+{
+    "title": "Time Conversion and Correction Function",
+    "description": "T_PLC_MS returns the current internal PLC time in milliseconds. This has\nnothing to do with a possibly existing clock (real time module), but is the\ninternal Timer of a PLC, which is used as a time reference. \nThe source code of the module has the following characteristics:\nFUNCTION T_PLC_MS : DWORD\nVAR CONSTANT\nDEBUG : BOOL := FALSE;\nN : INT := 0;\nOFFSET := 0;\nEND_VAR\nVAR\nTEMP : DWORD := 1;\nEND_VAR\nT_PLC_MS := TIME_TO_DWORD(TIME());\nIF DEBUG THEN\nT_PLC_MS := SHL(T_PLC_US,N) OR SHL(TEMP,N)-1 + OFFSET;\nEND_IF;\nIn normal operation, the module reads the function TIME() the internal\nTimer of the PLC, and returns it. The internal Timer the PLC according to\nIEC standard has one millisecond resolution. \nAnother feature of T_PLC_MS is a debug mode, which allows to test the\noverfow of the internal PLC Timers and verify the developed software shu￾re. The internal Timer of any PLC has, independent of manufacturer and\ntype of implementation, after a fxed time an overfow. That means that it\nis running against .. FF FFFF (highest value of the corresponding type can\nbe stored) and then starts again at 000..0000. At standard PLC Timers is\nthe overfow time 2^32 -1 milliseconds, which is about 49.71 days. Since\nthis Timer is implemented in a hardware, it initial value can not be set, so\nthat after starting the PLC it always starts at 0 and runs up to the maxi￾mum value . After reaching the maximum value, the infamous Timer Over￾fow arises, which causes fatal consequences in the application software ,\nbut can only be tested extremely difcult. \nT_PLC_MS ofers several ways to test the overfow and time-dependent\nsoftware. With the constant DEBUG, the test mode is switched on and\nthen, using the constants N and ofset , starts the timer at a certain level,\nthus specifcally the overfow can be tested without waiting the 49. Ofset\ndefnces which ist addeed to the value of the internal Timer . With the con￾stant N is determined by how many bits of the internal Timer Value is shif￾ted to the left, while the lower N bits are flled with 1. With N thus the\nspeed of the internal Timers can be increased by factors of 2,4,8,16 and\nso on. \nT_PLC_US thus ofers all possibilities to test time-dependent software, both\nfor the problem of overfow, and for very slow time-dependent functions.\nThe constant DEBUG, N and OFFSET were intentionally not implemented\nas inputs of the function to avoid accidental misuse.",
+    "type": "FUNCTION",
+    "name": "T_PLC_MS",
+    "input": [
+        {
+            "name": "debug",
+            "type": "BOOL",
+            "description": "Flag to enable debug mode for detailed processing."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "Shift value used for adjusting the timer."
+        },
+        {
+            "name": "offset",
+            "type": "DWORD",
+            "description": "Additive offset to adjust the timer value."
+        }
+    ],
+    "output": [
+        {
+            "name": "T_PLC_MS",
+            "type": "DWORD",
+            "description": "Resulting timer value in DWORD format after conversion and correction."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Final timer value in DWORD format."
+    }
+}

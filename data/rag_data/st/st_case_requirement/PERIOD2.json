@@ -1,0 +1,25 @@
+{
+    "title": "Date Period Check",
+    "description": "IS_HEX tests whether the string STR contains only hexadecimal characters\nare. If another character is found the function returns FALSE. If in STR are\nonly hexadecimal characters included, the function returns TRUE. The he￾xadecimal character are characters with the decimal code 0..9, a..f. and\nA..F.",
+    "type": "FUNCTION",
+    "name": "PERIOD2",
+    "input": [
+        {
+            "name": "DP",
+            "type": "ARRAY[0..3, 0..1] OF DATE",
+            "description": "An array containing pairs of dates that define specific periods."
+        },
+        {
+            "name": "DX",
+            "type": "DATE",
+            "description": "A single date to check against the periods defined in the DP array."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "A boolean value indicating whether the date DX is within any of the defined date periods in DP.",
+        "fields": []
+    }
+}

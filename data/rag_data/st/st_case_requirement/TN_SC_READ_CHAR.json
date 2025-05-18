@@ -1,0 +1,36 @@
+{
+    "title": "Read Character Function Module",
+    "description": "TN_SC_READ_CHAR is used to read the current character at \n\nthe specifed location X / Y.\n\n190 Version 1.21\n\nChapter 11. Telnet-Vision",
+    "type": "FUNCTION",
+    "name": "TN_SC_READ_CHAR",
+    "input": [
+        {
+            "name": "Iin_Y",
+            "type": "INT",
+            "description": "Y coordinate"
+        },
+        {
+            "name": "Iin_X",
+            "type": "INT",
+            "description": "X coordinate"
+        }
+    ],
+    "output": [
+        {
+            "name": "Oby_CHAR",
+            "type": "BYTE",
+            "description": "Character at position X / Y"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen structure containing terminal information"
+        }
+    ],
+    "return_value": {
+        "type": "N/A",
+        "description": "This function does not return a value."
+    }
+}

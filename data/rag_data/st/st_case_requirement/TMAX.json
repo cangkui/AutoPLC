@@ -1,0 +1,32 @@
+{
+    "title": "TMAX Function Block",
+    "description": "TMAX limits the duration of the output pulse to the time PT. The output Q\nfollows the input IN, as long as the TRUE time of IN is shorter than PT. If IN\nis longer than PT to TRUE, the output pulse is shortened. Whenever an\noutput changes by a timeout to FALSE, the output Z is set to TRUE for a\ncycle.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TMAX",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input boolean signal that triggers the function block."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "Time duration that the input signal must be TRUE for in order to reset the output."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal that indicates whether the function block is active or not."
+        },
+        {
+            "name": "Z",
+            "type": "BOOL",
+            "description": "Output signal that indicates that the timing condition has been satisfied, i.e., the input was TRUE for the specified duration."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

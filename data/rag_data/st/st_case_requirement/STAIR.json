@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Stair Value",
+    "description": "STAIR follows the input signal X with a step function. The \nheight of the steps is given by D. If X = 0, then the output directly follows \nthe input signal. STAIR is not suitable for fltering of input signals, because \nif the input fuctuates by a step , the output switches between two \nadjacent values back and forth. For this purpose we recommend the use of \nStair2 that works with a Hysteresis and avoids unstable conditions.\nThe following example illustrates the operation of STAIR:",
+    "type": "FUNCTION",
+    "name": "STAIR",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The value from which the stair calculation is derived."
+        },
+        {
+            "name": "D",
+            "type": "REAL",
+            "description": "The step size used for the stair calculation. Should be greater than zero for the operation to apply."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated stair value based on the inputs.",
+        "fields": []
+    }
+}

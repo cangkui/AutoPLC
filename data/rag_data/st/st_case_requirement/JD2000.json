@@ -1,0 +1,20 @@
+{
+    "title": "JD2000 Function",
+    "description": "LEAP_DAY function checks if the input date is a leap or a 29th Februa￾ry. The test is valid for the time window from 1970 to 2099. In the year\n2100 a leap year indicated although this is not one. However, since the\nrange of dates according to IEC61131-3 extends only to the year 2106 this\ncorrection will be omitted.",
+    "type": "FUNCTION",
+    "name": "JD2000",
+    "input": [
+        {
+            "name": "DTI",
+            "type": "TIME",
+            "description": "The input time value to be converted to Julian Date format."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed Julian Date corresponding to the input TIME value.",
+        "fields": []
+    }
+}

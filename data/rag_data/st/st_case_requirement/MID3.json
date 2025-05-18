@@ -1,0 +1,35 @@
+{
+    "title": "Mid Value Calculation",
+    "description": "COSH calculates the hyperbolic cosine using the formula:",
+    "type": "FUNCTION",
+    "name": "MID3",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "REAL",
+            "description": "The first input real number."
+        },
+        {
+            "name": "IN2",
+            "type": "REAL",
+            "description": "The second input real number."
+        },
+        {
+            "name": "IN3",
+            "type": "REAL",
+            "description": "The third input real number."
+        }
+    ],
+    "output": [
+        {
+            "name": "MID3",
+            "type": "REAL",
+            "description": "The calculated mid value, which is the second largest of the three input numbers."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The return value represents the mid value of the three inputs."
+    }
+}

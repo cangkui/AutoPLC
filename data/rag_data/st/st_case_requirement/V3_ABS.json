@@ -1,0 +1,20 @@
+{
+    "title": "Calculate the Magnitude of a 3D Vector",
+    "description": "BIT_LOAD_W copies the bit at input VAL to the bit in position N in WORD\nIN. The least signifcant bit B0 is described by the position 0.",
+    "type": "FUNCTION",
+    "name": "V3_ABS",
+    "input": [
+        {
+            "name": "A",
+            "type": "ARRAY[1..3] OF REAL",
+            "description": "An array representing a 3D vector, containing three REAL values corresponding to the x, y, and z components of the vector."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed magnitude of the 3D vector A.",
+        "fields": []
+    }
+}

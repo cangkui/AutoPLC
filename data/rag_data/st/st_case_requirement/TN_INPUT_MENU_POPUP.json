@@ -1,0 +1,37 @@
+{
+    "title": "TN_INPUT_MENU_POPUP Function Module",
+    "description": "TN_INPUT_MENU_POPUP is used to manage and display the \n\nMenu_Bar Submenu and for the representation of \n\nTN_INPUT_SELECT_POPUP elements. The element is shown in *.in_X and \n\n*.in_Y. The menu items are stored as elements within *.st_Menu_Text. The \n\nindividual element are devided from each other using '#'. To devide \n\nindividual sub-menu items from each other or providing them with a cut \n\nline, an '-' has to submitted as text menu-element.\n\nWithin the sub-menu can be navigated with up / down key. If a sub-menu \n\nitem is confrmed by pressing Enter / Return key, then in \n\n*.in_Menu_Selected the number of the selected menu-point is passed.\n\nAn active Menu automatically backs up the background before it is drawn, \n\nand restores the background after ending.\n\nAs long as a menu is display, the user program may not make graphical \n\nchanges. This can be checked by TN_SCREEN.bo_Menue_Bar_Dialog = \n\nTRUE or TN_SCREEN.bo_Modal_Dialog = TRUE.\n\nThe module is primarily from TN_INPUT_MENU_BAR and \n\nTN_INPUT_SELECT_POPUP used internally, and need not be executed \n\ndirectly by the user.",
+    "type": "FUNCTION",
+    "name": "TN_INPUT_MENU_POPUP",
+    "input": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "The screen structure containing display properties and state management for the menu."
+        },
+        {
+            "name": "Xus_TN_MENU",
+            "type": "us_TN_MENU",
+            "description": "The menu structure containing the text and organization of menu items, divided by '#'. Each sub-menu item can be divided by '-' for visual separation."
+        }
+    ],
+    "output": [],
+    "in/out": [
+        {
+            "name": "in_X",
+            "type": "Integer",
+            "description": "The X-coordinate for where the menu is displayed on the screen."
+        },
+        {
+            "name": "in_Y",
+            "type": "Integer",
+            "description": "The Y-coordinate for where the menu is displayed on the screen."
+        },
+        {
+            "name": "in_Menu_Selected",
+            "type": "Integer",
+            "description": "The number of the selected menu item after user confirmation."
+        }
+    ],
+    "return_value": null
+}

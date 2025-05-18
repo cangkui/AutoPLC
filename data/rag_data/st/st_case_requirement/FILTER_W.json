@@ -1,0 +1,27 @@
+{
+    "title": "Filter Block",
+    "description": "FILTER_W Output The main application is the fltering of sensor signals for noise re￾duction. The basic functionality of a flter of the frst degree can be found\nin the module FT_PT1.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FILTER_W",
+    "input": [
+        {
+            "name": "X",
+            "type": "WORD",
+            "description": "Input value to be filtered."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "Time interval for filtering."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "WORD",
+            "description": "Filtered output value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

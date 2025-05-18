@@ -1,0 +1,19 @@
+{
+    "title": "Hexadecimal String Validation",
+    "description": "IS_HEX tests whether the string STR contains only hexadecimal characters\nare. If another character is found the function returns FALSE. If in STR are\nonly hexadecimal characters included, the function returns TRUE. The he￾xadecimal character are characters with the decimal code 0..9, a..f. and\nA..F.",
+    "type": "FUNCTION",
+    "name": "IS_HEX",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string that needs to be validated as a hexadecimal string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates whether the input string is a valid hexadecimal string. Returns TRUE if all characters are hexadecimal, otherwise FALSE."
+    }
+}

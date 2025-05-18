@@ -1,0 +1,26 @@
+{
+    "title": "Year of Date Calculation",
+    "description": "YEAR_OF_DATE calculates the corresponding year from the\ndate of input IDATE.",
+    "type": "FUNCTION",
+    "name": "YEAR_OF_DATE",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The input date from which the year is to be extracted."
+        }
+    ],
+    "output": [
+        {
+            "name": "year",
+            "type": "INT",
+            "description": "The calculated year derived from the input date."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The function returns the year as an integer.",
+        "fields": []
+    }
+}

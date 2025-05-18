@@ -1,0 +1,30 @@
+{
+    "title": "Water Vapor Concentration Calculation",
+    "description": "DEW_CON calculates from the relative humidity (RH) and \n\ntemperature (T in °C) water vapor concentration in the air. The result is \n\ncalculated in grams/m³. RH is shown in % (50 = 50%) and indicates the \n\ntemperature in °C.\n\nThe module is suitable for temperatures from -40°C to +90°C.",
+    "type": "FUNCTION",
+    "name": "DEW_CON",
+    "input": [
+        {
+            "name": "RH",
+            "type": "REAL",
+            "description": "Relative Humidity in percentage (e.g., 50 for 50%)"
+        },
+        {
+            "name": "T",
+            "type": "REAL",
+            "description": "Temperature in degrees Celsius"
+        }
+    ],
+    "output": [
+        {
+            "name": "REAL",
+            "type": "REAL",
+            "description": "Water vapor concentration in grams per cubic meter (g/m³)"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the calculated water vapor concentration in g/m³"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "title": "Buffer Comparison Function",
+    "description": "BUFFER_COMP checks whether the content of the array PT2\noccurs in the array PT1 from position START. If PT2 is found in PT1, so the\nfunction returns the position in PT1, starting from 0. If PT2 is not found in\nPT1, -1 is returned. BUFFER_COMP can also be used for comparison of two\nequally sized arrays.\nWhen called, a Pointer to the array and its size in bytes is passed to the\nfunction. In CoDeSys the call reads: BUFFER_COMP(ADR(BUF1),\nSIZEOF(BUF1), ADR(BUF2), SIZEOF(BUF2)), where BUF1 and BUF2 are the\nnames of the arrays to be manipulated. ADR() is a standard function which\nindentifes the Pointer to the array and SIZEOF() is a standard function,\nwhich determines the size of the array. The function only returns TRUE.\nThe array specifed by the Pointer is manipulated directly in memory. This\ntype of processing arrays is very efcient because no additional memory\nis required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "BUFFER_COMP",
+    "input": [
+        {
+            "name": "PT1",
+            "type": "POINTER TO ARRAY [0..32767] OF BYTE",
+            "description": "Pointer to the first byte array where the search will be performed."
+        },
+        {
+            "name": "SIZE1",
+            "type": "INT",
+            "description": "The size of the first byte array (PT1)."
+        },
+        {
+            "name": "PT2",
+            "type": "POINTER TO ARRAY [0..32767] OF BYTE",
+            "description": "Pointer to the second byte array which will be searched within the first byte array."
+        },
+        {
+            "name": "SIZE2",
+            "type": "INT",
+            "description": "The size of the second byte array (PT2)."
+        },
+        {
+            "name": "START",
+            "type": "INT",
+            "description": "The starting index in the first byte array (PT1) from which the search will be initiated."
+        }
+    ],
+    "output": [
+        {
+            "name": "BUFFER_COMP",
+            "type": "INT",
+            "description": "Returns the index of the first match in the first byte array (PT1), or -1 if no match was found."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The return value indicates the position of the first occurrence of the second byte array in the first byte array.",
+        "fields": []
+    }
+}

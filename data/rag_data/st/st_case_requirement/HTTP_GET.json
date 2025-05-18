@@ -1,0 +1,90 @@
+{
+    "title": "HTTP GET Function Module",
+    "description": "HTTP_GET does at positive edge of Get a GET-command on an HTTP ser￾ver. IWith MODE the HTTP protocol version can be specifed. The reques￾ted URL (web link) must be submitted completely processed in the\n\nURL_DATA structure. The full URL should therefore be processed before the\n\nmodule call by \"STRING_TO_URL. After a successful query DONE = TRUE,\n\nand the parameters HTTP_START and HTTP_STOP point to the data area in\n\nwhich the message header data for further processing and evaluation are\n\nto be found. Normally, a message body is present, which in turn is trans-\n\n98 Version 1.21\n\nChapter 9. Network and Communication\n\nmitted via BODY_START and BODY_STOP. Also, on HTTP_STATUS is reported\n\nthe HTTP status code as a string. One of the difculties in receiving the\n\nHTTP data is the end of the data stream. This module pursued multiple\n\nstrategies. In the process of the HTTP/1.0 the end of receiving data is de￾tected by disconnection of the host. Furthermore, always the information\n\nin the header \"Content-Length\" is checked, and with this can be clearly re￾cognized, that all data is received. If none of the previous versions is true,\n\nso a simple Receive Timeout Error detectes the end of data transmission.\n\nThe only downside is, that this takes time. Sometimes, depending on the\n\ntimeout value longer than desired. Therefore it is not bad if a reasonable\n\ntimeout value is set at IP_CONTROL. ERROR gives at errors, the exact cau￾se (See module IP_CONTROL)\n\nThe following MODE can be used:\n\nMode Protocol Version Properties\n\n0 HTTP/1.0 The host terminates automatically the TCP connection, after the trans￾fer of data.\n\n1 HTTP/1.0 By applying \"Connection: Keep-Alive\", the host is instructed to use a\n\npersistent connection. The client should end of the connection after\n\nstopping activities.\n\n2 HTTP/1.1 The host uses a persistent connection and must be stopped by client.\n\n3 HTTP/1.1 By use of \"Connection: Close\" the host is instructed to stop transmissi￾on of data, the TCP connection.",
+    "type": "FUNCTION",
+    "name": "HTTP_GET",
+    "input": [
+        {
+            "name": "URL_DATA",
+            "type": "STRING_TO_URL",
+            "description": "The complete URL string that has been processed into a URL structure."
+        },
+        {
+            "name": "IP_C",
+            "type": "parameterization",
+            "description": "Parameterization for IP configuration."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "IP4",
+            "type": "DWORD",
+            "description": "The IP address of the HTTP server."
+        },
+        {
+            "name": "GET",
+            "type": "BOOL",
+            "description": "Trigger to start the HTTP query."
+        },
+        {
+            "name": "MODE",
+            "type": "BYTE",
+            "description": "Determines the version of the HTTP GET query."
+        },
+        {
+            "name": "UNLOCK_BUF",
+            "type": "BOOL",
+            "description": "Indicates the release of the receive data buffer."
+        }
+    ],
+    "output": [
+        {
+            "name": "HTTP_STATUS",
+            "type": "STRING",
+            "description": "The HTTP status code returned from the server."
+        },
+        {
+            "name": "HTTP_START",
+            "type": "UINT",
+            "description": "The start position of the message header."
+        },
+        {
+            "name": "HTTP_STOP",
+            "type": "UINT",
+            "description": "The stop position of the message header."
+        },
+        {
+            "name": "BODY_START",
+            "type": "UINT",
+            "description": "The start position of the message body."
+        },
+        {
+            "name": "BODY_STOP",
+            "type": "UINT",
+            "description": "The stop position of the message body."
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the task was performed without error."
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating the specific issue encountered."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value."
+    }
+}

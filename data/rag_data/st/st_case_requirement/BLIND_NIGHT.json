@@ -1,0 +1,140 @@
+{
+    "title": "Blind Control Module",
+    "description": "BLIND_NIGHT serves to close the shutters or blinds at night. The module\n\nautomatically closes the blind after sunset with a delay of SUNSET_OFFSET\n\nand the blind goes up after sunrise with a delay of SUNRISE_OFFSET again.\n\n85 Version 1.00\n\nChapter 7. Blind Modules\n\nThe opening and closing can be unlocked separately with E_NIGHT for clo￾se and E_DAY for open. If, for example E_NIGHT set to TRUE and E_DAY\n\nnot, so in the evening at dusk the blinds shuts down, but it must be ope￾ned the next morning manually. If E_NIGHT and E_DAY are not connected\n\nso both set internally to TRUE. To identify the corresponding periods, the\n\nmodule requires an external data structure of type CALENDAR. UP, DN and\n\nS_IN the inputs from other BLIND modules and are passed in the day mode\n\nto the outputs QU, QD and STATUS. The signals PI, AI and PO, AO pass the\n\nvalues for the position and angle of the blind to the following modules. In\n\nthe night mode at the outputs of PO and AO the values for night mode are\n\npassed, any manual operation deletes the automatic night mode. If E_DAY\n\n= TRUE, at the end of the night the defned day mode with DAY_POSITION\n\nand DAY_ANGLE is restored. The time RESTORE_TIME is the maximum\n\ntime to reach the day position.\n\nThe input and output S_IN STATUS are ESR compliant outputs and inputs.\n\nIn Input S_IN the upstream functions report their status to the module, this\n\nstatus will be forwarded to the output of STATUS, and own status messa￾ges also issued on STATUS.\n\nSTATUS Meaning\n\n0 no message\n\n141 Night mode\n\n142 day position will be reached\n\nNNN forwarded messages\n\nThe following graphic shows the interconnection with other modules of\n\nBLIND_NIGHT for blind control:\n\nBLIND_NIGHT Timing Diagram\n\n86 Version 1.00\n\nChapter 7. Blind Modules\n\nThe timing diagram shows a course of a day. The times T1 and T2 defne\n\nthe allowed range for the beginning of the night shade, T3 and T4 defne\n\nthe appropriate area for the restoration of the day position. The day and\n\nnight position is predetermined by the setup values DAY_POSITION,\n\nDAY_ANGLE, NIGHT_POSITION and NIGHT_ANGLE. Using two release inputs\n\nE_DAY and E_NIGHT, the night shade and the days position are unlocked\n\nseparately. Thus, for example if E_NIGHT = FALSE and TRUE = E_DAY the\n\nmodule can be used in the morning to bring the blinds in the specifed\n\ndays position.",
+    "type": "FUNCTION",
+    "name": "BLIND_NIGHT",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input for raising the blinds."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input for lowering the blinds."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input from other modules."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Input value of the blind position in automatic mode."
+        },
+        {
+            "name": "AI",
+            "type": "BYTE",
+            "description": "Input value of the blade angle in automatic mode."
+        },
+        {
+            "name": "E_NIGHT",
+            "type": "BOOL",
+            "description": "Trigger for automatic night service."
+        },
+        {
+            "name": "E_DAY",
+            "type": "BOOL",
+            "description": "Trigger for automatic day service."
+        },
+        {
+            "name": "SUNRISE_OFFSET",
+            "type": "INT",
+            "description": "Offset from sunrise in minutes."
+        },
+        {
+            "name": "SUNSET_OFFSET",
+            "type": "INT",
+            "description": "Offset from sunset in minutes."
+        },
+        {
+            "name": "T1",
+            "type": "TOD",
+            "description": "Earliest point in time for night-shade."
+        },
+        {
+            "name": "T2",
+            "type": "TOD",
+            "description": "Latest point in time for night-shade."
+        },
+        {
+            "name": "T3",
+            "type": "TOD",
+            "description": "Earliest point in time for day position."
+        },
+        {
+            "name": "T4",
+            "type": "TOD",
+            "description": "Latest point in time for day position."
+        },
+        {
+            "name": "NIGHT_POSITION",
+            "type": "BYTE",
+            "description": "Position for night service."
+        },
+        {
+            "name": "NIGHT_ANGLE",
+            "type": "BYTE",
+            "description": "Angle for night service."
+        },
+        {
+            "name": "DAY_POSITION",
+            "type": "BYTE",
+            "description": "Position for day position."
+        },
+        {
+            "name": "DAY_ANGLE",
+            "type": "BYTE",
+            "description": "Angle for day position."
+        },
+        {
+            "name": "RESTORE_TIME",
+            "type": "TIME",
+            "description": "Maximum time to reach the day position."
+        },
+        {
+            "name": "CX",
+            "type": "CALENDAR",
+            "description": "Data structure for local time."
+        }
+    ],
+    "output": [
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor up signal."
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor down signal."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output."
+        },
+        {
+            "name": "PO",
+            "type": "BYTE",
+            "description": "Output value of the blind in automatic mode."
+        },
+        {
+            "name": "AO",
+            "type": "BYTE",
+            "description": "Output value of the blade angle in automatic mode."
+        },
+        {
+            "name": "NIGHT",
+            "type": "BOOL",
+            "description": "Indicates whether it is night time (TRUE between sunset and sunrise)."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

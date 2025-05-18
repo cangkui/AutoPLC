@@ -1,0 +1,32 @@
+{
+    "title": "TP_1 Timer Function Block",
+    "description": "ISC_UPPER tests whether a sign IN is a captial letter, if IN is a capital let￾ter, the function returns TRUE, if not the function returns FALSE. In exami￾ning the Global Setup EXTENDED_ASCII constant is considered. If EXTEN￾DED_ASCII = TRUE the extended ASCII character-set to be considered in\naccordance with ISO 8859-1.\nThe The following table describes the character codes:\nCode EXTENDED_ASCII=TRUE EXTENDED_ASCII = FASLE\n0..64,91..191,215, 223..255 FALSE FALSE\n65..90 TRUE TRUE\n192..214 TRUE FALSE\n216..222 TRUE FALSE",
+    "type": "FUNCTION_BLOCK",
+    "name": "TP_1",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Boolean input that starts the timing operation when set to TRUE."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "Duration for which the output Q remains TRUE after IN is activated."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Boolean input that resets the output Q to FALSE when set to TRUE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Boolean output that indicates the status of the timer; TRUE when timing is active, otherwise FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

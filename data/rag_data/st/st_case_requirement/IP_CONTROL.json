@@ -1,0 +1,51 @@
+{
+    "title": "IP_CONTROL Function Module",
+    "description": "IP_CONTROL enables manufacturers and platform-neutral use of \n\nEthernet communications. In order to unite the many diferent interfaces \n\nof the PLC-companies that IP_CONTROL is used as an adapter \"wrapper\" . \n\nThis module UDP and TCP as well as active and passive connections can \n\nbe handled. As in some small controls the number of simultaneous open \n\nsockets is very limited, so this module also supports the sharing of \n\nsockets. An integrated automatic coordination of requests allows to divide \n\na socket to a number of client devices. Here is automatically recognized \n\nwhether a client uses a diferent connection parameters than its \n\npredecessor. An existing connection is automatically terminated, and \n\nestablished with the new connection parameters . The type of connection \n\ncan be set with C_MODE (see table). With C_PORT the desired port number \n\nis given, and by the C_IP the IP v4 address. With C_STATE can be \n\ndetermined whether the connection is established - closed, resp. the \n\nnegative and positive edge on change of state. C_ENABLE agent will \n\nrelease the connection (establish) or close (removed). The send and \n\nreceive data works independently of each another, which means it is also \n\npossible to send and receive asynchronous such as Telnet. In applications \n\nwhich only send data and no data receive is expected R_OBSERVE must be \n\nFALSE, so that no Timeout at receive occurs. At the start of transmit and \n\nreceive activities TIME_RESET is set by the user a to TRUE once, so that all \n\ntimeout start over with a defned start value. This is required due to the \n\nSharing functionality, because established connections remains connected \n\nand the access rights are passed here only. The parameter IP serves as a \n\npossible default IP address. To avoid repeating the same IP address \n\nparameters, a Default - IP can be used. One possible use would be to \n\nspecify the DNS server address. When the module recognizes as C_IP the \n\nIP 0.0.0.0, it automatically uses the default IP address. The same behavior \n\n102 Version 1.21\n\nChapter 9. Network and Communication\n\nis at the Port parameter. If at the port C_PORT a 0 is detected so the \n\nparameterized block port number of the module is used. The error code \n\nERROR consists of several parts (see table ERROR). With TIMEOUT the \n\noverall monitoring time can be specifed. This time value is independently \n\nused used for connection, send data and receive data. The transferred \n\nTIMEOUT value is automatically limited to 200 ms minimum. Thus, this \n\nparameter can remain free.\n\nThe data block is automatically sent if in a shared connection in the send \n\nbufer the transmit data and data length are entered. For data reveice, the \n\ndata is appended to the already existing data in the bufer. By setting SIZE \n\n= 0, the receive data pointer is reset and the next received data is then \n\nstored at position 0. \n\nThe module supports the blocking of data messages, that means the \n\nS_BUF resp. R_BUF can be arbitrarily large. Individual received data frames \n\nare collected in R_BUF in stream form. Just the same when process data \n\nare sent. The data in S_BUF is sent individually as Stream allowed block \n\nsize.\n\nApplication example: \n\n CASE state OF \n\n00: (* On Wait for release *) \n\n IF RELEASE THEN \n\n state := 10;\n\n IP_STATE: = 1; (* Sign on *) \n\n END_IF;\n\n10: (* Wait for clearance to access for connection and sending content *) \n\n IF IP_STATE = 3 THEN (* access permitted? *)\n\n (* IP set up data traffic *)\n\n IP_C.C_PORT: = 123; (* enter port number *) \n\n IP_C.C_IP = IP4; (* Enter IP *) \n\n IP_C.C_MODE:= 1; (* Mode: UDP+ACTIVE+Port+IP *) \n\n IP_C.C_ENABLE:= TRUE; (* Release connection *) \n\n IP_C.TIME_RESET: = TRUE; (Reset time monitoring * *) \n\n IP_C.R_OBSERVE: = TRUE; (* Monitor data receive *) \n\n R_BUF.SIZE:= 0; (* Reset Home length *) \n\n (* Send data register *)\n\n S_BUF.BUFFER[0] := BYTE#16#1B;\n\n (* Etc. ... *)\n\n S_BUF.SIZE: = xx; (* enter send length *) \n\n103 Version 1.21\n\nChapter 9. Network and Communication\n\n state := 30;\n\n30:\n\n IF IP_C.ERROR <> 0 THEN\n\n (* Perform error analysis *)\n\n ELSIF S_BUF.SIZE = 0 AND R_BUF.SIZE >= xxx THEN\n\n (* evaluate received data *)\n\n (* Logout - release access for other *)\n\n IP_STATE := BYTE#4;\n\n state: = 0 0; (* process end *) \n\n END_IF;\n\nEND_CASE;\n\n(* IP_FIFO call cyclic *)\n\nIP_FIFO(FIFO:=IP_C.FIFO,STATE:=IP_STATE,ID:=IP_ID);\n\nIP_C.FIFO:=IP_FIFO.FIFO;\n\nIP_STATE := IP_FIFO.STATE;\n\nIP_ID:=IP_FIFO.ID;\n\nfollowing C_MODE may be used:\n\nTYP\n\nE\n\nTCP / UDP Aktiv / Passiv Port number required IP address required\n\n0 TCP Active Yes Yes\n\n1 UDP Active Yes Yes\n\n2 TCP Passive Yes Yes (Address of the active part￾ner)\n\n3 UDP Passive Yes Yes (Address of the active part￾ner)\n\n4 TCP Passive Yes No (Any active partner will be ac￾cepted)\n\n5 UDP Passive Yes No (Any active partner will be ac￾cepted)\n\nC_STATE:\n\nValue State Message\n\n0 connection is down\n\n104 Version 1.21\n\nChapter 9. Network and Communication\n\n1 Connection has been broken down (negative edge) value exists only for one cycle, then re￾turns 0.\n\n254 Connection is established (positive edge) value exists for one cycle, then returns 255. \n\n255 Connection is established\n\n<127 query if connections is established\n\n>127 query if connection is established\n\n \n\nERROR:\n\nDWORD Message Type Description\n\nB3 B2 B1 B0\n\n00 xx xx xx Connection establish Value 00 - No errors found\n\nnn xx xx xx Connection establish Value 01-252 system-specific error\n\nFD xx xx xx Connection establish Value 253 - Connection closed by remote\n\nFF xx xx xx Connection establish value 255 - Timeout Error\n\nxx 00 xx xx Send data Value 00 - No errors found\n\nxx nn xx xx Send data Value 01-252 system-specific error\n\nxx FF xx xx Send data value 255 - Timeout Error\n\nxx xx 00 xx Receive data Value 00 - No errors found\n\nxx xx nn xx Receive data Value 01-252 system-specific error\n\nxx xx FF xx Receive data value 255 - Timeout Error\n\nxx xx FE xx Receive data Value 254 - Receive buffer is full (overflow) \n\n(Buffer size is automatically set to 0)\n\nxx xx xx nn Application- Error In IP_CONTROL always 00\n\nERROR is transferred originally from the client appli￾cation and optionally, at this point an application error\n\nis reported. This error code is entered, but only by the\n\nclient devices.\n\n System-specifc error: (PCWorx / MULTIPROG)\n\nValue State Message\n\n0x00 No error occurred.\n\n105 Version 1.21\n\nChapter 9. Network and Communication\n\n0x01 Creation of at least one task has failed.\n\n0x02 Initialization of the socket interface failed (only WinNT).\n\n0x03 Dynamic memory could not be reserved.\n\n0x04 FB can not be initialized because at start the asynchronous communication tasks, an error\n\nhas occurred.\n\n0x10 Socket initialization failed.\n\n0x11 Error at sending a message.\n\n0x12 Error when receiving a message.\n\n0x13 Unknown service code in the message header.\n\n0x21 Invalid state transition upon connection.\n\n0x30 No more free channels available.\n\n0x31 The connection was canceled.\n\n0x33 General timeout, receiver or transmitter does not answer or sender has not completed\n\ntransmission.\n\n0x34 Connection request has been negatively acknowledged.\n\n0x35 Recipient did not confirm transfer, possibly overloaded receivers (repeat transfer).\n\n0x40 Partner-string is too long (255 characters max).\n\n0x41 The specified IP address is not valid or could not be interpreted correctly.\n\n0x42 not valid port number.\n\n0x45 Unknown parameters to input \"PARTNER\".\n\n0x50 Transmission attempt on invalid connection (sender or receiver).\n\n0x53 All available connections are occupied.\n\n0x61 Neg. confirmation of the recipient. It was used an incorrect sequence number.\n\n0x62 Data type of transmitter and receiver are not equal.\n\n0x63 Receiver is at the moment not ready to receive (poss. Cause: The recipient is disabled or is\n\ncurrently in the data transfer (NDR = TRUE).\n\n0x64 Can not find a receiver module with the corresponding R_ID.\n\n0x65 Another module instance is already working on this connection.\n\n0x70 Partner control was not configured as a time server.\n\n \n\n106 Version 1.21\n\nChapter 9. Network and Communication\n\n System-specifc error: (CoDeSys)\n\n0x00 No error occurred.\n\n0x01 SysSockCreate unsuccessful\n\n0x02 SysSockBind unsuccessful\n\n0x03 SysSockListen unsuccessful\n\n \n\n System-specifc error: (Beckhof)\n\n0x00 No error occurred.\n\n0x01 SocketUdpCreate unsuccessful\n\n0x03 socket listen unsuccessful\n\n0x04 SocketAccept unsuccessful",
+    "type": "FUNCTION",
+    "name": "IP_CONTROL",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for connection control."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "IP",
+            "type": "DWORD",
+            "description": "Encoded IP address as the default."
+        },
+        {
+            "name": "PORT",
+            "type": "WORD",
+            "description": "Port number of the IP address."
+        },
+        {
+            "name": "TIME_OUT",
+            "type": "TIME",
+            "description": "Monitoring time for connection, send, and receive operations."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Error code representing the status of the function execution.",
+        "fields": [
+            {
+                "name": "Error Code",
+                "type": "DWORD",
+                "description": "Code indicating the type of error or status where 0 signifies no errors."
+            }
+        ]
+    }
+}

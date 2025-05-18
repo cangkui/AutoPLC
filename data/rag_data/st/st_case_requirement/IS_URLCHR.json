@@ -1,0 +1,26 @@
+{
+    "title": "IP Address Validation Function",
+    "description": "IS_URLCHR checks if the string contains only valid characters for a URL en￾coding. If the string contains reserved characters it returns FALSE, otherwi￾se TRUE.\n\nFor a URL following characters are valid:\n\n[A..Z]\n\n[a..z]\n\n[0..9]\n\n[-._~]\n\nall other characters are reserved or not allowed.",
+    "type": "FUNCTION",
+    "name": "IS_VALID_IP",
+    "input": [
+        {
+            "name": "string_to_test",
+            "type": "STRING",
+            "description": "The string that needs to be tested for a valid IPv4 address."
+        }
+    ],
+    "output": [
+        {
+            "name": "is_valid_ip",
+            "type": "BOOL",
+            "description": "Returns TRUE if the input string contains a valid IPv4 address, otherwise FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "The result of the validation indicating whether the input is a valid IP v4 address.",
+        "fields": []
+    }
+}

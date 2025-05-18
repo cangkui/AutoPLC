@@ -1,0 +1,32 @@
+{
+    "title": "Time-based Value Storage and Retrieval",
+    "description": "OCT_TO_DWORD converts an octal encoded string into a byte\nvalue. Only the octal characters are '0 '..'7' are interpreted, others in HEX\noccurring characters are ignored.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_TN64",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The real input value to be stored."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "The duration that determines how frequently the input values are stored."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "REAL",
+            "description": "The most recent stored input value."
+        },
+        {
+            "name": "trig",
+            "type": "BOOL",
+            "description": "Boolean trigger indicating that a new value has been stored."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

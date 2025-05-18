@@ -1,0 +1,8 @@
+FUNCTION F_LIN : REAL
+VAR_INPUT
+    X : REAL;
+    A : REAL;
+    B : REAL;
+END_VAR
+F_lin := A * X + B;
+END_FUNCTION

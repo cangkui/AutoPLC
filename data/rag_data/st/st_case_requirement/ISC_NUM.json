@@ -1,0 +1,19 @@
+{
+    "title": "Check If Byte Is Numeric",
+    "description": "ISC_NUM tests whether a sign IN is a number, if IN is a character 0..9, the\nfunction returns TRUE, if not the function returns FALSE. The character 0..9\nare codes (48..57)",
+    "type": "FUNCTION",
+    "name": "ISC_NUM",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The input byte to be checked."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns true if the input byte is within the ASCII range for numeric characters, otherwise returns false."
+    }
+}

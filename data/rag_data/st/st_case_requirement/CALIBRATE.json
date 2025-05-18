@@ -1,0 +1,42 @@
+{
+    "title": "Calibration Block",
+    "description": "CALIBRATE serves for calibrating an analog signal. In order to allow a cali￾brating two reference values (Y_OFFSET and Y_SCALE) must be set by dou￾ble-clicking on the icon of the module. Y_OFFSET is the starting value at\nwhich the ofset is set by a pulse at CO and Y_SCALE is the value at which\nthe gain is determined. A calibration can only be successful if the frst of￾set and gain are then calibrated.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CALIBRATE",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input value that will be calibrated."
+        },
+        {
+            "name": "CO",
+            "type": "BOOL",
+            "description": "Control signal to adjust the offset."
+        },
+        {
+            "name": "CS",
+            "type": "BOOL",
+            "description": "Control signal to adjust the scale."
+        },
+        {
+            "name": "Y_Offset",
+            "type": "REAL",
+            "description": "Constant value for offset adjustment."
+        },
+        {
+            "name": "Y_Scale",
+            "type": "REAL",
+            "description": "Constant value for scale adjustment."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "Calibrated output value based on the input and calibration parameters."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

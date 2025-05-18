@@ -1,0 +1,25 @@
+{
+    "title": "Hyperbolic Sine Function",
+    "description": "SINH calculates the sinus Hyperbolic according the following formula:",
+    "type": "FUNCTION",
+    "name": "SINH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number input for which the hyperbolic sine is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "SINH",
+            "type": "REAL",
+            "description": "The calculated hyperbolic sine of the input value X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The result of the hyperbolic sine calculation."
+    }
+}

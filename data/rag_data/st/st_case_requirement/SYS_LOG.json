@@ -1,0 +1,90 @@
+{
+    "title": "SYSLOG Message Transmission",
+    "description": "SYS_LOG is a standard for transmitting messages in an IP computer net￾work. The protocol is very simple - the client sends a short text message\n\nto the syslog receiver. The receiver is also called \"syslog daemon\" or \"sys￾log server\". The messages are sent using UDP port 514 or TCP port 1468\n\nand includes the message in plain text. SYSLOG is typical used for compu￾ter systems management and security surveillance. This enables the easy\n\nintegration of various log sources to a central syslog server. The server\n\nsoftware is available for all platforms, sometimes known as free / sharewa￾re. Unix or Linux systems have a syslog server already integrated.\n\nThrough a positive edge at ACTIVATE from the parameters of LDT, FACILI￾TY, SEVERITY, TAG, HOST NAME, MESSAGE a syslog message is generated\n\nand sent to the SERVER_IP4 mail address. With OPTION various properties\n\ncan still be controlled (See Table OPTION). After successfully sending\n\nDONE gets TRUE, otherwise ERROR is issued when the actual error messa￾ge (See ERROR of module IP_CONTROL).\n\nA syslog message has the following structure\n\nFACILITY,SEVERITY,TIMESTAMP,HOSTNAME,TAG,MESSAGE",
+    "type": "FUNCTION",
+    "name": "SendSyslogMessage",
+    "input": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for the communication interface."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data."
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Positive edge starts the query."
+        },
+        {
+            "name": "LDT",
+            "type": "DT",
+            "description": "Local time for timestamping the message."
+        },
+        {
+            "name": "SERVER_IP4",
+            "type": "DWORD",
+            "description": "IP address of the syslog server."
+        },
+        {
+            "name": "PORT",
+            "type": "WORD",
+            "description": "Port number for the syslog server."
+        },
+        {
+            "name": "FACILITY",
+            "type": "BYTE",
+            "description": "Specifies the service or component."
+        },
+        {
+            "name": "SEVERITY",
+            "type": "BYTE",
+            "description": "Classification of severity for the message."
+        },
+        {
+            "name": "TAG",
+            "type": "STRING(32)",
+            "description": "Process name or ID associated with the syslog message."
+        },
+        {
+            "name": "HOST_NAME",
+            "type": "STRING",
+            "description": "Name or IP address of the sender of the message."
+        },
+        {
+            "name": "MESSAGE",
+            "type": "STRING",
+            "description": "The message content to be sent."
+        },
+        {
+            "name": "OPTION",
+            "type": "BYTE",
+            "description": "Various options to control message properties."
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates if the query completed without errors."
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code if the transmission fails."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

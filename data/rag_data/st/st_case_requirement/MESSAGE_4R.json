@@ -1,0 +1,67 @@
+{
+    "title": "MESSAGE_4R Function Block",
+    "description": "POLYNOM_INT interpolates a number of pairs of values with a polynomial\nof N times degree. The number of pairs is PTS, and N is the number of\npairs of values (PTS). Any characteristic is described by a maximum of 5\ncoordinate-values (X, Y) and internally described by a polynomial. The de￾fnition of the coordinate values is passed in an array which describes the\ncharacteristic with individual X, Y describes value pairs. The value pairs\nmust be sorted by the x_value. If an X value is queried outside the descri￾bed range by value-apairs, so that is calculated according to the determi￾ned polygon. It is noted, that here can occur oscillations above and below\nthe area of defnition by a polynomial of higher degree , and calculated va￾lues mostly are not useful in this area. Before the application of a polyno￾mial it is essential for this purpose to read the basics, for example, in Wiki￾pedia. To keep the number of defnition points fexible, at the input PTS is\ngiven the number of points. The possible score is in the range from 3 to 5,\nwherein each individual dot is shown with X-and Y-value. A Polynomial with\nmore than 5 points leads to an increased tendency to oscillate and is for\nthis reason refused. \nThe following example shows the defnition for the array XY and some va￾lues:\nVAR\n EXAMPLE : ARRAY[1..5,0..1] := -10,-0.53, 10,0.53, 100,88.3, 200,122.2;\nEND_VAR\nfor the above defnition, the following results are valid:\nPOLYNOM_INT(0, example, 4) = -1.397069;\nPOLYNOM_INT(30.0, example, 4) = 11.4257;\nPOLYNOM_INT(66.41, example, 4) = 47.74527;\nPOLYNOM_INT(800.0, example, 4) = -19617.94;\nWhen the results of the example is clearly seen that the value of\n-19617.94 for the input X = 800 makes no sense, since it is outside the\ndefned range of -10 to +200.\n The following trace recording shows the variation of output to input. Here,\nclearly, the overshoot of the polygon with respect to a linear interpolation\ncan be seen. Green = input X, Red = linear interpolation, Blue = polynomi￾al interpolation. \n 10. Geometric Functions",
+    "type": "FUNCTION_BLOCK",
+    "name": "MESSAGE_4R",
+    "input": [
+        {
+            "name": "M0",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "First message string."
+        },
+        {
+            "name": "M1",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "Second message string."
+        },
+        {
+            "name": "M2",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "Third message string."
+        },
+        {
+            "name": "M3",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "Fourth message string."
+        },
+        {
+            "name": "MM",
+            "type": "INT",
+            "description": "Increment value for the message counter. Default is 3."
+        },
+        {
+            "name": "ENQ",
+            "type": "BOOL",
+            "description": "Enable signal for the message selection process. Default is TRUE."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock signal used for timing the message selection process. Default is TRUE."
+        },
+        {
+            "name": "T1",
+            "type": "TIME",
+            "description": "Time interval for the timer. Default is 3 seconds."
+        }
+    ],
+    "output": [
+        {
+            "name": "MX",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "Selected message string based on the current counter value."
+        },
+        {
+            "name": "MN",
+            "type": "INT",
+            "description": "Current message counter value."
+        },
+        {
+            "name": "TR",
+            "type": "BOOL",
+            "description": "Trigger signal indicating that a new message has been selected."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

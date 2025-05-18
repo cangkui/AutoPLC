@@ -1,0 +1,19 @@
+{
+    "title": "String Mirror Function",
+    "description": "MIRROR reads the string STR reverse and passes the characters in reverse\norder.",
+    "type": "FUNCTION",
+    "name": "MIRROR",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The input string that needs to be mirrored."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The mirrored version of the input string."
+    }
+}

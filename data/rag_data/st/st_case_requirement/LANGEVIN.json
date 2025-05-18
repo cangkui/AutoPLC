@@ -1,0 +1,25 @@
+{
+    "title": "Langevin Function",
+    "description": "LANGEVIN Function is very similarto sigmoid function, but more\nslowly approaching the limits. In contrast to the sigmoid are the values at\n-1 and +1. The Langevin function is mainly at CPUs without foating point\nunit much faster than the Sigmoid function.\nThe following chart shows the progress of the Langevin function:",
+    "type": "FUNCTION",
+    "name": "LANGEVIN",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "Input parameter representing a real number."
+        }
+    ],
+    "output": [
+        {
+            "name": "LANGEVIN",
+            "type": "REAL",
+            "description": "The calculated Langevin value based on the input parameter X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the Langevin value, which is a real number calculated based on the input X."
+    }
+}

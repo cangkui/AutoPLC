@@ -1,0 +1,31 @@
+{
+    "title": "Calculate Sun Midday Time",
+    "description": "SUN_MIDDAY calculates at what time the sun is exactly in the \nsouth, depending on the date . The calculation is done in UTC (Universal \nTime).",
+    "type": "FUNCTION",
+    "name": "SUN_MIDDAY",
+    "input": [
+        {
+            "name": "LON",
+            "type": "REAL",
+            "description": "The longitude in degrees for which the noon time is to be calculated."
+        },
+        {
+            "name": "UTC",
+            "type": "DATE",
+            "description": "The UTC date based on which the midday time will be computed."
+        }
+    ],
+    "output": [
+        {
+            "name": "SUN_MIDDAY",
+            "type": "TOD",
+            "description": "The calculated time of day representing the sun midday for the specified location."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "TOD",
+        "description": "The resulting time of day after adjusting for the calculated offset from standard noon.",
+        "fields": []
+    }
+}

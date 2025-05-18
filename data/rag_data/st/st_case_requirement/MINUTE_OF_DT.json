@@ -1,0 +1,20 @@
+{
+    "title": "Minute Extraction from DateTime",
+    "description": "MINUTE_OF_DT extracts the current minute from a DT value.\nMINUTE_OF_DT(DT#2008-6-6-10:22:20) = 22",
+    "type": "FUNCTION",
+    "name": "MINUTE_OF_DT",
+    "input": [
+        {
+            "name": "XDT",
+            "type": "DT",
+            "description": "The DateTime value from which the minute is to be extracted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The extracted minute value from the given DateTime.",
+        "fields": []
+    }
+}

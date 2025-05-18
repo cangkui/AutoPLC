@@ -1,0 +1,45 @@
+{
+    "title": "TIMER_1 Function Module",
+    "description": "TIMER_1 generates at selectable days a week, an output event Q with a\n\nprogrammable duration (DURATION) and a fxed starting time START. DTI\n\nprovides the module the local time. START and DURATION sets the time of\n\nday and duration of the event. The input DAY determines on which days of\n\nweek the event is generated. IF DAY is set to 0, thus no event is produced.\n\nA DURATION = 0 indicates that the output is only set for one cycle. The re￾sulted output signal can also run past midnight, or it may be longer than a\n\nday. The maximum pulse duration, however is 49 days (T#49d). The input\n\nDAY is of type BYTE and the bits 0..7 defne the days of the event. Bit 0\n\ncorresponds to Sunday, bit 1 Saturday .. Bit 6 corresponds to Monday. If\n\nthe bits 0..6 in DAY are set, so every day an event is generated, otherwise\n\nonly for those days for which the corresponding bit is set. The input De￾fault is, if it is not connected, set to 2#0111_1111, and thus is the module\n\nis active every day. An additional Enable Input E can unlock the module.\n\nThis input is TRUE if it is not connected.",
+    "type": "FUNCTION",
+    "name": "TIMER_1",
+    "input": [
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable input to unlock the module."
+        },
+        {
+            "name": "DTI",
+            "type": "DATE_TIME",
+            "description": "Current local date and time input."
+        },
+        {
+            "name": "START",
+            "type": "TOD",
+            "description": "Time of day when the output event starts."
+        },
+        {
+            "name": "DURATION",
+            "type": "TIME",
+            "description": "Duration for which the output signal is active."
+        },
+        {
+            "name": "DAY",
+            "type": "BYTE",
+            "description": "Selection of the week days for the event. Bits 0-6 represent Sunday to Saturday."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal indicating event activation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

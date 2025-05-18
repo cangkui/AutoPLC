@@ -1,0 +1,22 @@
+{
+    "title": "Clock Pulse Generator",
+    "description": "CLK_PRG generates clock pulses with a programmable period PT. The out￾put pulses are only one PLC cycle.",
+    "type": "FUNCTION_BLOCK",
+    "name": "CLK_PRG",
+    "input": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The time period for which the output pulse should remain HIGH. Default value is set to 10 milliseconds."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "A boolean output which is HIGH when the output pulse is generated."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

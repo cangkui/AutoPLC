@@ -1,0 +1,26 @@
+{
+    "title": "Mathematical Expression Evaluator",
+    "description": "EXEC calculates mathematic expressions and results a string.\nThe expression can only be a simple expression with an operator and wi￾thout brackets. For errors, such as a divide by zero EXEC provides the re￾turn string 'ERROR'.\nThe valid operators are: +, - *, /, ^, SIN, COS, TAN, SQRT.\nREAL as numbers and integer numbers are allowed.",
+    "type": "FUNCTION",
+    "name": "EXEC",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string representing the mathematical expression to be evaluated."
+        }
+    ],
+    "output": [
+        {
+            "name": "EXEC",
+            "type": "STRING",
+            "description": "The result of the evaluated mathematical expression as a string."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The result or error message returned after evaluating the expression.",
+        "fields": []
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "title": "Minimum and Maximum Value Calculation",
+    "description": "FT_MIN_MAX stores the minimum and maximum value of an input signal\nIN and provides these two values at the outputs of MN and MX until clea￾red by a reset. A reset sets MN and MX on the reset applied input values.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FT_MIN_MAX",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input value for which the minimum or maximum is to be calculated."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "A reset flag that, when true, resets the minimum and maximum values."
+        }
+    ],
+    "output": [
+        {
+            "name": "mx",
+            "type": "REAL",
+            "description": "The current maximum value calculated."
+        },
+        {
+            "name": "mn",
+            "type": "REAL",
+            "description": "The current minimum value calculated."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

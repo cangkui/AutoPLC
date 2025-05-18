@@ -1,0 +1,39 @@
+{
+    "title": "Yahoo Weather Data Translation",
+    "description": "YAHOO_WEATHER_DESC_GE The module replaces the original English texts by German weather \n\ndescriptions. Following a positive edge at ACTIVATE the elements (texts) in \n\nthe YAHOO_WEATHER_DATA data structure is replaced. After querying the \n\nweather data using YAHOO_WEATHER this module should be called \n\nsubsequently. It is simply the parameter DONE from the module \n\nYAHOO_WEATHER that is interconnected with ACTIVATE.\n\nThe following elements will be adapted:\n\nYW.CUR_CONDITIONS_TEXT\n\nYW.FORCAST_TODAY_TEXT\n\nYW.FORCAST_TOMORROW_TEXT\n\n210 Version 1.21\n\nChapter 13. Weather Data",
+    "type": "FUNCTION",
+    "name": "YAHOO_WEATHER_DESC_GE",
+    "input": [
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "A boolean input that triggers the translation of weather descriptions when set to a positive edge."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "YW",
+            "type": "YW_TYPE",
+            "description": "Weather data structure containing original weather descriptions.",
+            "fields": [
+                {
+                    "name": "CUR_CONDITIONS_TEXT",
+                    "type": "STRING",
+                    "description": "Current weather condition text."
+                },
+                {
+                    "name": "FORCAST_TODAY_TEXT",
+                    "type": "STRING",
+                    "description": "Weather forecast text for today."
+                },
+                {
+                    "name": "FORCAST_TOMORROW_TEXT",
+                    "type": "STRING",
+                    "description": "Weather forecast text for tomorrow."
+                }
+            ]
+        }
+    ],
+    "output": [],
+    "return_value": {}
+}

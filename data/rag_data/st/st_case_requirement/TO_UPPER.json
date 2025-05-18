@@ -1,0 +1,26 @@
+{
+    "title": "Convert Byte to Uppercase",
+    "description": "TO_UPPER converts some characters to uppercase. During conversion, the\nGlobal Setup EXTENDED_ASCII constant is considered. If EXTENDED_ASCII\n= TRUE, all characters of the extended ASCII character set to be conside￾red in accordance with ISO 8859-1.\nThe following Table discusses the conversion code:\nCode EXTENDED_ASCII = TRUE EXTENDED_ASCII = FALSE\n0..64 0..64 0..64\n65..90 97..122 97..122\n91..191 91..191 91..191\n192..214 224..246 192..214\n215 215 215\n216..222 248..254 216..254\n223..255 223..255 223..255",
+    "type": "FUNCTION",
+    "name": "TO_UPPER",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The BYTE value to be converted to uppercase."
+        }
+    ],
+    "output": [
+        {
+            "name": "TO_UPPER",
+            "type": "BYTE",
+            "description": "The uppercase equivalent of the input BYTE, or the original input if no conversion is applicable."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The result of the uppercase conversion for the input BYTE.",
+        "fields": []
+    }
+}

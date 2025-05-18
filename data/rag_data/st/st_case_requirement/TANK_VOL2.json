@@ -1,0 +1,31 @@
+{
+    "title": "Tank Volume Calculation",
+    "description": "TANK_VOL2 calculates the contents of\n\na spherical tanks flled to the height H.\n\n42 Version 1.00\n\nChapter 5. Heating, Ventilation, Air Condition",
+    "type": "FUNCTION",
+    "name": "TANK_VOL2",
+    "input": [
+        {
+            "name": "TR",
+            "type": "REAL",
+            "description": "Radius of the tank"
+        },
+        {
+            "name": "H",
+            "type": "REAL",
+            "description": "Filling height of the tank"
+        }
+    ],
+    "output": [
+        {
+            "name": "Real",
+            "type": "REAL",
+            "description": "Contents of the tank to the fill level"
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Contents of the tank calculated based on the radius and height.",
+        "fields": []
+    }
+}

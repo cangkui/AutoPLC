@@ -1,0 +1,32 @@
+{
+    "title": "TON Timer Function Block",
+    "description": "GEN_BIT is a fully programmable pattern generator. At the inputs in0 .. IN7\nare the bit patterns at the input CLK in each case as a DWORD and passed\nby each clock pulse to the outputs Q0 .. Q3 starting from bit 0 of ascen￾ding. After the frst clock pulse at the input CLK the output Q0 has bit 0 of\nIN0 , at Q1 is bit 0 of In1 ... on Q7 is bit 0 of IN3. After the next clock pulse\nat the CLK input, the bit 1 of the inputs IN is passed to the outputs Q and\nso on, until the sequence is completed. The input STEPS determines how\nmany bits of the input DWORDS be passed to the outputs. The input REP\ndetermines how often this sequence is repeated. If the input set to 0, the\nsequence is repeated continuously. An asynchronous reset can always re￾set the sequencer. The outputs CNT and RUN indicate which bit is current￾ly passed to the output and whether the sequencer is running, or the se￾quence (RUN inactive) has fnished. After the sequences have expired the\nlast bit patterns remains on the outputs available until a reset restarts the\ngenerator.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TOF_1",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Input signal to start the timer."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "Preset time duration for the timer."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset signal to clear the output."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal indicating the state of the timer."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,31 @@
+{
+    "title": "Complex Hyperbolic Cotangent Function",
+    "description": "CATANH calculates the arc hyperbolic tangent of a complex number\nThe range of values of the result is between [- /2,+/2 ] for the imagina￾ry part.",
+    "type": "FUNCTION",
+    "name": "CATANH",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "A complex number for which the hyperbolic cotangent is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The result of the hyperbolic cotangent operation, returned as a complex number.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "REAL",
+                "description": "The real part of the hyperbolic cotangent result."
+            },
+            {
+                "name": "im",
+                "type": "REAL",
+                "description": "The imaginary part of the hyperbolic cotangent result."
+            }
+        ]
+    }
+}

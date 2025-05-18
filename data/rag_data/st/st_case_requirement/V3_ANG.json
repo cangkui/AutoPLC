@@ -1,0 +1,25 @@
+{
+    "title": "Calculate Angle Between Two Vectors",
+    "description": "BIT_TOGGLE_B inverts a specifed bit at IN.\nBIT_TOGGLE_W(2#0000_1111, 2) = 2#0000_1011\nBIT_TOGGLE_W(2#0000_1111, 7) = 2#1000_1111",
+    "type": "FUNCTION",
+    "name": "V3_ANG",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The first input vector for angle calculation."
+        },
+        {
+            "name": "B",
+            "type": "Vector_3",
+            "description": "The second input vector for angle calculation."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The angle in radians between vectors A and B.",
+        "fields": []
+    }
+}

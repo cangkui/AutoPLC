@@ -1,0 +1,40 @@
+{
+    "title": "TN_SC_AREA_SAVE Function Module",
+    "description": "TN_SC_AREA_SAVE allows you to save of rectangular areas of \n\nthe screen before it is modifed by other drawing operations. This is mainly \n\ndone before the call from the module BAR-MENU and MENU-POPUP , \n\nbecause these are the elements as an overlay graphic. Means X1, Y1 and \n\nX2, Y2 are given the coordinates of the secured area of the screen. The \n\ndata are saved in the data area Xus_TN_SCREEN.bya_BACKUP [x]. Here the \n\ncoordinates and the actual characters and color information is stored. The \n\nbufer can hold up half the area of the screen.\n\n185 Version 1.21\n\nChapter 11. Telnet-Vision",
+    "type": "FUNCTION",
+    "name": "TN_SC_AREA_SAVE",
+    "input": [
+        {
+            "name": "Iin_Y1",
+            "type": "INT",
+            "description": "Y1 coordinate of the area"
+        },
+        {
+            "name": "Iin_X1",
+            "type": "INT",
+            "description": "X1 coordinate of the area"
+        },
+        {
+            "name": "Iin_Y2",
+            "type": "INT",
+            "description": "Y2 coordinate of the area"
+        },
+        {
+            "name": "Iin_X2",
+            "type": "INT",
+            "description": "X2 coordinate of the area"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Data structure that contains information about the secured screen area including coordinates, characters, and colors."
+        }
+    ],
+    "output": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "No return value, the function operates by saving the specified screen area."
+    }
+}

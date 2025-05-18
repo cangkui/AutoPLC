@@ -1,0 +1,19 @@
+{
+    "title": "Convert Meters per Second to Kilometers per Hour",
+    "description": "MS_TO_KMH calculates a speed value of meters/second to kilometers/hour \nto.\nMS_TO_KMH := MS * 3.6",
+    "type": "FUNCTION",
+    "name": "MS_TO_KMH",
+    "input": [
+        {
+            "name": "ms",
+            "type": "REAL",
+            "description": "The velocity in meters per second."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted velocity in kilometers per hour."
+    }
+}

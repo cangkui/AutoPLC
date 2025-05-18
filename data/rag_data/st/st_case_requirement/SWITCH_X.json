@@ -1,0 +1,97 @@
+{
+    "title": "SWITCH_X Function Module",
+    "description": "SWITCH_X is an interface for up to 6 push-buttons. The individual buttons\n\nare debounced with T_DEBOUNCE and switch the respective outputs Q1 to\n\nQ6. IN3 to IN6 are directly connected to the outputs when they be opera￾ted alone. IN1 and IN2 generate a pulse for one cycle after they are pres￾sed. If one of the inputs IN3 up to N6 is pressed during input IN1 or IN2 is\n\noperated , then no output pulse passed to Q1 to Q6, but the corresponding\n\noutput Q31 to Q62 is activated. Q42, for example, is activated if IN4 is\n\noperated while IN2 is operated. Q2 and Q4 are then inactive.\n\nSWITCH_X thus allows the inputs IN3 to IN6 to realize a triple occupancy\n\nand select it by pressing IN1 or IN2 and a further input.\n\n59 Version 1.00\n\nChapter 6. Electrical Engineering",
+    "type": "FUNCTION",
+    "name": "SWITCH_X",
+    "input": [
+        {
+            "name": "IN1",
+            "type": "BOOL",
+            "description": "Push button input 1. Generates a pulse for one cycle after it is pressed."
+        },
+        {
+            "name": "IN2",
+            "type": "BOOL",
+            "description": "Push button input 2. Generates a pulse for one cycle after it is pressed."
+        },
+        {
+            "name": "IN3",
+            "type": "BOOL",
+            "description": "Push button input 3. Directly influences output Q3."
+        },
+        {
+            "name": "IN4",
+            "type": "BOOL",
+            "description": "Push button input 4. Directly influences output Q4."
+        },
+        {
+            "name": "IN5",
+            "type": "BOOL",
+            "description": "Push button input 5. Directly influences output Q5."
+        },
+        {
+            "name": "IN6",
+            "type": "BOOL",
+            "description": "Push button input 6. Directly influences output Q6."
+        },
+        {
+            "name": "T_DEBOUNCE",
+            "type": "TIME",
+            "description": "Debounce time for buttons."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Switch output 1 activated by IN1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Switch output 2 activated by IN2."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "Switch output 3 activated by IN3."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "Switch output 4 activated by IN4."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "Switch output 5 activated by IN5."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "Switch output 6 activated by IN6."
+        },
+        {
+            "name": "Q31",
+            "type": "BOOL",
+            "description": "Output activated if IN1 or IN2 is pressed while IN3 is activated."
+        },
+        {
+            "name": "Q32",
+            "type": "BOOL",
+            "description": "Output activated if IN1 or IN2 is pressed while IN4 is activated."
+        },
+        {
+            "name": "Q41",
+            "type": "BOOL",
+            "description": "Output activated if IN1 or IN2 is pressed while IN5 is activated."
+        },
+        {
+            "name": "Q42",
+            "type": "BOOL",
+            "description": "Output activated if IN1 or IN2 is pressed while IN6 is activated."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

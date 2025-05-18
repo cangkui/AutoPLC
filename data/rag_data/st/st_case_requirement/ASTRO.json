@@ -1,0 +1,52 @@
+{
+    "title": "Astronomical Units Conversion",
+    "description": "ASTRO converts various distance units commonly used in \nastronomy. Normally, only the input to be converted is occupied and the \nremaining inputs remain free. However, if several inputs loaded with \nvalues, the values of all inputs are converted accordingly and then \nsummed.\n1 AE = 149,597870 * 109 m\n1 PC = 206265 AE\n1 LJ = 9,460530 * 1015 m = 63240 AE = 0,30659 PC",
+    "type": "FUNCTION_BLOCK",
+    "name": "ASTRO",
+    "input": [
+        {
+            "name": "m",
+            "type": "REAL",
+            "description": "Distance in meters (SI base unit)."
+        },
+        {
+            "name": "AE",
+            "type": "REAL",
+            "description": "Distance in astronomical units, where 1 AE = 149,597,870 meters."
+        },
+        {
+            "name": "PC",
+            "type": "REAL",
+            "description": "Distance in parsecs, where 1 parsec = 206265 AE."
+        },
+        {
+            "name": "LJ",
+            "type": "REAL",
+            "description": "Distance in light years, where 1 light year = 63240 AE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Ym",
+            "type": "REAL",
+            "description": "Converted distance in meters based on input parameters."
+        },
+        {
+            "name": "YAE",
+            "type": "REAL",
+            "description": "Converted distance in astronomical units."
+        },
+        {
+            "name": "YPC",
+            "type": "REAL",
+            "description": "Converted distance in parsecs."
+        },
+        {
+            "name": "YLJ",
+            "type": "REAL",
+            "description": "Converted distance in light years."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

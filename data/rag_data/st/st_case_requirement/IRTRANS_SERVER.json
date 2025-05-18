@@ -1,0 +1,83 @@
+{
+    "title": "IRTRANS Server Function Module",
+    "description": "IRTRANS_SERVER can be used as both a receiver and a transmitter of IR￾TRANS commands. Is UDP_TCP = TRUE is a passive TCP connection, other￾wise set up a passive UDP connection. The type of operation must also be\n\nconfgured with IRTRANS device. Once a data connection is available and\n\nsending commands is allowed, S_ENABLE = TRUE. In UDP mode, after the\n\ninitial data received from IRTRANS, data can be sent, since in the passive\n\nmode, the UDP-IP parameter is initially not known. The receiving mode is\n\nindicated with R_ENABLE. If data are received they are available in R_BUF\n\nfor further processing for other modules. Send data has to be entered by\n\nthe modules in the S_BUF, so they are then sent automatically from IR-\n\n40 Version 1.21\n\nChapter 6. Device Driver\n\nTRANS_SERVER. If transmission errors occurs, they are issued with \"ER￾ROR\" (see module IP_CONTROL2). Existing errors are acknowledged auto￾matically every 5 seconds by the module.\n\nUDP server mode:\n\nIn the IRTRANS Web confguration, the IP address of the PLC is entered as\n\na broadcast address.\n\nIRTRANS Web Confguration:\n\nThe following example shows the application of IRTRANS Devices\n\n41 Version 1.21\n\nChapter 6. Device Driver",
+    "type": "FUNCTION",
+    "name": "IRTRANS_SERVER",
+    "input": [
+        {
+            "name": "UDP_TCP",
+            "type": "BOOL",
+            "description": "Selects the communication mode; FALSE for UDP and TRUE for TCP."
+        },
+        {
+            "name": "IP_C",
+            "type": "IP_CONTROL",
+            "description": "Data structure for parameterization of the IP control settings.",
+            "fields": [
+                {
+                    "name": "ipAddress",
+                    "type": "STRING",
+                    "description": "IP address for the communication."
+                },
+                {
+                    "name": "port",
+                    "type": "UINT",
+                    "description": "Port number for the communication."
+                }
+            ]
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Data structure for transmitting data.",
+            "fields": [
+                {
+                    "name": "data",
+                    "type": "STRING",
+                    "description": "The actual data to be transmitted."
+                },
+                {
+                    "name": "length",
+                    "type": "UINT",
+                    "description": "Length of the data to be sent."
+                }
+            ]
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER_SHORT",
+            "description": "Data structure for receiving data.",
+            "fields": [
+                {
+                    "name": "data",
+                    "type": "STRING",
+                    "description": "The received data."
+                },
+                {
+                    "name": "length",
+                    "type": "UINT",
+                    "description": "Length of the received data."
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "S_ENABLE",
+            "type": "BOOL",
+            "description": "Indicates whether IRTRANS data can be sent."
+        },
+        {
+            "name": "R_ENABLE",
+            "type": "BOOL",
+            "description": "Indicates whether IRTRANS data reception is enabled."
+        },
+        {
+            "name": "ERROR",
+            "type": "DWORD",
+            "description": "Error code indicating issues with the IP control settings."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

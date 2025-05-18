@@ -1,0 +1,19 @@
+{
+    "title": "Check if String is Numeric",
+    "description": "IS_NUM tests whether the string STR contains only numbers. If another\ncharacter is found the function returns FALSE. If in STR are only numbers\nincluded, the function returns TRUE. Numbers are the character 0..9.",
+    "type": "FUNCTION",
+    "name": "IS_NUM",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "Input variable of type STRING with specified length which needs to be checked for numeric characters."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns true if the input string consists only of numeric characters and has a length greater than zero; otherwise, returns false."
+    }
+}

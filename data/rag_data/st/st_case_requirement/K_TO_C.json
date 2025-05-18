@@ -1,0 +1,20 @@
+{
+    "title": "Temperature Conversion from Kelvin to Celsius",
+    "description": "K_TO_C converts a temperature reading from Kelvin in Celsius.",
+    "type": "FUNCTION",
+    "name": "K_TO_C",
+    "input": [
+        {
+            "name": "Kelvin",
+            "type": "REAL",
+            "description": "The temperature value in Kelvin that needs to be converted to Celsius."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The converted temperature value in Celsius.",
+        "fields": []
+    }
+}

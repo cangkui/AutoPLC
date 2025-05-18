@@ -1,0 +1,22 @@
+{
+    "title": "Square Wave Generator",
+    "description": "GEN_SQ is a generator with programmable period time and a fxed duty\ncycle of 50%. The input PT defnes the period time and the output Q pas￾ses the output signal.",
+    "type": "FUNCTION_BLOCK",
+    "name": "GEN_SQ",
+    "input": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The period of the square wave signal, defining the time interval for toggling the output."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output signal that represents the state of the square wave, toggling between TRUE and FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

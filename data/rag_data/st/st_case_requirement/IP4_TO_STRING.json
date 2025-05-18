@@ -1,0 +1,26 @@
+{
+    "title": "IP4 to String Conversion",
+    "description": "IP4_TO_STRING converts the IP4 address stored as DWORD in a string. The\n\nformat is 'NNN.NNN.NNN.NNN'.",
+    "type": "FUNCTION",
+    "name": "IP4_TO_STRING",
+    "input": [
+        {
+            "name": "IP4",
+            "type": "BOOL",
+            "description": "A string that contains the IP address in DWORD format."
+        }
+    ],
+    "output": [
+        {
+            "name": "IPAddressString",
+            "type": "STRING",
+            "description": "The decoded IP v4 address in string format."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "Decoded IP v4 address.",
+        "fields": []
+    }
+}

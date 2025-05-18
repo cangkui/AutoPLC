@@ -1,0 +1,27 @@
+{
+    "title": "STAIR2 Function Block",
+    "description": "FINDB_NUM searches STR from right to left and returns the\nlast position that is a number.\nNumbers are the letters \"0..9\" and \".\"",
+    "type": "FUNCTION_BLOCK",
+    "name": "STAIR2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input real value that needs to be rounded."
+        },
+        {
+            "name": "D",
+            "type": "REAL",
+            "description": "The step size for the rounding operation. Must be a positive real number to perform the stair-step calculation."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output real value after applying the stair-step rounding logic based on inputs X and D."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

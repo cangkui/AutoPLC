@@ -1,0 +1,24 @@
+{
+    "title": "Find Control Character in String",
+    "description": "FIND_CTRL searches the string str starting at position POS and returns the\nposition at which the next control character is. Control characters are all\ncharacters whose value is less than 32 or 127.",
+    "type": "FUNCTION",
+    "name": "FIND_CTRL",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING(STRING_LENGTH)",
+            "description": "The string in which to search for control characters."
+        },
+        {
+            "name": "pos",
+            "type": "INT",
+            "description": "The position in the string from which to start the search."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The position of the first control character found in the string. Returns 0 if no control character is found."
+    }
+}

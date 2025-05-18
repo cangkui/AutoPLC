@@ -1,0 +1,42 @@
+{
+    "title": "Hysteresis Function Block",
+    "description": "ARRAY_VAR calculates the variance of an arbitrary array of\nREAL. When called a pointer to the array and its size in bytes is passed to\nthe function. Under CoDeSys the call reads: ARRAY_VAR(ADR(Array), SI￾ZEOF(Array)), where array is the name of the array to be manipulated.\nADR() is a standard function, which identifes the pointer to the array and\nSIZEOF() is a standard function, which determines the size of the array. In\norder to determine the maximum, the array referenced by the pointer is\nscanned directly in memory. The function ARRAY_VAR does not change the\ncontent of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION_BLOCK",
+    "name": "HYST_3",
+    "input": [
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input value which is compared against the threshold values."
+        },
+        {
+            "name": "hyst",
+            "type": "REAL",
+            "description": "The hysteresis value that defines the margin for threshold comparison."
+        },
+        {
+            "name": "val1",
+            "type": "REAL",
+            "description": "The first threshold value used in determining the output Q1."
+        },
+        {
+            "name": "val2",
+            "type": "REAL",
+            "description": "The second threshold value used in determining the output Q2."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output boolean value indicating the state of the first control based on comparisons with val1."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "Output boolean value indicating the state of the second control based on comparisons with val2."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

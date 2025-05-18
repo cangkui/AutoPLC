@@ -1,0 +1,82 @@
+{
+    "title": "SMTP Client Module",
+    "description": "SMTP_CLIENT is used to send of classic emails.\n\nFollowing features are supported:\n\nSMTP protocol\n\nExtended SMTP protocol\n\nSending the subject line, text and content\n\nIndication of email sender address (From:), including \"Display Name\"\n\nIndication of the recipient (s) (To:)\n\nIndication of carbon copy recipient (s) (Cc:)\n\nIndication of blind copy recipient (s) (bc:)\n\nSending fle (s) as an attachment\n\nAuthentication method: NO, PLAIN, LOGIN, CRAM-MD5\n\nSpecifying the port number\n\nWhen positive edge at ACTIVATE the transfer process is started. The \n\nSERVER parameter contains the name of the SMTP server and optionally \n\nthe user name and password and a port number. If you pass a user name \n\nand password, the procedure is according to standard SMTP.\n\n124 Version 1.21\n\nChapter 9. Network and Communication\n\nSERVER: URL",
+    "type": "FUNCTION",
+    "name": "SMTP_CLIENT",
+    "input": [
+        {
+            "name": "SERVER",
+            "type": "STRING",
+            "description": "URL of the SMTP server, can include username, password, and port number."
+        },
+        {
+            "name": "MAIL FROM",
+            "type": "STRING",
+            "description": "The return address for the email."
+        },
+        {
+            "name": "MAILTO",
+            "type": "STRING",
+            "description": "Recipient addresses, can include To, Cc, Bc addresses separated by '#' and ';'."
+        },
+        {
+            "name": "SUBJECT",
+            "type": "STRING",
+            "description": "The subject text for the email."
+        },
+        {
+            "name": "FILES",
+            "type": "STRING",
+            "description": "List of files to be attached to the email. Multiple files separated by ';'."
+        },
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "Positive edge starts the email transfer process."
+        },
+        {
+            "name": "TIMEOUT",
+            "type": "TIME",
+            "description": "Timeout duration for the transfer process."
+        },
+        {
+            "name": "DTI",
+            "type": "DT",
+            "description": "Current date-time value."
+        },
+        {
+            "name": "DTI_OFFSET",
+            "type": "INT",
+            "description": "Time zone offset from UTC in minutes."
+        },
+        {
+            "name": "Dns_ip4",
+            "type": "DWORD",
+            "description": "IP4 address of the DNS server."
+        }
+    ],
+    "output": [
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates whether the email transfer completed without error."
+        },
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates whether the transfer is currently active."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code associated with the transfer process."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Problem type or identifier for the error that occurred."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

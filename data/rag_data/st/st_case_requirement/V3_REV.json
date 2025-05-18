@@ -1,0 +1,36 @@
+{
+    "title": "Vector 3 Reversal Function",
+    "description": "ISC_UPPER tests whether a sign IN is a captial letter, if IN is a capital let￾ter, the function returns TRUE, if not the function returns FALSE. In exami￾ning the Global Setup EXTENDED_ASCII constant is considered. If EXTEN￾DED_ASCII = TRUE the extended ASCII character-set to be considered in\naccordance with ISO 8859-1.\nThe The following table describes the character codes:\nCode EXTENDED_ASCII=TRUE EXTENDED_ASCII = FASLE\n0..64,91..191,215, 223..255 FALSE FALSE\n65..90 TRUE TRUE\n192..214 TRUE FALSE\n216..222 TRUE FALSE",
+    "type": "FUNCTION",
+    "name": "V3_REV",
+    "input": [
+        {
+            "name": "A",
+            "type": "Vector_3",
+            "description": "The input vector whose components are to be reversed."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "vector_3",
+        "description": "The output vector which is the negation of the input vector A.",
+        "fields": [
+            {
+                "name": "X",
+                "type": "REAL",
+                "description": "The X component of the output vector, which is the negative of the X component of input vector A."
+            },
+            {
+                "name": "Y",
+                "type": "REAL",
+                "description": "The Y component of the output vector, which is the negative of the Y component of input vector A."
+            },
+            {
+                "name": "Z",
+                "type": "REAL",
+                "description": "The Z component of the output vector, which is the negative of the Z component of input vector A."
+            }
+        ]
+    }
+}

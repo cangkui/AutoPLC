@@ -1,0 +1,62 @@
+{
+    "title": "Alarm Monitoring Block",
+    "description": "SIGN_I returns TRUE if the input value is negative. The input\nvalues are of type DINT.",
+    "type": "FUNCTION_BLOCK",
+    "name": "ALARM_2",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input value that is being monitored."
+        },
+        {
+            "name": "LO_1",
+            "type": "REAL",
+            "description": "The lower threshold for the first alarm."
+        },
+        {
+            "name": "HI_1",
+            "type": "REAL",
+            "description": "The upper threshold for the first alarm."
+        },
+        {
+            "name": "LO_2",
+            "type": "REAL",
+            "description": "The lower threshold for the second alarm."
+        },
+        {
+            "name": "HI_2",
+            "type": "REAL",
+            "description": "The upper threshold for the second alarm."
+        },
+        {
+            "name": "HYS",
+            "type": "REAL",
+            "description": "The hysteresis value applied to determine alarm state changes."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q1_LO",
+            "type": "BOOL",
+            "description": "Output indicating if the first low alarm is triggered."
+        },
+        {
+            "name": "Q1_HI",
+            "type": "BOOL",
+            "description": "Output indicating if the first high alarm is triggered."
+        },
+        {
+            "name": "Q2_LO",
+            "type": "BOOL",
+            "description": "Output indicating if the second low alarm is triggered."
+        },
+        {
+            "name": "Q2_HI",
+            "type": "BOOL",
+            "description": "Output indicating if the second high alarm is triggered."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

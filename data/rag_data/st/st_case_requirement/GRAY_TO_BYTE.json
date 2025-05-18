@@ -1,0 +1,19 @@
+{
+    "title": "Convert Gray Code to Byte",
+    "description": "GRAY_TO_BYTE converts a Gray-coded value (IN) in a byte.",
+    "type": "FUNCTION",
+    "name": "GRAY_TO_BYTE",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "A BYTE value representing the Gray code to be converted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The binary representation of the input Gray code after conversion."
+    }
+}

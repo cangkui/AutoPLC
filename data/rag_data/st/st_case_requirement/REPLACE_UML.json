@@ -1,0 +1,20 @@
+{
+    "title": "UML Character Replacement Function",
+    "description": "REPLACE_UML replaces umlauts with a combination of two characters so\nthat the result contains no more umlauts. The large and small letters are\nconsidered here. If a word is all upper case and is an umlaut is mentioned,\nthis is replaced by a capital letter followed by a lowercase letter, in the\ncase of a ß which has no capitals there will always be replaced with two\nsmall letters. If the function REPLACE_UML is used on a uppercase word,\nthen it must be ensured using the function UPPERCASE() that all capital\nletters that the lower case are again converted to uppercase.\nÄ > Ae, Ö > Oe, Ü > Ue, ä > ae, ö > oe, ü > oe, ß > ss.",
+    "type": "FUNCTION",
+    "name": "REPLACE_UML",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING",
+            "description": "The input string that may contain umlaut characters which need to be replaced."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "The output string after replacing umlaut characters, with appropriate handling for non-umlaut characters.",
+        "fields": []
+    }
+}

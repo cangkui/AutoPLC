@@ -1,0 +1,34 @@
+{
+    "title": "Buffer Insert Function",
+    "description": "_BUFFER_INSERT copies a string in any array of Byte and mo￾ves the rest of the array to the length of the string. The string is stored\nfrom any position POS in the bufer. The frst element in the array has the\nposition number 0. When called, a pointer to the array and its size in bytes\nis passed to the function. Under CoDeSys the call reads:\n_BUFFER_INSERT(ADR(Array), SIZEOF(Array)), where array is the name of\nthe array to be manipulated. ADR() is a standard function which identifes\nthe pointer to the array and SIZEOF() is a standard function, which deter￾mines the size of the array. The function returns the string copied from the\nbufer as STRING. The array specifed by the pointer is manipulated direct￾ly in memory. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "_BUFFER_INSERT",
+    "input": [
+        {
+            "name": "STR",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The string to be inserted into the buffer."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position in the buffer where the string will be inserted."
+        },
+        {
+            "name": "PT",
+            "type": "POINTER TO ARRAY[0..32767] OF BYTE",
+            "description": "A pointer to the buffer array where the string will be inserted."
+        },
+        {
+            "name": "SIZE",
+            "type": "UINT",
+            "description": "The size of the buffer."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The next position in the buffer after the inserted string."
+    }
+}

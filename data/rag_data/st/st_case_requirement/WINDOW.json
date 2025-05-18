@@ -1,0 +1,29 @@
+{
+    "title": "Window Function",
+    "description": "WINDOW function tests whether the input value is within the limits de￾fned by the LOW and HIGH.\nWINDOW is exactly TRUE if IN < HIGH and IN > LOW.",
+    "type": "FUNCTION",
+    "name": "WINDOW",
+    "input": [
+        {
+            "name": "low",
+            "type": "REAL",
+            "description": "The lower boundary of the input range."
+        },
+        {
+            "name": "in",
+            "type": "REAL",
+            "description": "The input value to be evaluated."
+        },
+        {
+            "name": "high",
+            "type": "REAL",
+            "description": "The upper boundary of the input range."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns true if the input value is within the specified range, false otherwise."
+    }
+}

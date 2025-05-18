@@ -1,0 +1,31 @@
+{
+    "title": "Calculate Geometric Average of an Array",
+    "description": "ARRAY_GAV calculates the median value of an arbi￾trary array of REAL. When called, a pointer to the array and its size in by￾tes is passed to the function. Under CoDeSys the call reads:\nARRAY_GAV(ADR(Array), SIZEOF(Array)), where array is the name of the\narray to be manipulated. ADR() is a standard function which identifes the\npointer to the array and SIZEOF() is a standard function, which determines\nthe size of the array. In order to determine the maximum, the array refe￾renced by the pointer is scanned directly in memory. The function\nARRAY_GAV does not change the content of the array. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "ARRAY_GAV",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY[0..32000] OF REAL",
+            "description": "A pointer to the array of real numbers whose geometric average is to be calculated."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The size of the array, indicating how many elements are present."
+        }
+    ],
+    "output": [
+        {
+            "name": "ARRAY_GAV",
+            "type": "REAL",
+            "description": "The computed geometric average of the array. Returns 0.0 if any array element is non-positive."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The geometric average of the input array computed from the positive elements.",
+        "fields": []
+    }
+}

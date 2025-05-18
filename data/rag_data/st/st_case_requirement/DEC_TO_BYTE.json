@@ -1,0 +1,20 @@
+{
+    "title": "Decimal to Byte Conversion",
+    "description": "DEC_TO_BYTE converts a decimal encoded string into a byte\nvalue. Here only decimal characters '0 '.. '9' are interpreted, others in DEC\noccurring characters are ignored .",
+    "type": "FUNCTION",
+    "name": "DEC_TO_BYTE",
+    "input": [
+        {
+            "name": "DEC",
+            "type": "STRING(10)",
+            "description": "A string representation of a decimal number to be converted to byte."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The byte representation of the input decimal string.",
+        "fields": []
+    }
+}

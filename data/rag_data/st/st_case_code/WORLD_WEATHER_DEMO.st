@@ -1,0 +1,21 @@
+FUNCTION WORLD_WEATHER_DEMO
+VAR
+    IP_C : IP_C; 
+    S_BUF : NETWORK_BUFFER; 
+    R_BUF : NETWORK_BUFFER; 
+    IP_CONTROL_1 : IP_CONTROL; 
+    activate : BOOL := TRUE; 
+    done : BOOL; 
+    busy : BOOL; 
+    error_c : DWORD; 
+    error_t : BYTE; 
+    latitude : REAL := 48.21; 
+    longitude : REAL := 16.37; 
+    WORLD_WEATHER : WORLD_WEATHER; 
+    WW_DATA : WORLD_WEATHER_DATA; 
+    CLK_PRG : oscat_basic.CLK_PRG; 
+    WORLD_WEATHER_DESC_GE : WORLD_WEATHER_DESC_GE; 
+    WORLD_WEATHER_ICON_OSCAT : WORLD_WEATHER_ICON_OSCAT; 
+END_VAR
+
+END_FUNCTION

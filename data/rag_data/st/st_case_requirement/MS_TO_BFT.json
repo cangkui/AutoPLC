@@ -1,0 +1,26 @@
+{
+    "title": "Convert MS to BFT",
+    "description": "MS_TO_BFT converts wind speeds of meters per second in the Beaufort\nscale.\nThe calculation is done using the formula:\nMS_TO_BFT = (MS * 1.196172)^2/3",
+    "type": "FUNCTION",
+    "name": "MS_TO_BFT",
+    "input": [
+        {
+            "name": "MS",
+            "type": "REAL",
+            "description": "The input value in Meteo Standard (MS) that needs to be converted to Beaufort scale."
+        }
+    ],
+    "output": [
+        {
+            "name": "BFT",
+            "type": "INT",
+            "description": "The resulting integer value in the Beaufort scale corresponding to the input MS value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The integer result of the conversion from MS to BFT.",
+        "fields": []
+    }
+}

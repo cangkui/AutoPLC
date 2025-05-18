@@ -1,0 +1,25 @@
+{
+    "title": "World Weather Data Description Replacement",
+    "description": "WORLD_WEATHER_DESC_GE The module replaces the original English texts by German weather \n\ndescriptions. Following a positive edge at ACTIVATE the elements (texts) in \n\nthe WORLD_WEATHER_DATA data structure is replaced. After querying the \n\n214 Version 1.21\n\nChapter 13. Weather Data\n\nweather data using WORLD_WEATHER this module should be called \n\nsubsequently. It is simply the parameter DONE from the module \n\nWORLD_WEATHER that is interconnected with ACTIVATE.\n\nThe following elements will be adapted:\n\nWW.WORLD_WEATHER_CUR.WEATHER_DESC\n\nWW.WORLD_WEATHER_DAY[0..4].WEATHER_DESC",
+    "type": "FUNCTION",
+    "name": "WORLD_WEATHER_DESC_GE",
+    "input": [
+        {
+            "name": "ACTIVATE",
+            "type": "BOOL",
+            "description": "A boolean input that initiates the weather description replacement upon a positive edge."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "WW",
+            "type": "WORLD_WEATHER_DATA",
+            "description": "The weather data structure that contains elements to be replaced."
+        }
+    ],
+    "output": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value."
+    }
+}

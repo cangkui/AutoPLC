@@ -1,0 +1,35 @@
+{
+    "title": "Subnet Check Function",
+    "description": "IP4_CHECK checks if a network address of the NIP and the local address\n\nLIP are in the same Subnet lie. Both addresses will be frst masked with\n\nthe Subnet mask and then tested for equality. Only the bits which are in\n\nthe Subnet Mask TRUE are examined for equality. The network addresses\n\nmust correspond to the IPv4 format and presented as a DWORD. If IP ad￾dresses must be tested that are String they are to be converted to\n\nDWORD before. \n\nThe following example shows 2 IP addresses and a Subnet Mask as String\n\nare tested after appropriate conversion to DWORD there. The output is\n\nTRUE because both addresses are in the same Subnet .",
+    "type": "FUNCTION",
+    "name": "IP4_CHECK",
+    "input": [
+        {
+            "name": "NIP",
+            "type": "DWORD",
+            "description": "Network IP address in DWORD format."
+        },
+        {
+            "name": "LIP",
+            "type": "DWORD",
+            "description": "Local IP address in DWORD format."
+        },
+        {
+            "name": "SM",
+            "type": "DWORD",
+            "description": "Subnet Mask in DWORD format."
+        }
+    ],
+    "output": [
+        {
+            "name": "Result",
+            "type": "BOOL",
+            "description": "TRUE if NIP and LIP are in the same Subnet; otherwise FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the NIP and LIP are in the same subnet, otherwise returns FALSE."
+    }
+}

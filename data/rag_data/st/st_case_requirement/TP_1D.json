@@ -1,0 +1,42 @@
+{
+    "title": "1D Timer Function Block",
+    "description": "SCALE_D scales an input value DWORD and calculates an output value in\nREAL. The input value X is limited here to I_LO and I_HI. SCALE_D (IN, 0,\n8191, 0, 100) scales an input with 14 bit resolution to the output 0..100.\nSCALE_D can also be negative and have a negative slope work at output\nvalues, and the values I_LO and I_HI must always be specifed that ILO <\nI_HI is.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TP_1D",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "A boolean input signal that starts the timing process when true."
+        },
+        {
+            "name": "PT1",
+            "type": "TIME",
+            "description": "The time duration that determines how long the output Q remains true after the input IN is activated."
+        },
+        {
+            "name": "PTD",
+            "type": "TIME",
+            "description": "The delay time which controls when output W is activated after the input has been processed."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A boolean reset input that, when true, resets the outputs and internal states."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The boolean output indicating the active state based on the input and time conditions."
+        },
+        {
+            "name": "W",
+            "type": "BOOL",
+            "description": "The boolean output indicating the delayed state which activates after the PTD time if conditions are met."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

@@ -1,0 +1,32 @@
+{
+    "title": "Integration Function Block",
+    "description": "INTEGRATE is a Integrator which integrates the value of X to an external\nvalue Y. The integrator operates when E = TRUE, the internal Default of E\n= TRUE.",
+    "type": "FUNCTION_BLOCK",
+    "name": "INTEGRATE",
+    "input": [
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable flag to execute the integration calculation. Default is TRUE."
+        },
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The current value to be integrated."
+        },
+        {
+            "name": "K",
+            "type": "REAL",
+            "description": "Scaling factor for the integration calculation. Default value is 1.0."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The resulting integrated value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

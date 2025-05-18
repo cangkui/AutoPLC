@@ -1,0 +1,32 @@
+{
+    "title": "Timed Pulse Generator",
+    "description": "TP_X is a multiple triggerable pulse generator. In contrast to the standard\nmodule TP this template can be triggered multiple times and thus the out￾put pulse can be extended. The output Q remains after the last trigger\nevent (rising edge of IN) at ON, for the period of PT. While Q is true, by a\nfurther edge at the IN the Timer can be triggered again and the output\npulse can be extended. In contrast to TOF, at TP_X the time PT is measu￾red as of the last rising edge, regardless of how long IN remains at TRUE.\nThis means that the output Q, after the time PT, is measured from the last\nrising edge of IN moves to FALSE, even when the input IN is TRUE. \nTiming of TP_X:\n 16. Logic Modules",
+    "type": "FUNCTION_BLOCK",
+    "name": "TP_X",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "Boolean input for the triggering signal. A rising edge on this signal will start the pulse."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "Time duration for which the output Q will remain true after a rising edge is detected."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Boolean output that indicates whether the pulse is currently active."
+        },
+        {
+            "name": "ET",
+            "type": "TIME",
+            "description": "Elapsed time since the pulse was activated."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

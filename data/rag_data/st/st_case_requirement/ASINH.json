@@ -1,0 +1,19 @@
+{
+    "title": "Hyperbolic Arcsine Calculation",
+    "description": "ASINH calculate the arc hyperbolic sine by the formula:",
+    "type": "FUNCTION",
+    "name": "ASINH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number input for which the hyperbolic arcsine is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The computed hyperbolic arcsine of the input value X."
+    }
+}

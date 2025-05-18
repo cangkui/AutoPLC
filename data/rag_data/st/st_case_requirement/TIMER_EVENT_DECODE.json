@@ -1,0 +1,64 @@
+{
+    "title": "TIMER_EVENT_DECODE Function",
+    "description": "TIMER_EVENT_DECODE allows the programming of Timer Events using\n\nstring instead of loading the structure TIMER_EVENT. \n\nThe events are specifed as follows:\n\n<Typ;Kanal; Day , Start, duration, country, Lor> \n\nElement Description Formats\n\n< > Start and stop characters of\n\nthe record.\n\nType Type of event (as described in\n\nTIMER_P4)\n\n'123', 2#0101, 8#33, 16#FF\n\nChannel to be programmed channel '123', 2#0101, 8#33, 16#FF\n\n62 Version 1.00\n\nChapter 6. Electrical Engineering\n\nDay Selection number eg Day '123', 2#0101, 8#33, 16#FF, 'Mo'\n\n'MO, DI, DO'\n\nStart Start time (daytime) 'TOD#12:00'\n\nDuration Duration of the event 'T#1h3m22s'\n\nCountry And logical link '123', 2#0101, 8#33, 16#FF\n\nLor logical or link '123', 2#0101, 8#33, 16#FF\n\nField Day has, depending on the type of event diferent meanings and can\n\nalso be specifed with week as a text or a list of the week. The input LANG\n\nspecifes the used language, 0 = the default language set in the setup , 1\n\n= english, .... more info about languages, see the section data types.",
+    "type": "FUNCTION",
+    "name": "TIMER_EVENT_DECODE",
+    "input": [
+        {
+            "name": "EVENT",
+            "type": "STRING",
+            "description": "The event string formatted as <Typ;Kanal; Day, Start, Duration, Country, Lor>."
+        },
+        {
+            "name": "LANG",
+            "type": "INT",
+            "description": "Language selection for the event description. 0 = default language, 1 = English, etc."
+        }
+    ],
+    "output": [
+        {
+            "name": "TIMER_BOOK",
+            "type": "STRUCT",
+            "description": "The output structure containing the programmed timer events.",
+            "fields": [
+                {
+                    "name": "EventType",
+                    "type": "STRING",
+                    "description": "Type of the event as described in TIMER_P4."
+                },
+                {
+                    "name": "Channel",
+                    "type": "STRING",
+                    "description": "Channel to be programmed."
+                },
+                {
+                    "name": "DaySelection",
+                    "type": "STRING",
+                    "description": "Selection of day for the event."
+                },
+                {
+                    "name": "StartTime",
+                    "type": "STRING",
+                    "description": "Start time for the event."
+                },
+                {
+                    "name": "Duration",
+                    "type": "STRING",
+                    "description": "Duration of the timer event."
+                },
+                {
+                    "name": "Country",
+                    "type": "STRING",
+                    "description": "Country logical link."
+                },
+                {
+                    "name": "Lor",
+                    "type": "STRING",
+                    "description": "Logical or link."
+                }
+            ]
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

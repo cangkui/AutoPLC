@@ -1,0 +1,27 @@
+{
+    "title": "Filter Dynamics with Time Integration",
+    "description": "FILTER_DW is a flter of the frst degree for 32-bit DWORD data. The main\napplication is the fltering of sensor signals for noise reduction. The basic\nfunctionality of a flter of the frst degree can be found in the module\nFT_PT1.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FILTER_DW",
+    "input": [
+        {
+            "name": "X",
+            "type": "DWORD",
+            "description": "Input value to be filtered."
+        },
+        {
+            "name": "T",
+            "type": "TIME",
+            "description": "Time interval over which the integration is computed."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "DWORD",
+            "description": "The filtered output value."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

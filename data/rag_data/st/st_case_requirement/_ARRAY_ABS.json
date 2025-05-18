@@ -1,0 +1,24 @@
+{
+    "title": "Array Absolute Value Calculation",
+    "description": "_ARRAY_ABS calculates the elements of an arbitrary array Of\nREAL in an absolute value. When called, a pointer to the array and its size\nin bytes is transferred to the function. Under CoDeSys the call reads: _AR￾RAY_ABS(ADR(Array), SIZEOF(array)), where array is the name of the array\nto be manipulated. ADR() is a standard function which identifes the poin￾ter to the array and SIZEOF() is a standard function, which determines the\nsize of the array. The function only returns TRUE. The array specifed by\nthe pointer is manipulated directly in memory. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.\nCall: _ARRAY_ABS(ADR(bigarray), SIZEOF(bigarray))",
+    "type": "FUNCTION",
+    "name": "_ARRAY_ABS",
+    "input": [
+        {
+            "name": "pt",
+            "type": "POINTER TO ARRAY[0..32000] OF REAL",
+            "description": "A pointer to the array of real numbers whose absolute values need to be calculated."
+        },
+        {
+            "name": "size",
+            "type": "UINT",
+            "description": "The number of elements in the array."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE if the absolute values were successfully calculated."
+    }
+}

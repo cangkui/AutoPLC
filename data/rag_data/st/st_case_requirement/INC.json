@@ -1,0 +1,36 @@
+{
+    "title": "Increment Function",
+    "description": "INC adds to the input X the Value D and ensures that the output INC is not\ndoes not exceed the value of M. If the result from the addition of X and D\nis greater than M, then it starts again at 0. The feature is especially useful\nwhen addressing arrays and bufers. Even the positioning of absolute en￾coders it can be used. INC can be used to decrementieren with a negative\nD, while INC will ensure that the result is not below zero. If subtract 1 from\nzero INC starts again at M.\nINC: = X + D, because D can take the maximum value M.\nIf INC > M so INC starts again at 0.\nIf INC < 0 so INC starts again at M",
+    "type": "FUNCTION",
+    "name": "INC",
+    "input": [
+        {
+            "name": "X",
+            "type": "INT",
+            "description": "The initial integer value to be incremented."
+        },
+        {
+            "name": "D",
+            "type": "INT",
+            "description": "The increment value that will be added to X."
+        },
+        {
+            "name": "M",
+            "type": "INT",
+            "description": "The modulus value used for wrapping the result."
+        }
+    ],
+    "output": [
+        {
+            "name": "INC",
+            "type": "INT",
+            "description": "The resulting value after incrementing X by D and applying modulo M."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The final computed increment value.",
+        "fields": []
+    }
+}

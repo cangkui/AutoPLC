@@ -1,0 +1,40 @@
+{
+    "title": "String Truncation and Padding Function",
+    "description": "FIX creates a string of fxed length N. The string STR at the input is trunca￾ted to the length N respective flled with the fll character C. If the string\nSTR is shorter than the length L to be created, will the string be flled de￾pending on M, with the fll character C. If M = 0, the padding at the end of\nthe string is appended, if M = 1, the padding is attached the beginning\nand when M = 2, the string is centered between fll character. If the num￾ber of the necessary padding is odd and if M = 2, the fll at the end has a\nfll character more than at the beginning. The FIX function evaluates the\nGlobal Setup string_length constant and limits the maximum length L of\nthe string to string_length.",
+    "type": "FUNCTION",
+    "name": "FIX",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The input string that needs to be modified."
+        },
+        {
+            "name": "L",
+            "type": "INT",
+            "description": "The length to which the string should be truncated or padded."
+        },
+        {
+            "name": "C",
+            "type": "BYTE",
+            "description": "The character used for padding the string."
+        },
+        {
+            "name": "M",
+            "type": "INT",
+            "description": "The mode for string modification: 1 for left truncate/pad, 2 for center pad."
+        }
+    ],
+    "output": [
+        {
+            "name": "FIX",
+            "type": "string",
+            "description": "The modified string after truncation and/or padding."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "Returns the modified string after performing the specified operations."
+    }
+}

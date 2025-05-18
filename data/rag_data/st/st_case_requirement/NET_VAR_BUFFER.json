@@ -1,0 +1,40 @@
+{
+    "title": "NET_VAR_BUFFER Module",
+    "description": "NET_VAR_BUFFER is used for bidirectional transmission of 64 bytes \n\nfrom the master to slave and vice versa. The data from BUF_IN be recorded and \n\npassed on the other side (other plc) on the same module at the same position as \n\nBUF_OUT.\n\nSimultaneously, the input data on the opposite side (other control) is passed here as \n\nBUF_OUT again.\n\nID parameter indicates the current identification number of the module instance. If the \n\nconfiguration of the master and the slave program is differently (incorrectly) that ID \n\nnumber is passed as a fault in the module NET_VAR_CONTROL.\n\n201 Version 1.21\n\nChapter 12. Network Variables",
+    "type": "FUNCTION",
+    "name": "NET_VAR_BUFFER",
+    "input": [
+        {
+            "name": "X",
+            "type": "NET_VAR_DATA",
+            "description": "Data structure used for configuration and transmission.",
+            "fields": []
+        },
+        {
+            "name": "BUF_IN",
+            "type": "ARRAY [1..64] OF BYTE",
+            "description": "Input data buffer for receiving data.",
+            "fields": []
+        }
+    ],
+    "output": [
+        {
+            "name": "BUF_OUT",
+            "type": "ARRAY [1..64] OF BYTE",
+            "description": "Output data buffer for sending data.",
+            "fields": []
+        },
+        {
+            "name": "OUTPUT ID",
+            "type": "BYTE",
+            "description": "Identification number of the module instance.",
+            "fields": []
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "No return value as the operation is purely based on input/output data transmission.",
+        "fields": []
+    }
+}

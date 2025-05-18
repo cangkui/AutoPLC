@@ -1,0 +1,25 @@
+{
+    "title": "Byte Reversal Function",
+    "description": "REVERSE reverses the order of the bits in a byte. Bit7 of IN becomes bit 0,\nbit 6 to bit 1, etc.",
+    "type": "FUNCTION",
+    "name": "REVERSE",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BYTE",
+            "description": "The input byte value to be reversed."
+        }
+    ],
+    "output": [
+        {
+            "name": "REVERSE",
+            "type": "BYTE",
+            "description": "The output byte value resulting from the bitwise operations on the input byte."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BYTE",
+        "description": "The return value represents the modified byte resulting from the function's operations."
+    }
+}

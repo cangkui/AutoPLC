@@ -1,0 +1,62 @@
+{
+    "title": "Clock Divider Function Block",
+    "description": "CLK_DIV is a divider module and devides the input si￾gnal CLK into 8 levels each divided by 2, so that at the output Q0 is half\nthe frequency of the input CLK with 50% duty cycle available. The output\nQ1 is the halved frequency of Q0 available and so on, until at Q7 the input\nfrequency is divided by 256. A reset input RST sets asynchronous all out￾puts to FALSE. CLK is allowed to make only one cycle to TRUE, if CLK does\nnot this, CLK musst provided over TP_R.\n The following example is a test circuit with a start signal via ENI / ENO\nrealized functionality. Figure 2 shows a corresponding trace recording of\nthe circuit:",
+    "type": "FUNCTION_BLOCK",
+    "name": "CLK_DIV",
+    "input": [
+        {
+            "name": "clk",
+            "type": "BOOL",
+            "description": "The clock input signal used to increment the counter."
+        },
+        {
+            "name": "rst",
+            "type": "BOOL",
+            "description": "The reset input signal that initializes the counter and output states."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "The first output bit representing the least significant bit of the counter."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "The second output bit of the counter."
+        },
+        {
+            "name": "Q2",
+            "type": "BOOL",
+            "description": "The third output bit of the counter."
+        },
+        {
+            "name": "Q3",
+            "type": "BOOL",
+            "description": "The fourth output bit of the counter."
+        },
+        {
+            "name": "Q4",
+            "type": "BOOL",
+            "description": "The fifth output bit of the counter."
+        },
+        {
+            "name": "Q5",
+            "type": "BOOL",
+            "description": "The sixth output bit of the counter."
+        },
+        {
+            "name": "Q6",
+            "type": "BOOL",
+            "description": "The seventh output bit of the counter."
+        },
+        {
+            "name": "Q7",
+            "type": "BOOL",
+            "description": "The eighth output bit representing the most significant bit of the counter."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

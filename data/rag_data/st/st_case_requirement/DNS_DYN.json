@@ -1,0 +1,91 @@
+{
+    "title": "Dynamic DNS Registration Module",
+    "description": "DNS_DYN dynamic IP addresses are registered as domain names. \n\nMany Internet providers assign a dynamic IP address when dialing into the \n\nInternet. To be visible and accessible for Internet Participants, one of the \n\nways is to upgrade its current IP address via Dyn-DNS. The process is not \n\nstandardized, unfortunately, so for every Dyn-DNS provider has to be \n\ncreated a individual solution. The module can be used in conjunction with \n\nDynDNS.org and Selfhost.de. These providers ofer in addition to paid also \n\nfree DynDNS services.\n\nIf ENABLE is set to TRUE, then the module is active. Using a positive edge \n\nto UPDATE any time an update can be started. If at T_UPDATE a time is \n\nspecifed, always an update is done after that time.\n\nCaution, most DynDNS providers rates a frequent or unnecessary update \n\nas an attack, and block the account for a certain time.\n\nThe time T_UPDATE should not be set below an hour. If the parameter \n\nT_UPDATE is not connect it is assumed as an update time of 1 hour. If no \n\nupdate is needed on time, then T#0ms should be passed.\n\nThe MODE parameter allows the selection of DynDNS Provider\n\n(0 = DynDNS.org, 1 = SELFHOST.DE)\n\nThe own domain name must be passed by the hostname. For security \n\nreasons, USERNAME and PASSWORD as authorization data must be \n\nspecifed to the DynDNS provider. If the parameter IP4 is not used, so \n\nDynDNS provider automatically adopts the current registration-IP as WAN \n\nIP with which the update is performed. By specifying an IP address also an \n\nindividual IP address may be assigned.\n\nWith fawless execution the parameter DONE = TRUE, else ERROR_C and \n\nERROR_T passes the error code and error type. (See error codes).\n\nERROR_T:\n\nValue Properties\n\n93 Version 1.21\n\nChapter 9. Network and Communication\n\n1 The exact meaning of ERROR_C can be read at module DNS_CLIENT\n\n2 The exact meaning of ERROR_C can be read at module HTTP_GET\n\n3 The DynDNS provider has refused registration",
+    "type": "FUNCTION",
+    "name": "DNS_DYN",
+    "input": [
+        {
+            "name": "ENABLE",
+            "type": "BOOL",
+            "description": "Release of the module to activate its functionality."
+        },
+        {
+            "name": "UPDATE",
+            "type": "BOOL",
+            "description": "Triggers a new DNS registration immediately."
+        },
+        {
+            "name": "T_UPDATE",
+            "type": "TIME",
+            "description": "Waiting time for the new DNS registration. Defaults to 1 hour if not specified."
+        },
+        {
+            "name": "MODE",
+            "type": "BYTE",
+            "description": "Selection of the DynDNS provider (0 = DynDNS.org, 1 = SELFHOST.DE)."
+        },
+        {
+            "name": "HOST_NAME",
+            "type": "STRING(30)",
+            "description": "The domain name to be registered."
+        },
+        {
+            "name": "USER_NAME",
+            "type": "STRING(20)",
+            "description": "The username used for registration with the DynDNS provider."
+        },
+        {
+            "name": "PASSWORD",
+            "type": "STRING(20)",
+            "description": "The password used for registration with the DynDNS provider."
+        },
+        {
+            "name": "IP4",
+            "type": "DWORD",
+            "description": "Optional parameter to specify a custom IP address. If not provided, the current WAN IP will be used."
+        }
+    ],
+    "output": [
+        {
+            "name": "BUSY",
+            "type": "BOOL",
+            "description": "Indicates whether the module is currently active and processing a query."
+        },
+        {
+            "name": "DONE",
+            "type": "BOOL",
+            "description": "Indicates whether the DNS registration succeeded."
+        },
+        {
+            "name": "ERROR_C",
+            "type": "DWORD",
+            "description": "Error code returned if registration fails."
+        },
+        {
+            "name": "ERROR_T",
+            "type": "BYTE",
+            "description": "Error type indicator."
+        }
+    ],
+    "in/out": [
+        {
+            "name": "IP_C",
+            "type": "IP_C",
+            "description": "Parameterization for IP configuration."
+        },
+        {
+            "name": "S_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for transmitting data."
+        },
+        {
+            "name": "R_BUF",
+            "type": "NETWORK_BUFFER",
+            "description": "Buffer for receiving data."
+        }
+    ],
+    "return_value": {
+        "type": null,
+        "description": null
+    }
+}

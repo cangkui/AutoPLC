@@ -1,0 +1,57 @@
+{
+    "title": "Ramp Generator Function Block",
+    "description": "RMP_W is a ramp generator with 16-bit (2 bytes) resolution. The ramp of\n0.. 65535 is divided into a maximum of 65536 steps and run in a time of\nPT once complete. An enable signal E switches the ramp generator on or\nof. An asynchronous reset sets each time the output to 0, and a pulse at\nthe Set input sets the output to 65535. With the UD input, the direction UP\n(UD = TRUE) or DOWN (UD = FALSE) is defned. The output of BUSY =\nTRUE indicates that a ramp is active. BUSY = FALSE means the output is\nstable. The outputs HIGH and LOW gets TRUE, the output OUT reaches the\nlower or upper limit (0 and 65535).\nAt setting of PT is to be noted that a PLC with 5 ms cycle time needs\n65536*5 = 327 seconds for a ramp. If the PT is the time defned shorter\nthan the cycle time 65536, the edge is translated in correspondingly lar￾ger steps. The ramp is constructed in this case with less than 256 steps\nper cycle. PT may be T#0s, then the output switched between minimum\nand maximum value back and forth.\nFor a detailed description, see the module RMP_B. The function is absolu￾tely identical except that the output OUT 8-bit wide instead of 16 bit.\n 19. Signal processing",
+    "type": "FUNCTION_BLOCK",
+    "name": "RMP_W",
+    "input": [
+        {
+            "name": "SET",
+            "type": "BOOL",
+            "description": "Control signal to set the ramp output to its maximum value."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "Time duration for which the ramp should be executed."
+        },
+        {
+            "name": "E",
+            "type": "BOOL",
+            "description": "Enable signal for the ramp operation; when false, the ramp is disabled."
+        },
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Direction control for the ramp; true for upward ramping, false for downward."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Control signal to reset the ramp output to zero."
+        }
+    ],
+    "output": [
+        {
+            "name": "out",
+            "type": "WORD",
+            "description": "Current output value of the ramp generator."
+        },
+        {
+            "name": "busy",
+            "type": "BOOL",
+            "description": "Indicates whether the ramp generator is currently active."
+        },
+        {
+            "name": "high",
+            "type": "BOOL",
+            "description": "Indicates if the output is at its maximum value."
+        },
+        {
+            "name": "low",
+            "type": "BOOL",
+            "description": "Indicates if the output is at its minimum value."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

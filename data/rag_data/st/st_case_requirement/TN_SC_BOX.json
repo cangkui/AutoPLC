@@ -1,0 +1,51 @@
+{
+    "title": "TN_SC_BOX Function Module",
+    "description": "TN_SC_BOX is used to draw a rectangular area, that is flled \n\nwith the specifed character in Iby_FILL. With parameter Iby_ATTR fll color \n\ncan be specifed. The fll area is drawn with a border that is given by \n\nIin_BORDER.\n\nBorder types:\n\n0 = no border\n\n1 = frame with a single line\n\n2 = frame double line\n\n3 = frame with spaces",
+    "type": "FUNCTION",
+    "name": "TN_SC_BOX",
+    "input": [
+        {
+            "name": "Iin_Y1",
+            "type": "INT",
+            "description": "Y1 coordinate of the area"
+        },
+        {
+            "name": "Iin_X1",
+            "type": "INT",
+            "description": "X1 coordinate of the area"
+        },
+        {
+            "name": "Iin_Y2",
+            "type": "INT",
+            "description": "Y2 coordinate of the area"
+        },
+        {
+            "name": "Iin_X2",
+            "type": "INT",
+            "description": "X2 coordinate of the area"
+        },
+        {
+            "name": "Iby_FILL",
+            "type": "BYTE",
+            "description": "Fill character of the area"
+        },
+        {
+            "name": "Iby_ATTR",
+            "type": "BYTE",
+            "description": "Color code to fill the area"
+        },
+        {
+            "name": "Iby_BORDER",
+            "type": "BYTE",
+            "description": "Type of frame"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "Screen structure for displaying the drawn box"
+        }
+    ],
+    "return_value": null
+}

@@ -1,0 +1,25 @@
+{
+    "title": "Bit Toggle Function",
+    "description": "BIT_TOGGLE_DW inverts a specifed bit at IN.\nBIT_TOGGLE_DW(2#0000_1111, 2) = 2#0000_1011\nBIT_TOGGLE_DW(2#0000_1111, 7) = 2#1000_1111",
+    "type": "FUNCTION",
+    "name": "BIT_TOGGLE_DW",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The input DWORD value where the bit will be toggled."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position of the bit to be toggled, starting from 0 for the least significant bit."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The resulting DWORD value after the specified bit has been toggled.",
+        "fields": []
+    }
+}

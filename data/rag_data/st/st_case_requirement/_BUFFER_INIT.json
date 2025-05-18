@@ -1,0 +1,29 @@
+{
+    "title": "Buffer Initialization Function",
+    "description": "_BUFFER_INIT initializes any array of Byte with value INIT.\nWhen called, a pointer to the array and its size in bytes is passed to the\nfunction. Under CoDeSys the call reads: _BUFFER_INIT(ADR(Array), SI￾ZEOF(Array), INIT), where array is the name of the array to be manipula￾ted. ADR() is a standard function which identifes the pointer to the array\nand SIZEOF() is a standard function, which determines the size of the ar￾ray. The function only returns TRUE. The array specifed by the pointer is\nmanipulated directly in memory. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "_BUFFER_INIT",
+    "input": [
+        {
+            "name": "PT",
+            "type": "POINTER TO BYTE",
+            "description": "Pointer to the buffer that needs to be initialized."
+        },
+        {
+            "name": "SIZE",
+            "type": "UINT",
+            "description": "The size in bytes of the buffer to be initialized."
+        },
+        {
+            "name": "INIT",
+            "type": "BYTE",
+            "description": "The byte value with which to initialize the buffer."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns TRUE upon successful initialization of the buffer."
+    }
+}

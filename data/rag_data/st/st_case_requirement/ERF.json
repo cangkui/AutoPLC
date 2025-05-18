@@ -1,0 +1,19 @@
+{
+    "title": "Error Function Calculation",
+    "description": "ERF function calculates the error function of X. The error function is\ncalculated using an approximation formula, the maximum relative error is\nsmaller than 1,3 * 10-4 \n.",
+    "type": "FUNCTION",
+    "name": "ERF",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "A real number input for which the error function is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "The calculated value of the error function for the input X."
+    }
+}

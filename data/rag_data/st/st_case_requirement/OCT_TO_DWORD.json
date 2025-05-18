@@ -1,0 +1,20 @@
+{
+    "title": "Convert Octal String to DWORD",
+    "description": "OCT_TO_DWORD converts an octal encoded string into a byte\nvalue. Only the octal characters are '0 '..'7' are interpreted, others in HEX\noccurring characters are ignored.",
+    "type": "FUNCTION",
+    "name": "OCT_TO_DWORD",
+    "input": [
+        {
+            "name": "OCT",
+            "type": "STRING[20]",
+            "description": "A string of octal digits that needs to be converted to a DWORD."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The converted DWORD value representing the octal input string.",
+        "fields": []
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "title": "Check Non-Containment of Substring",
+    "description": "IS_NCC tests whether the string STR none of the in STR listed characters\nare included. Is a character of CMP found in STR, the function returns FAL￾SE.",
+    "type": "FUNCTION",
+    "name": "IS_NCC",
+    "input": [
+        {
+            "name": "str",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The main string in which to search for the substring."
+        },
+        {
+            "name": "cmp",
+            "type": "STRING[STRING_LENGTH]",
+            "description": "The substring that needs to be checked for containment in the main string."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Boolean value indicating whether the substring is not contained in the main string. TRUE if not found; FALSE if found."
+    }
+}

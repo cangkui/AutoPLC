@@ -1,0 +1,67 @@
+{
+    "title": "FILE_SERVER Module for PLC",
+    "description": "FILE_SERVER_DATA (fle interface)\n\nPT: NETWORK_BUFFER (read / write data)\n\nAvailable platforms and related dependencies\n\nCoDeSys:\n\nDoes the library \" SysLibFile.lib \"\n\nRuns on\n\nWAGO 750-841\n\nCoDeSys SP PLCWinNT V2.4\n\nand compatible platforms\n\n154 Version 1.21\n\nChapter 10. File-System\n\nPCWORX:\n\nNo library required\n\nRuns on all controllers with fle system from frmware >= 3.5x\n\nBECKHOFF:\n\nDevelopment Environment Target \n\nPlatform\n\nPLC libraries to include\n\nTwinCAT v2.8.0 or higher PC or CX \n\n(x86)\n\nTcSystem.Lib\n\nTwinCAT v2.10.0 Build >= 1301 or \n\nhigher\n\nCX (ARM) TcSystem.Lib\n\nThe module FILE_SERVER enables hardware and manufacturers a neutral \n\naccess to the fle system of PLC. Since at almost every hardware and \n\nsoftware platform, the accessibility to the fle system is sometimes very \n\ndiferent, it is necessary to use a uniform and simplifed functional \n\ninterface, which is reduced to the necessary functions. The module is \n\nhardware-dependent and therefore it must be available for that platform \n\nare the appropriate implementation.\n\nWIth FILE NAME the fle is determined. Depending on the platform may be \n\nslightly diferent syntax (with or without the path). With MODE parameter \n\nthe principle of access is given. At MODE 1,2 and 3 with \"OFFSET\" the \n\nposition can be specifed in the fle. In the fle system counting is always \n\nstarted with byte 0. The frst step is always to check whether this fle is \n\nalready (still) open, and if not they will open and the current fle size is \n\nobserved and passed to the \"FILE_SIZE\". When specifying a time \n\nAUTO_CLOSE > 0ms, the fle is automatically closed after each command \n\nand the expiration of the waiting time. Alternatively, using MODE = 5, the \n\nclosing of the fle is done manually. Each write command which change the \n\nsize of the fle automatically leads to a corrected \"FILE_SIZE\" entry, so it is \n\nalways visible how large the fle is right now. Once a fle is open, this is \n\nreported on FILE_OPEN = TRUE.\n\nEach write command at which the size of the fle changes automatically \n\nleads to a corrected \"FILE_SIZE\" entry, so you can always how large the \n\nfle is right now. In PT.SIZE is the actual amount of data automatically \n\ncorrected or entered.\n\nIf the MODE 1,2 or 3 called with PT.SIZE = 0, the fle is opened, the \n\nFILE_SIZE determined, but no read/write command is performed, and the \n\nfle will remain open until manually closed or AUTO_CLOSE.\n\n155 Version 1.21\n\nChapter 10. File-System\n\nIf data has to be written, the data has to be stored in PT.BUFFER and in \n\nPT.SIZE the bytes must exist. This data are written to the specifed relative \n\nofset in the fle. If a write mode is called with PT.SIZE = 0, then in turn the \n\nfle is opened (if not already open, and made no write command, and \n\nthese will remain open until a manual closing or AUTO_CLOSE is carried \n\nout.)\n\nAfter every executed command that changes the position of the virtual \n\nread / write pointer, the current position in the data structure is written in \n\nthe parameter \"OFFSET\". An automatic append function can be realized \n\nvery easy. The parameter FILE_SIZE has to be written to the OFFSET \n\nparameter after opening the fle. After that, all written bytes are appended \n\nto the end without changing the OFFSET parameter manually. The same \n\nprinciple can be applied of course when reading, the read pointer should \n\nbe positioned frst within the fle (usually starting at ofset 0).\n\nIf a command is executed and FILE NAME difers from the current FILE \n\nNAME, the old one, still open fle, is closed automatically and the new one \n\nis opened then, and continued with the normal command. This can easily \n\nperform a fying change of the fle without having to perform cumbersome \n\nand OPEN to CLOSE before.\n\nWhen you delete a fle with MODE 4 automatically a potentially \n\noutstanding fle is closed before, and then deleted in sequence.\n\nAfter a AUTO_CLOSE or manual closing by MODE 5 all data in \n\nFILE_SERVER_DATA is reseted.\n\nThe module FILE_SERVER should always be called periodically, at least as \n\nlong as not all requests are completed safely.\n\nSince some platforms perform a fle-lock (eg CoDeSys) and do not always \n\nallow an asynchronous use, FILE_SERVER should run in a separate task so \n\nthat the default application is not infuenced in the time behavior. . \n\nThe FILE_SERVER provides the following commands in \"MODE\":\n\nMODE Properties\n\n1 An existing file is opened for reading and reading data optional\n\n2 An existing file is opened for write access and optional data is written\n\n3 A file will be created for writing and data will be written optional\n\n4 Delete file\n\n5 Close file\n\nERROR: Error codes Beckhof\n\nValue trigger Description\n\n156 Version 1.21\n\nChapter 10. File-System\n\n0 No error\n\n19 SYSTEMSERVICE_FOPEN Unknown or invalid parameter\n\n28 SYSTEMSERVICE_FOPEN File not found. Invalid file name or file path\n\n38 SYSTEMSERVICE_FOPEN SYSTEMSERVICE_FOPEN\n\n51 SYSTEMSERVICE_FCLOSE unknown or invalid file handle.\n\n62 SYSTEMSERVICE_FCLOSE File was opened with the wrong method.\n\n67 SYSTEMSERVICE_FREAD unknown or invalid file handle.\n\n74 SYSTEMSERVICE_FREAD No memory for read buffer.\n\n78 SYSTEMSERVICE_FREAD File was opened with the wrong method.\n\n83 SYSTEMSERVICE_FWRITE unknown or invalid file handle\n\n94 SYSTEMSERVICE_FWRITE File was opened with the wrong method.\n\n99 SYSTEMSERVICE_FSEEK unknown or invalid file handle.\n\n110 SYSTEMSERVICE_FSEEK File was opened with the wrong method.\n\n115 SYSTEMSERVICE_FTELL unknown or invalid file handle.\n\n126 SYSTEMSERVICE_FTELL File was opened with the wrong method\n\n140 SYSTEMSERVICE_FDELETE File not found. Invalid file name or file path.\n\n255 Application Position is after the end of file\n\nERROR: Error codes PCWORX:\n\nValue trigger Description\n\n0 No error\n\n2 File_open The maximum number of files already open\n\n4 File_open The file is already open\n\n5 File_open The file is write-protected or access denied\n\n6 File_open File name not specified\n\n11 File_close Invalid file handle\n\n30 File_close File could not be closed\n\n41 FILE_READ Invalid file handle\n\n157 Version 1.21\n\nChapter 10. File-System\n\n50 FILE_READ End of file reached\n\n52 FILE_READ The number of characters to read is larger than the data buffer\n\n62 FILE_READ Data could not be read\n\n71 FILE_WRITE Invalid file handle\n\n81 FILE_WRITE There is no memory available to write the data \n\n82 FILE_WRITE The count of characters to write is larger than the data buffer\n\n93 FILE_WRITE There were no written data\n\n0 FILE_SEEK Invalid file handle\n\n113 FILE_SEEK Invalid positioning mode or the specified position is before the start of\n\nthe file\n\n124 FILE_SEEK The position could not be set\n\n131 FILE_TELL Invalid file handle\n\n142 FILE_REMOVE The maximum number of files already open\n\n143 FILE_REMOVE The file could not be found\n\n145 FILE_REMOVE The file is opened, readonly or access denied\n\n146 FILE_REMOVE File name not specified\n\n161 FILE_REMOVE File could not be deleted\n\n255 Application Position is after the end of file\n\nERROR: CoDeSys error codes:\n\nValue trigger Description\n\n0 No error\n\n1 SysFileOpen Error\n\n2 SysFileClose Error\n\n3 SysFileRead Error\n\n4 SysFileWrite Error\n\n5 SysFileSetPos Error\n\n6 SysFileGetPos Error\n\n7 SysFileDelete Error\n\n8 SysFileGetSize Error\n\n158 Version 1.21\n\nChapter 10. File-System\n\n255 Application Position is after the end of file",
+    "type": "FUNCTION",
+    "name": "FILE_SERVER",
+    "input": [
+        {
+            "name": "FILENAME",
+            "type": "STRING",
+            "description": "The name of the file to be accessed. The syntax may vary by platform."
+        },
+        {
+            "name": "MODE",
+            "type": "INT",
+            "description": "Specifies the mode of operation: 1 for read, 2 for write, 3 for create, 4 for delete, 5 for close."
+        },
+        {
+            "name": "OFFSET",
+            "type": "INT",
+            "description": "Specifies the byte offset in the file to start reading or writing."
+        },
+        {
+            "name": "AUTO_CLOSE",
+            "type": "INT",
+            "description": "Specifies the auto close time in milliseconds. If greater than 0, the file will close automatically after each command."
+        },
+        {
+            "name": "PT",
+            "type": "STRUCT",
+            "description": "A structure containing buffer and size for read/write operations.",
+            "fields": [
+                {
+                    "name": "BUFFER",
+                    "type": "BYTE[]",
+                    "description": "The data buffer that holds data to be read from or written to the file."
+                },
+                {
+                    "name": "SIZE",
+                    "type": "INT",
+                    "description": "The number of bytes in the buffer."
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "FILE_SIZE",
+            "type": "INT",
+            "description": "The current size of the file after a read/write operation."
+        },
+        {
+            "name": "FILE_OPEN",
+            "type": "BOOL",
+            "description": "Indicates whether the file is currently open."
+        },
+        {
+            "name": "ERROR_CODE",
+            "type": "INT",
+            "description": "An error code indicating the status of the file operation."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Returns true if the file operation was successful, false otherwise."
+    }
+}

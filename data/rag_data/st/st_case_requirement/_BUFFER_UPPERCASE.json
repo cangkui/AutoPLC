@@ -1,0 +1,25 @@
+{
+    "title": "Buffer Uppercase Conversion",
+    "description": "_BUFFER_UPPERCASE interprets each byte in the bufer as\nASCII characters and converts it to uppercase . When called, a pointer to\nthe array and its size in bytes is passed to the function. Under CoDeSys\nthe call reads: _BUFFER_INIT(ADR(Array), SIZEOF(Array), INIT), where array\nis the name of the array to be manipulated. ADR is a standard function,\nwhich identifes the Pointer the array and SIZEOF is a standard function,\nwhich determines the size of the array. The function only returns TRUE. By\nthe Pointer given array is manipulated directly in memory. \nThis type of processing arrays is very efcient because no additional me￾mory is required and no surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "_BUFFER_UPPERCASE",
+    "input": [
+        {
+            "name": "PT",
+            "type": "POINTER TO ARRAY [0..32000] OF BYTE",
+            "description": "A pointer to an array of bytes that will be converted to uppercase."
+        },
+        {
+            "name": "SIZE",
+            "type": "INT",
+            "description": "The number of bytes in the array to be converted."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates whether the uppercase conversion was successful.",
+        "fields": []
+    }
+}

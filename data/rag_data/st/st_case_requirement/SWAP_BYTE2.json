@@ -1,0 +1,20 @@
+{
+    "title": "Byte Swap Function",
+    "description": "MONTH_END calculates the date of the last day of the current month and\ncurrent year.\nMONTH_END(D#2008-2-13) = D#2008-2-29",
+    "type": "FUNCTION",
+    "name": "SWAP_BYTE2",
+    "input": [
+        {
+            "name": "IN",
+            "type": "DWORD",
+            "description": "The DWORD value whose bytes are to be swapped."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The resulting DWORD after the bytes have been swapped.",
+        "fields": []
+    }
+}

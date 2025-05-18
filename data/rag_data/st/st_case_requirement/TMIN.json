@@ -1,0 +1,27 @@
+{
+    "title": "TMIN Function Block",
+    "description": "TMIN ensures that the output pulse Q is at least PT is set to TRUE, even if\nthe input pulse at IN is shorter than PT. otherwise the output Q follows the\ninput IN.",
+    "type": "FUNCTION_BLOCK",
+    "name": "TMIN",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "A boolean input signal that influences the output state."
+        },
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The time period for which the input signal should be considered."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "The boolean output signal indicating the current state based on the input and timer."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

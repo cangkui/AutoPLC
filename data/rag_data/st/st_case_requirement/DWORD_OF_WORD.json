@@ -1,0 +1,25 @@
+{
+    "title": "Convert Two Words to a DWORD",
+    "description": "DWORD_OF_WORD creates from 2 separate WORDS W0 und W1 a\nDWORD.\nA DWORD is composed as follows: W1-W0.",
+    "type": "FUNCTION",
+    "name": "DWORD_OF_WORD",
+    "input": [
+        {
+            "name": "W1",
+            "type": "WORD",
+            "description": "The first 16-bit WORD value to be converted and shifted."
+        },
+        {
+            "name": "W0",
+            "type": "WORD",
+            "description": "The second 16-bit WORD value to be combined with the first."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "DWORD",
+        "description": "The resulting 32-bit DWORD value formed by combining W1 and W0.",
+        "fields": []
+    }
+}

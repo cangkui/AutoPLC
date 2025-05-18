@@ -1,0 +1,105 @@
+{
+    "title": "BLIND_SECURITY Function Module",
+    "description": "BLIND_SECURITY makes sure the blinds drive either up or down when cer￾tain events occur. The inputs UP and DN control a downstream module\n\nBLIND_ACTUATOR over the outputs of QU and QD. With the inputs FIRE,\n\nWIND, RAIN ALARM the inputs UP and DN are overwritten and the blinds\n\ndrive either completely up or completely down. This FIRE has the highest\n\npriority followed by WIND, Alarm and with the lowest priority RAIN. Rain\n\ncan be overridden as the only one by manual inputs UP and DN. Therefore,\n\nif the user should decide to remain open the blind despite the rain, he\n\nmust interrupt the rain mode only by a short press of the UP or DN. FIRE\n\ndrives the shutter to the top while RAIN, Wind and Alarm are confgurable\n\nfor up or down. ALARM is confgured using the setup variables ALARM_UP\n\nfor both high and down drive, the setup variable WIND_UP specifes whe￾ther to run in Wind up or down. The variable RAIN_UP determine what po￾sition will be approached at Rain. The default values are UPfor Alarm, UP\n\nfor Wind and DNfor Rain. The setup variables can be changed by dou￾ble-clicking the icon at any time. \n\nThe input and output S_IN STATUS are ESR compliant outputs and inputs.\n\nIn Input S_IN the upstream functions report their status to the module, this\n\nstatus will be forwarded to the output of STATUS, and own status messa￾ges also issued on STATUS.\n\nSTATUS Meaning\n\n0 no message\n\n111 Fire\n\n112 Wind\n\n113 Burglar alarm\n\n114 Door alarm\n\n90 Version 1.00\n\nChapter 7. Blind Modules\n\n115 Rain\n\nNNN forwarded messages\n\nThe following graphic shows the application of BLIND_SECURITY with\n\nBLIND_ACTUATOR for controlling a blind:\n\nBLIND_SECURITY must necessarily used directly on BLIND_CONTROL. If\n\nother modules are installed between BLIND_SECURITY and BLIND_CON￾TROL the security functions can not be guaranteed.",
+    "type": "FUNCTION",
+    "name": "BLIND_SECURITY",
+    "input": [
+        {
+            "name": "UP",
+            "type": "BOOL",
+            "description": "Input UP control signal for raising the blind."
+        },
+        {
+            "name": "DN",
+            "type": "BOOL",
+            "description": "Input DOWN control signal for lowering the blind."
+        },
+        {
+            "name": "S_IN",
+            "type": "BYTE",
+            "description": "ESR compliant status input indicating upstream function status."
+        },
+        {
+            "name": "PI",
+            "type": "BYTE",
+            "description": "Blind position in automatic mode."
+        },
+        {
+            "name": "AI",
+            "type": "BYTE",
+            "description": "Slat angle in automatic mode."
+        },
+        {
+            "name": "FIRE",
+            "type": "BOOL",
+            "description": "Input signal for fire alarm."
+        },
+        {
+            "name": "WIND",
+            "type": "BOOL",
+            "description": "Input signal for wind alarm."
+        },
+        {
+            "name": "ALARM",
+            "type": "BOOL",
+            "description": "Input signal for intrusion detection alarm."
+        },
+        {
+            "name": "DOOR",
+            "type": "BOOL",
+            "description": "Input signal from door contact."
+        },
+        {
+            "name": "RAIN",
+            "type": "BOOL",
+            "description": "Input signal from rain sensor."
+        },
+        {
+            "name": "Setup ALARM_UP",
+            "type": "BOOL",
+            "description": "Configuration for default direction at alarm (Default = Up)."
+        },
+        {
+            "name": "WIND_UP",
+            "type": "BOOL",
+            "description": "Configuration for default direction at wind (Default = Up)."
+        },
+        {
+            "name": "RAIN_UP",
+            "type": "BOOL",
+            "description": "Configuration for default direction at rain (Default = Down)."
+        }
+    ],
+    "output": [
+        {
+            "name": "QU",
+            "type": "BOOL",
+            "description": "Motor up signal for driving the blind up."
+        },
+        {
+            "name": "QD",
+            "type": "BOOL",
+            "description": "Motor down signal for driving the blind down."
+        },
+        {
+            "name": "STATUS",
+            "type": "BYTE",
+            "description": "ESR compliant status output indicating the module's status."
+        },
+        {
+            "name": "PO",
+            "type": "BYTE",
+            "description": "Output value of the blind in automatic mode."
+        },
+        {
+            "name": "AO",
+            "type": "BYTE",
+            "description": "Output value of the blade angle in automatic mode."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "void",
+        "description": "This function does not return a value."
+    }
+}

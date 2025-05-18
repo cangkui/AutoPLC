@@ -1,0 +1,41 @@
+{
+    "title": "READ_HTTP Function Module",
+    "description": "READ_HTTP the HTTP header information can be analyzed. The \n\nmodule searches any array of bytes on the contents of a string and then \n\nevaluates the following parameters, and returns that string as its result. \n\nThe data in the bufer are automatically converted to upper case, so all \n\nsearch string at SRC has to be too, given in capital letters. With POS it can \n\nbegin its search at any position. The frst element in the array is at position \n\nnumber 1",
+    "type": "FUNCTION",
+    "name": "READ_HTTP",
+    "input": [
+        {
+            "name": "INPUT SIZE",
+            "type": "UINT",
+            "description": "The size of the buffer that contains the HTTP header."
+        },
+        {
+            "name": "POS",
+            "type": "INT",
+            "description": "The position in the buffer from where the search operation starts. The first element in the array is at position number 1."
+        },
+        {
+            "name": "SRC",
+            "type": "STRING",
+            "description": "The search string, which must be provided in uppercase to match the converted data in the buffer."
+        },
+        {
+            "name": "IN_OUT PT",
+            "type": "POINTER",
+            "description": "The address of the buffer containing the HTTP header and body."
+        }
+    ],
+    "output": [
+        {
+            "name": "OUTPUT VALUE",
+            "type": "STRING",
+            "description": "The evaluated result from the HTTP header based on the search term provided in SRC, or the default HTTP version and status code if SRC is empty."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "STRING",
+        "description": "Returns the value found in the HTTP header based on the search criteria. If no search term is provided, returns the HTTP version and status code.",
+        "fields": []
+    }
+}

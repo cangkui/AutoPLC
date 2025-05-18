@@ -1,0 +1,42 @@
+{
+    "title": "IRTRANS_RCV_1 Function Module",
+    "description": "IRTRANS_RCV_1 checkes when CMD = TRUE if the string matches the input\n\nDEV corresponds to DEV_CODE (device code) and the string at the input\n\n37 Version 1.21\n\nChapter 6. Device Driver\n\nKEY corresponds to the KEY_CODE. If the codes match and CMD = TRUE,\n\nthen the output Q for a cycle is set to TRUE.\n\nThe following example shows the application of IRTRANS_RCV_1:\n\nIn this example, the receive data bufer to IRTRANS_DECODE is passed.\n\nThe decoder determines from the valid data packets String DEV and KEY\n\nand passes them with CMD to IRTRANS_RCV_1 . \n\nIRTRANS_RCV_1 or alternatively IRTRANS_RCV_4 and IRTRANS_RCV_ checks\n\nwhether DEV and KEY match and then switches the output Q for a cycle to\n\nTRUE. in the example a DRIVER_1 is controlled which enables the remote\n\ncontrol to switch the output with each received log.\n\n If multiple Key Codes are to be evaluated alternatively the modules IR￾TRANS_RCV_4 or IRTRANS_RCV_8 can be used or more of these modules\n\ncan be used in parallel mode. \n\n38 Version 1.21\n\nChapter 6. Device Driver",
+    "type": "FUNCTION",
+    "name": "IRTRANS_RCV_1",
+    "input": [
+        {
+            "name": "CMD",
+            "type": "BOOL",
+            "description": "TRUE if data for evaluating are available"
+        },
+        {
+            "name": "DEV",
+            "type": "STRING",
+            "description": "Name of the remote control"
+        },
+        {
+            "name": "KEY",
+            "type": "STRING",
+            "description": "Name of the button"
+        },
+        {
+            "name": "DEV_CODE",
+            "type": "STRING",
+            "description": "Device code to be decoded from the remote control name"
+        },
+        {
+            "name": "KEY_CODE",
+            "type": "STRING",
+            "description": "Key code to be decoded"
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "Output indicating if conditions are met (set to TRUE for a cycle)"
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

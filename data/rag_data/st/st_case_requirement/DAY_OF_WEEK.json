@@ -1,0 +1,26 @@
+{
+    "title": "Calculate Day of the Week",
+    "description": "DAY_OF_WEEK week from the date of receipt\nIDATE.\nMonday = 1 .. Sunday = 7 The calculation is done in accordance with\nISO8601.",
+    "type": "FUNCTION",
+    "name": "DAY_OF_WEEK",
+    "input": [
+        {
+            "name": "IDATE",
+            "type": "DATE",
+            "description": "The input date for which the day of the week is to be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "DAY_OF_WEEK",
+            "type": "INT",
+            "description": "An integer representing the day of the week, where 1 corresponds to Sunday."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "INT",
+        "description": "The day of the week as an integer.",
+        "fields": []
+    }
+}

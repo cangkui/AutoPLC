@@ -1,0 +1,22 @@
+{
+    "title": "Clock N Function Block",
+    "description": "CLK_N generates a pulse every X milliseconds, based on the PLC internal 1\nms reference. The pulses are exactly one PLC cycle length and are genera￾ted every 2^N milliseconds.\nThe period is 1 ms for N = 0, 2ms for N = 1, 4ms, for N=2\nCLK_N replaces the modules CLK_1ms, CLK_2ms, CLK_4ms and CLK_8ms\nfrom older libraries.\nThe following picture shows the output signal for N=0:",
+    "type": "FUNCTION_BLOCK",
+    "name": "CLK_N",
+    "input": [
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "An integer that specifies the number of milliseconds for the clock period."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "A boolean output that represents the current state of the clock."
+        }
+    ],
+    "in/out": [],
+    "return_value": {}
+}

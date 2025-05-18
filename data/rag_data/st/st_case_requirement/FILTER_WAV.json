@@ -1,0 +1,32 @@
+{
+    "title": "Filter Waveform",
+    "description": "FILTER_WAV is a flter with a weighted average. (Also called FIR flter) the\nflter with a weighted average of individual values in the bufer are evalua￾ted with diferent weights.\nY:= X0 * W0 + X1 * W1 + ….+ X15 * W15\nX0 is the value of X in the current cycle, X1 is the value in the previous cy￾cle, etc. The factors W are passed as the input array W. In applying the FIR\nflter hast to be ensured that appropriate factors are used for weighting.\nThe application makes sense only if these factors are determined by ap￾propriate methods or design software.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FILTER_WAV",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The input sample value to be filtered."
+        },
+        {
+            "name": "W",
+            "type": "ARRAY[0..15] OF REAL",
+            "description": "An array of weights corresponding to the samples in the buffer."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "A reset signal that initializes the buffer if set to TRUE."
+        }
+    ],
+    "output": [
+        {
+            "name": "Y",
+            "type": "REAL",
+            "description": "The output result representing the weighted average of the buffered samples."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

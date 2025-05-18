@@ -1,0 +1,44 @@
+{
+    "title": "DLOG_REAL Module",
+    "description": "DLOG_REAL is for logging (recording) of a process value of \n\ntype REAL, and can only be used in combination with a DLOG_STORE_* \n\nmodule, as this coordinates of the data structure X to record the data. \n\nUsing parameter N defnes the number of desired decimal places. See \n\ndocumentation on the module REAL_TO_STRF. The D input determines \n\nwhich character represents the decimal point. Passed with no sign of \n\nparameter D, automatically ',' is used. \n\nAt recording formats that support a process value name, such as at \n\nDLOG_STORE_FILE_CSV a name can be provided at COLUMN\". If with DELTA \n\nparameter a value not equal 0.0 is specified, the automatic data logging is enabled \n\nvia differential monitoring. Changing the value of VALUE to + / - DELTA automatically \n\nstores a record. This feature can be applied in parallel to the central trigger on the \n\nDLOG_STORE_ * module. \n\n51 Version 1.21\n\nChapter 7. Data Logger",
+    "type": "FUNCTION",
+    "name": "DLOG_REAL",
+    "input": [
+        {
+            "name": "X",
+            "type": "DLOG_DATA",
+            "description": "DLOG data structure used for storing the logging data."
+        },
+        {
+            "name": "VALUE",
+            "type": "REAL",
+            "description": "The process value to be logged."
+        },
+        {
+            "name": "N",
+            "type": "INT",
+            "description": "The number of decimal places to use when logging the process value."
+        },
+        {
+            "name": "D",
+            "type": "STRING(1)",
+            "description": "The character representing the decimal point."
+        },
+        {
+            "name": "COLUMN",
+            "type": "STRING(40)",
+            "description": "The name of the process value, used in formats that support this feature."
+        },
+        {
+            "name": "DELTA",
+            "type": "REAL",
+            "description": "The difference value that enables automatic data logging via differential monitoring if not equal to 0.0."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "VOID",
+        "description": "Indicates that the function does not return a value."
+    }
+}

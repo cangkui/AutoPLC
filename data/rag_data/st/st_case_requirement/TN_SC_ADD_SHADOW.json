@@ -1,0 +1,44 @@
+{
+    "title": "TN_SC_ADD_SHADOW Function Module",
+    "description": "TN_SC_ADD_SHADOW allows you to add optical shadow to \n\nrectangular glyphs. By specifying a rectangular area by means of the \n\nparameters X1, Y1 and X2, Y2, a basic framework is defned, at which at \n\nthe right and bottom color darkened lines are drawn (shadow). The \n\nshadow coordinates X1, Y1 and X2, Y2 are always given +1 for proper \n\nprimitive. OPTION means you can choose between two shadow variations. \n\nIf OPITION = 0 then the shadow is reached by pure color adjustment \n\n(darkening of the character) . If an OPTION > 0, in the area of the shadow \n\nall the characters replaced by black flled characters.",
+    "type": "FUNCTION",
+    "name": "TN_SC_ADD_SHADOW",
+    "input": [
+        {
+            "name": "Iin_Y1",
+            "type": "INT",
+            "description": "Y1 coordinate of the area"
+        },
+        {
+            "name": "Iin_X1",
+            "type": "INT",
+            "description": "X1 coordinate of the area"
+        },
+        {
+            "name": "Iin_Y2",
+            "type": "INT",
+            "description": "Y2 coordinate of the area"
+        },
+        {
+            "name": "Iin_X2",
+            "type": "INT",
+            "description": "X2 coordinate of the area"
+        },
+        {
+            "name": "Iin_OPTION",
+            "type": "INT",
+            "description": "Kind of the shadow"
+        }
+    ],
+    "in/out": [
+        {
+            "name": "Xus_TN_SCREEN",
+            "type": "Us_TN_SCREEN",
+            "description": "The output screen structure where shadows will be applied."
+        }
+    ],
+    "return_value": {
+        "type": "VOID",
+        "description": "This function does not return a value."
+    }
+}

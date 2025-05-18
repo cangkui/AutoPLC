@@ -1,0 +1,31 @@
+{
+    "title": "Hyperbolic Complex Inverse Sine Function",
+    "description": "CASINH calculates the arc hyperbolic sine of a complex number\n[fzy] The range of values of the result is between [-  ,+  ] For the imagi￾nary part.",
+    "type": "FUNCTION",
+    "name": "CASINH",
+    "input": [
+        {
+            "name": "X",
+            "type": "complex",
+            "description": "A complex number for which the hyperbolic inverse sine is to be calculated."
+        }
+    ],
+    "output": [],
+    "in/out": [],
+    "return_value": {
+        "type": "complex",
+        "description": "The hyperbolic inverse sine of the input complex number.",
+        "fields": [
+            {
+                "name": "re",
+                "type": "real",
+                "description": "The real part of the hyperbolic inverse sine result."
+            },
+            {
+                "name": "im",
+                "type": "real",
+                "description": "The imaginary part of the hyperbolic inverse sine result."
+            }
+        ]
+    }
+}

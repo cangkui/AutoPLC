@@ -1,0 +1,41 @@
+{
+    "title": "Buffer to String Conversion",
+    "description": "BUFFER_TO_STRING (ADR (Array),\nSIZEOF (ARRAY), START, STOP), ARRAY is the name of the array. ADR() is a\nstandard function which identifes the pointer to the array and SIZEOF() is\na standard function, which determines the size of the array. The function\nreturns the string copied from the bufer as STRING. This type of proces￾sing arrays is very efcient because no additional memory is required and\nno surrender values must be copied.",
+    "type": "FUNCTION",
+    "name": "BUFFER_TO_STRING",
+    "input": [
+        {
+            "name": "PT",
+            "type": "POINTER TO ARRAY [0..32767] OF BYTE",
+            "description": "A pointer to the byte array that contains the data to be converted to a string."
+        },
+        {
+            "name": "SIZE",
+            "type": "UINT",
+            "description": "The total size of the byte array pointed to by PT."
+        },
+        {
+            "name": "START",
+            "type": "UINT",
+            "description": "The starting index in the byte array from which to begin the conversion."
+        },
+        {
+            "name": "STOP",
+            "type": "UINT",
+            "description": "The stopping index in the byte array at which to end the conversion."
+        }
+    ],
+    "output": [
+        {
+            "name": "string",
+            "type": "string",
+            "description": "The resulting string obtained from the specified range of the byte buffer."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "string",
+        "description": "The final string after converting the bytes from the buffer.",
+        "fields": []
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "title": "Coth Function Calculation",
+    "description": "COTH calculates the hyperbolic cotangent by the following formula:\nFor input values larger than 20 or less than -20 COTH provides the appro￾ximate value +1 or -1 corresponding to an accuracy better than 8 digits\nand is thus below the resolution of type REAL.",
+    "type": "FUNCTION",
+    "name": "COTH",
+    "input": [
+        {
+            "name": "X",
+            "type": "REAL",
+            "description": "The real number input for which the hyperbolic cotangent will be calculated."
+        }
+    ],
+    "output": [
+        {
+            "name": "COTH",
+            "type": "REAL",
+            "description": "The calculated hyperbolic cotangent value based on the input X."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "REAL",
+        "description": "Returns the computed hyperbolic cotangent value."
+    }
+}

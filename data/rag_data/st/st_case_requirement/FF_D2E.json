@@ -1,0 +1,42 @@
+{
+    "title": "FF_D2E Function Block",
+    "description": "DAY_OF_DATE day since 1.1.1970. The result of\nthe function is of type DINT because the entire DATE Range Includes\n49,710 days.",
+    "type": "FUNCTION_BLOCK",
+    "name": "FF_D2E",
+    "input": [
+        {
+            "name": "D0",
+            "type": "BOOL",
+            "description": "Boolean input signal to determine the state of output Q0."
+        },
+        {
+            "name": "D1",
+            "type": "BOOL",
+            "description": "Boolean input signal to determine the state of output Q1."
+        },
+        {
+            "name": "CLK",
+            "type": "BOOL",
+            "description": "Clock input signal that triggers the state change on the flip-flop."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "Reset input signal that sets the output values to false when activated."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q0",
+            "type": "BOOL",
+            "description": "Output signal representing the state determined by input D0."
+        },
+        {
+            "name": "Q1",
+            "type": "BOOL",
+            "description": "Output signal representing the state determined by input D1."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

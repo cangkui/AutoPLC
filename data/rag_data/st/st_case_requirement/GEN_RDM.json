@@ -1,0 +1,37 @@
+{
+    "title": "Random Duty Cycle Generator",
+    "description": "GEN_RDM is a random signal generator. It generates the output OUT a\nnew value in PT intervals. The output Q is TRUE for one cycle when the\noutput OUT has changed. The input AM and OS set the amplitude and the\nofset for the output OUT. If the inputs OS and AM are not connected, then\nthe default values are 0 and .\nThe following example shows a trace recording of the input values PT =\n100ms, AM = 10 and OS = 5. The output values generated every 100 ms\nin the range of 0 .. 10.",
+    "type": "FUNCTION_BLOCK",
+    "name": "GEN_RDM",
+    "input": [
+        {
+            "name": "PT",
+            "type": "TIME",
+            "description": "The time period for the duty cycle generation."
+        },
+        {
+            "name": "AM",
+            "type": "REAL",
+            "description": "The amplitude factor that scales the random signal, default value is 1."
+        },
+        {
+            "name": "OS",
+            "type": "REAL",
+            "description": "The offset added to the generated random signal."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "A boolean output indicating whether the output signal is active."
+        },
+        {
+            "name": "Out",
+            "type": "REAL",
+            "description": "The generated output signal based on the random duty cycle."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

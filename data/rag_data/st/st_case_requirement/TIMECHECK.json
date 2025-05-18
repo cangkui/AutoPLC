@@ -1,0 +1,36 @@
+{
+    "title": "Time Check Function",
+    "description": "DEAD_ZONE is a linear transfer function with dead zone. The output equals \nthe input signal when the absolute value of the input is greater than L.\nDEAD_ZONE = X if ABS(X) > L \nDEAD_ZONE = 0 if ABS(X) <= L",
+    "type": "FUNCTION",
+    "name": "TIMECHECK",
+    "input": [
+        {
+            "name": "TD",
+            "type": "TOD",
+            "description": "The time of day to check against the range."
+        },
+        {
+            "name": "START",
+            "type": "TOD",
+            "description": "The start time of the range."
+        },
+        {
+            "name": "STOP",
+            "type": "TOD",
+            "description": "The stop time of the range."
+        }
+    ],
+    "output": [
+        {
+            "name": "TIMECHECK",
+            "type": "BOOL",
+            "description": "Returns TRUE if TD falls within the time range; otherwise, returns FALSE."
+        }
+    ],
+    "in/out": [],
+    "return_value": {
+        "type": "BOOL",
+        "description": "Indicates the result of the time check operation.",
+        "fields": []
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "title": "ONTIME Function Block",
+    "description": "ONTIME is an hour meter. It is summed up the entire time that the signal\nIN was since the last RESET to TRUE. Additionally, the number of the total\non/of cycles is determined. The output values are of type UDINT. With the\ninput RST, the output values will be reset at any time. The output values\nare not stored in variables of the module, but are applied externally atta￾ched and connected over IO (Pointer). This has the distinct advantage that\nas desired by the user the variables can be determined as RETAIN or PER￾SISTENT. It is thus possible to store old operating hours and restore it la￾ter, for example, at CPU change.\nThe declaration of the variables at the inputs SECONDS and CYCLES must\nbe of type UDINT and can either be created as a VAR, VAR RETAIN or VAR\nRETAIN PERSISTENT.\nThe declaration of the variables for the operating time and cycles must be\nUDINT type and can be alternatively RETAIN or PERSISTENT.\nVAR RETAIN PERSISTENT\nBetriebszeit_in_Sekunden: UDINT;\nCycles: UDINT;\nEND_VAR\nThe following table explains, RETAIN and PERSISTENT:\nType variables Retain and Persistent retain their value during download,\nonline change and reset. In a cold reset or reset source, lose these varia-\nbles the values. The user can save, but the values in the fle system or\nnetwork, and to restore itself, eg after changing the CPU.",
+    "type": "FUNCTION_BLOCK",
+    "name": "ONTIME",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "This input signal indicates whether the timing should be active."
+        },
+        {
+            "name": "RST",
+            "type": "BOOL",
+            "description": "This input signal resets the SECONDS and CYCLES outputs."
+        }
+    ],
+    "output": [
+        {
+            "name": "SECONDS",
+            "type": "UDINT",
+            "description": "The total elapsed time in seconds."
+        },
+        {
+            "name": "CYCLES",
+            "type": "UDINT",
+            "description": "The total count of active cycles."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}

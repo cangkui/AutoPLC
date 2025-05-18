@@ -1,0 +1,32 @@
+{
+    "title": "Signal Function Block",
+    "description": "SIGNAL generates an output signal Q that corresponds to the bit pattern in\nSIG. This is Bitpattern is passed in TS long steps. By diferent bit patterns\nin SIG, various output signals are generated. If the input IN connected to\nTRUE, the module begins to put on output Q in accordance with the SIG\nprovided Bitpattern . By adapting the Bitpattern diferent output signals\nare generated. A Pattern of 10101010, generates an output signal with\n50% Duty Cycle and a frequency that is 1/2*S. A Pattern 11110000 by con￾trast, generates an output signal of 50% and a frequency of 1/8*TS. The\nstart of an output signal is random. The Bit sequence starts at any bit\nwhen the input IN goes to TRUE. If at the input TS no time given then the\nmodule internally uses a default of 1024ms per cycle (a cycle is the cycle\nof all 8 bits of a sequence). Typical applications for SIGNAL is the signal ge￾neration for sirens or signal lamps. \nThe following graph illustrates the functioning of signal for\nSIG = 2#1111_0000:",
+    "type": "FUNCTION_BLOCK",
+    "name": "SIGNAL",
+    "input": [
+        {
+            "name": "IN",
+            "type": "BOOL",
+            "description": "A boolean input indicating whether an alarm is present."
+        },
+        {
+            "name": "SIG",
+            "type": "BYTE",
+            "description": "A byte input representing a signal value that will be combined with the calculated step."
+        },
+        {
+            "name": "TS",
+            "type": "TIME",
+            "description": "A time input to determine the interval for the step calculation."
+        }
+    ],
+    "output": [
+        {
+            "name": "Q",
+            "type": "BOOL",
+            "description": "A boolean output indicating the result of the signal processing."
+        }
+    ],
+    "in/out": [],
+    "return_value": null
+}
