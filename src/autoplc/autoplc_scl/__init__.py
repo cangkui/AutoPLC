@@ -180,6 +180,12 @@ def autoplc_scl_workflow(
                 openai_client=openai_client,
                 load_few_shots=config.IS_DEBUGGER_FEWSHOT
             )
+        else:
+            # save scl code to file
+            code_output_file = os.path.join(base_folder, f"{task['name']}/{task['name']}_{0}.scl")
+            logger.info("output file is", code_output_file)
+            with open(code_output_file, "w", encoding="utf-8") as fp:
+                fp.write(scl_code)
         
         ###############    auto learner      ################
         if not config.AUTOLEARN_DISABLED:

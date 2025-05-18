@@ -60,8 +60,8 @@ class AutoDebugger():
         syntax_output_file = os.path.join(cls.base_logs_folder, f"{task['name']}/syntax.log")
         verify_information_log = os.path.join(cls.base_logs_folder, f"{task['name']}/verify_info.jsonl")
 
-        logger.info("syntax_output_file is > ",syntax_output_file)
-        logger.info("verify_information_log is > ",verify_information_log)
+        logger.info(f"syntax_output_file is > {syntax_output_file}")
+        logger.info(f"verify_information_log is > {verify_information_log}")
 
         # 初始化验证计数器和编译器实例
         verify_count = 0
@@ -95,23 +95,27 @@ class AutoDebugger():
             no_error = check_result.success
             
             if no_error:
-                logger.info(task['name'], 'SUCCESS!')
+                logger.info(f"{task['name']} SUCCESS!")
                 break
             else:
                 error_list = []
+                
                 # 首选IsDef为true的错误
                 for error in check_result.errors:
                     if error.error_type == "Data Section Error":
-                        logger.info('Data Section Error >>> ',str(error))
+                        logger.info(f"Data Section Error >>> {str(error)}")
                         error_list.append(error.to_dict())
+
                 # 如果没有IsDef为true的错误，则选择IsDef为false的错误
                 if not error_list:
                     for error in check_result.errors:
-                        if not error.error_type == "Program Section Error":
-                            logger.info('Program Section Error >>>> ',str(error))
+                        if error.error_type == "Program Section Error":
+                            logger.info(f'Program Section Error >>>> {str(error)}')
                             error_list.append(error.to_dict())
+
                 error_log = '\n'.join([str(err) for err in error_list])
-                logger.info(task['name'], 'Start Verification!')
+                logger.info(f'{task["name"]} Start Verification!')
+
                 debugging_process_data["compiler"] = error_list
                 with open(syntax_output_file, "a+", encoding="utf-8") as fp:
                     fp.write(error_log)
@@ -145,11 +149,11 @@ class AutoDebugger():
                 json.dump(debugging_process_data, fp, ensure_ascii=False)
                 fp.write('\n')
                     
-            logger.info(task['name'], f"End-Verify_and_improver ({verify_count}) -Execution time: {(time.time() - start_time):.6f} Seconds")
+            logger.info(f"{task['name']} End-Verify_and_improver ({verify_count}) -Execution time: {(time.time() - start_time):.6f} Seconds")
         
         # 将最终的代码结果写入文件 为方便读取，直接覆盖前面写的内容
         code_output_file = os.path.join(cls.base_logs_folder, f"{task['name']}/{task['name']}_{verify_count}.scl")
-        logger.info("output file is", code_output_file)
+        logger.info(f"output file is {code_output_file}")
         with open(code_output_file, "w", encoding="utf-8") as fp:
             fp.write(scl_code)
 
@@ -301,30 +305,30 @@ Input structured in XML format:
 </SyntaxCheckResults>
 """
 
+programming_guidance = "NO PROGRAMMING GUIDANCE"
+# programming_guidance = """
+# 1. Do not use SCL syntax that is not allowed in the Siemens S7-1200/1500 PLC.
+# 2. Input and output formats must conform to task requirements.
+# 3. use loops, branches, and sequential structures to achieve objectives.
+# 4. avoid variable name conflicts with keywords and standard function names such as `len`.
+# 5. define and initialize all loop variables used in FOR loops (e.g., `i`) before use.
+# 6. Here is a sample code of state machine programming you may refer to. Output based on oldState when no rising edge/jump is triggered.
+# ```scl
+# // Assuming it is a rising edge jump
+# IF #state AND NOT #oldState:
+#     // Update status and operate according to the new status
+# END_IF;
+# CASE #state OF 
+#     #CONST_STATE1: // Operate based on the updated status
+#         //do something
+#     #CONST_STATE2:
+#         //do something
+# END_CASE;
+# #oldState := #state; // Save current state
+# ```
+# 7. If state transition is involved, use the syntax of REPEAT-UNTIL combined with CASE-OF to ensure that the output of the current cycle can be updated correctly after the state transition. Because the CASE-OF syntax in SCL does not double check for changes in the case among executing cycles, it is necessary to nest REPEAT-UNTIL in the outer layer to complete the state update. Use the temporary variable 'tempExitStateLoop' to exit from repeat.
+# ```scl\nREPEAT\n    tempExitStateLoop := TRUE; // Exit only when no state transition occurs\n    CASE #state OF\n        #CONST_STATE1:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE2:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE3:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; \n    END_CASE;\nUNTIL(TRUE = #tempExitStateLoop)\nEND_REPEAT;\n```
 
-programming_guidance = """
-1. Do not use SCL syntax that is not allowed in the Siemens S7-1200/1500 PLC.
-2. Input and output formats must conform to task requirements.
-3. use loops, branches, and sequential structures to achieve objectives.
-4. avoid variable name conflicts with keywords and standard function names such as `len`.
-5. define and initialize all loop variables used in FOR loops (e.g., `i`) before use.
-6. Here is a sample code of state machine programming you may refer to. Output based on oldState when no rising edge/jump is triggered.
-```scl
-// Assuming it is a rising edge jump
-IF #state AND NOT #oldState:
-    // Update status and operate according to the new status
-END_IF;
-CASE #state OF 
-    #CONST_STATE1: // Operate based on the updated status
-        //do something
-    #CONST_STATE2:
-        //do something
-END_CASE;
-#oldState := #state; // Save current state
-```
-7. If state transition is involved, use the syntax of REPEAT-UNTIL combined with CASE-OF to ensure that the output of the current cycle can be updated correctly after the state transition. Because the CASE-OF syntax in SCL does not double check for changes in the case among executing cycles, it is necessary to nest REPEAT-UNTIL in the outer layer to complete the state update. Use the temporary variable 'tempExitStateLoop' to exit from repeat.
-```scl\nREPEAT\n    tempExitStateLoop := TRUE; // Exit only when no state transition occurs\n    CASE #state OF\n        #CONST_STATE1:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE2:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE3:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; \n    END_CASE;\nUNTIL(TRUE = #tempExitStateLoop)\nEND_REPEAT;\n```
-
-8. It is necessary to fully define all the parameters provided in the requirements.
-"""
+# 8. It is necessary to fully define all the parameters provided in the requirements.
+# """
 

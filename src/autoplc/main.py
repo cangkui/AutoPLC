@@ -9,12 +9,8 @@ from rich.logging import RichHandler
 logger = logging.getLogger("autoplc_scl")
 logger.setLevel(logging.INFO)
 
-# 设置输出格式
-log_formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
-
 # 仅添加 Rich 控制台输出，不写文件
 console_handler = RichHandler(rich_tracebacks=True, markup=True)
-console_handler.setFormatter(log_formatter)
 
 logger.handlers.clear()  # 清除旧 handler（避免重复）
 logger.addHandler(console_handler)

@@ -174,32 +174,33 @@ SCL programming guidances:
 
 """.strip()
 
+programming_guidance = "NO PROGRAMMING GUIDANCE PROVIDED"
 
-programming_guidance = """
-1. Do not use SCL syntax that is not allowed in the Siemens S7-1200/1500 PLC.
-2. Input and output formats must conform to task requirements.
-3. use loops, branches, and sequential structures to achieve objectives.
-4. avoid variable name conflicts with keywords and standard function names such as `len`.
-5. define and initialize all loop variables used in FOR loops (e.g., `i`) before use.
-6. Here is a sample code of state machine programming you may refer to. Output based on oldState when no rising edge/jump is triggered.
-```scl
-// Assuming it is a rising edge jump
-IF #state AND NOT #oldState:
-    // Update status and operate according to the new status
-END_IF;
-CASE #state OF 
-    #CONST_STATE1: // Operate based on the updated status
-        //do something
-    #CONST_STATE2:
-        //do something
-END_CASE;
-#oldState := #state; // Save current state
-```
-7. If state transition is involved, use the syntax of REPEAT-UNTIL combined with CASE-OF to ensure that the output of the current cycle can be updated correctly after the state transition. Because the CASE-OF syntax in SCL does not double check for changes in the case among executing cycles, it is necessary to nest REPEAT-UNTIL in the outer layer to complete the state update. Use the temporary variable 'tempExitStateLoop' to exit from repeat.
-```scl\nREPEAT\n    tempExitStateLoop := TRUE; // Exit only when no state transition occurs\n    CASE #state OF\n        #CONST_STATE1:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE2:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE3:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; \n    END_CASE;\nUNTIL(TRUE = #tempExitStateLoop)\nEND_REPEAT;\n```
+# programming_guidance = """
+# 1. Do not use SCL syntax that is not allowed in the Siemens S7-1200/1500 PLC.
+# 2. Input and output formats must conform to task requirements.
+# 3. use loops, branches, and sequential structures to achieve objectives.
+# 4. avoid variable name conflicts with keywords and standard function names such as `len`.
+# 5. define and initialize all loop variables used in FOR loops (e.g., `i`) before use.
+# 6. Here is a sample code of state machine programming you may refer to. Output based on oldState when no rising edge/jump is triggered.
+# ```scl
+# // Assuming it is a rising edge jump
+# IF #state AND NOT #oldState:
+#     // Update status and operate according to the new status
+# END_IF;
+# CASE #state OF 
+#     #CONST_STATE1: // Operate based on the updated status
+#         //do something
+#     #CONST_STATE2:
+#         //do something
+# END_CASE;
+# #oldState := #state; // Save current state
+# ```
+# 7. If state transition is involved, use the syntax of REPEAT-UNTIL combined with CASE-OF to ensure that the output of the current cycle can be updated correctly after the state transition. Because the CASE-OF syntax in SCL does not double check for changes in the case among executing cycles, it is necessary to nest REPEAT-UNTIL in the outer layer to complete the state update. Use the temporary variable 'tempExitStateLoop' to exit from repeat.
+# ```scl\nREPEAT\n    tempExitStateLoop := TRUE; // Exit only when no state transition occurs\n    CASE #state OF\n        #CONST_STATE1:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE2:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; // Set this variable to False after the state transition to avoid operations that do not execute the new state\n        #CONST_STATE3:\n            // do something\n            // if state change then tempExitStateLoop := FALSE; \n    END_CASE;\nUNTIL(TRUE = #tempExitStateLoop)\nEND_REPEAT;\n```
 
-8. It is necessary to fully define all the parameters provided in the requirements.
-"""
+# 8. It is necessary to fully define all the parameters provided in the requirements.
+# """
 
 shot_prompt = """Here is the input, structured in XML format:
 <! -- SCL programming task requirements to be completed -->

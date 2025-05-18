@@ -242,7 +242,7 @@ recommend_function_user_prompt_zh = """
 {requirement}
 
 ## 针对该需求的建模流程:
-{programming_guidance}
+{logic_for_this_task}
 
 ## 候选库函数
 {library_functions}

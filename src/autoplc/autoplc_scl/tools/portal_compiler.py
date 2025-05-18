@@ -6,7 +6,8 @@ import json
 
 from dataclasses import dataclass,asdict
 from typing import List, Optional, Dict
-
+import logging
+logger = logging.getLogger("autoplc_scl")
 
 @dataclass
 class ErrorMessage:
@@ -168,7 +169,7 @@ class TIAPortalCompiler():
             url="http://192.168.103.152:9000/api/tiaapi/process",
             json={"BlockName": block_name, "Code": scl_code}
         )
-        print(f"TIA Compiler Time usage: {(time.time() - t1):.2f}")
+        logger.info(f"TIA Compiler Time usage: {(time.time() - t1):.2f}")
 
         if resp.status_code == 200:
             raw_data = resp.json()
@@ -178,6 +179,9 @@ class TIAPortalCompiler():
             # print(f"raw_data: {raw_data}")
             
             simplified_errors = []
+            # 用于记录已经出现过错误的行号
+            error_lines = set()
+
             for err in raw_errors:
                 error_type = "Data Section Error" if err.get("IsDef", False) else "Program Section Error"
                 code_window = self.extract_code_window(
@@ -186,11 +190,31 @@ class TIAPortalCompiler():
                     window_size=3
                 )
 
-                simplified_errors.append(ErrorMessage(
-                    error_desc=err["ErrorDesc"],
-                    error_type=error_type,
-                    code_window=code_window
-                ))
+                # 提取错误行号
+                path = err.get("Path", 0)
+                is_def = err.get("IsDef", False)
+                lines = scl_code.splitlines()
+                base_line_idx = 0
+                if not is_def:
+                    begin_idx = next((i for i, line in enumerate(lines) if "BEGIN" in line.upper()), None)
+                    if begin_idx is not None:
+                        base_line_idx = begin_idx
+                    else:
+                        end_var_indices = [i for i, line in enumerate(lines) if "END_VAR" in line.upper()]
+                        if end_var_indices:
+                            base_line_idx = end_var_indices[-1] + 1
+                        else:
+                            base_line_idx = 0
+                error_line_idx = base_line_idx + path
+
+                # 检查行号是否已存在于集合中
+                if error_line_idx not in error_lines:
+                    simplified_errors.append(ErrorMessage(
+                        error_desc=err["ErrorDesc"],
+                        error_type=error_type,
+                        code_window=code_window
+                    ))
+                    error_lines.add(error_line_idx)
 
             return ResponseData(
                 success=raw_data.get("Success", True), # 如果没有 Success 字段，默认返回 True
@@ -200,3 +224,4 @@ class TIAPortalCompiler():
 
         else:
             return ResponseData.default_false()
+
