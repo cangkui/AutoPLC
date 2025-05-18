@@ -58,6 +58,10 @@ def run_autoplc_scl(
     APIDataLoader.init_load(code_type="scl")
     base_folder = init_team_log_path()
 
+    import shutil
+    os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
+    shutil.copy(config.config_path, os.path.join(base_folder, "config", "config.yaml"))
+
     # workflow
     all_agents_start_time = time.time()
 
@@ -173,6 +177,7 @@ def autoplc_scl_workflow(
             openai_client = openai_client,
             load_few_shots=config.IS_CODING_FEWSHOT
         )
+        first_gen_scl = scl_code
 
         ################       debug SCL      ################
         if not config.DEBUGGER_DISABLED:
@@ -191,7 +196,7 @@ def autoplc_scl_workflow(
                 print(f"[INFO] start auto learner from groundtruth scl")
                 coding_feed_back = LearnAgent.run_learn_from_coding(
                     task=task,
-                    prediction_scl=scl_code,
+                    prediction_scl=first_gen_scl, # 这里用的是第一次生成的scl代码，因为我们希望模型提高首次生成效率
                     openai_client=openai_client,
                     groundtruth_scl=groundtruth_scl
                 )

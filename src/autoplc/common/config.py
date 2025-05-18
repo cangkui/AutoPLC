@@ -12,7 +12,7 @@ class Config:
         self.ROOTPATH = ROOTPATH
         config_path = self.ROOTPATH.joinpath(f"src/config/{config_file}.yaml")
         self._config = self._load_config(config_path)
-        
+        self.config_path = config_path
         self._resolve_environment_variables()
     
     def _load_config(self, config_path: str) -> Dict[str, Any]:
