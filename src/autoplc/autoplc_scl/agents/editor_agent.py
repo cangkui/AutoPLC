@@ -47,8 +47,10 @@ class LogicComposer():
             task: dict,
             retrieved_examples: List[dict],
             related_algorithm: List[dict],
-            algorithm_for_this_task: str,
-            openai_client : OpenAIClient
+            logic_for_this_task: str,
+            apis_for_this_task: list[str],
+            openai_client : OpenAIClient,
+            load_few_shots: bool = True,
         ) -> str:
         """
         运行编辑器代理以生成代码。
@@ -57,8 +59,10 @@ class LogicComposer():
         - task: 包含任务信息的字典。
         - retrieved_examples: 检索到的示例列表，每个示例是一个字典。
         - related_algorithm: 相关算法的列表，每个算法是一个字典。
-        - algorithm_for_this_task: 用于此任务的特定算法的字符串描述。
+        - logic_for_this_task: 用于此任务的逻辑建模（算法）。
+        - apis_for_this_task: 用于此任务的API列表。
         - openai_client : 用于调用的大模型客户端
+        - load_few_shots: 是否加载few-shot示例。
 
         返回:
         - scl_code: 生成的代码字符串。
@@ -66,40 +70,34 @@ class LogicComposer():
 
         requirement = str(task)
 
-        local_api_retriever = ClientManager().get_local_api_retriever()
-
-        # 加载API详细信息，包括检索到的示例，以及来自plan的API名称列表
-        if algorithm_for_this_task:
-            retrieval_api_names = local_api_retriever.query_algo_apis(algorithm_for_this_task)
+        # 根据建议的API生成API描述
+        if apis_for_this_task:
+            api_description = APIDataLoader.format_api_details(apis_for_this_task)
         else:
-            retrieval_api_names = []
+            api_description = "No Control Instruction is recommended for this task. Please determine the required operations manually."
 
-        #获取相似案例用到的api，以及根据plan生成的结果匹配到的api（关掉planner就没有retrieval_api_names）
-        api_details_str, _ = APIDataLoader.get_api_details(         
-            case_names=[item['name'] for item in retrieved_examples],
-            api_names=retrieval_api_names,
-        )
-
-        # 构造模型messages
-        if algorithm_for_this_task:
-            algorithm_for_this_task = f"<! -- A plan that you can refer to when coding -->\n<Plan>\n{algorithm_for_this_task}\n</Plan>\n"
+        # 算法生成指导
+        if logic_for_this_task:
+            logic_for_this_task = f"<!-- A Control Logic that you can refer to when coding -->\n<ControlLogic>\n{logic_for_this_task}\n</ControlLogic>\n"
+        else:
+            logic_for_this_task = "NO CONTROL LOGIC RECOMMENDED FOR THIS TASK, YOU SHOULD DETERMINE IT BY YOURSELF"
 
         editor_system_prompt = sys_prompt.format(
-            api_details=api_details_str,
+            api_details=api_description,
             programming_guidance=programming_guidance
         )
 
         instance_prompt = shot_prompt.format(
             task_requirements=requirement,
-            algorithm_process=algorithm_for_this_task
+            algorithm_process=logic_for_this_task
         )
 
         code_messages = [{"role": "system", "content": editor_system_prompt}]
 
         # 加载Few-Shot示例
-        fewshots = cls.load_code_gen_shots(retrieved_examples, related_algorithm)
-
-        code_messages.extend(fewshots)
+        if load_few_shots:
+            fewshots = cls.load_code_gen_shots(retrieved_examples, related_algorithm)
+            code_messages.extend(fewshots)
 
         # 添加用户提示信息到消息列表中
         code_messages.append({"role": "user", "content": instance_prompt})

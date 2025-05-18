@@ -108,8 +108,9 @@ class ApiAgent():
             algorithm_for_this_task: str,
             openai_client: OpenAIClient,
             zhipuai_client: ZhipuAIQAClient,
-            local_api_retriever : BM25RetrievalInstruction
-        ) -> RecommendedAPIs:
+            local_api_retriever : BM25RetrievalInstruction,
+            load_few_shots: bool = True,
+        ) -> Tuple[List[str], List[str]]:
         """
         运行推荐API接口函数。
     
@@ -122,25 +123,29 @@ class ApiAgent():
         - zhipuai_client: ZhipuAIQAClient实例，用于调用ZhipuAI的API。
     
         返回:
-        - RecommendedAPIs实例，包含推荐的基本指令和库指令。
+        - Tuple[List[str], List[str]]: 包含推荐的基本指令和库指令的名字元组。
         """
-    
-        # 将任务信息转换为字符串
-        requirement = str(task)
     
         # 初始化基本指令和库指令列表
         basic_instructions =  []
         library_instructions = []
 
+        # TODO: 生成DSL（领域特定语言）指令
         if algorithm_for_this_task :
-            dsl_list = cls.run_gen_dsl(task,algorithm_for_this_task,openai_client)
+            pass
+            # dsl_list = cls.run_gen_dsl(task,algorithm_for_this_task,openai_client)
         
-            # 遍历DSL列表，查询相关的基本指令
-            for dsl in dsl_list:
-                basic_instructions.extend(local_api_retriever.query_api_by_type(dsl['涉及的复杂数据类型']))
-                basic_instructions.extend(local_api_retriever.query_algo_apis(dsl['触发条件'] + "。"  + dsl['操作内容']))
-    
-        # 根据算法语义检索高层次库函数，当前使用算法名称直接查询
+            # # 遍历DSL列表，查询相关的基本指令
+            # for dsl in dsl_list:
+            #     basic_instructions.extend(local_api_retriever.query_api_by_type(dsl['涉及的复杂数据类型']))
+            #     basic_instructions.extend(local_api_retriever.query_algo_apis(dsl['触发条件'] + "。"  + dsl['操作内容']))
+
+        # TODO: few-shot setting
+        if load_few_shots:
+            pass
+
+        # 根据算法语义检索
+        # TODO: 改为智谱检索
         if algorithm_for_this_task:
             basic_instructions += local_api_retriever.query_algo_apis(algorithm_for_this_task)
     
@@ -148,12 +153,12 @@ class ApiAgent():
         basic_instructions = list(set(basic_instructions))
         library_instructions = list(set(library_instructions))
     
-        # 返回推荐的API指令实例
-        return RecommendedAPIs(
-            basic_instructions=basic_instructions,
-            library_instructions=library_instructions
-        )
+        # 打印推荐的基本指令和库指令
+        print("[DEBUG] 推荐的基本指令：", basic_instructions)
+        print("[DEBUG] 推荐的库指令：", library_instructions)
 
+        # 返回推荐的API指令实例
+        return basic_instructions, library_instructions
 
 if  __name__ == '__main__':
 

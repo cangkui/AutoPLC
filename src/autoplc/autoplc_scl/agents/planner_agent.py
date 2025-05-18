@@ -26,7 +26,8 @@ class Modeler():
             task: dict,
             retrieved_examples: List[dict],
             related_algorithm: List[dict],
-            openai_client : OpenAIClient
+            openai_client : OpenAIClient,
+            load_few_shots: bool = True,
             ) -> str:
         """
         运行建模任务以生成算法流程描述。
@@ -36,6 +37,8 @@ class Modeler():
         - retrieved_examples: 检索到的示例列表，每个示例是一个字典。
         - related_algorithm: 相关算法的列表，每个算法是一个字典。
         - openai_client : LLM客户端
+        - load_few_shots: 是否加载few-shot示例。
+        
         返回:
         - algorithm_for_this_task: 生成的算法流程描述字符串。
         """
@@ -48,15 +51,17 @@ class Modeler():
         # 构造消息列表，包括系统提示和用户要求
         messages = [ 
             # {"role": "system", "content": state_machine_prompt}, 
-            {"role": "system", "content": system_prompt_state_machine}
+            # {"role": "system", "content": system_prompt_state_machine}
+            {"role": "system", "content": state_machine_prompt_en}
             # {"role": "user", "content": str(task)}
         ]
 
-        fewshots = cls.load_plan_gen_shots(retrieved_examples, related_algorithm)
+        # 加载few-shot示例
+        if load_few_shots:
+            fewshots = cls.load_plan_gen_shots(retrieved_examples, related_algorithm)
+            messages.extend(fewshots)
 
-        messages.extend(fewshots)
-
-        messages.append({"role": "user", "content": str(task)})
+        messages.append({"role": "user", "content": plan_shots_prompt_en.format(task_requirements = str(task)) })
         # print(messages)
 
         # 调用模型生成规划
@@ -119,23 +124,6 @@ class Modeler():
         return formatted
 
 
-old_state_machine_and_prompt = """
-先判断是过程控制任务还是数据处理任务。
-对过程控制任务:
-    1.分析有哪些状态。 
-    2.分析状态转移事件。
-    3.给出算法流程,不要输出代码
-对数据处理任务:
-    1.给出算法流程,不要输出代码
-IMPORTANT:
-- 保持语言专业严谨，符合PLC编程语言的规范。
-- 考虑数据类型转换,必要时将Byte、Int转换为Real再计算。
-- 如果没有发生转移事件，维持当前状态的动作。 
-- 保持语言专业严谨，符合PLC编程语言的规范。
-- 不允许对In_Out类型参数进行初始化操作。
-- Static类型变量的初始化操作需要谨慎,防止误删其中保存的重要数据(如数据库的当前存储状态)。
-- 如果需要检测“跳变”、“上升沿”或“下降沿”，你应当使用【静态变量】保存每个周期的输入状态state，再与下一周期的输入进行比较(`IF newState and not oldsState`)以确定是否发生跳变。
-""".strip()
 
 plan_shots_prompt_en = """Here is the input, structured in XML format:
 <! -- SCL programming task requirements to be completed -->
@@ -144,6 +132,25 @@ plan_shots_prompt_en = """Here is the input, structured in XML format:
 </Task_Requirements>
 """
 
+state_machine_prompt_en = """
+You are a PLC engineer.
+
+Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
+
+For **sequential control tasks**:
+    1. Analyze the possible states.
+    2. Identify the state transition events.
+    3. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
+
+For **data processing tasks**:
+    1. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
+
+Notes:
+- Maintain a professional and rigorous tone, in line with Siemens S7-1200/1500 PLC standards.
+- Be cautious with initialization steps to avoid unintentional deletion of important data.
+- If no transition event occurs, the current state's actions should be maintained.
+- If the requirement explicitly calls for exception handling, include it; otherwise, it is not necessary.
+""".strip()
 
 
 state_machine_prompt = """
@@ -177,6 +184,52 @@ Important:
 - 如果需要检测“跳变”、“上升沿”或“下降沿”，你应当使用【静态变量】保存每个周期的输入状态state，再与下一周期的输入进行比较(`IF newState and not oldsState`)以确定是否发生跳变。
 - 类似灌装生产线的控制系统通常被称为实时控制系统。因此在编程时，注意每个扫描周期检查和保持历史状态，确保在没有新信号时维持现有状态。意味着在每个扫描周期内，PLC会记住上一周期的状态，并在没有新输入信号的情况下维持这个状态。这样可以确保系统在没有新的输入信号时不会改变当前的输出状态。以灌装生产线为例，当传感器检测到瓶子到达灌装位置时，启动灌装阀门。只有在操作员确认灌装完成后，才关闭灌装阀门。如果没有操作员的确认信号，阀门应该保持打开状态。
 """.strip()
+
+system_prompt_state_machine = f"""
+你是一个SCL代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。你要设想你在根据提供的需求写出这个算法的实现逻辑。不要定义非必要的变量。
+首先你要判断需求是过程控制任务还是数据处理任务。过程控制任务有状态转换逻辑，而数据处理任务通常是通用的功能函数。这两种任务有不同的分析流程。分析流程如下：
+对于过程控制任务:
+    1.首先你需要分析，整个过程控制会涉及到哪些状态。 
+    2.在这些状态的基础上，你需要分析状态之间的状态转移事件。
+    3.在以上两点的基础上，给出算法流程。
+对数据处理任务:
+    1.给出算法流程。
+注意事项:
+    1.你需要保持语言专业严谨性，要符合PLC编程语言的规范。
+    2.对于过程控制任务，如果没有发生转移事件，维持当前状态的动作。 
+    3.如果题目没有明确要求进行错误处理,则无需考虑错误处理逻辑,只有在有村无码出现的时候，再根据具体的错误情况返回错误状态码。
+
+特别注意：
+    你给出的是算法流程，不要输出伪代码或者其他任何形式的代码内容!
+"""
+
+
+
+system_prompt_copy_relate_plan = f"""
+你是一个SCL代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。
+你要设想你在根据提供的需求写出这个算法的实现逻辑。不要定义非必要的变量。
+# 请注意，你要用中文回答
+"""
+
+
+old_state_machine_and_prompt = """
+先判断是过程控制任务还是数据处理任务。
+对过程控制任务:
+    1.分析有哪些状态。 
+    2.分析状态转移事件。
+    3.给出算法流程,不要输出代码
+对数据处理任务:
+    1.给出算法流程,不要输出代码
+IMPORTANT:
+- 保持语言专业严谨，符合PLC编程语言的规范。
+- 考虑数据类型转换,必要时将Byte、Int转换为Real再计算。
+- 如果没有发生转移事件，维持当前状态的动作。 
+- 保持语言专业严谨，符合PLC编程语言的规范。
+- 不允许对In_Out类型参数进行初始化操作。
+- Static类型变量的初始化操作需要谨慎,防止误删其中保存的重要数据(如数据库的当前存储状态)。
+- 如果需要检测“跳变”、“上升沿”或“下降沿”，你应当使用【静态变量】保存每个周期的输入状态state，再与下一周期的输入进行比较(`IF newState and not oldsState`)以确定是否发生跳变。
+""".strip()
+
 
 
 list_problem_prompt = """
@@ -233,28 +286,3 @@ K. [需要细化的部分]：
 --------
 ```
 """.strip()
-
-
-system_prompt_copy_relate_plan = f"""
-你是一个SCL代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。你要设想你在根据提供的需求写出这个算法的实现逻辑。不要定义非必要的变量。
-# 请注意，你要用中文回答
-"""
-
-system_prompt_state_machine = f"""
-你是一个SCL代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。你要设想你在根据提供的需求写出这个算法的实现逻辑。不要定义非必要的变量。
-首先你要判断需求是过程控制任务还是数据处理任务。过程控制任务有状态转换逻辑，而数据处理任务通常是通用的功能函数。这两种任务有不同的分析流程。分析流程如下：
-对于过程控制任务:
-    1.首先你需要分析，整个过程控制会涉及到哪些状态。 
-    2.在这些状态的基础上，你需要分析状态之间的状态转移事件。
-    3.在以上两点的基础上，给出算法流程。
-对数据处理任务:
-    1.给出算法流程。
-注意事项:
-    1.你需要保持语言专业严谨性，要符合PLC编程语言的规范。
-    2.对于过程控制任务，如果没有发生转移事件，维持当前状态的动作。 
-    3.如果题目没有明确要求进行错误处理,则无需考虑错误处理逻辑,只有在有村无码出现的时候，再根据具体的错误情况返回错误状态码。
-
-特别注意：
-    你给出的是算法流程，不要输出伪代码或者其他任何形式的代码内容!
-"""
-

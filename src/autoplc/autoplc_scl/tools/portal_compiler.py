@@ -25,7 +25,16 @@ class ErrorMessage:
             error_type=data.get('error_type', '代码段错误'),
             code_window=data.get('code_window')
         )
-
+    
+    def to_dict(self):
+        return {
+            "error_desc": self.error_desc,
+            "error_type": self.error_type,
+            "code_window": self.code_window
+        }
+    
+    def __str__(self):
+        return f"[{self.error_type}] {self.error_desc}\n{self.code_window}"
 
 
 @dataclass
@@ -45,7 +54,6 @@ class ResponseData:
         errors = data.get('errors')
         if errors:
             errors = [ErrorMessage.from_dict(e) for e in errors]
-        # print(data)
         return cls(
             success=data['Success'],
             result=data['Result'],
@@ -120,11 +128,10 @@ class TIAPortalCompiler():
 
         return summary
     
-    @classmethod
-    def extract_code_window(source_code: str, error_info: Dict, window_size: int = 3) -> str:
+    def extract_code_window(self, source_code: str, error_info: Dict, window_size: int = 3) -> str:
         lines = source_code.splitlines()
-        path = error_info.get("path", 0)
-        is_def = error_info.get("isDef", False)
+        path = error_info.get("Path", 0)
+        is_def = error_info.get("IsDef", False)
 
         base_line_idx = 0
         if not is_def:
@@ -151,6 +158,7 @@ class TIAPortalCompiler():
             result.append(f"{i + 1:>4}: {lines[i]}")
 
         return "\n".join(result)
+    
     def scl_syntax_check(self, block_name: str, scl_code: str) -> ResponseData:
         """
         检查SCL代码语法，并输出简化后的错误信息（含类型、窗口）
@@ -165,26 +173,29 @@ class TIAPortalCompiler():
         if resp.status_code == 200:
             raw_data = resp.json()
             raw_errors = raw_data.get("Errors", [])
-
+            
+            # DEBUG
+            # print(f"raw_data: {raw_data}")
+            
             simplified_errors = []
             for err in raw_errors:
-                error_type = "定义区错误" if err.get("is_def", False) else "代码段错误"
+                error_type = "Data Section Error" if err.get("IsDef", False) else "Program Section Error"
                 code_window = self.extract_code_window(
                     scl_code,
-                    {"path": err["path"], "isDef": err["is_def"]},
+                    {"Path": err["Path"], "IsDef": err["IsDef"]},
                     window_size=3
                 )
 
                 simplified_errors.append(ErrorMessage(
-                    error_desc=err["error_desc"],
+                    error_desc=err["ErrorDesc"],
                     error_type=error_type,
                     code_window=code_window
                 ))
 
             return ResponseData(
-                success=raw_data.get("Success", False),
-                result=raw_data.get("Result"),
-                errors=simplified_errors
+                success=raw_data.get("Success", True), # 如果没有 Success 字段，默认返回 True
+                result=raw_data.get("Result",""), # 如果没有 Result 字段，默认返回空字符串
+                errors=simplified_errors # 返回简化后的错误信息
             )
 
         else:
