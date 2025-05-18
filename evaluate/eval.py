@@ -1,0 +1,227 @@
+import os
+import time
+import json
+import requests
+from dataclasses import dataclass, asdict
+from typing import List, Optional, Dict
+from tqdm import tqdm
+
+
+@dataclass
+class ErrorMessage:
+    error_desc: str
+    error_type: str
+    code_window: Optional[str] = None
+
+    def to_dict(self):
+        return {
+            "error_desc": self.error_desc,
+            "error_type": self.error_type,
+            "code_window": self.code_window
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+            error_desc=data['error_desc'],
+            error_type=data.get('error_type', '代码段错误'),
+            code_window=data.get('code_window')
+        )
+
+
+@dataclass
+class ResponseData:
+    success: bool
+    result: Optional[str] = None
+    errors: List[ErrorMessage] = None
+
+    def to_dict(self) -> dict:
+        return {
+            "success": self.success,
+            "result": self.result,
+            "errors": [e.to_dict() for e in self.errors] if self.errors else []
+        }
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        errors = data.get("errors", [])
+        return cls(
+            success=data["success"],
+            result=data.get("result"),
+            errors=[ErrorMessage.from_dict(e) for e in errors]
+        )
+
+    @classmethod
+    def default_false(cls):
+        return cls(
+            success=False,
+            result=None,
+            errors=[ErrorMessage(
+                error_desc="编译工具调用失败",
+                error_type="系统错误"
+            )]
+        )
+
+
+class TIAPortalCompiler:
+    def extract_code_window(self, source_code: str, error_info: Dict, window_size: int = 3) -> str:
+        lines = source_code.splitlines()
+        path = error_info.get("Path", 0)
+        is_def = error_info.get("IsDef", False)
+
+        base_line_idx = 0
+        if not is_def:
+            begin_idx = next((i for i, line in enumerate(lines) if "BEGIN" in line.upper()), None)
+            if begin_idx is not None:
+                base_line_idx = begin_idx
+            else:
+                end_var_indices = [i for i, line in enumerate(lines) if "END_VAR" in line.upper()]
+                base_line_idx = end_var_indices[-1] + 1 if end_var_indices else 0
+
+        error_line_idx = base_line_idx + path
+        start_idx = max(0, error_line_idx - window_size)
+        end_idx = min(len(lines), error_line_idx + window_size + 1)
+
+        return "\n".join(f"{i + 1:>4}: {lines[i]}" for i in range(start_idx, end_idx))
+
+    def scl_syntax_check(self, block_name: str, scl_code: str) -> ResponseData:
+        try:
+            resp = requests.post(
+                url="http://192.168.103.152:9000/api/tiaapi/process",
+                json={"BlockName": block_name, "Code": scl_code}
+            )
+            if resp.status_code != 200:
+                return ResponseData.default_false()
+
+            raw_data = resp.json()
+            raw_errors = raw_data.get("Errors", [])
+            simplified_errors = []
+
+            for err in raw_errors:
+                code_window = self.extract_code_window(scl_code, err, window_size=3)
+                simplified_errors.append(ErrorMessage(
+                    error_desc=err["ErrorDesc"],
+                    error_type="定义区错误" if err.get("IsDef", False) else "代码段错误",
+                    code_window=code_window
+                ))
+
+            return ResponseData(
+                success=raw_data.get("Success", True),
+                result=raw_data.get("Result", ""),
+                errors=simplified_errors
+            )
+        except Exception as e:
+            print(f"[Error] TIA Compiler API failed: {e}")
+            return ResponseData.default_false()
+
+    def batch_test_exp_folder(self, exp_folder: str, save_dir: str):
+        os.makedirs(save_dir, exist_ok=True)
+        for case_name in os.listdir(exp_folder):
+            case_path = os.path.join(exp_folder, case_name)
+            if not os.path.isdir(case_path):
+                continue
+
+            scl_files = [f for f in os.listdir(case_path) if f.endswith('.scl')]
+            if not scl_files:
+                print(f"[WARN] No SCL file in {case_path}")
+                continue
+
+            scl_file = scl_files[0]
+            scl_path = os.path.join(case_path, scl_file)
+
+            with open(scl_path, 'r', encoding='utf-8') as f:
+                scl_code = f.read()
+
+            print(f"Testing case: {case_name}")
+            response = self.scl_syntax_check(case_name, scl_code)
+
+            # 保存结果
+            exp_folder_name = os.path.basename(os.path.abspath(exp_folder))
+            save_name = f"{exp_folder_name}_{case_name}.json"
+            save_path = os.path.join(save_dir, save_name)
+
+            with open(save_path, 'w', encoding='utf-8') as out_f:
+                out_f.write(response.to_json())
+
+
+def eval_result(folder_path):
+    from tqdm import tqdm
+
+    compiler = TIAPortalCompiler()
+    py_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # 创建 compile_results/{exp_name}/
+    exp_name = os.path.basename(os.path.normpath(folder_path))
+    save_root = os.path.join(py_dir, "compile_results")
+    save_dir = os.path.join(save_root, exp_name)
+    os.makedirs(save_dir, exist_ok=True)
+
+    # 预处理出所有.scl文件
+    case_list = []
+    for case_name in os.listdir(folder_path):
+        case_path = os.path.join(folder_path, case_name)
+        if os.path.isdir(case_path):
+            scl_files = [f for f in os.listdir(case_path) if f.endswith('.scl')]
+            if scl_files:
+                case_list.append((case_name, os.path.join(case_path, scl_files[0])))
+
+    total_cases = len(case_list)
+    success_cases = 0
+    failed_cases = 0
+    total_errors = 0
+    failed_files = []
+
+    for case_name, scl_path in tqdm(case_list, desc=f"Compiling ({exp_name})"):
+        with open(scl_path, 'r', encoding='utf-8') as f:
+            scl_code = f.read()
+
+        response = compiler.scl_syntax_check(case_name, scl_code)
+
+        if response.success:
+            success_cases += 1
+        else:
+            failed_cases += 1
+            failed_files.append(case_name)
+            total_errors += len(response.errors or [])
+
+        # 保存每个测试样例的 JSON
+        save_path = os.path.join(save_dir, f"{case_name}.json")
+        with open(save_path, 'w', encoding='utf-8') as out_f:
+            out_f.write(response.to_json())
+
+    # 汇总信息
+    pass_rate = (success_cases / total_cases) * 100 if total_cases else 0
+    avg_errors = (total_errors / failed_cases) if failed_cases else 0
+
+    summary = {
+        "total_cases": total_cases,
+        "success_cases": success_cases,
+        "failed_cases": failed_cases,
+        "pass_rate_percent": round(pass_rate, 2),
+        "total_errors": total_errors,
+        "avg_errors_per_failed_case": round(avg_errors, 2),
+        "failed_files": failed_files
+    }
+
+    print("\n=== Compilation Summary ===")
+    for k, v in summary.items():
+        print(f"{k}: {v}")
+
+    # 保存统计信息
+    summary_path = os.path.join(save_dir, f"{exp_name}_summary.json")
+    with open(summary_path, 'w', encoding='utf-8') as f:
+        json.dump(summary, f, ensure_ascii=False, indent=2)
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description='Batch compile .scl files in experiment folders.')
+    parser.add_argument('--folder', type=str, default="data/eval_data", help='Path to experiment folder')
+
+    args = parser.parse_args()
+    print(f"Start testing in folder: {args.folder}")
+    eval_result(args.folder)
+    print("Done.")

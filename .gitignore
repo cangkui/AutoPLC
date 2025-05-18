@@ -8,6 +8,8 @@ experiment_result/
 .env
 test.py
 plan_test_diff.py
+evaluate/compile_results/*
+
 
 
 # Byte-compiled / optimized / DLL files
