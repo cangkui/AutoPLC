@@ -90,7 +90,7 @@ class TIAPortalCompiler:
     def scl_syntax_check(self, block_name: str, scl_code: str) -> ResponseData:
         try:
             resp = requests.post(
-                url="http://192.168.103.152:9000/api/tiaapi/process",
+                url="http://192.168.103.245:9000/api/tiaapi/process",
                 json={"BlockName": block_name, "Code": scl_code}
             )
             if resp.status_code != 200:

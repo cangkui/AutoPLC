@@ -404,8 +404,18 @@ class BM25RetrievalInstruction:
         # 初始化一个集合，用于存储所有相关的API名称，以避免重复
         all_apis = set()
         
-        # 将算法查询字符串按行分割，每行作为一个独立的查询
-        algo_lines = algo.strip().split("\n") 
+        def split_text(algo_text: str):
+            """
+            将算法描述分句，按句号、分号、逗号（可选）、换行等切分。
+            """
+            import re
+            # 定义可能的分隔符（中英文标点 + 换行）
+            splitters = r'[；;。.\n]+'
+            algo_lines = [line.strip() for line in re.split(splitters, algo_text) if line.strip()]
+            return algo_lines
+
+        # 将算法查询分句
+        algo_lines = split_text(algo)
 
         for line in algo_lines:
             if line:

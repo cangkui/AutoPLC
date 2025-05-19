@@ -148,9 +148,10 @@ class ApiAgent():
 
         # 根据算法语义检索
         # TODO: 改为智谱检索
+        basic_instructions += local_api_retriever.query_algo_apis(task['description'])
         if algorithm_for_this_task:
             basic_instructions += local_api_retriever.query_algo_apis(algorithm_for_this_task)
-    
+
         # 去除重复的指令
         basic_instructions = list(set(basic_instructions))
         library_instructions = list(set(library_instructions))

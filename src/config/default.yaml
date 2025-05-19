@@ -27,7 +27,7 @@ modeler:
 # 验证代理配置
 verify:
   count: 5
-  openness: "http://192.168.103.152:9000"
+  openness: "http://192.168.103.245:9000"
 
 # RAG检索配置
 retrieval:
@@ -42,7 +42,7 @@ instruction:
   path:
     - "{ROOTPATH}/data/rag_data/instructions/basic.jsonl"
     - "{ROOTPATH}/data/rag_data/instructions/extend.jsonl"
-  score_threshold: 0.5
+  score_threshold: 50
   top_k: 2
 
 # 工作流实验设置
