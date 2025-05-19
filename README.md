@@ -85,9 +85,8 @@ Thank you!
 
 1. 将当前用户加入TIA Openness用户组。打开计算机管理=>本地用户和组=>组，选中Siemens TIA Openness用户组，右键属性=>添加到组，添加Administrator用户和当前用户，应用并退出。重启系统或者注销当前用户后重新登录。
 2. 为了保证兼容性，请务必将`TiaImportExample.exe`同级目录下的`Siemens.Engineering.dll`和`Siemens.Engineering.Hmi.dll`替换为本地TIA Portal V19提供的相应文件。这两个文件一般位于TIA Portal V19安装目录下，默认位置在`C:\Program Files\Siemens\Automation\Portal V19\PublicAPI\V19`。
-2. 在`TiaImportExample.exe`所在目录下，以管理员身份打开命令提示符.
-3. 运行`.\TiaImportExample.exe`，等待TIA Portal V19弹出申请窗口，点击全部允许。
-4. 当程序打印出类似于以下内容时说明运行成功。可以在同一局域网内通过 `curl http://192.168.103.245:9000/api/home` 测试接口访问是否正常，正常情况下应该显示`"Hello, World!"`。注意，正常情况下程序将自动扫描可用的局域网IP地址并将该地址作为程序监听地址，端口号默认为9000。如果您使用的是VMWare Workstation，请将虚拟机的网络设置为桥接（物理直连）以确保宿主机所在局域网能够访问到程序部署的HTTP服务。
+3. 在`TiaImportExample.exe`所在目录下，以管理员身份打开命令提示符. 运行`.\TiaImportExample.exe`，等待TIA Portal V19弹出申请窗口，点击全部允许。
+4. 当程序打印出类似于以下内容时说明运行成功。
 
 ```
 Start initializing ...
@@ -109,6 +108,9 @@ HTTP service initialization successful!
 Press Enter to exit...
 ```
 
+> 可以在同一局域网内通过 `curl http://192.168.103.245:9000/api/home` 测试接口访问是否正常，正常情况下应该显示`"Hello, World!"`。  
+> 注意，正常情况下程序将自动扫描可用的局域网IP地址并将该地址作为程序监听地址，端口号默认为9000。如果您使用的是VMWare Workstation，请将虚拟机的网络设置为桥接（物理直连）以确保宿主机所在局域网能够访问到程序部署的HTTP服务。
+
 ### English
 
 We strongly recommend testing and deploying this project on a Windows 10 Pro virtual machine installed with Siemens TIA Portal V19.
@@ -127,7 +129,27 @@ We strongly recommend testing and deploying this project on a Windows 10 Pro vir
 2. Replace DLL.
 > To ensure compatibility, replace the `Siemens.Engineering.dll` and `Siemens.Engineering.Hmi.dll` in the same directory as `TiaImportExample.exe` with the corresponding files from the local TIA Portal V19 installation.  
 > These files are typically located in the TIA Portal V19 installation directory, by default at `C:\Program Files\Siemens\Automation\Portal V19\PublicAPI\V19`.  
-3. Run `.\TiaImportExample.exe`, wait for the TIA Portal V19 permission window to pop up, and click **Allow All**.  
-5. When the program prints output similar to the following, it indicates successful operation. 
+3. Run `.\TiaImportExample.exe`, wait for the TIA Portal V19 permission window to pop up, and click **Allow All**. When the program prints output similar to the following code block, it indicates success. 
+
+```
+Start initializing ...
+Project Name: evaluation
+Project Version:
+Opened: evaluation
+Initializing success.
+Controller founded: TiaImportExample.Controllers.HomeController
+Controller founded: TiaCompilerCLI.Controllers.TiaApiController
+TIA Portal API service started, access address: http://192.168.103.245:9000/
+StatusCode: 200, ReasonPhrase: 'OK', Version: 1.1, Content: System.Net.Http.StreamContent, Headers:
+{
+  Date: Sun, 18 May 2025 14:45:33 GMT
+  Server: Microsoft-HTTPAPI/2.0
+  Content-Length: 18
+  Content-Type: application/json; charset=utf-8
+}
+HTTP service initialization successful!
+Press Enter to exit...
+```
+
 > You can test the interface access within the same local area network using `curl http://192.168.103.245:9000/api/home`, which should normally return `Hello, World!`.  
 > **Note:** The program will automatically scan for available LAN IP addresses and use them as the listening address, with the default port being `9000`. If using VMWare Workstation, set the virtual machine's network to **Bridged (Physical Direct Connection)** to ensure the HTTP service deployed on the virtual machine is accessible from the host's local area network.
