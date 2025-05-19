@@ -57,10 +57,8 @@ class AutoDebugger():
         """
     
         # 定义日志文件路径
-        syntax_output_file = os.path.join(cls.base_logs_folder, f"{task['name']}/syntax.log")
         verify_information_log = os.path.join(cls.base_logs_folder, f"{task['name']}/verify_info.jsonl")
 
-        logger.info(f"syntax_output_file is > {syntax_output_file}")
         logger.info(f"verify_information_log is > {verify_information_log}")
 
         # 初始化验证计数器和编译器实例
@@ -117,10 +115,7 @@ class AutoDebugger():
                 logger.info(f'{task["name"]} Start Verification!')
 
                 debugging_process_data["compiler"] = error_list
-                with open(syntax_output_file, "a+", encoding="utf-8") as fp:
-                    fp.write(error_log)
-                    fp.write('\n' + '='*20 + "\n")
-            
+
             verifier_instance_prompt_with_data = verifier_instance_prompt.format(
                 static_analysis_results = error_log,
                 scl_code = scl_code

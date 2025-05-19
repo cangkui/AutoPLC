@@ -143,6 +143,7 @@ def autoplc_scl_workflow(
                 load_few_shots=config.IS_MODELING_FEWSHOT
             )
             # print(f"[INFO] logic for this task:\n {logic_for_this_task}")
+            # save logic for this task to file
         
         ################     api recommend      ################
         if not config.APIREC_DISABLED:
@@ -190,18 +191,6 @@ def autoplc_scl_workflow(
         ###############    auto learner      ################
         if not config.AUTOLEARN_DISABLED:
 
-            if groundtruth_scl is not None:
-                logger.info("Start auto learner from groundtruth scl.")
-                coding_feed_back = LearnAgent.run_learn_from_coding(
-                    task=task,
-                    prediction_scl=first_gen_scl, # 这里用的是第一次生成的scl代码，因为我们希望模型提高首次生成效率
-                    openai_client=openai_client,
-                    groundtruth_scl=groundtruth_scl
-                )
-                # save feedback json
-                with open(os.path.join(base_folder, f"{task['name']}", "coding_feedback.json"), "w", encoding="utf-8") as f:
-                    json.dump(coding_feed_back, f, ensure_ascii=False, indent=4)
-
             # 加载history
             if os.path.exists(os.path.join(base_folder, f"{task['name']}", "verify_info.jsonl")):
                 try:
@@ -212,6 +201,21 @@ def autoplc_scl_workflow(
                     debug_history = []
             else:
                 debug_history = []
+
+            if groundtruth_scl is not None:
+                logger.info("Start auto learner from groundtruth scl.")
+                coding_feed_back = LearnAgent.run_learn_from_coding(
+                    task=task,
+                    prediction_scl=first_gen_scl, # 这里用的是第一次生成的scl代码，因为我们希望模型提高首次生成效率
+                    openai_client=openai_client,
+                    groundtruth_scl=groundtruth_scl,
+                    debug_history=debug_history
+                )
+                # save feedback json
+                with open(os.path.join(base_folder, f"{task['name']}", "coding_feedback.json"), "w", encoding="utf-8") as f:
+                    json.dump(coding_feed_back, f, ensure_ascii=False, indent=4)
+
+            return # 暂时跳过debug feedback
 
             if len(debug_history) > 0 and groundtruth_scl is not None:
                 logger.info("Start auto learner from debug history.")
@@ -229,5 +233,14 @@ def autoplc_scl_workflow(
     except Exception as e:
         logger.exception(f"Error occurred while processing task {task['name']}: {e}")
         logger.exception(e)
+    finally :
+        # save all intermediate results to file
+        with open(os.path.join(base_folder, f"{task['name']}", "intermediate_results.json"), "w", encoding="utf-8") as f:
+            json.dump({
+                retrieved_samples: retrieved_samples if retrieved_samples else [],
+                related_algorithm: related_algorithm if related_algorithm else [],
+                logic_for_this_task: logic_for_this_task if logic_for_this_task else "",
+                apis_for_this_task: apis_for_this_task if apis_for_this_task else [],
+            })
     
     logger.info(f"Task {task['name']} completed in {time.time() - start_time:.2f} seconds.")
