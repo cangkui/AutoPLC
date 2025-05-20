@@ -91,21 +91,6 @@ class ExperimentStatistics:
         """Convert statistics to dictionary format"""
         return asdict(self)
 
-retrieve_client = OpenAI(
-    api_key=os.getenv("API_KEY_KNOWLEDGE").strip(),
-    base_url="https://open.bigmodel.cn/api/paas/v4/"
-)
-
-autoplc_client_anthropic = Anthropic(
-    base_url=os.getenv("BASE_URL"),
-    api_key=os.getenv("API_KEY")
-)
-
-autoplc_client_openai = OpenAI(
-    base_url=os.getenv("BASE_URL"),
-    api_key=os.getenv("API_KEY")
-)
-
 class _BaseClient:
     """
     用于与LLM（大语言模型）交互的基类。
@@ -113,10 +98,11 @@ class _BaseClient:
     Attributes:
         config (Config): 本项目的配置类，包含了与LLM交互所需的配置信息。
     """
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
         self.config = config # 本项目的配置类
         self.experiment_base_logs_folder = 'default_logs' # 本次实验的日志文件夹，在init时重制
         self.statistics = ExperimentStatistics()
+        self.llm_client = llm_client # LLM客户端实例
 
     def call(self, messages: str, task_name: str = "default", role_name: str = "default"):
         # 调用LLM的接口，发送消息并获取响应
@@ -229,14 +215,14 @@ class OpenAIClient(_BaseClient):
         experiment_base_logs_folder (str): 本次实验的日志文件夹，在init时重制。
         statistics ({}): 统计每个任务的input和output token的使用情况。
     """
-    def __init__(self, config: Config):
-        super().__init__(config)
+    def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
+        super().__init__(config, llm_client)
 
     def call(self, 
         messages: List[dict], 
         task_name: str = "default", 
         role_name: str = "default",
-        model: str = "gpt-4.1"
+        model: str = None
     ) -> Completion:
         """
         调用LLM的接口，发送消息并获取响应。
@@ -249,9 +235,10 @@ class OpenAIClient(_BaseClient):
         Returns:
             response: LLM的响应对象，包含了生成的消息和使用信息。
         """
-        
+        if model is None:
+            model = self.config.model
         # 创建消息以获取响应
-        response = autoplc_client_openai.chat.completions.create(
+        response = self.llm_client.chat.completions.create(
             messages=messages,
             model=model,
             max_tokens=self.config.max_tokens,
@@ -273,9 +260,9 @@ class ZhipuAIQAClient(_BaseClient):
     
     初始化时，接受一个Config对象作为配置参数。
     """
-    def __init__(self, config: Config):
+    def __init__(self, config: Config,llm_client: Union[OpenAI, Anthropic]):
         # 初始化基类_BaseClient，传入配置参数
-        super().__init__(config)
+        super().__init__(config, llm_client)
 
     def call_kbq(self, 
         messages: str, 
@@ -299,7 +286,7 @@ class ZhipuAIQAClient(_BaseClient):
         """
 
         # 创建模型完成请求，包含特定的检索工具参数
-        response = retrieve_client.chat.completions.create(
+        response = self.llm_client.chat.completions.create(
             model=self.config.retrieve_model,  
             temperature=self.config.retrieve_temperature,
             top_p=self.config.retrieve_top_p,
@@ -380,11 +367,31 @@ class BM25RetrievalInstruction:
         self.INSTRUCTION_SCORE_THRESHOLD = config.INSTRUCTION_SCORE_THRESHOLD
         self.INSTRUCTION_TOP_K = config.INSTRUCTION_TOP_K
 
-    def query_api_by_type(self , complex_types:list[str]) -> list[str]:
+    def query_api_by_type(self, complex_types: List[str]) -> List[str]:
         """
-        返回一组api，其中的输入参数为 complex_types 中的类型
+        根据复杂数据类型，返回指令列表。
+        匹配逻辑：如果某条指令文档中包含复杂类型名（字符串匹配），则判定为相关。
+        
+        Parameters:
+            complex_types (List[str]): 复杂数据类型名列表，如 ["ARRAY[*]", "DTL", "Variant"]
+            
+        Returns:
+            List[str]: 命中的指令名列表。
         """
-        pass
+        matched_apis = set()
+
+        # 标准化类型匹配词
+        norm_types = [t.lower().replace('[*]', '').replace('_', '') for t in complex_types]
+
+        for name, doc in zip(self.instruction_names, self.instruction_corpus):
+            doc_lower = doc.lower().replace('_', '')
+            for t in norm_types:
+                if t in doc_lower:
+                    matched_apis.add(name)
+                    break  # 命中一个类型即可加入
+
+        return list(matched_apis)
+
 
     def query_algo_apis(self, algo: str) -> List[str]:
         """
@@ -495,8 +502,24 @@ class ClientManager:
         return cls._instance
 
     def set_config(self, config: Config):
-        self._openai_client = OpenAIClient(config)
-        self._zhipuai_client = ZhipuAIQAClient(config)
+        
+        retrieve_client = OpenAI(
+            api_key=os.getenv("API_KEY_KNOWLEDGE").strip(),
+            base_url="https://open.bigmodel.cn/api/paas/v4/"
+        )
+
+        autoplc_client_anthropic = Anthropic(
+            base_url=os.getenv("BASE_URL"),
+            api_key=os.getenv("API_KEY")
+        )
+
+        autoplc_client_openai = OpenAI(
+            base_url=os.getenv("BASE_URL"),
+            api_key=os.getenv("API_KEY")
+        )
+
+        self._openai_client = OpenAIClient(config,autoplc_client_openai)
+        self._zhipuai_client = ZhipuAIQAClient(config,retrieve_client)
         self._local_api_retriever = BM25RetrievalInstruction(config)
 
     def get_openai_client(self):

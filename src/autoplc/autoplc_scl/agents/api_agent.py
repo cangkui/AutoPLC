@@ -75,6 +75,44 @@ class ApiAgent():
         return json_data
     
     @classmethod
+    def extract_complex_type(
+        cls,
+        task: dict,
+        algorithm_for_this_task: str,
+        openai_client: OpenAIClient
+    ) -> List[str]:
+        """
+        调用大模型，从任务需求中提取涉及的复杂数据类型。
+        输出为字符串列表，例如 ["ARRAY[*]", "Variant"]
+        """
+        requirement = str(task)
+
+        messages = [
+            {"role": "system", "content": extract_type_system_prompt_zh},
+            {"role": "user", "content": extract_type_user_prompt_zh.format(requirement=requirement, algorithm=algorithm_for_this_task)}
+        ]
+
+        try:
+            response = openai_client.call(
+                messages=messages,
+                task_name='extract_complex_type',
+                role_name='api_agent',
+            )
+            content = cls.extract_content(response)
+            complex_types = json.loads(content)
+
+            if isinstance(complex_types, list) and all(isinstance(t, str) for t in complex_types):
+                logger.info(f"🔍 Extracted complex types: {complex_types}")
+                return complex_types
+            else:
+                logger.warning("⚠️ Output is not a valid string list.")
+                return []
+        except Exception as e:
+            logger.error(f"❌ Failed to extract complex types: {e}")
+            return []
+
+
+    @classmethod
     def run_gen_dsl(cls,
             task: dict,
             algorithm_for_this_task: str,
@@ -308,4 +346,27 @@ You are a searcher. Given a task, you can retrieve the most relevant structured 
 <case> ... </case>
 </root>
 
+""".strip()
+
+extract_type_system_prompt_zh = """
+你是西门子 S7-1200/1500 系列 PLC 编程专家，擅长从任务描述中识别涉及的复杂数据类型（如 Variant、DTL、ARRAY[*]、STRUCT、STRING 等）。
+
+请你阅读用户的任务目标和控制逻辑设计，并判断是否存在需要使用上述复杂数据类型的情况（如：动态变量、时间戳处理、数组操作等）。
+
+输出格式为 JSON 数组，仅包含推测涉及的复杂数据类型。例如：
+["Variant", "ARRAY[*]", "DTL"]
+
+注意事项：
+- 只返回涉及的复杂数据类型名称。
+- 遇到循环缓冲区、队列等应返回 ARRAY[*]。
+- 遇到时间、日期、定时器等应返回 DTL 或 IEC_TIMER。
+- 如果无涉及，返回空数组 []。
+""".strip()
+
+extract_type_user_prompt_zh = """
+## 任务描述
+{requirement}
+
+## 控制建模设计
+{algorithm}
 """.strip()
