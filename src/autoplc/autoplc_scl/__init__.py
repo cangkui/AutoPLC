@@ -235,12 +235,15 @@ def autoplc_scl_workflow(
         logger.exception(e)
     finally :
         # save all intermediate results to file
-        with open(os.path.join(base_folder, f"{task['name']}", "intermediate_results.json"), "w", encoding="utf-8") as f:
-            json.dump({
-                retrieved_samples: retrieved_samples if retrieved_samples else [],
-                related_algorithm: related_algorithm if related_algorithm else [],
-                logic_for_this_task: logic_for_this_task if logic_for_this_task else "",
-                apis_for_this_task: apis_for_this_task if apis_for_this_task else [],
-            })
-    
+        try:
+            with open(os.path.join(base_folder, f"{task['name']}", "intermediate_results.json"), "w", encoding="utf-8") as f:
+                json.dump({
+                    "retrieved_samples": sample_names if sample_names else [],
+                    "logic_for_this_task": logic_for_this_task if logic_for_this_task else "",
+                    "apis_for_this_task": apis_for_this_task if apis_for_this_task else [],
+                },fp=f, ensure_ascii=False, indent=4)
+        except Exception as e: 
+            logger.error(f"Error occurred while saving intermediate results for task {task['name']}: {e}")
+            pass
+        
     logger.info(f"Task {task['name']} completed in {time.time() - start_time:.2f} seconds.")
