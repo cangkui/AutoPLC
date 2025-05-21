@@ -110,6 +110,10 @@ class Config:
         return [Path(path) for path in self._config["instruction"]["path"]]
     
     @property
+    def FUNCTION_USAGE_PATH(self) -> Path:
+        return Path(self._config["instruction"]["function_usage_path"])
+
+    @property
     def INSTRUCTION_SCORE_THRESHOLD(self) -> float:
         return self._config["instruction"]["score_threshold"]
     

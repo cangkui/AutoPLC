@@ -315,176 +315,106 @@ def read_jsonl(filename):
     return lines
 
 class BM25RetrievalInstruction:
-    """
-        A class that implements BM25-based instruction retrieval for PLC programming.
-        This class provides functionality to search and retrieve relevant PLC instructions
-        based on semantic similarity using the BM25 algorithm. It supports searching both
-        by algorithm descriptions and direct queries.
-        Attributes:
-            instruction_corpus (List[str]): List of instruction documents containing API descriptions
-            instruction_names (List[str]): List of instruction/API names
-            tokenized_corpus (List[List[str]]): The tokenized version of instruction_corpus
-            bm25 (BM25Okapi): The BM25 model used for retrieval
-            INSTRUCTION_SCORE_THRESHOLD (float): Minimum score threshold for matching instructions
-            INSTRUCTION_TOP_K (int): Maximum number of top results to return
-        Parameters:
-            config (Config): Configuration object containing necessary parameters:
-                - INSTRUCTION_PATH: Path to instruction descriptions file
-                - BM25_MODEL: Type of BM25 model to use (currently only supports "BM25Okapi")
-                - INSTRUCTION_SCORE_THRESHOLD: Threshold score for instruction matching
-                - INSTRUCTION_TOP_K: Number of top results to return
-        Example:
-            >>> config = Config()
-            >>> retriever = _BM25RetrieverInstruction(config)
-            >>> apis = retriever.query_algo_apis("首先，需要对输入的数组进行排序\n随后，设置计时器") 
-            >>> docs = retriever.query_doc("如何使用计时器？")
-    """
-    def __init__(self, config: Config):
+    def __init__(self, config:Config):
         jieba.initialize()
         stop_path = config.INSTRUCTION_DIR.joinpath("stopwords_english.txt.")
-        stopwords = set(open(stop_path, encoding="utf-8").read().splitlines())
-        self.stopwords = stopwords
-        # 初始化API描述和名称
-        self.instruction_corpus,self.instruction_names = self.read_ins_desc(config.INSTRUCTION_PATH)
+        self.stopwords = set(open(stop_path, encoding="utf-8").read().splitlines())
 
-        logger.info(f"loading instruction from >>> {config.INSTRUCTION_PATH}")
+        # 加载指令数据
+        self.instructions = []
+        for inst_path in config.INSTRUCTION_PATH:
+            self.instructions.extend(read_jsonl(inst_path))
+        self.instruction_names = [api['instruction_name'] for api in self.instructions]
 
-        def remove_stopwords(token_list, stopwords):
-            return [t for t in token_list if t not in stopwords]
+        # 多通道文本构建
+        self.channel_texts = {
+            'keywords': [],
+            'summary': [],
+            'usage': []
+        }
 
-        self.tokenized_corpus = [
-            remove_stopwords(list(jieba.cut(doc)), stopwords)
-            for doc in self.instruction_corpus
-        ]
+        logger.info(f"initializing BM25s with chanel_texts: {self.channel_texts.keys()}")
+
+        for api in self.instructions:
+            self.channel_texts['keywords'].append(self._tokenize(api['generated_keywords']))
+            self.channel_texts['summary'].append(self._tokenize(api['generated_brief']['functional_summary']))
+            self.channel_texts['usage'].append(self._tokenize(api['generated_brief']['usage_context']))
         
         # 初始化BM25模型
-        if config.BM25_MODEL == "BM25Okapi":
-            self.bm25 = BM25Okapi(self.tokenized_corpus)
-        else:
-            raise NotImplementedError(f"BM25 model {config.BM25_MODEL} not implemented")
-        
-        # 设置BM25模型的参数
+        self.bm25_models = {
+            'keywords': BM25Okapi(self.channel_texts['keywords']),
+            'summary': BM25Okapi(self.channel_texts['summary']),
+            'usage': BM25Okapi(self.channel_texts['usage'])
+        }
+
         self.INSTRUCTION_SCORE_THRESHOLD = config.INSTRUCTION_SCORE_THRESHOLD
         self.INSTRUCTION_TOP_K = config.INSTRUCTION_TOP_K
 
-    def query_api_by_type(self, complex_types: List[str]) -> List[str]:
+    def _tokenize(self, content:str) -> List[str]:
+        """Tokenizes the input content using jieba and removes stopwords."""
+        if isinstance(content, list):
+            content = ".".join(content)
+        tokens = list(jieba.cut(content.lower()))
+        return [t for t in tokens if t not in self.stopwords]
+
+    def query_multi_channel(self, query: str) -> List[str]:
         """
-        根据复杂数据类型，返回指令列表。
-        匹配逻辑：如果某条指令文档中包含复杂类型名（字符串匹配），则判定为相关。
-        
-        Parameters:
-            complex_types (List[str]): 复杂数据类型名列表，如 ["ARRAY[*]", "DTL", "Variant"]
-            
+        Queries multiple channels (keywords, summary, usage) to find relevant instructions.
+        Args:
+            query (str): The query string to search for.
         Returns:
-            List[str]: 命中的指令名列表。
+            List[str]: A list of instruction names that match the query.
         """
+        import re
+
+        def split_text(text: str) -> List[str]:
+            return [line.strip() for line in re.split(r'[；;。\n]+', text) if line.strip()]
+
         matched_apis = set()
 
-        # 标准化类型匹配词
-        norm_types = [t.lower().replace('[*]', '').replace('_', '') for t in complex_types]
-
-        for name, doc in zip(self.instruction_names, self.instruction_corpus):
-            doc_lower = doc.lower().replace('_', '')
-            for t in norm_types:
-                if t in doc_lower:
-                    matched_apis.add(name)
-                    break  # 命中一个类型即可加入
+        for sentence in split_text(query):
+            tokenized = self._tokenize(sentence)
+            for channel, bm25 in self.bm25_models.items():
+                scores = bm25.get_scores(tokenized)
+                scored_items = [
+                    (self.instruction_names[i], score)
+                    for i, score in enumerate(scores)
+                    if score > self.INSTRUCTION_SCORE_THRESHOLD
+                ]
+                top_hits = sorted(scored_items, key=lambda x: x[1], reverse=True)[:self.INSTRUCTION_TOP_K]
+                matched_apis.update([name for name, _ in top_hits])
 
         return list(matched_apis)
 
-
-    def query_algo_apis(self, algo: str) -> List[str]:
+    def query_api_by_type(self, complex_types: List[str]) -> List[str]:
         """
-        Returns a list of APIs related to the algorithm query string provided.
-
-        This method processes the query string by tokenization and BM25 algorithm to find APIs related to the algorithm.
-        It first splits the query string into separate query lines, then processes each line, 
-        calculates the matching score between the query and the document using the BM25 algorithm,
-        and selects the most relevant API documents based on the score sorting.
-
-        Parameters:
-        algo (str): The algorithm query string entered by the user, which can contain multiple lines of query.
-
+        Queries the API instructions based on complex types.
+        args:
+            complex_types (List[str]): A list of complex types to search for.
         Returns:
-        List[str]: A list of API names related to the query algorithm, where each str is an API name.
+            List[str]: A list of instruction names that match the complex types.
         """
-        # 初始化一个集合，用于存储所有相关的API名称，以避免重复
-        all_apis = set()
-        
-        def split_text(algo_text: str):
-            """
-            将算法描述分句，按句号、分号、逗号（可选）、换行等切分。
-            """
-            import re
-            # 定义可能的分隔符（中英文标点 + 换行）
-            splitters = r'[；;。.\n]+'
-            algo_lines = [line.strip() for line in re.split(splitters, algo_text) if line.strip()]
-            return algo_lines
+        matched_apis = set()
+        norm_types = [t.lower().replace('[*]', '').replace('_', '') for t in complex_types]
+        for name, api in zip(self.instruction_names, self.instructions):
+            all_text = json.dumps(api).lower().replace('_', '')
+            if any(t in all_text for t in norm_types):
+                matched_apis.add(name)
+        return list(matched_apis)
 
-        # 将算法查询分句
-        algo_lines = split_text(algo)
-
-        for line in algo_lines:
-            if line:
-                
-                # 使用jieba分词将查询行分割成单词列表
-                tokenized_query = list(jieba.cut(line))
-
-                # 去除停用词
-                tokenized_query = [t for t in tokenized_query if t not in self.stopwords]
-
-                # 使用BM25算法获取当前查询与所有文档的得分
-                # print(self)
-                # print("----------")
-                # print(tokenized_query)
-
-                scores = self.bm25.get_scores(tokenized_query)
-                ranked_indices = np.argsort(scores)[::-1]
-                ranked_scores = sorted(scores, reverse=True)
-
-                # 过滤出得分高于预设阈值的文档，并限制结果数量
-                top_docs = [(rank, score) for rank, score in zip(ranked_indices, ranked_scores) if score > self.INSTRUCTION_SCORE_THRESHOLD][:self.INSTRUCTION_TOP_K]
-                for idx, (doc_idx, score) in enumerate(top_docs, start=1):
-                    # 将相关API添加到集合中
-                    all_apis.add(self.instruction_names[doc_idx])
-    
-        all_apis = list(all_apis)
-        return all_apis
-
-    def query_doc(self, query, top_n=3) -> List[str]:
+    def query_doc(self, query: str, channel: str = 'summary', top_n: int = 3) -> List[str]:
         """
-        Based on the user's query, return a list of documents most relevant to the question.
-
-        Parameters:
-        - query (str): The user's query.
-        - top_n (int): The number of most relevant documents returned, default is 3.
-
+        Queries the BM25 model for the top N instructions based on the query.
+        Args:
+            query (str): The query string to search for.
+            channel (str): The channel to search in ('keywords', 'summary', 'usage').
+            top_n (int): The number of top results to return.
         Returns:
-        - List[str]: The list of documents most relevant to the query.
+                List[str]: A list of instruction names that match the query.
         """
-        # 使用jieba分词器对查询问题进行分词
-        tokenized_query = list(jieba.cut(query))
-        
-        # 使用BM25算法获取与查询问题最相关的文档
-        return self.bm25.get_top_n(tokenized_query, self.instruction_corpus, n=top_n)
-    
-    def read_ins_desc(self, inst_paths: List[str]):
-        inst_desc = []
-        for inst_path in inst_paths:
-            inst_desc.extend(read_jsonl(inst_path))
-        ret = []
-        names = []
-        for api in inst_desc:
-            # 提取 description 字段并转为小写
-            description = api['description'].lower()
-            # 使用 jieba 分词
-            tokenized_desc = list(jieba.cut(description))
-            # 去除停用词
-            filtered_desc = [t for t in tokenized_desc if t not in self.stopwords]
-            # 将处理后的结果添加到 ret 列表
-            ret.append(" ".join(filtered_desc))
-            names.append(api['instruction_name'])
-        return ret, names
+        tokenized = self._tokenize(query)
+        bm25 = self.bm25_models[channel]
+        return bm25.get_top_n(tokenized, self.instruction_names, n=top_n)
 
 class ClientManager:
     """

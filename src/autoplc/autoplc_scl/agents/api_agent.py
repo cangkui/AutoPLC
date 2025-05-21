@@ -1,14 +1,8 @@
-from calendar import c
 from dataclasses import dataclass
-from os import name
-import os
-from re import S
-import sys
+from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple, List
 import json
-
-from flask import config
-
+from autoplc_scl.tools import APIDataLoader
 from common import Config
 from autoplc_scl.agents.clients import BM25RetrievalInstruction, ClientManager, OpenAIClient, ZhipuAIQAClient
 
@@ -99,18 +93,94 @@ class ApiAgent():
                 role_name='api_agent',
             )
             content = cls.extract_content(response)
-            complex_types = json.loads(content)
+            complex_types = json.loads(str(content))
 
-            if isinstance(complex_types, list) and all(isinstance(t, str) for t in complex_types):
+            if isinstance(complex_types, list):
                 logger.info(f"🔍 Extracted complex types: {complex_types}")
                 return complex_types
             else:
                 logger.warning("⚠️ Output is not a valid string list.")
                 return []
+            
         except Exception as e:
             logger.error(f"❌ Failed to extract complex types: {e}")
             return []
 
+    @classmethod
+    def run_filter_relevant_functions_group(
+        cls,
+        task: dict,
+        algorithm_for_this_task: str,
+        functions_json_list: List[dict],
+        openai_client
+    ) -> List[str]:
+        """
+        分组调用大模型筛选出必须使用的函数，返回结构：[{name: ..., reason: ...}, ...]
+        """
+        group_size = 15 # 15个函数为一组
+        groups = [functions_json_list[i:i+group_size] for i in range(0, len(functions_json_list), group_size)]
+
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            futures = [
+                executor.submit(cls.run_filter_relevant_functions, task, algorithm_for_this_task, group, openai_client)
+                for group in groups
+            ]
+            results = [future.result() for future in futures]
+
+        # 将所有结果合并
+        merged_results = []
+        for result in results:
+            if isinstance(result, list):
+                merged_results.extend(result)
+            else:
+                logger.warning("⚠️ Output is not a valid function list.")
+
+        logger.info(f"✅ Filtered {len(merged_results)} relevant functions after grouping.")
+        return merged_results
+
+
+    @classmethod
+    def run_filter_relevant_functions(
+        cls,
+        task: dict,
+        algorithm_for_this_task: str,
+        functions_json_list: List[dict],
+        openai_client: OpenAIClient
+    ) -> List[str]:
+        """
+        给定任务、算法和函数简述，调用大模型筛选出必须使用的函数及推荐理由。
+        返回结构：["api1", "api2", ...]
+        """
+        requirement = str(task)
+
+        messages = [
+            {"role": "system", "content": filter_relevant_instructions_system_prompt},
+            {"role": "user", "content": filter_relevant_instructions_user_prompt.format(
+                requirement=requirement,
+                algorithm=algorithm_for_this_task,
+                functions_json=json.dumps(functions_json_list, indent=2)
+            )}
+        ]
+
+        try:
+            response = openai_client.call(
+                messages=messages,
+                task_name='filter_relevant_functions',
+                role_name='api_agent'
+            )
+            content = cls.extract_content(response)
+            filtered = json.loads(content)
+
+            if isinstance(filtered, list):
+                logger.info(f"✅ Filtered {len(filtered)} relevant functions.")
+                return filtered
+            else:
+                logger.warning("⚠️ Output is not a valid function list.")
+                return []
+
+        except Exception as e:
+            logger.error(f"❌ Failed to filter relevant functions: {e}")
+            return []
 
     @classmethod
     def run_gen_dsl(cls,
@@ -184,11 +254,31 @@ class ApiAgent():
         if load_few_shots:
             pass
 
-        # 根据算法语义检索
-        # TODO: 改为智谱检索
-        basic_instructions += local_api_retriever.query_algo_apis(task['description'])
+        # 根据任务描述和算法描述查询相关的基本指令
+        basic_instructions += local_api_retriever.query_multi_channel(task['description'])
         if algorithm_for_this_task:
-            basic_instructions += local_api_retriever.query_algo_apis(algorithm_for_this_task)
+            basic_instructions += local_api_retriever.query_multi_channel(algorithm_for_this_task)
+
+        # 基于复杂类型召回指令
+        complex_types = cls.extract_complex_type(task, algorithm_for_this_task, openai_client)
+        logger.info(f"🔍 Extracted complex types: {complex_types}")
+        if complex_types:
+            basic_instructions.extend(local_api_retriever.query_api_by_type(complex_types))
+
+        # 查询api相关信息（用于重排序）
+        if basic_instructions:
+            basic_instruction_list = APIDataLoader.query_api_brief(basic_instructions)
+
+        logger.info(f"🔍 Extracted basic instructions: {basic_instructions}")
+
+        # 大模型过滤重排序
+        if basic_instructions:
+            # 调用OpenAI的API进行过滤
+            basic_instructions = cls.run_filter_relevant_functions_group(task, 
+                                                                   algorithm_for_this_task, 
+                                                                   basic_instruction_list, 
+                                                                   openai_client)
+
 
         # 去除重复的指令
         basic_instructions = list(set(basic_instructions))
@@ -369,4 +459,61 @@ extract_type_user_prompt_zh = """
 
 ## 控制建模设计
 {algorithm}
+""".strip()
+
+
+# filter_relevant_instructions_system_prompt = """
+# You are a senior PLC software engineer. Your job is to help select useful existing instructions that are likely to help complete the task.
+
+# Each instruction is described by:
+# - name
+# - functional_summary
+# - usage_context
+
+# You are also given the task description and its control logic plan.
+
+# Select the set of instructions that are helpful or strongly relevant to the task. You may include instructions that are not strictly necessary but would significantly assist in implementing the control logic.
+
+# To guide your judgment, consider:
+# - Would this instruction simplify or stabilize the implementation?
+# - Does the instruction type align with key components of the control plan?
+# - Is it commonly used in similar scenarios?
+
+# Respond in a JSON array like this:
+# ["api1", "api2"]
+
+# IMPORTANT: Do not include any other text or explanation. Just the JSON array.
+# """.strip()
+
+
+filter_relevant_instructions_system_prompt = """
+You are a senior PLC software engineer. Your job is to help select useful existing instructions necessary for the task.
+
+Each instruction is described by:
+- name
+- functional_summary
+- usage_context
+
+You are also given the task description and its control logic plan.
+
+Apply Occam's razor: select the minimal set of indispensable instructions required to fulfill the task.
+- Can the task be accomplished without this instruction?
+- Does the instruction type align with the task requirement?	
+
+Respond in a JSON array like this:
+["api1","api2"]
+
+IMPORTANT: Do not include any other text or explanation. Just the JSON array.
+""".strip()
+
+
+filter_relevant_instructions_user_prompt = """
+## Task Requirement
+{requirement}
+
+## Control Logic
+{algorithm}
+
+## Candidate Instructions
+{functions_json}
 """.strip()

@@ -54,7 +54,7 @@ def run_autoplc_scl(benchmark: str, config: Config):
         return
 
     ClientManager().set_config(config)
-    APIDataLoader.init_load(code_type="scl")
+    APIDataLoader.init_load(config = config)
     base_folder = init_team_log_path()
 
     os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
@@ -97,6 +97,11 @@ def autoplc_scl_workflow(
     os.makedirs(os.path.join(base_folder, f"{task['name']}"), exist_ok=True)
 
     start_time = time.time()
+
+    # 初始化finally块中的变量
+    sample_names = []
+    logic_for_this_task = ""
+    apis_for_this_task = []
 
     import traceback
     try:
@@ -160,6 +165,8 @@ def autoplc_scl_workflow(
             library_func_recommend = []
             
         apis_for_this_task = list(set(api_recommend + api_from_similar_cases))
+
+        return # 暂时跳过，测试api推荐的效果
         ################      generate SCL      ################
         scl_code = LogicComposer.run_gen_scl(
             task=task,
@@ -215,7 +222,7 @@ def autoplc_scl_workflow(
                 with open(os.path.join(base_folder, f"{task['name']}", "coding_feedback.json"), "w", encoding="utf-8") as f:
                     json.dump(coding_feed_back, f, ensure_ascii=False, indent=4)
 
-            return # 暂时跳过debug feedback
+            
 
             if len(debug_history) > 0 and groundtruth_scl is not None:
                 logger.info("Start auto learner from debug history.")

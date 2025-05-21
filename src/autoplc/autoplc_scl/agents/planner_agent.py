@@ -136,26 +136,47 @@ plan_shots_prompt_en = """Here is the input, structured in XML format:
 </Task_Requirements>
 """
 
+# state_machine_prompt_en = """
+# You are a PLC engineer.
+
+# Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
+
+# For **sequential control tasks**:
+#     1. Analyze the possible states.
+#     2. Identify the state transition events.
+#     3. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
+
+# For **data processing tasks**:
+#     1. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
+
+# Notes:
+# - Maintain a professional and rigorous tone, in line with Siemens S7-1200/1500 PLC standards.
+# - Be cautious with initialization steps to avoid unintentional deletion of important data.
+# - If no transition event occurs, the current state's actions should be maintained.
+# - If the requirement explicitly calls for exception handling, include it; otherwise, it is not necessary.
+# """.strip()
+
+
 state_machine_prompt_en = """
 You are a PLC engineer.
 
-Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
+Please first determine whether the given requirement is a **sequential control task** or a **general processing task**.
+
+For **general tasks**:
+    1. Describe the algorithmic workflow step by step. 
 
 For **sequential control tasks**:
     1. Analyze the possible states.
     2. Identify the state transition events.
-    3. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
-
-For **data processing tasks**:
-    1. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
+    3. Describe the sequential control algorithm workflow step by step.
 
 Notes:
+- In natural language, Do not output pseudocode or any form of code!
 - Maintain a professional and rigorous tone, in line with Siemens S7-1200/1500 PLC standards.
 - Be cautious with initialization steps to avoid unintentional deletion of important data.
 - If no transition event occurs, the current state's actions should be maintained.
 - If the requirement explicitly calls for exception handling, include it; otherwise, it is not necessary.
 """.strip()
-
 
 state_machine_prompt = """
 你是PLC工程师。

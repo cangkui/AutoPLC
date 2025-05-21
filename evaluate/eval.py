@@ -3,7 +3,7 @@ import time
 import json
 import requests
 from dataclasses import dataclass, asdict
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Set
 from tqdm import tqdm
 
 
@@ -216,12 +216,70 @@ def eval_result(folder_path):
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
 
+def eval_api_recommendation(task_folder: str, ground_truth_path: str):
+    with open(ground_truth_path, 'r', encoding='utf-8') as f:
+        gt_data = json.load(f)
+    gt_data = {k.lower(): v for k, v in gt_data.items()}  # 统一 key 为小写
+
+    total_tp, total_fp, total_fn = 0, 0, 0
+    task_names = [name for name in os.listdir(task_folder) if os.path.isdir(os.path.join(task_folder, name))]
+    max_gt_len = 0
+    max_pred_len = 0
+    for task in tqdm(task_names, desc="Evaluating API Recommendations"):
+        inter_path = os.path.join(task_folder, task, "intermediate_results.json")
+        if not os.path.exists(inter_path):
+            continue
+
+        with open(inter_path, 'r', encoding='utf-8') as f:
+            inter_data = json.load(f)
+        predicted: Set[str] = set(api.lower() for api in inter_data.get("apis_for_this_task", []))
+        actual: Set[str] = set(api.lower() for api in gt_data.get(task.lower(), []) if "_TO_" not in api)
+
+        if len(actual) > max_gt_len:
+            max_gt_len = len(actual)
+        if len(predicted) > max_pred_len:
+            max_pred_len = len(predicted)
+
+        tp = len(predicted & actual)
+        fp = len(predicted - actual)
+        fn = len(actual - predicted)
+
+        # 打印没有找到的 API
+        # if fn > 0:
+        #     print(f"\nTask: {task}")
+        #     print(f"Missing APIs: {actual - predicted}")
+
+        total_tp += tp
+        total_fp += fp
+        total_fn += fn
+
+    precision = total_tp / (total_tp + total_fp) if total_tp + total_fp else 0
+    recall = total_tp / (total_tp + total_fn) if total_tp + total_fn else 0
+    f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0
+
+    print("\n=== API Recommendation Evaluation Summary ===")
+    print(f"Total TP: {total_tp}, FP: {total_fp}, FN: {total_fn}")
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall:    {recall:.4f}")
+    print(f"F1 Score:  {f1:.4f}")
+    print(f"Max GT Length: {max_gt_len}")
+    print(f"Max Predicted Length: {max_pred_len}")
+
+
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description='Batch compile .scl files in experiment folders.')
-    parser.add_argument('--folder', type=str, default="data/eval_data", help='Path to experiment folder')
-
+    parser = argparse.ArgumentParser(description='Evaluate SCL compilation or API recommendation')
+    parser.add_argument('--mode', type=str, choices=['compile', 'eval_api'], default='compile')
+    parser.add_argument('--folder', type=str, default="data/eval_data")
+    parser.add_argument('--gt_file', type=str, help="Path to ground truth API JSON file")
     args = parser.parse_args()
-    print(f"Start testing in folder: {args.folder}")
-    eval_result(args.folder)
+
+    if args.mode == 'compile':
+        print(f"Start compiling folder: {args.folder}")
+        eval_result(args.folder)
+    elif args.mode == 'eval_api':
+        if not args.gt_file:
+            raise ValueError("--gt_file is required for eval_api mode")
+        eval_api_recommendation(args.folder, args.gt_file)
+
     print("Done.")
