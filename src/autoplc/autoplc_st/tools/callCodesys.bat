@@ -1,0 +1,1 @@
+D:\Tools\CODESYS\CODESYS\Common\CODESYS.exe  --profile="CODESYS V3.5 SP20 Patch 3"  --noUI --runscript="D:\autoPLCASEproject\gitAutoPLC\AutoPLC\src\autoplc\autoplc_st\tools\codesys_debugger.py"

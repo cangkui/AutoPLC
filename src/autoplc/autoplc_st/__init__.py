@@ -1,30 +1,34 @@
 import os
+import shutil
+import sys
 import time
 import json
-import sys
 from autoplc_st.agents.clients import ClientManager
 from autoplc_st.tools import APIDataLoader, PromptResultUtil
 import multiprocessing
 from autoplc_st.agents import (
     Retriever,
     Modeler,
+    ApiAgent,
     LogicComposer,
     AutoDebugger,
+    LearnAgent,
     init_team_log_path
 )
 from common import Config, ROOTPATH
+import logging
+logger = logging.getLogger("autoplc_st")
 
 
 root_path = ROOTPATH
-
 def generate_plans():
     from autoplc_st.agents.plan_gen import gen_plan_dataset
     global root_path
     # root_path = os.getenv("ROOTPATH")
-    case_requirement_dir = os.path.join(root_path, "data/rag_data/st/st_case_requirement")
-    # case_requirement_dir = os.path.join(root_path, "src/experiment/datasets/competition/")
-    case_code_dir = os.path.join(root_path, "data/rag_data/st/st_case_code")
-    case_plan_dir = os.path.join(root_path, "data/rag_data/st/st_case_plan_experiment")
+    case_requirement_dir = os.path.join(root_path, "data", "rag_data", "st", "st_case_requirement")
+    # case_requirement_dir = os.path.join(root_path, "src", "experiment", "datasets", "competition")
+    case_code_dir = os.path.join(root_path, "data", "rag_data", "st", "st_case_code")
+    case_plan_dir = os.path.join(root_path, "data", "rag_data", "st", "st_case_plan_experiment")
     gen_plan_dataset(case_requirement_dir, case_code_dir, case_plan_dir)
 
 
@@ -32,50 +36,42 @@ def decide_is_state_machine_in_lgf():
     from autoplc_st.agents.plan_gen import figure_state_machine_in_lgf
     global root_path
     # root_path = os.getenv("ROOTPATH")
-    dataset_file = os.path.join(root_path, "data/benchmarks/lgf_state_machine.jsonl")
+    dataset_file = os.path.join(root_path, "data", "benchmarks", "lgf_state_machine.jsonl")
     figure_state_machine_in_lgf(dataset_file)
 
 def baseline_in_github_case(model):
     from autoplc_st.agents.plan_gen import run_baseline_in_github_case
     global root_path
     # root_path = os.getenv("ROOTPATH")
-    dataset_file = os.path.join(root_path, "data/benchmarks/githubcase.jsonl")
+    dataset_file = os.path.join(root_path, "data", "benchmarks", "githubcase.jsonl")
     run_baseline_in_github_case(model, dataset_file)
 
-def run_autoplc_st(
-        benchmark: str,
-        config:Config
-    ):
+def run_autoplc_st(benchmark: str, config: Config):
     global root_path
     root_path = ROOTPATH
-
-    benchmark_file_path = root_path.joinpath(f"data/benchmarks/{benchmark}.jsonl")
+    benchmark_file_path = os.path.join(root_path, "data", "benchmarks", f"{benchmark}.jsonl")
     if not os.path.exists(benchmark_file_path):
-        print(f"Benchmark file {benchmark_file_path} not found.")
+        logger.error(f"Benchmark file {benchmark_file_path} not found.")
         return
 
-    # init
     ClientManager().set_config(config)
     APIDataLoader.init_load(code_type="st")
     base_folder = init_team_log_path()
 
-    # workflow
+    os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
+    shutil.copy(config.config_path, os.path.join(base_folder, "config", "config.yaml"))
+
     all_agents_start_time = time.time()
 
     with open(benchmark_file_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
         tasks = [json.loads(line) for line in lines]
-        # tasks = [json.loads(line) for line in lines]
 
     for task in tasks:
-        autoplc_st_workflow(
-            task, 
-            base_folder,
-            config
-    )
+        autoplc_st_workflow(task, base_folder, config)
 
     total_time = time.time() - all_agents_start_time
-    print(f"Experiment completed in {total_time:.2f} seconds.")
+    logger.info(f"Experiment completed in {total_time:.2f} seconds.")
 
 
 def autoplc_st_workflow(
@@ -84,14 +80,20 @@ def autoplc_st_workflow(
         config:Config
     ):
 
-    retrieve_disabled = config.RETRIEVE_DISABLED
-    modeling_disabled = config.MODELING_DISABLED
-    debugger_disabled = config.DEBUGGER_DISABLED
-    plan_set_name = config.PLAN_SET_NAME
+    # 检查是否存在对应的 st 文件
+    st_file_path = os.path.join(config.ST_CODE_DIR, f"{task['name']}.st")
+    if os.path.exists(st_file_path):
+        groundtruth_st = open(st_file_path, "r", encoding="utf8").read()
+        logger.info(f"Loaded groundtruth st: {task['name']}")
+    else:
+        groundtruth_st = None
+        logger.warning(f"Groundtruth st for {task['name']} not found.")
+
 
     # 获取大模型客户端
     openai_client = ClientManager().get_openai_client()
     zhipuai_client = ClientManager().get_zhipuai_client()
+    local_api_retriever = ClientManager().get_local_api_retriever()
 
     os.makedirs(os.path.join(base_folder, f"{task['name']}"), exist_ok=True)
 
@@ -101,50 +103,132 @@ def autoplc_st_workflow(
     try:
         ###############    retrieve examples    ################
         retrieved_samples = []
-        if not retrieve_disabled:
-            retrieved_samples = Retriever.run_retrieve_case(task=task,alternatives=config.CASE_ALTERNATIVES,zhipuai_client=zhipuai_client)
+        if not config.RETRIEVE_DISABLED:
+            retrieved_samples = Retriever.run_retrieve_case(
+                task=task,
+                alternatives=config.CASE_ALTERNATIVES,
+                zhipuai_client=zhipuai_client
+            )
+            
 
-        ################ load related algorithms ################
+        ################ load related algorithms and possible apis ################
         sample_names = [sample["name"] for sample in retrieved_samples]
+        logger.info(f"Retrieved samples: {sample_names}")
 
         related_algorithm = []
         for name in sample_names:
-            # algo = PromptResultUtil.get_plan(name=name, code_type="scl")      #为了跑不同版本的plan 需要传plan的版本的名称
-            algo = PromptResultUtil.get_plan_diff(name=name, plan_version = plan_set_name)
+            # algo = PromptResultUtil.get_plan(name=name, code_type="st")      #为了跑不同版本的plan 需要传plan的版本的名称
+            algo = PromptResultUtil.get_plan_diff(
+                name=name, 
+                plan_version = config.PLAN_SET_NAME
+            )
             if algo is not None:
                 related_algorithm.append(algo)
             else:
                 related_algorithm.append("")
 
-        ################      generate plan      ################
-        algorithm_for_this_task = ""
-        if not modeling_disabled:
-            algorithm_for_this_task = Modeler.run_modeling_task(task=task, 
-            retrieved_examples=retrieved_samples,
-            related_algorithm=related_algorithm,
-            openai_client=openai_client
-            )
+        if sample_names:
+            #获取相似案例用到的api
+            api_from_similar_cases = APIDataLoader.extract_apis_from_cases(sample_names)    
+        else:
+            api_from_similar_cases = []
 
-        ################      generate code      ################
-        scl_code = LogicComposer.run_gen_scl(
-            task=task,
-            retrieved_examples=retrieved_samples,
-            related_algorithm=related_algorithm,
-            algorithm_for_this_task=algorithm_for_this_task,
-            openai_client=openai_client
-        )
-        sys.exit()
-        ################       verify code      ################
-        if not debugger_disabled:
-            scl_code = AutoDebugger.run_debugger_with_compiler(
-                task=task,
-                scl_code=scl_code,
-                max_verify_count=config.VERIFY_COUNT,
-                openai_client=openai_client
+        ################      generate plan      ################
+        logic_for_this_task = ""
+        if not config.MODELING_DISABLED:
+            logic_for_this_task = Modeler.run_modeling_task(
+                task=task, 
+                retrieved_examples=retrieved_samples,
+                related_algorithm=related_algorithm,
+                openai_client=openai_client,
+                load_few_shots=config.IS_MODELING_FEWSHOT
             )
-    
+            # print(f"[INFO] logic for this task:\n {logic_for_this_task}")
+        
+        ################     api recommend      ################
+        if not config.APIREC_DISABLED:
+            api_recommend, library_func_recommend  = ApiAgent.run_recommend_api(
+                task=task, 
+                algorithm_for_this_task=logic_for_this_task,
+                openai_client=openai_client,
+                zhipuai_client=zhipuai_client,
+                local_api_retriever=local_api_retriever,
+                load_few_shots=config.IS_APIREC_FEWSHOT
+            )
+        else:
+            api_recommend = []
+            library_func_recommend = []
+            
+        apis_for_this_task = list(set(api_recommend + api_from_similar_cases))
+        ################      generate st      ################
+        st_code = LogicComposer.run_gen_st(
+            task=task,
+            retrieved_examples = retrieved_samples,
+            related_algorithm = related_algorithm,
+            logic_for_this_task= logic_for_this_task,
+            apis_for_this_task = apis_for_this_task,
+            openai_client = openai_client,
+            load_few_shots=config.IS_CODING_FEWSHOT
+        )
+        first_gen_st = st_code
+        
+        ################       debug st      ################
+        if not config.DEBUGGER_DISABLED:
+            st_code = AutoDebugger.run_debugger_with_compiler(
+                task=task,
+                st_code=st_code,
+                max_verify_count=config.VERIFY_COUNT,
+                openai_client=openai_client,
+                load_few_shots=config.IS_DEBUGGER_FEWSHOT
+            )
+        else:
+            # save st code to file
+            code_output_file = os.path.join(base_folder, f"{task['name']}/{task['name']}_{0}.st")
+            logger.info("output file is", code_output_file)
+            with open(code_output_file, "w", encoding="utf-8") as fp:
+                fp.write(st_code)
+        
+        ###############    auto learner      ################
+        if not config.AUTOLEARN_DISABLED:
+
+            if groundtruth_st is not None:
+                logger.info("Start auto learner from groundtruth st.")
+                coding_feed_back = LearnAgent.run_learn_from_coding(
+                    task=task,
+                    prediction_st=first_gen_st, # 这里用的是第一次生成的st代码，因为我们希望模型提高首次生成效率
+                    openai_client=openai_client,
+                    groundtruth_st=groundtruth_st
+                )
+                # save feedback json
+                with open(os.path.join(base_folder, f"{task['name']}", "coding_feedback.json"), "w", encoding="utf-8") as f:
+                    json.dump(coding_feed_back, f, ensure_ascii=False, indent=4)
+
+            # 加载history
+            if os.path.exists(os.path.join(base_folder, f"{task['name']}", "verify_info.jsonl")):
+                try:
+                    with open(os.path.join(base_folder, f"{task['name']}", "verify_info.jsonl"), "r", encoding="utf-8") as f:
+                        debug_history = [json.loads(line) for line in f.readlines()]
+                except Exception as e:
+                    logger.error(f"Error decoding JSON from verify_info.jsonl: {e}")
+                    debug_history = []
+            else:
+                debug_history = []
+
+            if len(debug_history) > 0 and groundtruth_st is not None:
+                logger.info("Start auto learner from debug history.")
+                debug_feed_back = LearnAgent.run_learn_from_debug(
+                    task = task,
+                    groundtruth_st = groundtruth_st,
+                    debug_history = debug_history,
+                    openai_client = openai_client
+                )
+                # save debug feedback json
+                with open(os.path.join(base_folder, f"{task['name']}", "debug_feedback.json"), "w", encoding="utf-8") as f:
+                    json.dump(debug_feed_back, f, ensure_ascii=False, indent=4)
+
+
     except Exception as e:
-        print(f"Error occurred: {e}")
-        traceback.print_exc()
+        logger.exception(f"Error occurred while processing task {task['name']}: {e}")
+        logger.exception(e)
     
-    print(f"Task {task['name']} completed in {time.time() - start_time:.2f} seconds.")
+    logger.info(f"Task {task['name']} completed in {time.time() - start_time:.2f} seconds.")

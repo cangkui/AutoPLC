@@ -61,6 +61,14 @@ class Config:
         return self._config["environment"]["scl_code_dir"]
     
     @property
+    def ST_PLAN(self) -> Path:
+        return Path(self._config["environment"]["st_plan"])
+    
+    @property
+    def ST_CODE_DIR(self) -> str:
+        return self._config["environment"]["st_code_dir"]
+
+    @property
     def CODESYS_DIR(self) -> str:
         return self._config["environment"]["coedsys_dir"]
     

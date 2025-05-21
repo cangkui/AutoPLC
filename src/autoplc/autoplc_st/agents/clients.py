@@ -9,13 +9,16 @@ from anthropic import Anthropic
 from openai import OpenAI
 from typing import List, Union
 from common import Config
-from autoplc_scl.tools import PromptResultUtil
+from autoplc_st.tools import PromptResultUtil
 from anthropic.types.message import Message
 # from zhipuai.types.chat.chat_completion import Completion
 from openai.types.chat.chat_completion import ChatCompletion as Completion
 
 from dataclasses import dataclass, field, asdict
 from typing import List, Union, Dict
+
+import logging
+logger = logging.getLogger("autoplc_st")
 
 @dataclass
 class TokenUsage:
@@ -176,7 +179,7 @@ class _BaseClient:
             else:
                 content = response.choices[0]['message']['content']
         except (IndexError, KeyError, AttributeError):
-            print("无法从响应中提取内容，请检查响应结构。")
+            logger.error("无法从响应中提取内容，请检查响应结构。")
             content = None        
         return content
 
@@ -353,11 +356,11 @@ class BM25RetrievalInstruction:
         jieba.initialize()
         stop_path = config.INSTRUCTION_DIR.joinpath("stopwords_english.txt.")
         stopwords = set(open(stop_path, encoding="utf-8").read().splitlines())
-
+        self.stopwords = stopwords
         # 初始化API描述和名称
         self.instruction_corpus,self.instruction_names = self.read_ins_desc(config.INSTRUCTION_PATH)
 
-        print("[INFO] loading instruction from >>> ", config.INSTRUCTION_PATH)
+        logger.info(f"loading instruction from >>> {config.INSTRUCTION_PATH}")
 
         def remove_stopwords(token_list, stopwords):
             return [t for t in token_list if t not in stopwords]
@@ -410,10 +413,14 @@ class BM25RetrievalInstruction:
                 # 使用jieba分词将查询行分割成单词列表
                 tokenized_query = list(jieba.cut(line))
 
+                # 去除停用词
+                tokenized_query = [t for t in tokenized_query if t not in self.stopwords]
+
                 # 使用BM25算法获取当前查询与所有文档的得分
                 # print(self)
                 # print("----------")
                 # print(tokenized_query)
+
                 scores = self.bm25.get_scores(tokenized_query)
                 ranked_indices = np.argsort(scores)[::-1]
                 ranked_scores = sorted(scores, reverse=True)
@@ -451,25 +458,16 @@ class BM25RetrievalInstruction:
         ret = []
         names = []
         for api in inst_desc:
-            params_descs = ["Input Parameters:"]
-            for param in api['parameters'].get('Input', []):
-                params_descs.append(
-                    f"{param['name']}({param['description']})"
-                    if "name" in param and "description" in param else ""
-                )
-            params_descs.append("\nOutput Parameters:")
-            for param in api['parameters'].get('Output', []):
-                params_descs.append(
-                    f"{param['name']}({param['description']})"
-                    if "name" in param and "description" in param else ""
-                )
-            params_str = "\n".join(params_descs)
-            usage = f"Usage: {api['how_to_use']}" if 'how_to_use' in api else ""
-            total_str = f"""Instruction Name: {api['instruction_name']}; Description: {api['description']}; Parameters: {params_str}; {usage}""".strip()
-            keywords = jieba.analyse.textrank(total_str, topK=5)
-            ret.append(f"{total_str} {' '.join(keywords)}")
+            # 提取 description 字段并转为小写
+            description = api['description'].lower()
+            # 使用 jieba 分词
+            tokenized_desc = list(jieba.cut(description))
+            # 去除停用词
+            filtered_desc = [t for t in tokenized_desc if t not in self.stopwords]
+            # 将处理后的结果添加到 ret 列表
+            ret.append(" ".join(filtered_desc))
             names.append(api['instruction_name'])
-        return ret,names
+        return ret, names
 
 class ClientManager:
     """

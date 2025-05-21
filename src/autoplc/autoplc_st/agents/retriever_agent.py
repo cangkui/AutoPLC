@@ -5,8 +5,9 @@ from typing import Any, Tuple, List
 from autoplc_st.tools.prompt_res_util import PromptResultUtil
 from common import Config
 from autoplc_st.agents.clients import  ZhipuAIQAClient
-
-knowledge_id = os.getenv("ST_CASE_KNOWLEDGE")
+import logging
+knowledge_id = os.getenv("st_CASE_KNOWLEDGE")
+logger = logging.getLogger("autoplc_st")
 @dataclass
 class RetrievedExample:
     name: str
@@ -110,16 +111,16 @@ class Retriever():
                 json_desc = PromptResultUtil.get_json_content(name=name, code_type="st")
                 if json_desc is None:
                     continue
-                code_scl = PromptResultUtil.get_source_code(name=name, code_type="st")
+                code_st = PromptResultUtil.get_source_code(name=name, code_type="st")
                 res.append(
                     RetrievedExample.from_dict({
                         "name": name,
                         "json_desc": json_desc,
-                        "code": code_scl
+                        "code": code_st
                     }))
         except Exception as e:
-            print("Error in retriever agent:", e)
-            traceback.print_exc()
+            logger.error("Error in retriever agent:", e)
+            logger.exception(e)
         
         return res
 

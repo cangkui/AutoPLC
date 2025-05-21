@@ -6,6 +6,8 @@ from .planner_agent import Modeler
 from .editor_agent import LogicComposer
 from .verifier_agent import AutoDebugger
 from .clients import OpenAIClient,ZhipuAIQAClient
+from .api_agent import ApiAgent
+from .learner_agent import LearnAgent
 from common import ROOTPATH
 
 

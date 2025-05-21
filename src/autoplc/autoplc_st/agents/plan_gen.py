@@ -3,15 +3,15 @@ import pytz
 from datetime import datetime
 from pathlib import Path
 import os
-from autoplc_scl.tools import PromptResultUtil
-from autoplc_scl.agents.clients import ClientManager
+from autoplc_st.tools import PromptResultUtil
+from autoplc_st.agents.clients import ClientManager
 from common import ROOTPATH
 
-def fill_fewshot(natural_language_requirement, scl_code):
+def fill_fewshot(natural_language_requirement, st_code):
     return f"""
     自然语言需求：{natural_language_requirement}
 
-    代码：{scl_code}
+    代码：{st_code}
     你需要根据自然语言需求生成能够为后续的代码生成提供指导的算法流程描述，并根据提供的代码流程进行适当调整。
     """    
 
@@ -21,7 +21,7 @@ def plan_gen(current_task_requirement, current_task_code) -> str:
      
     参数:
     - current_task_requirement: 当前任务的自然语言需求描述。
-    - current_task_code: 当前任务的SCL代码。
+    - current_task_code: 当前任务的st代码。
     
     返回:
     - response: 生成的算法流程描述。
@@ -34,12 +34,12 @@ def plan_gen(current_task_requirement, current_task_code) -> str:
     # code_messages.append({"role": "assistant", "content": fewshot_prompt_plan_1})
 
     natural_language_requirement = current_task_requirement
-    scl_code = current_task_code
+    st_code = current_task_code
 
     task_prompt = f"""
     自然语言需求：{natural_language_requirement}
 
-    代码：{scl_code}
+    代码：{st_code}
     你需要根据自然语言需求生成能够为后续的代码生成提供指导的算法流程描述，并根据提供的代码流程进行适当调整。
     """
 
@@ -161,12 +161,12 @@ def gen_plan_dataset(case_requirement_dir, case_code_dir, case_plan_dir):
                 requirement_content = req_file.read()
             # 获取文件名（不带后缀）
             base_name = os.path.splitext(file)[0]
-            # 构建对应的.scl文件名
-            scl_file_name = base_name + '.scl'
-            print(scl_file_name)
+            # 构建对应的.st文件名
+            st_file_name = base_name + '.st'
+            print(st_file_name)
 
             # 构建第二个目录中对应的文件路径
-            code_file_path = os.path.join(case_code_dir, scl_file_name)
+            code_file_path = os.path.join(case_code_dir, st_file_name)
             # 检查对应的代码文件是否存在
             if os.path.exists(code_file_path):
                 # 读取第二个目录下对应文件的内容
@@ -209,17 +209,17 @@ def run_baseline_in_github_case(model, dataset_file):
 # """
 
 # system_prompt = f"""
-# 你是一个SCL代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。你要设想你在根据提供的需求写出这个算法的实现逻辑，并且根据给出的代码进行调整。不要定义非必要的变量。
+# 你是一个st代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。你要设想你在根据提供的需求写出这个算法的实现逻辑，并且根据给出的代码进行调整。不要定义非必要的变量。
 # 请注意，你要用中文回答
 # """
 
 # system_prompt = f"""
-# 你是一个SCL电气工程师，给定一段需求以及你针对这个需求写出的SCL代码，你要提供你在编写这段代码来完成给定的需求时的思维逻辑。
+# 你是一个st电气工程师，给定一段需求以及你针对这个需求写出的st代码，你要提供你在编写这段代码来完成给定的需求时的思维逻辑。
 # 注意，你要用中文回答
 # """
 
 system_prompt_state_machine = f"""
-你是一个SCL代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。你要设想你在根据提供的需求写出这个算法的实现逻辑。不要定义非必要的变量。
+你是一个st代码生成领域的思维链总结专家,擅长根据自然语言需求和示例代码写出比算法流程更粗的思维逻辑。你要设想你在根据提供的需求写出这个算法的实现逻辑。不要定义非必要的变量。
 首先你要判断需求是过程控制任务还是数据处理任务。过程控制任务有状态转换逻辑，而数据处理任务通常是通用的功能函数。这两种任务有不同的分析流程。分析流程如下：
 对于过程控制任务:
     1.首先你需要分析，整个过程控制会涉及到哪些状态。 
@@ -238,7 +238,7 @@ system_prompt_state_machine = f"""
 
 
 system_prompt = f"""
-你是一个SCL电气工程师，给定一段需求，你要提供你在编写这段代码来完成给定的需求时的思维逻辑。为了让你的思维逻辑尽可能正确，还提供了这个需求对应的SCL代码，你可以参考代码解决问题的逻辑思路，但是不要太过于具体，你要从你提供的思维逻辑能够对类似的需求起到指导作用的角度来写这个需求的解决问题的思维逻辑，但是也不用想太多，从提供的信息出发，一定要避免过度设计，尽量不要写伪代码。
+你是一个st电气工程师，给定一段需求，你要提供你在编写这段代码来完成给定的需求时的思维逻辑。为了让你的思维逻辑尽可能正确，还提供了这个需求对应的st代码，你可以参考代码解决问题的逻辑思路，但是不要太过于具体，你要从你提供的思维逻辑能够对类似的需求起到指导作用的角度来写这个需求的解决问题的思维逻辑，但是也不用想太多，从提供的信息出发，一定要避免过度设计，尽量不要写伪代码。
 注意，你要用中文回答
 """
 
@@ -246,13 +246,13 @@ system_prompt = f"""
 
 req_context = ""
 code_context = ""
-fs_req = ROOTPATH.joinpath("/data/rag_data/scl/scl_case_requirement")
-fs_code = ROOTPATH.joinpath("/data/rag_data/scl/scl_case_code")
+fs_req = ROOTPATH.joinpath("/data/rag_data/st/st_case_requirement")
+fs_code = ROOTPATH.joinpath("/data/rag_data/st/st_case_code")
 
 
 with open(os.path.join(fs_req, "FB_ColorLightControl.json"), 'r', encoding='utf8') as f:
     req_context = f.read()
-with open(os.path.join(fs_code, "FB_ColorLightControl.scl"), 'r', encoding='utf8') as f:
+with open(os.path.join(fs_code, "FB_ColorLightControl.st"), 'r', encoding='utf8') as f:
     code_context = f.read()
 
 fewshot_prompt_req_1 = f"""
@@ -304,5 +304,5 @@ is_state_machine = f"""
 """
 
 baseline_githubCase = f"""
-你是一个scl代码编写专家，会根据json格式的需求来编写对应的scl代码。你会收到json形式的需求，然后只生成scl代码，不会生成其他信息。
+你是一个st代码编写专家，会根据json格式的需求来编写对应的st代码。你会收到json形式的需求，然后只生成st代码，不会生成其他信息。
 """
