@@ -111,6 +111,9 @@ class AutoDebugger():
                             logger.info(f'Program Section Error >>>> {str(error)}')
                             error_list.append(error.to_dict())
 
+                # 每次仅修复前5个错误
+                error_list = error_list[:5]
+
                 error_log = '\n'.join([str(err) for err in error_list])
                 logger.info(f'{task["name"]} Start Verification!')
 

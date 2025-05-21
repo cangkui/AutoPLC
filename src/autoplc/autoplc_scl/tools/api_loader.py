@@ -12,6 +12,7 @@ class APIDataLoader():
     api_detail_dict: dict = None
     functions_usage: dict = None
     # keywords: dict = None
+    api_details_str = ""
 
     @classmethod
     def init_load(cls, config: Config):
@@ -129,6 +130,9 @@ class APIDataLoader():
             for i, api in enumerate(data_transform)
             for src, dst in [api.split('_TO_')]
         )
+    
+        # to be compatible with the verifier
+        cls.api_details_str = api_details_str
 
         return f"{api_details_str}\n{data_transform_str}\n"
 
