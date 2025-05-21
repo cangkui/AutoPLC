@@ -1,3 +1,4 @@
+import re
 import time
 from typing import Tuple, List
 import os
@@ -95,17 +96,25 @@ class Modeler():
         - response: AI模型的响应对象。
 
         返回:
-        - scl_code: 提取出的SCL代码字符串。
+        - algo: 提取出的算法流程描述字符串。
         """
         if hasattr(response, 'choices'):
             choice = response.choices[0]
             if hasattr(choice, 'message') and hasattr(choice.message, 'content'):
-                scl_code = choice.message.content
+                algo = choice.message.content
             else:
-                scl_code = choice['message']['content']
+                algo = choice['message']['content']
         else:
-            scl_code = response.content[0].text
-        return scl_code
+            algo = response.content[0].text
+
+        # 使用正则从```plaintext```中提取内容
+        pattern = re.compile(r'```plaintext([\s\S]*?)```')
+        match = pattern.search(algo)
+        if match:
+            algo = match.group(1).strip()
+        else:
+            algo = algo.strip()
+        return algo
 
     @classmethod
     def load_plan_gen_shots(cls, examples: List[dict], algorithms: List[str]):
@@ -136,47 +145,34 @@ plan_shots_prompt_en = """Here is the input, structured in XML format:
 </Task_Requirements>
 """
 
-# state_machine_prompt_en = """
-# You are a PLC engineer.
-
-# Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
-
-# For **sequential control tasks**:
-#     1. Analyze the possible states.
-#     2. Identify the state transition events.
-#     3. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
-
-# For **data processing tasks**:
-#     1. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
-
-# Notes:
-# - Maintain a professional and rigorous tone, in line with Siemens S7-1200/1500 PLC standards.
-# - Be cautious with initialization steps to avoid unintentional deletion of important data.
-# - If no transition event occurs, the current state's actions should be maintained.
-# - If the requirement explicitly calls for exception handling, include it; otherwise, it is not necessary.
-# """.strip()
-
-
 state_machine_prompt_en = """
 You are a PLC engineer.
 
-Please first determine whether the given requirement is a **sequential control task** or a **general processing task**.
-
-For **general tasks**:
-    1. Describe the algorithmic workflow step by step. 
+Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
 
 For **sequential control tasks**:
     1. Analyze the possible states.
     2. Identify the state transition events.
-    3. Describe the sequential control algorithm workflow step by step.
+    3. Output the algorithmic workflow. Do not output pseudocode or any form of code!
+
+For **data processing tasks**:
+    1. Output the algorithmic workflow. Do not output pseudocode or any form of code!
 
 Notes:
-- In natural language, Do not output pseudocode or any form of code!
+- Derectly output the algorithmic workflow step by step without other explanations.
 - Maintain a professional and rigorous tone, in line with Siemens S7-1200/1500 PLC standards.
 - Be cautious with initialization steps to avoid unintentional deletion of important data.
 - If no transition event occurs, the current state's actions should be maintained.
 - If the requirement explicitly calls for exception handling, include it; otherwise, it is not necessary.
+
+Output Format:
+```plaintext
+step1: [description]
+step2: [description]
+// more step here...
+```
 """.strip()
+
 
 state_machine_prompt = """
 你是PLC工程师。
