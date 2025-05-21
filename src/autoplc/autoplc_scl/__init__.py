@@ -166,7 +166,6 @@ def autoplc_scl_workflow(
             
         apis_for_this_task = list(set(api_recommend + api_from_similar_cases))
 
-        return # 暂时跳过，测试api推荐的效果
         ################      generate SCL      ################
         scl_code = LogicComposer.run_gen_scl(
             task=task,

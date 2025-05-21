@@ -51,7 +51,7 @@ workflow:
   retrieve_disabled: false
   modeling_disabled: false
   debugger_disabled: false
-  api_rec_disabled : false
+  api_rec_disabled : true
   auto_learn_disabled : true
   is_coding_fewshot: true
   is_retrieve_fewshot: false

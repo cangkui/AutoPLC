@@ -48,7 +48,7 @@ instruction:
 
 # 工作流实验设置
 workflow:
-  retrieve_disabled: false
+  retrieve_disabled: true
   modeling_disabled: false
   debugger_disabled: false
   api_rec_disabled : false

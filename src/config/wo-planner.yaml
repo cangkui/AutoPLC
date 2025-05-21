@@ -49,7 +49,7 @@ instruction:
 # 工作流实验设置
 workflow:
   retrieve_disabled: false
-  modeling_disabled: false
+  modeling_disabled: true
   debugger_disabled: false
   api_rec_disabled : false
   auto_learn_disabled : true
