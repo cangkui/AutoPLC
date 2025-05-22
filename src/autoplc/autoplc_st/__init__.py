@@ -54,8 +54,11 @@ def run_autoplc_st(benchmark: str, config: Config):
         logger.error(f"Benchmark file {benchmark_file_path} not found.")
         return
 
+    # 输出config关键内容：
+    logger.info(f"Benchmark:{benchmark} Model: {config.model} retriever: {config.RETRIEVE_DISABLED == False} planner: {config.MODELING_DISABLED == False} api_rec: {config.APIREC_DISABLED == False} debugger: {config.DEBUGGER_DISABLED == False} auto_learn: {config.AUTOLEARN_DISABLED == False}")
+
     ClientManager().set_config(config)
-    APIDataLoader.init_load(code_type="st")
+    APIDataLoader.init_load(config = config)
     base_folder = init_team_log_path()
 
     os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
@@ -99,6 +102,11 @@ def autoplc_st_workflow(
 
     start_time = time.time()
 
+    # 初始化finally块中的变量
+    sample_names = []
+    logic_for_this_task = ""
+    apis_for_this_task = []
+
     import traceback
     try:
         ###############    retrieve examples    ################
@@ -134,7 +142,7 @@ def autoplc_st_workflow(
             api_from_similar_cases = []
 
         ################      generate plan      ################
-        logic_for_this_task = ""
+        logic_for_this_task = "NOT PROVIDED"
         if not config.MODELING_DISABLED:
             logic_for_this_task = Modeler.run_modeling_task(
                 task=task, 
@@ -144,6 +152,9 @@ def autoplc_st_workflow(
                 load_few_shots=config.IS_MODELING_FEWSHOT
             )
             # print(f"[INFO] logic for this task:\n {logic_for_this_task}")
+            # save logic for this task to file
+        else:
+            related_algorithm = ["NOT PROVIDED"] * len(retrieved_samples)
         
         ################     api recommend      ################
         if not config.APIREC_DISABLED:
@@ -160,6 +171,7 @@ def autoplc_st_workflow(
             library_func_recommend = []
             
         apis_for_this_task = list(set(api_recommend + api_from_similar_cases))
+
         ################      generate st      ################
         st_code = LogicComposer.run_gen_st(
             task=task,
@@ -171,7 +183,7 @@ def autoplc_st_workflow(
             load_few_shots=config.IS_CODING_FEWSHOT
         )
         first_gen_st = st_code
-        
+
         ################       debug st      ################
         if not config.DEBUGGER_DISABLED:
             st_code = AutoDebugger.run_debugger_with_compiler(
@@ -184,24 +196,12 @@ def autoplc_st_workflow(
         else:
             # save st code to file
             code_output_file = os.path.join(base_folder, f"{task['name']}/{task['name']}_{0}.st")
-            logger.info("output file is", code_output_file)
+            logger.info(f"output file is {code_output_file}")
             with open(code_output_file, "w", encoding="utf-8") as fp:
                 fp.write(st_code)
         
         ###############    auto learner      ################
         if not config.AUTOLEARN_DISABLED:
-
-            if groundtruth_st is not None:
-                logger.info("Start auto learner from groundtruth st.")
-                coding_feed_back = LearnAgent.run_learn_from_coding(
-                    task=task,
-                    prediction_st=first_gen_st, # 这里用的是第一次生成的st代码，因为我们希望模型提高首次生成效率
-                    openai_client=openai_client,
-                    groundtruth_st=groundtruth_st
-                )
-                # save feedback json
-                with open(os.path.join(base_folder, f"{task['name']}", "coding_feedback.json"), "w", encoding="utf-8") as f:
-                    json.dump(coding_feed_back, f, ensure_ascii=False, indent=4)
 
             # 加载history
             if os.path.exists(os.path.join(base_folder, f"{task['name']}", "verify_info.jsonl")):
@@ -213,6 +213,21 @@ def autoplc_st_workflow(
                     debug_history = []
             else:
                 debug_history = []
+
+            if groundtruth_st is not None:
+                logger.info("Start auto learner from groundtruth st.")
+                coding_feed_back = LearnAgent.run_learn_from_coding(
+                    task=task,
+                    prediction_st=first_gen_st, # 这里用的是第一次生成的st代码，因为我们希望模型提高首次生成效率
+                    openai_client=openai_client,
+                    groundtruth_st=groundtruth_st,
+                    debug_history=debug_history
+                )
+                # save feedback json
+                with open(os.path.join(base_folder, f"{task['name']}", "coding_feedback.json"), "w", encoding="utf-8") as f:
+                    json.dump(coding_feed_back, f, ensure_ascii=False, indent=4)
+
+            
 
             if len(debug_history) > 0 and groundtruth_st is not None:
                 logger.info("Start auto learner from debug history.")
@@ -230,5 +245,17 @@ def autoplc_st_workflow(
     except Exception as e:
         logger.exception(f"Error occurred while processing task {task['name']}: {e}")
         logger.exception(e)
-    
+    finally :
+        # save all intermediate results to file
+        try:
+            with open(os.path.join(base_folder, f"{task['name']}", "intermediate_results.json"), "w", encoding="utf-8") as f:
+                json.dump({
+                    "retrieved_samples": sample_names if sample_names else [],
+                    "logic_for_this_task": logic_for_this_task if logic_for_this_task else "",
+                    "apis_for_this_task": apis_for_this_task if apis_for_this_task else [],
+                },fp=f, ensure_ascii=False, indent=4)
+        except Exception as e: 
+            logger.error(f"Error occurred while saving intermediate results for task {task['name']}: {e}")
+            pass
+        
     logger.info(f"Task {task['name']} completed in {time.time() - start_time:.2f} seconds.")

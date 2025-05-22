@@ -101,11 +101,13 @@ class Retriever():
             if isinstance(response["case"], dict):
                 response["case"] = [response["case"]]
 
-            # anti-cheating
+            
             names = [example["name"].strip() for example in response["case"]]
+            names = names + [a for a in alternatives if a not in names]
+
+            # anti-cheating
             names = [name for name in names 
                      if not (name.lower() in task_name.lower() or task_name.lower() in name.lower())]
-            names = names + [a for a in alternatives if a not in names]
             
             for name in names[:3]:
                 json_desc = PromptResultUtil.get_json_content(name=name, code_type="scl")

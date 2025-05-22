@@ -5,6 +5,7 @@ from autoplc_st.agents.clients import ClientManager, OpenAIClient
 import logging
 logger = logging.getLogger("autoplc_st")
 
+
 class LogicComposer():
     """
     LogicComposer类用于生成st代码。它提供了从响应中提取代码的功能，并通过运行编辑器代理生成代码。
@@ -27,14 +28,14 @@ class LogicComposer():
     def extract_code_from_response(cls, text: str) -> str:
         """
         Extract code from response
-        ```st
+        ```ST
             <Code>
         ```
         """
         import re
 
         # 使用正则表达式提取实际的代码内容
-        match = re.search(r'```st\n(.*?)\n```', text, re.DOTALL)
+        match = re.search(r'```ST\n(.*?)\n```', text, re.DOTALL)
 
         if match:
             code_content = match.group(1).strip()  # 使用 strip 去除多余的空格和换行
@@ -78,10 +79,7 @@ class LogicComposer():
             api_description = "No Control Instruction is recommended for this task. Please determine the required operations manually."
 
         # 算法生成指导
-        if logic_for_this_task:
-            logic_for_this_task = f"<!-- A Control Logic that you can refer to when coding -->\n<ControlLogic>\n{logic_for_this_task}\n</ControlLogic>\n"
-        else:
-            logic_for_this_task = "NO CONTROL LOGIC RECOMMENDED FOR THIS TASK, YOU SHOULD DETERMINE IT BY YOURSELF"
+        logic_for_this_task = f"<!-- A Control Logic that you can refer to when coding -->\n<ControlLogic>\n{logic_for_this_task}\n</ControlLogic>\n"
 
         editor_system_prompt = sys_prompt.format(
             api_details=api_description,
@@ -159,17 +157,17 @@ class LogicComposer():
         return formatted
 
 sys_prompt = """
-Based on the information provided, write st code to meet the task requirements. Try to use loops, branches, and sequential structures instead of library functions whenever possible, and only use library functions when necessary. Follow the programming standards. Follow the provided code template to correctly construct st code. Refer to the example code of st library functions. 
+Based on the information provided, write ST code to meet the task requirements. Try to use loops, branches, and sequential structures instead of library functions whenever possible, and only use library functions when necessary. Follow the programming standards. Follow the provided code template to correctly construct ST code. Refer to the example code of ST library functions. 
 
 OutputFormat:
-```st
-// only your st code is allowed here.
+```ST
+// only your ST code is allowed here.
 ```
 
-st Standard Library Documentation:
+ST Standard Library Documentation:
 {api_details}
 
-st programming guidances:
+ST programming guidances:
 {programming_guidance}
 
 """.strip()

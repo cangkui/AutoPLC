@@ -10,7 +10,6 @@ import logging
 
 logger = logging.getLogger("autoplc_st")
 
-
 class Modeler():
     """
     Modeler类用于生成算法流程描述。它通过运行建模任务来生成指导后续代码生成的算法流程。
@@ -95,17 +94,18 @@ class Modeler():
         - response: AI模型的响应对象。
 
         返回:
-        - st_code: 提取出的st代码字符串。
+        - algo: 提取出的算法流程描述字符串。
         """
         if hasattr(response, 'choices'):
             choice = response.choices[0]
             if hasattr(choice, 'message') and hasattr(choice.message, 'content'):
-                st_code = choice.message.content
+                algo = choice.message.content
             else:
-                st_code = choice['message']['content']
+                algo = choice['message']['content']
         else:
-            st_code = response.content[0].text
-        return st_code
+            algo = response.content[0].text
+
+        return algo
 
     @classmethod
     def load_plan_gen_shots(cls, examples: List[dict], algorithms: List[str]):
@@ -137,25 +137,25 @@ plan_shots_prompt_en = """Here is the input, structured in XML format:
 """
 
 state_machine_prompt_en = """
-You are a PLC engineer.
+You are a professional PLC engineer working in a Codesys-based development environment.
 
 Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
 
 For **sequential control tasks**:
-    1. Analyze the possible states.
-    2. Identify the state transition events.
-    3. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
+    1. Analyze the possible control states involved in the process.
+    2. Identify clear and deterministic state transition events or conditions.
+    3. Describe the algorithmic workflow and control logic in a structured, human-readable manner. Do not output pseudocode or any form of code!
 
 For **data processing tasks**:
-    1. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
+    1. Describe the algorithmic workflow and computational steps. Do not output pseudocode or any form of code!
 
 Notes:
-- Maintain a professional and rigorous tone, in line with Siemens S7-1200/1500 PLC standards.
-- Be cautious with initialization steps to avoid unintentional deletion of important data.
-- If no transition event occurs, the current state's actions should be maintained.
-- If the requirement explicitly calls for exception handling, include it; otherwise, it is not necessary.
+- Maintain a professional and systematic tone, in line with IEC 61131-3 Structured Text conventions.
+- Consider initialization and persistent variable behavior carefully to avoid data loss or unexpected resets.
+- In the absence of any triggering event, the system should remain in the current state and continue executing its associated logic.
+- Only include exception handling logic if it is explicitly mentioned in the requirement.
+- Be mindful of typical Codesys task cycle execution and ensure that the logic is consistent with real-time execution constraints.
 """.strip()
-
 
 state_machine_prompt = """
 你是PLC工程师。

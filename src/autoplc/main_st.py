@@ -14,9 +14,13 @@ console_handler = RichHandler(rich_tracebacks=True, markup=True)
 logger.handlers.clear()  # 清除旧 handler（避免重复）
 logger.addHandler(console_handler)
 
+from autoplc_st import run_autoplc_st
+import argparse
 if __name__ == "__main__":
     # TODO:We need to generate plans at first so that we can use plans as shots in planning agents.
-    from autoplc_st import run_autoplc_st
-    exp_config = Config(config_file="default_st")
-    run_autoplc_st(benchmark="oscat", config=exp_config)
-    # run_autoplc_scl(benchmark="lgf", config=exp_config)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--benchmark", type=str, default="oscat", help="benchmark name")
+    parser.add_argument("--config", type=str, default="default_st", help="config name")
+    args = parser.parse_args()
+    
+    run_autoplc_st(benchmark=args.benchmark, config=Config(config_file=args.config))

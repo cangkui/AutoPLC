@@ -7,6 +7,7 @@ environment:
   instruction_dir: "{ROOTPATH}/data/rag_data/instructions"
   st_code_dir: "{ROOTPATH}/data/rag_data/st/st_case_code"
   codesys_dir: "D:/Tools/CODESYS/CODESYS/Common/CODESYS.exe"
+
 # 模型配置
 model:
   name: "gpt-4.1-mini"  # 可选: claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022, llama3.1-8b-instruct
@@ -32,24 +33,24 @@ verify:
 # RAG检索配置
 retrieval:
   case_alternatives:
-    - "LGF_CompareString"
-    - "LGF_BitCount"
-    - "LGF_SinusCI"
+    - "ARRAY_TREND"
+    - "AUTORUN"
+    - "IRTRANS_RCV_1"
   b25_model: "BM25Okapi"
 
 # 指令配置
 instruction:
   path:
-    - "{ROOTPATH}/data/rag_data/instructions/basic.jsonl"
-    - "{ROOTPATH}/data/rag_data/instructions/extend.jsonl"
-  score_threshold: 0.5
+    - "{ROOTPATH}/data/rag_data/instructions/basic.with_brief.with_keywords.jsonl"
+  score_threshold: 50
   top_k: 2
+  function_usage_path: "{ROOTPATH}/data/rag_data/st/st_functions_usage.json"
 
 # 工作流实验设置
 workflow:
   retrieve_disabled: false
   modeling_disabled: false
-  debugger_disabled: false
+  debugger_disabled: true
   api_rec_disabled : false
   auto_learn_disabled : false
   is_coding_fewshot: true

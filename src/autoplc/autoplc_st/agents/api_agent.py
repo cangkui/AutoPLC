@@ -1,4 +1,5 @@
 from calendar import c
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from os import name
 import os
@@ -9,6 +10,7 @@ import json
 
 from flask import config
 
+from autoplc_st.tools.api_loader import APIDataLoader
 from common import Config
 from autoplc_st.agents.clients import BM25RetrievalInstruction, ClientManager, OpenAIClient, ZhipuAIQAClient
 
@@ -74,6 +76,120 @@ class ApiAgent():
             json_data = None
         return json_data
     
+    @classmethod
+    def extract_complex_type(
+        cls,
+        task: dict,
+        algorithm_for_this_task: str,
+        openai_client: OpenAIClient
+    ) -> List[str]:
+        """
+        调用大模型，从任务需求中提取涉及的复杂数据类型。
+        输出为字符串列表，例如 ["ARRAY[*]", "Variant"]
+        """
+        requirement = str(task)
+
+        messages = [
+            {"role": "system", "content": extract_type_system_prompt_zh},
+            {"role": "user", "content": extract_type_user_prompt_zh.format(requirement=requirement, algorithm=algorithm_for_this_task)}
+        ]
+
+        try:
+            response = openai_client.call(
+                messages=messages,
+                task_name='extract_complex_type',
+                role_name='api_agent',
+            )
+            content = cls.extract_content(response)
+            complex_types = json.loads(str(content))
+
+            if isinstance(complex_types, list):
+                logger.info(f"🔍 Extracted complex types: {complex_types}")
+                return complex_types
+            else:
+                logger.warning("⚠️ Output is not a valid string list.")
+                return []
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to extract complex types: {e}")
+            return []
+
+    @classmethod
+    def run_filter_relevant_functions_group(
+        cls,
+        task: dict,
+        algorithm_for_this_task: str,
+        functions_json_list: List[dict],
+        openai_client
+    ) -> List[str]:
+        """
+        分组调用大模型筛选出必须使用的函数，返回结构：[{name: ..., reason: ...}, ...]
+        """
+        group_size = 15 # 15个函数为一组
+        groups = [functions_json_list[i:i+group_size] for i in range(0, len(functions_json_list), group_size)]
+
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            futures = [
+                executor.submit(cls.run_filter_relevant_functions, task, algorithm_for_this_task, group, openai_client)
+                for group in groups
+            ]
+            results = [future.result() for future in futures]
+
+        # 将所有结果合并
+        merged_results = []
+        for result in results:
+            if isinstance(result, list):
+                merged_results.extend(result)
+            else:
+                logger.warning("⚠️ Output is not a valid function list.")
+
+        logger.info(f"✅ Filtered {len(merged_results)} relevant functions after grouping.")
+        return merged_results
+
+
+    @classmethod
+    def run_filter_relevant_functions(
+        cls,
+        task: dict,
+        algorithm_for_this_task: str,
+        functions_json_list: List[dict],
+        openai_client: OpenAIClient
+    ) -> List[str]:
+        """
+        给定任务、算法和函数简述，调用大模型筛选出必须使用的函数及推荐理由。
+        返回结构：["api1", "api2", ...]
+        """
+        requirement = str(task)
+
+        messages = [
+            {"role": "system", "content": filter_relevant_instructions_system_prompt},
+            {"role": "user", "content": filter_relevant_instructions_user_prompt.format(
+                requirement=requirement,
+                algorithm=algorithm_for_this_task,
+                functions_json=json.dumps(functions_json_list, indent=2)
+            )}
+        ]
+
+        try:
+            response = openai_client.call(
+                messages=messages,
+                task_name='filter_relevant_functions',
+                role_name='api_agent'
+            )
+            content = cls.extract_content(response)
+            filtered = json.loads(content)
+
+            if isinstance(filtered, list):
+                logger.info(f"✅ Filtered {len(filtered)} relevant functions.")
+                return filtered
+            else:
+                logger.warning("⚠️ Output is not a valid function list.")
+                return []
+
+        except Exception as e:
+            logger.error(f"❌ Failed to filter relevant functions: {e}")
+            return []
+
     @classmethod
     def run_gen_dsl(cls,
             task: dict,
@@ -146,11 +262,32 @@ class ApiAgent():
         if load_few_shots:
             pass
 
-        # 根据算法语义检索
-        # TODO: 改为智谱检索
+        # 根据任务描述和算法描述查询相关的基本指令
+        basic_instructions += local_api_retriever.query_multi_channel(task['description'])
         if algorithm_for_this_task:
-            basic_instructions += local_api_retriever.query_algo_apis(algorithm_for_this_task)
-    
+            basic_instructions += local_api_retriever.query_multi_channel(algorithm_for_this_task)
+
+        # 基于复杂类型召回指令
+        complex_types = cls.extract_complex_type(task, algorithm_for_this_task, openai_client)
+        logger.info(f"🔍 Extracted complex types: {complex_types}")
+        if complex_types:
+            basic_instructions.extend(local_api_retriever.query_api_by_type(complex_types))
+
+        # 查询api相关信息（用于重排序）
+        if basic_instructions:
+            basic_instruction_list = APIDataLoader.query_api_brief(basic_instructions)
+
+        logger.info(f"🔍 Extracted basic instructions: {basic_instructions}")
+
+        # 大模型过滤重排序
+        if basic_instructions:
+            # 调用OpenAI的API进行过滤
+            basic_instructions = cls.run_filter_relevant_functions_group(task, 
+                                                                   algorithm_for_this_task, 
+                                                                   basic_instruction_list, 
+                                                                   openai_client)
+
+
         # 去除重复的指令
         basic_instructions = list(set(basic_instructions))
         library_instructions = list(set(library_instructions))
@@ -161,6 +298,7 @@ class ApiAgent():
 
         # 返回推荐的API指令实例
         return basic_instructions, library_instructions
+
 
 if  __name__ == '__main__':
 
@@ -174,10 +312,10 @@ if  __name__ == '__main__':
     ApiAgent.run_gen_dsl(task=task,algorithm_for_this_task=algo_for_task,openai_client=openai_client)
 
 gen_dsl_system_prompt_zh = """
-角色：你是西门子 S7-1200/1500 系列 PLC 系统的专业工程师，精通顺序控制、状态逻辑与数据块管理。
+角色：你是基于 CODESYS 平台进行 ST 编程的专业工程师，精通顺序控制、状态逻辑与数据块管理。
 
 任务：请结合需求中的复杂数据类型，将用户给出的建模流程描述，解析为许多个结构化的 DSL 表达，以便后续进行指令推荐与程序生成。
-你的输出应准确表达控制逻辑中的条件与操作，并标注涉及的复杂数据类型（如 IEC_TIMER 、Variant、 Array[*]、 DTL、 String等）。
+你的输出应准确表达控制逻辑中的条件与操作，并标注涉及的复杂数据类型（如 TON 、 Array、String等）。
 
 示例输出格式如下：
 
@@ -185,12 +323,12 @@ gen_dsl_system_prompt_zh = """
 [{
     "触发条件": "无",
     "操作内容": "计算数组的长度",
-    "涉及的复杂数据类型": ["ARRAY[*]"]
+    "涉及的复杂数据类型": ["ARRAY"]
 }，
 {
     "触发条件": "水位（#WaterLevel）达到设定值（#Number）",
     "操作内容": "启动泵（#pump）并监控运行时间",
-    "涉及的复杂数据类型": ["IEC_TIMER"]
+    "涉及的复杂数据类型": ["TON"]
 }]
 ```
 
@@ -198,7 +336,7 @@ gen_dsl_system_prompt_zh = """
 - 每个DSL的操作内容尽可能原子化。
 - 触发条件和操作内容应尽量简洁、准确，符合PLC工程师风格。
 - 仅需要标注操作涉及的复杂数据类型，因为这些类型通常需要特殊的st指令去进行类型判断、读写操作、数据转换。
-- 数据类型应基于操作语义与需求中的参数进行合理推断（如遇到计时操作，考虑IEC_TIMER等）。
+- 数据类型应基于操作语义与需求中的参数进行合理推断（如遇到计时操作，考虑TON等）。
 """
 
 gen_dsl_user_prompt_zh = """
@@ -210,7 +348,7 @@ gen_dsl_user_prompt_zh = """
 """.strip()
 
 recommend_function_system_prompt_zh = """
-角色：你是一位精通西门子 S7-1200/1500 系列 的资深PLC系统架构师，负责基于控制流程模型为工程项目推荐可能使用的自定义函数或模块级封装。
+角色：你是一位精通 CODESYS 平台 ST 编程的资深PLC系统架构师，负责基于控制流程模型为工程项目推荐可能使用的自定义函数或模块级封装。
 
 任务目标：
 请你结合需求，根据建模生成的控制流程（如状态机、顺序控制段）与操作描述，推理出可能适用的自定义库函数。
@@ -307,4 +445,62 @@ You are a searcher. Given a task, you can retrieve the most relevant structured 
 <case> ... </case>
 </root>
 
+""".strip()
+
+
+filter_relevant_instructions_system_prompt = """
+You are a senior PLC software engineer. Your job is to help select useful existing instructions necessary for the task.
+
+Each instruction is described by:
+- name
+- functional_summary
+- usage_context
+
+You are also given the task description and its control logic plan.
+
+Apply Occam's razor: select the minimal set of indispensable instructions required to fulfill the task.
+- Can the task be accomplished without this instruction?
+- Does the instruction type align with the task requirement?	
+
+Respond in a JSON array like this:
+["api1","api2"]
+
+IMPORTANT: Do not include any other text or explanation. Just the JSON array.
+""".strip()
+
+
+filter_relevant_instructions_user_prompt = """
+## Task Requirement
+{requirement}
+
+## Control Logic
+{algorithm}
+
+## Candidate Instructions
+{functions_json}
+""".strip()
+
+
+
+extract_type_system_prompt_zh = """
+你是PLC平台CODESYS的ST编程专家，擅长从任务描述中识别涉及的复杂数据类型（如DATE、STRING、ARRAY、POINTER、TON等）。
+
+请你阅读用户的任务目标和控制逻辑设计，并判断是否存在需要使用上述复杂数据类型的情况（如：动态变量、时间戳处理、数组操作等）。
+
+输出格式为 JSON 数组，仅包含推测涉及的复杂数据类型。例如：
+["DATE","ARRAY"]
+
+注意事项：
+- 只返回涉及的复杂数据类型名称。
+- 遇到动态变量、数组、指针等应返回 ARRAY 或 POINTER等。
+- 遇到时间、日期、定时器等应返回 TIME 或 TON等。
+- 如果无涉及，返回空数组 []。
+""".strip()
+
+extract_type_user_prompt_zh = """
+## 任务描述
+{requirement}
+
+## 控制建模设计
+{algorithm}
 """.strip()

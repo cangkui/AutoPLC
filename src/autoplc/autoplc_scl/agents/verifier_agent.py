@@ -98,13 +98,13 @@ class AutoDebugger():
             else:
                 error_list = []
                 
-                # 首选IsDef为true的错误
+                # 首选 Data Section 的错误，因为Data Section 的错误会引发级联错误
                 for error in check_result.errors:
                     if error.error_type == "Data Section Error":
                         logger.info(f"Data Section Error >>> {str(error)}")
                         error_list.append(error.to_dict())
 
-                # 如果没有IsDef为true的错误，则选择IsDef为false的错误
+                # 如果没有Data Section 的错误，则检查 Program Section 的错误
                 if not error_list:
                     for error in check_result.errors:
                         if error.error_type == "Program Section Error":
@@ -114,7 +114,8 @@ class AutoDebugger():
                 error_log = '\n'.join([str(err) for err in error_list])
                 logger.info(f'{task["name"]} Start Verification!')
 
-                debugging_process_data["compiler"] = error_list
+                # 记录所有错误信息
+                debugging_process_data["compiler"] = check_result.errors
 
             verifier_instance_prompt_with_data = verifier_instance_prompt.format(
                 static_analysis_results = error_log,
@@ -290,14 +291,14 @@ SCL Programming Guidelines:
 
 verifier_instance_prompt = """
 Input structured in XML format:
-<!-- Code with syntax errors. -->
+<!-- Code with errors. -->
 <SCLCode>
 {scl_code}
 </SCLCode>
-<!-- Syntax check results and potential violated syntax rules. Context represents the point where the syntax checker stops due to encountering an error. -->
-<SyntaxCheckResults>
+<!-- Errors. -->
+<Errors>
 {static_analysis_results}
-</SyntaxCheckResults>
+</Errors>
 """
 
 programming_guidance = "NO PROGRAMMING GUIDANCE"

@@ -91,21 +91,6 @@ class ExperimentStatistics:
         """Convert statistics to dictionary format"""
         return asdict(self)
 
-retrieve_client = OpenAI(
-    api_key=os.getenv("API_KEY_KNOWLEDGE").strip(),
-    base_url="https://open.bigmodel.cn/api/paas/v4/"
-)
-
-autoplc_client_anthropic = Anthropic(
-    base_url=os.getenv("BASE_URL"),
-    api_key=os.getenv("API_KEY")
-)
-
-autoplc_client_openai = OpenAI(
-    base_url=os.getenv("BASE_URL"),
-    api_key=os.getenv("API_KEY")
-)
-
 class _BaseClient:
     """
     用于与LLM（大语言模型）交互的基类。
@@ -113,10 +98,11 @@ class _BaseClient:
     Attributes:
         config (Config): 本项目的配置类，包含了与LLM交互所需的配置信息。
     """
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
         self.config = config # 本项目的配置类
         self.experiment_base_logs_folder = 'default_logs' # 本次实验的日志文件夹，在init时重制
         self.statistics = ExperimentStatistics()
+        self.llm_client = llm_client # LLM客户端实例
 
     def call(self, messages: str, task_name: str = "default", role_name: str = "default"):
         # 调用LLM的接口，发送消息并获取响应
@@ -229,14 +215,14 @@ class OpenAIClient(_BaseClient):
         experiment_base_logs_folder (str): 本次实验的日志文件夹，在init时重制。
         statistics ({}): 统计每个任务的input和output token的使用情况。
     """
-    def __init__(self, config: Config):
-        super().__init__(config)
+    def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
+        super().__init__(config, llm_client)
 
     def call(self, 
         messages: List[dict], 
         task_name: str = "default", 
         role_name: str = "default",
-        model: str = "gpt-4.1"
+        model: str = None
     ) -> Completion:
         """
         调用LLM的接口，发送消息并获取响应。
@@ -249,9 +235,10 @@ class OpenAIClient(_BaseClient):
         Returns:
             response: LLM的响应对象，包含了生成的消息和使用信息。
         """
-        
+        if model is None:
+            model = self.config.model
         # 创建消息以获取响应
-        response = autoplc_client_openai.chat.completions.create(
+        response = self.llm_client.chat.completions.create(
             messages=messages,
             model=model,
             max_tokens=self.config.max_tokens,
@@ -273,9 +260,9 @@ class ZhipuAIQAClient(_BaseClient):
     
     初始化时，接受一个Config对象作为配置参数。
     """
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
         # 初始化基类_BaseClient，传入配置参数
-        super().__init__(config)
+        super().__init__(config, llm_client)
 
     def call_kbq(self, 
         messages: str, 
@@ -299,7 +286,7 @@ class ZhipuAIQAClient(_BaseClient):
         """
 
         # 创建模型完成请求，包含特定的检索工具参数
-        response = retrieve_client.chat.completions.create(
+        response = self.llm_client.chat.completions.create(
             model=self.config.retrieve_model,  
             temperature=self.config.retrieve_temperature,
             top_p=self.config.retrieve_top_p,
@@ -328,146 +315,106 @@ def read_jsonl(filename):
     return lines
 
 class BM25RetrievalInstruction:
-    """
-        A class that implements BM25-based instruction retrieval for PLC programming.
-        This class provides functionality to search and retrieve relevant PLC instructions
-        based on semantic similarity using the BM25 algorithm. It supports searching both
-        by algorithm descriptions and direct queries.
-        Attributes:
-            instruction_corpus (List[str]): List of instruction documents containing API descriptions
-            instruction_names (List[str]): List of instruction/API names
-            tokenized_corpus (List[List[str]]): The tokenized version of instruction_corpus
-            bm25 (BM25Okapi): The BM25 model used for retrieval
-            INSTRUCTION_SCORE_THRESHOLD (float): Minimum score threshold for matching instructions
-            INSTRUCTION_TOP_K (int): Maximum number of top results to return
-        Parameters:
-            config (Config): Configuration object containing necessary parameters:
-                - INSTRUCTION_PATH: Path to instruction descriptions file
-                - BM25_MODEL: Type of BM25 model to use (currently only supports "BM25Okapi")
-                - INSTRUCTION_SCORE_THRESHOLD: Threshold score for instruction matching
-                - INSTRUCTION_TOP_K: Number of top results to return
-        Example:
-            >>> config = Config()
-            >>> retriever = _BM25RetrieverInstruction(config)
-            >>> apis = retriever.query_algo_apis("首先，需要对输入的数组进行排序\n随后，设置计时器") 
-            >>> docs = retriever.query_doc("如何使用计时器？")
-    """
-    def __init__(self, config: Config):
+    def __init__(self, config:Config):
         jieba.initialize()
         stop_path = config.INSTRUCTION_DIR.joinpath("stopwords_english.txt.")
-        stopwords = set(open(stop_path, encoding="utf-8").read().splitlines())
-        self.stopwords = stopwords
-        # 初始化API描述和名称
-        self.instruction_corpus,self.instruction_names = self.read_ins_desc(config.INSTRUCTION_PATH)
+        self.stopwords = set(open(stop_path, encoding="utf-8").read().splitlines())
 
-        logger.info(f"loading instruction from >>> {config.INSTRUCTION_PATH}")
+        # 加载指令数据
+        self.instructions = []
+        for inst_path in config.INSTRUCTION_PATH:
+            self.instructions.extend(read_jsonl(inst_path))
+        self.instruction_names = [api['instruction_name'] for api in self.instructions]
 
-        def remove_stopwords(token_list, stopwords):
-            return [t for t in token_list if t not in stopwords]
+        # 多通道文本构建
+        self.channel_texts = {
+            'keywords': [],
+            'summary': [],
+            'usage': []
+        }
 
-        self.tokenized_corpus = [
-            remove_stopwords(list(jieba.cut(doc)), stopwords)
-            for doc in self.instruction_corpus
-        ]
+        logger.info(f"initializing BM25s with chanel_texts: {self.channel_texts.keys()}")
+
+        for api in self.instructions:
+            self.channel_texts['keywords'].append(self._tokenize(api['generated_keywords']))
+            self.channel_texts['summary'].append(self._tokenize(api['generated_brief']['functional_summary']))
+            self.channel_texts['usage'].append(self._tokenize(api['generated_brief']['usage_context']))
         
         # 初始化BM25模型
-        if config.BM25_MODEL == "BM25Okapi":
-            self.bm25 = BM25Okapi(self.tokenized_corpus)
-        else:
-            raise NotImplementedError(f"BM25 model {config.BM25_MODEL} not implemented")
-        
-        # 设置BM25模型的参数
+        self.bm25_models = {
+            'keywords': BM25Okapi(self.channel_texts['keywords']),
+            'summary': BM25Okapi(self.channel_texts['summary']),
+            'usage': BM25Okapi(self.channel_texts['usage'])
+        }
+
         self.INSTRUCTION_SCORE_THRESHOLD = config.INSTRUCTION_SCORE_THRESHOLD
         self.INSTRUCTION_TOP_K = config.INSTRUCTION_TOP_K
 
-    def query_api_by_type(self , complex_types:list[str]) -> list[str]:
+    def _tokenize(self, content:str) -> List[str]:
+        """Tokenizes the input content using jieba and removes stopwords."""
+        if isinstance(content, list):
+            content = ".".join(content)
+        tokens = list(jieba.cut(content.lower()))
+        return [t for t in tokens if t not in self.stopwords]
+
+    def query_multi_channel(self, query: str) -> List[str]:
         """
-        返回一组api，其中的输入参数为 complex_types 中的类型
-        """
-        pass
-
-    def query_algo_apis(self, algo: str) -> List[str]:
-        """
-        Returns a list of APIs related to the algorithm query string provided.
-
-        This method processes the query string by tokenization and BM25 algorithm to find APIs related to the algorithm.
-        It first splits the query string into separate query lines, then processes each line, 
-        calculates the matching score between the query and the document using the BM25 algorithm,
-        and selects the most relevant API documents based on the score sorting.
-
-        Parameters:
-        algo (str): The algorithm query string entered by the user, which can contain multiple lines of query.
-
+        Queries multiple channels (keywords, summary, usage) to find relevant instructions.
+        Args:
+            query (str): The query string to search for.
         Returns:
-        List[str]: A list of API names related to the query algorithm, where each str is an API name.
+            List[str]: A list of instruction names that match the query.
         """
-        # 初始化一个集合，用于存储所有相关的API名称，以避免重复
-        all_apis = set()
-        
-        # 将算法查询字符串按行分割，每行作为一个独立的查询
-        algo_lines = algo.strip().split("\n") 
+        import re
 
-        for line in algo_lines:
-            if line:
-                
-                # 使用jieba分词将查询行分割成单词列表
-                tokenized_query = list(jieba.cut(line))
+        def split_text(text: str) -> List[str]:
+            return [line.strip() for line in re.split(r'[；;。\n]+', text) if line.strip()]
 
-                # 去除停用词
-                tokenized_query = [t for t in tokenized_query if t not in self.stopwords]
+        matched_apis = set()
 
-                # 使用BM25算法获取当前查询与所有文档的得分
-                # print(self)
-                # print("----------")
-                # print(tokenized_query)
+        for sentence in split_text(query):
+            tokenized = self._tokenize(sentence)
+            for channel, bm25 in self.bm25_models.items():
+                scores = bm25.get_scores(tokenized)
+                scored_items = [
+                    (self.instruction_names[i], score)
+                    for i, score in enumerate(scores)
+                    if score > self.INSTRUCTION_SCORE_THRESHOLD
+                ]
+                top_hits = sorted(scored_items, key=lambda x: x[1], reverse=True)[:self.INSTRUCTION_TOP_K]
+                matched_apis.update([name for name, _ in top_hits])
 
-                scores = self.bm25.get_scores(tokenized_query)
-                ranked_indices = np.argsort(scores)[::-1]
-                ranked_scores = sorted(scores, reverse=True)
+        return list(matched_apis)
 
-                # 过滤出得分高于预设阈值的文档，并限制结果数量
-                top_docs = [(rank, score) for rank, score in zip(ranked_indices, ranked_scores) if score > self.INSTRUCTION_SCORE_THRESHOLD][:self.INSTRUCTION_TOP_K]
-                for idx, (doc_idx, score) in enumerate(top_docs, start=1):
-                    # 将相关API添加到集合中
-                    all_apis.add(self.instruction_names[doc_idx])
-    
-        all_apis = list(all_apis)
-        return all_apis
-
-    def query_doc(self, query, top_n=3) -> List[str]:
+    def query_api_by_type(self, complex_types: List[str]) -> List[str]:
         """
-        Based on the user's query, return a list of documents most relevant to the question.
-
-        Parameters:
-        - query (str): The user's query.
-        - top_n (int): The number of most relevant documents returned, default is 3.
-
+        Queries the API instructions based on complex types.
+        args:
+            complex_types (List[str]): A list of complex types to search for.
         Returns:
-        - List[str]: The list of documents most relevant to the query.
+            List[str]: A list of instruction names that match the complex types.
         """
-        # 使用jieba分词器对查询问题进行分词
-        tokenized_query = list(jieba.cut(query))
-        
-        # 使用BM25算法获取与查询问题最相关的文档
-        return self.bm25.get_top_n(tokenized_query, self.instruction_corpus, n=top_n)
-    
-    def read_ins_desc(self, inst_paths: List[str]):
-        inst_desc = []
-        for inst_path in inst_paths:
-            inst_desc.extend(read_jsonl(inst_path))
-        ret = []
-        names = []
-        for api in inst_desc:
-            # 提取 description 字段并转为小写
-            description = api['description'].lower()
-            # 使用 jieba 分词
-            tokenized_desc = list(jieba.cut(description))
-            # 去除停用词
-            filtered_desc = [t for t in tokenized_desc if t not in self.stopwords]
-            # 将处理后的结果添加到 ret 列表
-            ret.append(" ".join(filtered_desc))
-            names.append(api['instruction_name'])
-        return ret, names
+        matched_apis = set()
+        norm_types = [t.lower().replace('[*]', '').replace('_', '') for t in complex_types]
+        for name, api in zip(self.instruction_names, self.instructions):
+            all_text = json.dumps(api).lower().replace('_', '')
+            if any(t in all_text for t in norm_types):
+                matched_apis.add(name)
+        return list(matched_apis)
+
+    def query_doc(self, query: str, channel: str = 'summary', top_n: int = 3) -> List[str]:
+        """
+        Queries the BM25 model for the top N instructions based on the query.
+        Args:
+            query (str): The query string to search for.
+            channel (str): The channel to search in ('keywords', 'summary', 'usage').
+            top_n (int): The number of top results to return.
+        Returns:
+                List[str]: A list of instruction names that match the query.
+        """
+        tokenized = self._tokenize(query)
+        bm25 = self.bm25_models[channel]
+        return bm25.get_top_n(tokenized, self.instruction_names, n=top_n)
 
 class ClientManager:
     """
@@ -485,8 +432,24 @@ class ClientManager:
         return cls._instance
 
     def set_config(self, config: Config):
-        self._openai_client = OpenAIClient(config)
-        self._zhipuai_client = ZhipuAIQAClient(config)
+        
+        retrieve_client = OpenAI(
+            api_key=os.getenv("API_KEY_KNOWLEDGE").strip(),
+            base_url="https://open.bigmodel.cn/api/paas/v4/"
+        )
+
+        autoplc_client_anthropic = Anthropic(
+            base_url=os.getenv("BASE_URL"),
+            api_key=os.getenv("API_KEY")
+        )
+
+        autoplc_client_openai = OpenAI(
+            base_url=os.getenv("BASE_URL"),
+            api_key=os.getenv("API_KEY")
+        )
+
+        self._openai_client = OpenAIClient(config,autoplc_client_openai)
+        self._zhipuai_client = ZhipuAIQAClient(config,retrieve_client)
         self._local_api_retriever = BM25RetrievalInstruction(config)
 
     def get_openai_client(self):

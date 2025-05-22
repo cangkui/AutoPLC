@@ -1,32 +1,35 @@
 # import os
 import json
 from typing import List, Dict, Tuple
+from common.config import Config
 from common import ROOTPATH
 # import dotenv
 
 # dotenv.load_dotenv()
 
-
 class APIDataLoader():
-    RAG_DATA_DIR = ROOTPATH.joinpath("data/rag_data")
     api_detail_dict: dict = None
     functions_usage: dict = None
     # keywords: dict = None
-    api_details_str: str = None
+    api_details_str = ""
 
     @classmethod
-    def init_load(cls, code_type: str):
+    def init_load(cls, config: Config):
         if cls.api_detail_dict is None:
-            with open(f"{cls.RAG_DATA_DIR}/{code_type}/{code_type}_instruction_detail_all.json", "r", encoding="utf8") as fp:
-                cls.api_detail_dict = json.load(fp)
+            cls.api_detail_dict = {}
+            try:
+                for path in config.INSTRUCTION_PATH:
+                    with open(path, "r", encoding="utf8") as fp:
+                        for line in fp:
+                            json_data = json.loads(line)
+                            api_name = json_data["instruction_name"]
+                            cls.api_detail_dict[api_name] = json_data
+            except Exception as e:
+                print(f"Error loading API data: {e}")
         if cls.functions_usage is None:
-            with open(f"{cls.RAG_DATA_DIR}/{code_type}/{code_type}_functions_usage.json","r", encoding="utf8") as fp:
+            with open(config.FUNCTION_USAGE_PATH,"r", encoding="utf8") as fp:
                 cls.functions_usage = json.load(fp)
-        # if cls.keywords is None:
-        #     with open(f"{RAG_DATA_DIR}/Keywords.json","r") as fp:
-        #         cls.keywords = json.load(fp)
 
-    
     @classmethod
     def prettify_api(cls, data: dict) -> str:
         """
@@ -39,7 +42,8 @@ class APIDataLoader():
         - str: 格式化后的API信息字符串，包含指令名称、描述、参数和示例代码等信息。
         """
         output = f"{data['instruction_name']}()\n"
-        output += f"- description: {data['brief_description']}\n"
+        output += f"- description : {data['generated_brief']['functional_summary']}\n"
+        output += f"- how to use: {data['how_to_use']}\n"
         
         for category in data['parameters']:
             output += f"- {category} parameters:\n"
@@ -48,10 +52,9 @@ class APIDataLoader():
             output += "\n"
         
         output += f"- example_code:```st\n {data['example_code']}\n```\n"
-        output += f"- additional_info: {data['additional_info']}\n"
         
         return output
-
+    
     @classmethod
     def extract_apis_from_cases(cls, case_names: List[str]) -> List[str]:
         """
@@ -71,7 +74,30 @@ class APIDataLoader():
         extracted_apis = list(set(extracted_apis))
         return extracted_apis
 
- 
+    @classmethod
+    def query_api_brief(cls, api_names: List[str]) -> List[dict]:
+        """
+        根据 API 名称查询 API 简短信息。
+
+        参数:
+        - api_names: API 名称列表
+
+        返回:
+        - 包含 API 名称和简短信息的字典列表
+        """
+        api_detail_dict = cls.api_detail_dict
+        api_details = []
+        for api in api_names:
+            if api in api_detail_dict:
+                api_details.append(
+                    {
+                        "instruction_name": api,
+                        "generated_brief": api_detail_dict[api]["generated_brief"],
+                        "generated_keywords": api_detail_dict[api]["generated_keywords"],
+                    }
+                )
+        return api_details
+    
     @classmethod
     def format_api_details(cls, api_names: List[str]) -> Tuple[str, dict]:
         """
@@ -103,6 +129,8 @@ class APIDataLoader():
             for i, api in enumerate(data_transform)
             for src, dst in [api.split('_TO_')]
         )
+    
+        # to be compatible with the verifier
+        cls.api_details_str = api_details_str
 
         return f"{api_details_str}\n{data_transform_str}\n"
-
