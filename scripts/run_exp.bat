@@ -1,22 +1,29 @@
 @echo off
 setlocal
 
-:: 解释器路径
-set PYTHON=..\asevenv\Scripts\python.exe
+:: Paths
+set PYTHON_PATH=..\asevenv\Scripts\python.exe
+set MAIN_PATH=..\src\autoplc\main.py
 
-:: config 列表
-set configs=default.yaml wo-apirec.yaml wo-debugger.yaml wo-planner.yaml wo-retrival.yaml
+:: Config files
+set CONFIGS=default wo-apirec wo-debugger wo-planner wo-retrival
 
-:: benchmark 数据集列表
-set benchmarks=competition lgf githubcase agents4plc
+:: Datasets
+set DATASETS=competition lgf githubcase agents4plc
 
-:: 遍历 configs 和 benchmarks
-for %%c in (%configs%) do (
-    for %%b in (%benchmarks%) do (
-        echo Running config=%%c on benchmark=%%b
-        %PYTHON% ..\src\autoplc\main.py --config %%c --benchmark %%b
+:: Loop over each config
+for %%C in (%CONFIGS%) do (
+    echo ===============================
+    echo Running config: %%C
+    echo ===============================
+
+    :: Loop over each dataset
+    for %%D in (%DATASETS%) do (
+        echo -------------------------------
+        echo Running on dataset: %%D
+        echo -------------------------------
+        %PYTHON_PATH% %MAIN_PATH% --config %%C --benchmark %%D
     )
 )
 
-echo All experiments finished.
-pause
+endlocal

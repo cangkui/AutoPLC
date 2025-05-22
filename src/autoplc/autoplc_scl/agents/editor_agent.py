@@ -78,10 +78,7 @@ class LogicComposer():
             api_description = "No Control Instruction is recommended for this task. Please determine the required operations manually."
 
         # 算法生成指导
-        if logic_for_this_task:
-            logic_for_this_task = f"<!-- A Control Logic that you can refer to when coding -->\n<ControlLogic>\n{logic_for_this_task}\n</ControlLogic>\n"
-        else:
-            logic_for_this_task = "NO CONTROL LOGIC RECOMMENDED FOR THIS TASK, YOU SHOULD DETERMINE IT BY YOURSELF"
+        logic_for_this_task = f"<!-- A Control Logic that you can refer to when coding -->\n<ControlLogic>\n{logic_for_this_task}\n</ControlLogic>\n"
 
         editor_system_prompt = sys_prompt.format(
             api_details=api_description,

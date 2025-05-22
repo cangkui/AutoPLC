@@ -53,6 +53,9 @@ def run_autoplc_scl(benchmark: str, config: Config):
         logger.error(f"Benchmark file {benchmark_file_path} not found.")
         return
 
+    # 输出config关键内容：
+    logger.info(f"Benchmark:{benchmark} Model: {config.model} retriever: {config.RETRIEVE_DISABLED == False} planner: {config.MODELING_DISABLED == False} api_rec: {config.APIREC_DISABLED == False} debugger: {config.DEBUGGER_DISABLED == False} auto_learn: {config.AUTOLEARN_DISABLED == False}")
+
     ClientManager().set_config(config)
     APIDataLoader.init_load(config = config)
     base_folder = init_team_log_path()
@@ -138,7 +141,7 @@ def autoplc_scl_workflow(
             api_from_similar_cases = []
 
         ################      generate plan      ################
-        logic_for_this_task = ""
+        logic_for_this_task = "NOT PROVIDED"
         if not config.MODELING_DISABLED:
             logic_for_this_task = Modeler.run_modeling_task(
                 task=task, 
@@ -149,6 +152,8 @@ def autoplc_scl_workflow(
             )
             # print(f"[INFO] logic for this task:\n {logic_for_this_task}")
             # save logic for this task to file
+        else:
+            related_algorithm = ["NOT PROVIDED"] * len(retrieved_samples)
         
         ################     api recommend      ################
         if not config.APIREC_DISABLED:

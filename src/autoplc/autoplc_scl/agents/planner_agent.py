@@ -107,13 +107,6 @@ class Modeler():
         else:
             algo = response.content[0].text
 
-        # 使用正则从```plaintext```中提取内容
-        pattern = re.compile(r'```plaintext([\s\S]*?)```')
-        match = pattern.search(algo)
-        if match:
-            algo = match.group(1).strip()
-        else:
-            algo = algo.strip()
         return algo
 
     @classmethod
@@ -153,24 +146,16 @@ Please first determine whether the given requirement is a **sequential control t
 For **sequential control tasks**:
     1. Analyze the possible states.
     2. Identify the state transition events.
-    3. Output the algorithmic workflow. Do not output pseudocode or any form of code!
+    3. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
 
 For **data processing tasks**:
-    1. Output the algorithmic workflow. Do not output pseudocode or any form of code!
+    1. Describe the algorithmic workflow. Do not output pseudocode or any form of code!
 
 Notes:
-- Derectly output the algorithmic workflow step by step without other explanations.
 - Maintain a professional and rigorous tone, in line with Siemens S7-1200/1500 PLC standards.
 - Be cautious with initialization steps to avoid unintentional deletion of important data.
 - If no transition event occurs, the current state's actions should be maintained.
 - If the requirement explicitly calls for exception handling, include it; otherwise, it is not necessary.
-
-Output Format:
-```plaintext
-step1: [description]
-step2: [description]
-// more step here...
-```
 """.strip()
 
 

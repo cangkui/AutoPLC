@@ -9,7 +9,7 @@ environment:
 
 # 模型配置
 model:
-  name: "gpt-4.1-mini"  # 可选: claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022, llama3.1-8b-instruct
+  name: "gpt-4.1"  # 可选: gpt-4.1, claude-3-5-haiku-20241022, llama3.1-8b-instruct
   max_tokens: 16384
   temperature: 0.1
   top_p: 0.9
@@ -22,11 +22,11 @@ retrieve:
 
 # 模型器设置
 modeler:
-  plan_set_name: "scl_case_plan_0312"
+  plan_set_name: "scl_case_plan_NOfewshot"
 
 # 验证代理配置
 verify:
-  count: 3
+  count: 5
   openness: "http://192.168.103.245:9000"
 
 # RAG检索配置
