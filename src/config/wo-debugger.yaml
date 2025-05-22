@@ -40,8 +40,7 @@ retrieval:
 # 指令配置
 instruction:
   path:
-    - "{ROOTPATH}/data/rag_data/instructions/basic.with_brief.with_keywords.jsonl"
-    - "{ROOTPATH}/data/rag_data/instructions/extend.with_brief.with_keywords.jsonl"
+    - "{ROOTPATH}/data/rag_data/instructions/scl_brief_keywords.jsonl"
   score_threshold: 50
   top_k: 2
   function_usage_path: "{ROOTPATH}/data/rag_data/scl/scl_functions_usage.json"
