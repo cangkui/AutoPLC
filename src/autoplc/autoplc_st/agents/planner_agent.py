@@ -139,9 +139,9 @@ plan_shots_prompt_en = """Here is the input, structured in XML format:
 state_machine_prompt_en = """
 You are a professional PLC engineer working in a Codesys-based development environment.
 
-Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
+Please first determine whether the given requirement is a **process control task** or a **data processing task**.
 
-For **sequential control tasks**:
+For **process control tasks**:
     1. Analyze the possible control states involved in the process.
     2. Identify clear and deterministic state transition events or conditions.
     3. Describe the algorithmic workflow and control logic in a structured, human-readable manner. Do not output pseudocode or any form of code!

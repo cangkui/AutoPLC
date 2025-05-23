@@ -141,9 +141,9 @@ plan_shots_prompt_en = """Here is the input, structured in XML format:
 state_machine_prompt_en = """
 You are a PLC engineer.
 
-Please first determine whether the given requirement is a **sequential control task** or a **data processing task**.
+Please first determine whether the given requirement is a **process control task** or a **data processing task**.
 
-For **sequential control tasks**:
+For **process control tasks**:
     1. Analyze the possible states.
     2. Identify the state transition events.
     3. Describe the algorithmic workflow. Do not output pseudocode or any form of code!

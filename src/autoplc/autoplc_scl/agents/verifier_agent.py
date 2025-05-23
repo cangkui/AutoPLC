@@ -115,7 +115,7 @@ class AutoDebugger():
                 logger.info(f'{task["name"]} Start Verification!')
 
                 # 记录所有错误信息
-                debugging_process_data["compiler"] = check_result.errors
+                debugging_process_data["compiler"] = [error.to_dict() for error in check_result.errors]
 
             verifier_instance_prompt_with_data = verifier_instance_prompt.format(
                 static_analysis_results = error_log,
