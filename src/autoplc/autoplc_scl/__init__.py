@@ -167,6 +167,7 @@ def autoplc_scl_workflow(
             )
         else:
             api_recommend = []
+            api_from_similar_cases = []
             library_func_recommend = []
             
         apis_for_this_task = list(set(api_recommend + api_from_similar_cases))

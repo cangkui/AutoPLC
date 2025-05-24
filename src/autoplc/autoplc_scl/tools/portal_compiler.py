@@ -1,12 +1,12 @@
-
 import requests
 import os
 import time
 import json
 
-from dataclasses import dataclass,asdict
+from dataclasses import dataclass, asdict
 from typing import List, Optional, Dict
 import logging
+
 logger = logging.getLogger("autoplc_scl")
 
 @dataclass
@@ -20,11 +20,14 @@ class ErrorMessage:
 
     @classmethod
     def from_dict(cls, data: dict) -> 'ErrorMessage':
-        # 保留兼容性（不建议用 path/is_def 创建，但防止旧数据出错）
+        # Handle missing path or is_def, setting path to -1 for no path found
+        path = data.get('Path', -1)
+        code_window = None if path == -1 else data.get('code_window')
+
         return cls(
             error_desc=data['error_desc'],
             error_type=data.get('error_type', '代码段错误'),
-            code_window=data.get('code_window')
+            code_window=code_window
         )
     
     def to_dict(self):
@@ -58,7 +61,7 @@ class ResponseData:
         return cls(
             success=data['Success'],
             result=data['Result'],
-            errors=data['Errors']
+            errors=errors
         )
 
     @classmethod
@@ -77,7 +80,6 @@ class ResponseData:
                 code_window=None
             )]
         )
-
 
 
 class TIAPortalCompiler():
@@ -131,7 +133,7 @@ class TIAPortalCompiler():
     
     def extract_code_window(self, source_code: str, error_info: Dict, window_size: int = 3) -> str:
         lines = source_code.splitlines()
-        path = error_info.get("Path", 0)
+        path = error_info.get("Path", -1)
         is_def = error_info.get("IsDef", False)
 
         base_line_idx = 0
@@ -147,6 +149,10 @@ class TIAPortalCompiler():
                     base_line_idx = end_var_indices[-1] + 1
                 else:
                     base_line_idx = 0  # fallback
+
+        # 如果path是-1，表示没有路径信息，返回空窗口
+        if path == -1:
+            return ""
 
         # 推测的错误行位置
         error_line_idx = base_line_idx + path
@@ -175,9 +181,6 @@ class TIAPortalCompiler():
             raw_data = resp.json()
             raw_errors = raw_data.get("Errors", [])
             
-            # DEBUG
-            # print(f"raw_data: {raw_data}")
-            
             simplified_errors = []
             # 用于记录已经出现过错误的行号
             error_lines = set()
@@ -191,7 +194,7 @@ class TIAPortalCompiler():
                 )
 
                 # 提取错误行号
-                path = err.get("Path", 0)
+                path = err.get("Path", -1)
                 is_def = err.get("IsDef", False)
                 lines = scl_code.splitlines()
                 base_line_idx = 0
@@ -217,11 +220,10 @@ class TIAPortalCompiler():
                     error_lines.add(error_line_idx)
 
             return ResponseData(
-                success=raw_data.get("Success", True), # 如果没有 Success 字段，默认返回 True
-                result=raw_data.get("Result",""), # 如果没有 Result 字段，默认返回空字符串
-                errors=simplified_errors # 返回简化后的错误信息
+                success=raw_data.get("Success", True),  # 如果没有 Success 字段，默认返回 True
+                result=raw_data.get("Result", ""),  # 如果没有 Result 字段，默认返回空字符串
+                errors=simplified_errors  # 返回简化后的错误信息
             )
 
         else:
             return ResponseData.default_false()
-
