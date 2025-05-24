@@ -1,0 +1,29 @@
+Natural Language Requirements:  
+
+1. **Initialization Verification Phase**  
+   - Retrieve the cycle time and phase parameters of the called OB via the QRY_CINT system function.  
+   - Check the system call status:  
+     - If a non-zero status code is returned → Flag the `ERR_QRY_CINT` error and set the output value to zero.  
+     - If the OB is unavailable → Flag the `ERR_OB_UNAVAILABLE` error and set the output value to zero.  
+
+2. **Reset Priority Handling**  
+   - When the reset signal is TRUE:  
+     - Reset the counter `statCounter` to zero.  
+     - Force the output value to zero.  
+     - Skip all calculation logic.  
+
+3. **Cycle Time Accumulation**  
+   - Convert the system-retrieved millisecond-level cycle time into second-level increments.  
+   - Use modulo operation `statCounter MOD periode` to implement cyclic counting.  
+
+4. **Phase Synthesis Calculation**  
+   - Map the counter to the [0, 2π] interval.  
+   - Convert phase offsets.  
+
+5. **Cosine Waveform Generation**  
+   - Apply the cosine function to synthesize the final output.  
+
+6. **Status Maintenance Mechanism**  
+   - Automatically clear the error flag after each execution.  
+   - Always set `STATUS_FINISHED_NO_ERROR` if no exceptions occur.  
+   - Force the ENO mechanism to remain TRUE.

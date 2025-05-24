@@ -1,0 +1,14 @@
+Natural Language Requirements:
+
+1. Cross-cycle bit detection:
+   - Compare the highest bit (bit31) of the current cycle with the lowest bit (bit0) of the previous cycle
+   - If current bit31=1 and previous cycle's bit0=0, count as a valid rising edge
+
+2. Same-cycle adjacent bit detection:
+   - Process 32-bit data through 31 iterations:
+     a. Check adjacent bit combinations (bit1 & bit0) through bit extraction
+     b. If "01" pattern is detected (bit1=0 and bit0=1), count as a valid rising edge
+     c. After each iteration, right-shift the data by 1 bit to implement bit sequence sliding
+
+3. State preservation:
+   - Save the current value after each scan cycle for use in the next cross-cycle detection

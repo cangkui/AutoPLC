@@ -1,0 +1,33 @@
+Natural Language Requirements:  
+
+1. **Input Validation**  
+   - If maxValue < minValue is detected:  
+     * Set error=True, status=ERR_MAX_LESS_MIN  
+     * Return 0 and exit the function  
+
+2. **System Time Retrieval**  
+   - Call RD_SYS_T to get the current system time and store it in tempTime  
+   - If system time retrieval fails:  
+     * Set error=True, status=ERR_RD_SYS_T  
+     * Return 0 and exit the function  
+
+3. **Random Seed Generation**  
+   - Extract the nanosecond field (NANOSECOND) from tempTime  
+   - Convert the nanosecond value to DWord format as tempNanoSecondInDWord  
+   - Generate a random seed by byte reversal:  
+     * Move byte 0 of tempNanoSecondInDWord to B3  
+     * Move byte 1 to B2, byte 2 to B1, byte 3 to B0  
+
+4. **Value Normalization**  
+   - Convert the 32-bit random seed to a 0.0~1.0 range:  
+     * tempNormReal = tempRandomValue / 4294967295.0  
+
+5. **Range Mapping Calculation**  
+   - Linearly scale to the target range:  
+     * Random value = tempNormReal × (maxValue - minValue) + minValue  
+
+6. **Status Feedback Setup**  
+   - On success:  
+     * error=False  
+     * status=STATUS_FINISHED_NO_ERROR  
+     * subfunctionStatus=SUB_STATUS_NO_ERROR

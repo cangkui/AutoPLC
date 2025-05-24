@@ -1,0 +1,29 @@
+Natural Language Requirements:  
+
+1. **Edge Detection Core Logic**:  
+   - Rising edge bitmask = Current value AND (NOT previous value)  
+   - Falling edge bitmask = Previous value AND (NOT current value)  
+   - Directly obtain edge status for each bit via bitmask  
+
+2. **Historical State Storage**:  
+   - Store current value in a static variable for comparison in the next scan cycle  
+
+3. **Edge Counting Algorithm (Optimized Bit Operations)**:  
+   a) **Initial Processing**:  
+      - Copy mask value to a temporary variable  
+      - Perform bit grouping statistics via shift and mask operations  
+   
+   b) **Parallel Bit Counting**:  
+      - Step 1: Count in 2-bit groups  
+      - Step 2: Merge counts in 4-bit groups  
+      - Step 3: Accumulate counts in 8-bit groups  
+      - Final count obtained via shift operations  
+
+4. **Output Parameter Combination**:  
+   - `hasChanged` = Any type of edge detected  
+   - Edge type existence determined by non-zero bitmask  
+   - Directly output bitmask as edge position indicator  
+   - Convert count result to USInt type for output  
+
+5. **Execution Flow**:  
+   Current value → Edge detection → Historical storage → Parallel counting → Result output

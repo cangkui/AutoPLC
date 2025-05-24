@@ -1,0 +1,13 @@
+Natural Language Requirements:  
+
+1. **Input Type Validation**:  
+   - **Boolean Array Check**: If the input is an array with boolean elements, immediately return `-2` (boolean arrays are not supported).  
+   - **Non-Array Check**: If the input is not an array type, return `-1` (invalid input).  
+
+2. **Valid Array Processing**:  
+   - Use `CountOfElements` to get the total number of elements in the array (e.g., array `[0..5]` returns 6).  
+   - Convert the result to `DInt` type (since the underlying function may return `UDInt`).  
+
+3. **Result Output**:  
+   - Directly assign the calculated result to the function's return value.  
+   - Set `ENO` to `True` (no error handling required).

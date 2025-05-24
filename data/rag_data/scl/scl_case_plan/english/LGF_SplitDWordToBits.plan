@@ -1,0 +1,22 @@
+Natural Language Requirement: STEP-BY-STEP Algorithm Flow (Bit Splitting Core Logic):
+
+1. Create Mask Constant:  
+   - Define 16#0001 as the bit extraction mask (binary bit 0 is set to 1)  
+
+2. Bit Extraction Loop Logic (Pseudo Code Representation):  
+   FOR bit index from 0 to 31:  
+   |   IF current bit is bit0:  
+   |   |   output bit value = input DWord AND mask  
+   |   ELSE:  
+   |   |   temp value = input DWord right shifted by (current bit index) bits  
+   |   |   output bit value = temp value AND mask  
+   |   
+   |   Assign the calculated result to the corresponding bitX output variable (X=31-current bit index)  
+
+Variable Mapping Table:  
+| Output Variable | Corresponding Bit Position | Shift Count |  
+|----------------|--------------------------|-------------|  
+| bit31          | Highest bit              | 31          |  
+| ...            | ...                      | ...         |   
+| bit1           | Bit 1                    | 1           |  
+| bit0           | Lowest bit               | 0           |

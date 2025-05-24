@@ -1,0 +1,65 @@
+Here's the English translation of your algorithm flow description for SCL code generation:
+
+### Algorithm Flow Thought Chain (For SCL Code Generation)
+
+#### 1. Trigger Mechanism
+- Detect rising edge of `execute` to trigger operation  
+- Initialize state machine (`FB_STATE_INIT`)  
+- Reset diagnostic info and output status (busy=true, done/error=false)  
+
+#### 2. State Machine Flow (Core Processing Logic)
+
+##### State 1: Initialization (FB_STATE_INIT)
+1. File path validation:  
+   - Mandatory path prefix `UserFiles/`  
+   - Character-level comparison (prevent path traversal)  
+   → Error code 16#8401  
+
+2. Buffer validation:  
+   - Verify lower buffer limit must be 0  
+   - Calculate total buffer size  
+   → Error code 16#8201  
+
+3. Data type pre-check:  
+   - Determine if `data` is byte array  
+   - Non-byte arrays require serialization  
+
+##### State 2: Parameter Processing (FB_STATE_PARAMETER)
+1. Data copy/serialization:  
+   - Byte array → Direct memory copy (MOVE_BLK_VARIANT)  
+   → Error code 16#8601  
+   - Structured data → Serialize to byte stream (Serialize)  
+   → Error code 16#8603  
+
+2. Buffer capacity verification:  
+   - Data length vs buffer size  
+   → Error code 16#8202  
+
+##### State 3: File Writing (FB_STATE_FILE_WRITE)
+1. Call system function block FileWriteC:  
+   - Set filename, offset, data length  
+   - Bind buffer data  
+
+2. Write result handling:  
+   - Success → Update written length  
+   - Failure → Record system error code  
+   → Error code 16#8604/16#8605  
+
+#### 3. Error Handling Mechanism
+- Error state propagation:  
+  Error bit → error=true → Freeze state machine → Record diagnostic info (status code, substate, error location)  
+
+- Error recovery:  
+  Falling edge of execute automatically resets error state  
+
+#### 4. Output Management
+- Status signal generation:  
+  busy → Remains high during processing  
+  done → Sets on final success  
+  error → Immediately sets on error  
+
+- Data length feedback:  
+  Returns actual written bytes on success  
+  Clears data length on error  
+
+The translation maintains all technical terminology while making the flow clear for international developers. Error codes remain in hexadecimal format as per industrial programming conventions. State transitions and conditional logic are preserved with proper technical phrasing.

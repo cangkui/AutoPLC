@@ -1,0 +1,37 @@
+Natural Language Requirements:  
+
+1. **Initialization Phase**  
+- Set the initial search position to the input starting point `startPos`  
+- Get and cache the length of the target string  
+- Preset the return value to `-1` (indicating "not found" status)  
+- Validate the input array (check for valid character/byte array type)  
+
+2. **Input Validation Process**  
+- Verify whether `searchIn` is a valid array type  
+- Immediately return `ERR_NO_ARRAY` error if the type is invalid  
+- If valid, retrieve the total array length for later use  
+
+3. **Sliding Window Search Loop**  
+   ```text  
+   While the current window is within bounds:  
+     1. Window Construction:  
+        - Extract up to 254 characters from the current array position (to comply with legacy system limits)  
+        - Convert into a temporary variable of standard STRING type  
+        
+     2. String Matching:  
+        - Perform substring search within the temporary string  
+        - Record the relative position of the substring within the temporary string  
+        
+     3. Hit Handling:  
+        - Calculate the absolute position in the actual array = window start position + relative position - 1  
+        - Immediately return the hit position and exit the loop  
+        
+     4. Window Sliding:  
+        - Step length = window length - target string length + 1  
+        - Ensure no cross-window matching possibilities are missed  
+   ```  
+
+4. **Termination Conditions**  
+- Success condition: The substring is found in any window  
+- Failure condition: The window slides beyond the array length range  
+- On failure, retain the initial return value of `-1`

@@ -1,0 +1,39 @@
+### Algorithm Flow Description  
+
+#### Core Logic  
+1. **Function Block Activation Control**  
+   - Initialization triggered on rising edge of `enable` signal: Clear historical data buffer, reset counters, set first-call state  
+   - Continuous operation when `enable` remains TRUE; reset outputs and mark inactive state when FALSE  
+
+2. **Data Acquisition Mechanism**  
+   - Detect rising edge of `insert` signal to trigger data sampling  
+   - Use a circular buffer (`statValues[0..4]`) to store the latest 5 samples. Shift left when inserting new values:  
+     `[n-2] ← [n-1] ← [n] ← [n+1] ← new_value`  
+
+3. **Derivative Calculation Conditions**  
+   - Data integrity check: Require ≥5 valid samples (`statCount ≥ MINIMUM_NUMBER_OF_VALUES`)  
+   - Validity check: `deltaT ≠ 0`  
+   - Apply five-point derivative formula:  
+     ```
+     deriv = 1/(12*deltaT) * (y(n-2) - 8y(n-1) + 8y(n+1) - y(n+2))
+     ```  
+
+#### State Machine Logic  
+| Current State               | Trigger Condition          | Action                                |  
+|-----------------------------|----------------------------|---------------------------------------|  
+| STATUS_NO_CALL (0x7000)     | Rising edge of `enable`     | Initialize buffer → STATUS_FIRST_CALL |  
+| STATUS_FIRST_CALL (0x7001)  | Initialization complete     | Await data sampling                   |  
+| STATUS_SUBSEQUENT_CALL      | Successful derivative calc  | Output result                         |  
+| STATUS_NOT_ENOUGH_VALUES    | Rising edge of `insert` with insufficient data | Increment counter, remain in wait state |  
+| ERR_DELTA_T (0x8200)        | Attempted calc with `deltaT=0` | Lock error state, halt calculations   |  
+
+#### Error Handling  
+- **Error Flag Generation**: `error = (status & 0x8000) ≠ 0` (MSB of status code indicates error)  
+- **Critical Errors**:  
+  ▫ Parameter error: Immediate termination with `ERR_DELTA_T` if `deltaT=0`  
+  ▫ Insufficient data: Maintain wait state until ≥5 samples  
+
+#### Boundary Conditions  
+- **Edge Detection**: Capture rising edges of `enable`/`insert` via `statEnableOld` and `statInsertOld` variables  
+- **Numerical Stability**: Use `LReal` type for precision; explicitly initialize buffers to 0.0  
+- **State Persistence**: Force output to 0 and retain `STATUS_NO_CALL` when inactive (`enable=FALSE`)

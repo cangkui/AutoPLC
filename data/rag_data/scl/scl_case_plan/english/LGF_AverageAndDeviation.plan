@@ -1,0 +1,21 @@
+Natural Language Requirements:  
+
+1. **Array Validity Check**  
+   - Get the actual index range of the array using `LOWER_BOUND` and `UPPER_BOUND`.  
+   - Calculate the total number of valid elements: `Upper Bound - Lower Bound + 1`.  
+
+2. **Arithmetic Mean Calculation Phase**  
+   - Initialize the accumulator to 0.  
+   - Traverse the array and perform accumulation (FOR loop from the actual lower bound to the actual upper bound).  
+   - Divide the final accumulated value by the total number of elements to get the average.  
+
+3. **Standard Deviation Calculation Phase**  
+   - Initialize the squared difference accumulator to 0.  
+   - Traverse the array a second time to calculate the squared difference between each element and the mean.  
+   - After accumulating all squared differences, perform the following:  
+     a) Calculate the variance: `Sum of squared differences / Total number of elements`.  
+     b) Take the square root of the variance to get the standard deviation.  
+
+4. **Result Output Phase**  
+   - Write intermediate calculation results to the output variables.  
+   - Force-enable the output by setting `ENO = true`.

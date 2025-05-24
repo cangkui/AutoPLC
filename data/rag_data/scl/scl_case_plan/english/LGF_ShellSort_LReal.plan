@@ -1,0 +1,34 @@
+Natural Language Requirements:  
+
+1. Input Validation Phase  
+   - Calculate array bounds (LOWER/UPPER_BOUND)  
+   - Validate element count:  
+     * More than 1000 elements → ERR_TOO_MANY_ELEMENTS  
+     * Empty array → ERR_NO_ARRAY  
+   - Establish index offset (handling non-1-based arrays)  
+
+2. Data Preparation Phase  
+   - Fully copy the input array to a temporary working array  
+   - Maintain original array index mapping  
+
+3. Dynamic Gap Sequence Generation  
+   - Initialize gaps using Knuth sequence (3n+1):  
+     * Loop to generate initial gaps until exceeding total element count  
+     * Subsequently reduce each gap to 1/3 of the previous value  
+
+4. Core Sorting Logic  
+   FOR each decreasing gap value:  
+     FOR each element starting from gap position:  
+       - Cache current element value  
+       - Compare elements based on sort direction:  
+         * Ascending: Find position where preceding element > current value  
+         * Descending: Find position where preceding element < current value  
+       - Element shifting operation:  
+         WHILE gap position is valid and condition met:  
+           * Shift preceding element backward by gap position  
+           * Update comparison position  
+       - Insert cached value into final position  
+
+5. Result Write-back Phase  
+   - Write the sorted temporary array back to the original array  
+   - Preserve the original array's index range

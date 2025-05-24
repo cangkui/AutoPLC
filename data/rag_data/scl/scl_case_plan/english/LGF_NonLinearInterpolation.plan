@@ -1,0 +1,22 @@
+Natural Language Requirements:  
+
+### Core Logic Flow  
+1. **Mode Priority Determination**  
+   - Process modes in priority order: `enDefaultOutValue`, `track`, `reset` based on input signals  
+   - When `enDefaultOutValue` is enabled, directly output `defaultOutValue`  
+   - When `track` is enabled, pass the input `value` straight through to the output  
+   - When `reset` is triggered, reset the search index `statIndex`  
+
+2. **Setpoint Table Preprocessing**  
+   - Obtain the upper and lower bound indices of the setpoint array  
+   - Validate and initialize `statIndex` (records the right endpoint index of the current search interval)  
+
+3. **Interval Search Algorithm**  
+   - Use a dynamically adjusted two-pointer method to find the interval containing the input value  
+   - Loop to compare the input `value` with the `inputValueStart/End` of the current interval  
+   - Adjust the interval index `statIndex` left or right based on comparison results  
+
+4. **Linear Interpolation Calculation**  
+   - Calculate the slope `tempFactor` based on the final determined interval endpoints  
+   - Apply the linear equation formula:  
+     `outputValue = (slope * value) + (startOutputValue - slope * startInputValue)`

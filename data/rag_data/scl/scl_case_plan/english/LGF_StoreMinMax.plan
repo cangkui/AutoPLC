@@ -1,0 +1,17 @@
+**Natural Language Requirements:**
+
+The following describes the algorithm flow for this functional block:
+
+1. **Reset Handling (Highest Priority)**  
+   - If `reset` is TRUE:  
+     - Reset the internally stored `statStoreMinValue` to `LREAL_MAX` (a very large value)  
+     - Reset the internally stored `statStoreMaxValue` to `LREAL_MIN` (a very small value)  
+
+2. **Extreme Value Update Logic**  
+   - Compare the input `value` with the currently stored minimum value:  
+     - If `value < statStoreMinValue` ➔ Update `statStoreMinValue` to the current `value`  
+   - Compare the input `value` with the currently stored maximum value:  
+     - If `value > statStoreMaxValue` ➔ Update `statStoreMaxValue` to the current `value`  
+
+3. **Output Assignment**  
+   - Write `statStoreMinValue` and `statStoreMaxValue` to the output variables `minValue` and `maxValue`, respectively

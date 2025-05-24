@@ -1,0 +1,42 @@
+Natural Language Requirements:  
+
+#### 1. Initialization Phase  
+- Clear temporary storage variables: Unix timestamp, Julian Day, Modified Julian Day  
+
+#### 2. Input Validation  
+- **Forced Update Mechanism**: Trigger DTL value validation via the `#timeDTL + t#0d` operation  
+- **Error Branch 1 (ENO=FALSE)**:  
+  - Reset output values to zero  
+  - Set error flag `error=True`  
+  - Set status code to `16#8000` (invalid DTL input)  
+  - Return immediately  
+
+#### 3. Time Range Check  
+- **Comparison Baseline**: Compare with constant `DTL#1990-01-01-00:00:00`  
+- **Error Branch 2 (Time Earlier Than 1990)**:  
+  - Reset output values to zero  
+  - Set error flag `error=True`  
+  - Set status code to `16#8001` (time earlier than 1990)  
+  - Return immediately  
+
+#### 4. Core Time Conversion Logic  
+- **Break Down Time Elements**:  
+  - Convert date portion to days since 1990-01-01 (DATE_TO_DINT)  
+  - Convert time portion to seconds of the day (TOD_TO_DINT/1000)  
+- **Calculate Unix Timestamp**:  
+  ```  
+  (days * 86400) + seconds of the day + 631152000 (time difference between 1970 and 1990)  
+  ```  
+- **Calculate Julian Day**:  
+  ```  
+  Unix timestamp / 86400 + 2440587.5  
+  ```  
+- **Calculate Modified Julian Day**:  
+  ```  
+  Julian Day - 2400000.5  
+  ```  
+
+#### 5. Result Output  
+- Assign final calculation results to output variables  
+- Clear error flag (`error=False`)  
+- Set normal status code `16#0000`

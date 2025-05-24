@@ -1,0 +1,74 @@
+**Natural Language Requirements:**  
+
+#### **Core Logic Adjustment Approach**  
+1. **Operation Priority**: The reset operation has the highest priority (immediately resets the pointer), while push/pop operations are processed in sequence within the same scan cycle.  
+2. **Minimum Value Handling Strategy**: Use real-time search mode—each pop operation traverses all current elements to locate the minimum value position, avoiding the maintenance of auxiliary stacks.  
+3. **Array Operation Characteristics**: When deleting a middle element, shift subsequent elements forward to maintain array continuity.  
+
+---  
+
+#### **Detailed Execution Flow**  
+
+**1. Initial Configuration**  
+```sccl  
+Set stack capacity constant = 4  
+Initialize stack pointer = 0  
+Default error state = FALSE  
+Default status code = 16#0000  
+```  
+
+**2. Operation Processing Sequence**  
+```  
+Reset → Push → Pop → Status Update  
+```  
+
+**3. Reset Operation**  
+```sccl  
+IF reset rising edge THEN  
+   Reset stack pointer to zero (physically retains array data)  
+   Preserve original array elements (overwritten by subsequent operations in actual use)  
+```  
+
+**4. Push Operation**  
+```sccl  
+IF push triggered AND stack pointer < 4 THEN  
+   stack[current pointer] = input value  
+   Auto-increment pointer  
+ELSE IF stack is full  
+   Set error state = TRUE  
+   Status code = 16#8A04  
+   Return immediately (skip subsequent operations)  
+```  
+
+**5. Pop Operation**  
+```sccl  
+IF pop triggered THEN  
+   |-- Empty stack check --  
+   IF stack pointer = 0  
+      Set error state = TRUE  
+      Status code = 16#8A05  
+      Return immediately  
+
+   |-- Locate minimum value --  
+   Initialize min_index = 0  
+   FOR i = 1 TO stack pointer - 1:  
+      IF stack[i] < stack[min_index]  
+         Update min_index  
+
+   |-- Element removal strategy --  
+   Save return value = stack[min_index]  
+   IF min_index is not at the top:  
+      Shift subsequent elements forward (from min_index to top - 1)  
+   Clear original top position as 0  
+   Auto-decrement pointer  
+```  
+
+**6. Boundary Condition Handling**  
+```sccl  
+After each operation:  
+   IF no errors triggered  
+      Reset error = FALSE  
+      Status code = 16#0000  
+   ELSE  
+      Maintain error state until the next valid operation  
+```

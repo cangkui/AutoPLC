@@ -1,0 +1,23 @@
+Natural Language Requirements:  
+
+1. **Array Boundary Validation**  
+   - Retrieve the one-dimensional lower bound `tempArrayLowerBound` and upper bound `tempArrayUpperBound` of the array `values`.  
+   - If the array is empty (invalid bounds), handle the error or take special action (though not explicitly handled in the code, errors are ignored via `ENO := TRUE`).  
+
+2. **Initialize Extremes and Indices**  
+   - Assign the value of the first array element to both `tempMinValue` and `tempMaxValue`.  
+   - Explicitly set the initial indices `tempArrayIndexMin` and `tempArrayIndexMax` to the first element's index `tempArrayLowerBound`.  
+
+3. **Traverse Array to Search for Extremes**  
+   - Iterate from the second element (`tempArrayLowerBound + 1`) to the last element (`tempArrayUpperBound`).  
+   - Compare each element:  
+     - If the current element `tempActValue < tempMinValue`:  
+       - Update `tempMinValue` to the current value.  
+       - Update `tempArrayIndexMin` to the current index.  
+     - If the current element `tempActValue > tempMaxValue`:  
+       - Update `tempMaxValue` to the current value.  
+       - Update `tempArrayIndexMax` to the current index.  
+
+4. **Output Results**  
+   - Write the final `tempMinValue` and `tempMaxValue` to `minValue` and `maxValue`, respectively.  
+   - Write the corresponding indices `tempArrayIndexMin` and `tempArrayIndexMax` to `minValueIndex` and `maxValueIndex`, respectively.

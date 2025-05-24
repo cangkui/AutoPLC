@@ -1,0 +1,26 @@
+Natural Language Requirements:
+
+1. Input Validation Phase:
+   - Check if the input value is non-negative and the target digit position is a positive integer
+   - If any condition fails:
+     * Set error flag to TRUE
+     * Assign status code 16#8001
+     * Immediately terminate execution
+
+2. Numerical Preprocessing Phase:
+   - Create temporary variable (tempNumber) to store original input value
+   - Initialize loop counter to 1
+
+3. Digit Positioning Phase:
+   - Perform loop operation for target digit count times:
+     * Right-shift temporary value by one digit in each loop (equivalent to integer division by 10)
+     * Number of loops equals required digit position
+
+4. Digit Extraction Phase:
+   - Check if shifted value equals 0:
+     * If 0 → Original number has insufficient digits, output 0
+     * Otherwise → Extract last digit (MOD 10 operation)
+
+5. Output Processing Phase:
+   - Convert final result to Byte type
+   - Maintain error=FALSE and normal status code for successful execution

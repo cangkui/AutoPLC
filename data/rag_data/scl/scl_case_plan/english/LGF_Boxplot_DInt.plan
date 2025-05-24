@@ -1,0 +1,43 @@
+Natural Language Requirements:
+
+1. Edge Detection Execution  
+- Detect rising edge of "execute" to trigger calculation  
+- Get array index range: Obtain dimension 1 boundaries via LOWER_BOUND/UPPER_BOUND  
+- Initialize statistical variables: Reset all intermediate results and status flags  
+
+2. Parameter Validity Check (Pre-validation)  
+- Verify rangeOutlier validity: Must be >1.0 or =0.0  
+- Validate array lower bound: Negative indices not allowed  
+- Error handling: Set corresponding status codes (16#9101/16#8200)  
+
+3. Data Preprocessing  
+- Call Shell sort algorithm: Perform in-place sorting of input array via LGF_Shell_DInt  
+- Obtain extreme values: First and last elements after sorting become original min/max  
+
+4. Core Statistical Calculations  
+- Median calculation:  
+  * Even elements: Average of middle two elements  
+  * Odd elements: Central element value  
+- Quartile calculation (linear interpolation method):  
+  * Q25 position: (n+3)/4  
+  * Q75 position: (3n+1)/4  
+  * Implement interpolation using TRUNC and FRAC_LREAL  
+
+5. Outlier Detection (when rangeOutlier≠0)  
+- Calculate interquartile range: IQR = Q75 - Q25  
+- Determine boundaries:  
+  * Lower boundary: Q25 - rangeOutlier×IQR  
+  * Upper boundary: Q75 + rangeOutlier×IQR  
+- Bidirectional scanning:  
+  * Forward scan for first element ≥ lower boundary (new min)  
+  * Reverse scan for last element ≤ upper boundary (new max)  
+  * Calculate outlier ratio: (outlier count/total elements)×100%  
+
+6. Skewness Calculation  
+- Formula: (Q75 + Q25 - 2×Median) / IQR  
+- Reflects data distribution symmetry: Positive=right-skewed, Negative=left-skewed  
+
+7. Result Output & Status Management  
+- Dynamic output selection: Choose original/adjusted extreme values based on rangeOutlier being zero  
+- Error status mapping: Map highest error flag to "error" output  
+- Force enable output: Always set ENO=True, manage errors via independent status codes

@@ -1,0 +1,16 @@
+Natural Language Requirements:  
+
+1. **Input Validity Preprocessing**  
+   - Perform modulo 32 operation on `bitNo` (`bitNo MOD 32`) to ensure the value range is 0-31, preventing invalid bit shift operations.  
+
+2. **Operation Mode Selection Based on `setTo`**  
+   - **TRUE Mode (Set Bit Operation)**  
+     a. Generate a single-bit mask: Shift `0x0001` left by `bitNo` bits.  
+     b. Use `OR` logic to set the specified bit of the original `value` to 1.  
+   - **FALSE Mode (Clear Bit Operation)**  
+     a. Generate a single-bit mask: Shift `0x0001` left by `bitNo` bits.  
+     b. Create an inverted mask: XOR the mask with the all-ones constant (`0xFFFFFFFF`).  
+     c. Use `AND` logic to clear the specified bit of the original `value` to 0.  
+
+3. **Direct Return of Operation Result**  
+   - Do not modify the input parameters; directly return the new DWORD value after bit manipulation.

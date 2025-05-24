@@ -1,0 +1,39 @@
+Natural Language Requirements:  
+
+1. **Initialization & Parameter Validation**  
+   - Calculate target array starting position: `array lower bound + startPos`  
+   - Get array upper bound value  
+   - Validate starting position: If it exceeds array bounds, immediately return `ERR_START_POS_OUTSIDE`  
+
+2. **Character Traversal Processing**  
+   FOR loop to process each character in WString:  
+   - **Character Classification Handling**  
+     a. ASCII characters (≤0x7F):  
+        - Check remaining array space  
+        - Directly write single byte: `DWORD.B0`  
+        
+     b. Two-byte UTF-8 (≤0x7FF):  
+        - Ensure remaining space ≥ 2  
+        - Construct encoding pattern:  
+          - High byte: `(char value >> 6) | 0xC0`  
+          - Low byte: `(char value & 0x3F) | 0x80`  
+          
+     c. Three-byte UTF-8 (≤0xFFFF):  
+        - Ensure remaining space ≥ 3  
+        - Construct encoding pattern:  
+          - First byte: `(char value >> 12) | 0xE0`  
+          - Second byte: `(char value >> 6 & 0x3F) | 0x80`  
+          - Third byte: `(char value & 0x3F) | 0x80`  
+
+3. **Space Overflow Handling**  
+   - If any character processing detects insufficient remaining array space:  
+     - Immediately terminate processing  
+     - Set `ERR_COUNT_EXCEEDS_BOUNDS` error  
+     - Reset processed byte count to zero  
+
+4. **Result Output**  
+   - On success: Assign accumulated written byte count to `bytesUsed`  
+   - On failure:  
+     - Set `bytesUsed` to 0  
+     - Set ENO signal to False  
+   - Finally return status code

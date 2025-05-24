@@ -1,0 +1,38 @@
+Natural Language Requirements:  
+```  
+1. Initialization Phase  
+   - Validate input array:  
+     * If not an array or element type is not Char/Byte → Set ERR_NO_ARRAY and return  
+   - Set initial values:  
+     * position = -1, length = 0, clear extractedString  
+     * Pre-calculate lengths of textBefore/textAfter  
+
+2. Main Processing Loop (REPEAT structure)  
+   a. Convert array segment to string:  
+     * Start from current tempPosInArray  
+     * Take min(remaining array length, 254) chars and convert to temporary string  
+
+   b. Leading text search:  
+     * Search for textBefore in the temporary string  
+     * If not found → Move search start point (account for textBefore length to avoid truncation)  
+     * If found → Adjust start point based on includeBeforeAfter:  
+       √ Include both texts → Set start to textBefore's position  
+       √ Exclude → Set start to textAfter's end position  
+
+   c. Trailing text processing:  
+     * Convert string again from new start point  
+     * Search for textAfter:  
+       √ If found → Calculate final length and position  
+       √ If not found → Extract remaining string, set partial match warning  
+
+3. Termination Conditions:  
+   - Both texts found → Set success status, return extracted result  
+   - Search position exceeds array length → Set not found warning and exit  
+   - Only leading text found → Set partial match warning  
+
+4. Status Code Mapping:  
+   - 16#0000: Complete success  
+   - 16#8200: Invalid input array  
+   - 16#9001: Leading text found but trailing text not found  
+   - 16#9002: No match found  
+```

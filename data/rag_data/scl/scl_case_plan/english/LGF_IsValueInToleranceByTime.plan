@@ -1,0 +1,35 @@
+Natural Language Requirements:  
+
+1. **Initialization and Limit Calculation**  
+   - Select the limit type based on configuration:  
+     - **Absolute Limits**: Directly compare if the value exceeds `upperMaximum` or falls below `lowerMinimum`.  
+     - **Relative Limits**:  
+       - **Absolute Tolerance**: Set value ± upper/lower limits.  
+       - **Percentage Tolerance**: Set value × (1 ± percentage/100).  
+   - **Detect setpoint changes**: Reset internal state when the setpoint changes.  
+   - **Handle reset signals**: Clear all monitoring states upon reset.  
+
+2. **Tolerance State Tracking**  
+   - Set the `wasWithinTolerance` flag when the value first enters the valid range.  
+   - Force-reset all states if limit monitoring is disabled or a reset is active.  
+
+3. **Error Detection**  
+   - Detect invalid configurations:  
+     - For **absolute limits**, report an error if the setpoint itself exceeds the limit range.  
+     - Return a range error if calculation fails.  
+
+4. **Timed Monitoring Logic**  
+   - **Upper Limit Monitoring**:  
+     - Start a timer if the value exceeds the upper limit continuously **and** (was previously valid or is within the setpoint change grace period).  
+     - Trigger `overHighLimit` when the timer expires.  
+   - **Lower Limit Monitoring**:  
+     - Same logic as upper limit, but in the opposite direction.  
+   - **Setpoint Change Handling**:  
+     - After a change, start an independent timer—temporary limit violations are allowed during this period.  
+
+5. **Output Logic**  
+   - `inLimits` must satisfy all of the following:  
+     - No active upper/lower limit timers.  
+     - Not within the setpoint change grace period.  
+     - Must have entered the valid range at least once (`wasWithinTolerance`).  
+   - The `setpointChange` flag remains active until the timer ends or the value re-enters the valid range.

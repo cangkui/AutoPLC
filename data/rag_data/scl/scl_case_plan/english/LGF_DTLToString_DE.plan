@@ -1,0 +1,32 @@
+Natural Language Requirements:  
+
+1. **Initialize Temporary String**  
+- Create an empty string to assemble the final result.  
+
+2. **Date-Time Field Conversion (Core Processing Flow)**  
+- Write the year (4-character width, starting at position 7).  
+- Write the month (2-character width, starting at position 4).  
+- Write the day (2-character width, starting at position 1).  
+- Write the hour (2-character width, starting at position 12).  
+- Write the minute (2-character width, starting at position 15).  
+- Write the second (2-character width, starting at position 18).  
+- Write the nanosecond (9-character width, starting at position 21).  
+
+3. **Separator Handling Logic**  
+- **Date Section (between year, month, day):**  
+  • If the input separator is empty → use the default '-'.  
+  • If non-empty → use the user-specified character.  
+- **Time Section:**  
+  • Force the use of colon (':') as the separator.  
+- **Between Seconds and Nanoseconds:**  
+  • Fixed use of a dot ('.') as the separator.  
+
+4. **Format Normalization**  
+- **Month/Day/Hour/Minute/Second Fields:**  
+  • Detect leading empty characters → replace with '0'.  
+- **Special Handling for Nanoseconds:**  
+  • Replace leading empty characters with '0' in a loop.  
+  • Replace up to 8 digits to ensure valid precision.  
+
+5. **Output Result Assembly**  
+- Return the processed temporary string as the final result.

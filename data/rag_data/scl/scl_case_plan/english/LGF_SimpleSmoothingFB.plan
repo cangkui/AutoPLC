@@ -1,0 +1,31 @@
+Natural Language Requirements:  
+
+1. **Initialization Detection**  
+   - Upon detecting the **rising edge** of the `enable` signal:  
+     - Reset the value buffer (clear all 3 storage positions)  
+     - Reset the counter to zero  
+     - Set the state to `STATUS_FIRST_CALL` (first call)  
+   - When inactive, maintain the `STATUS_NO_CALL` state  
+
+2. **Insert Value Processing**  
+   - Only process the `insert` signal when `enable` remains active:  
+     - Upon detecting the **rising edge** of `insert`:  
+       - **Data Shift**: Store the new `value` in the circular buffer (shift old values left, store the new value in the rightmost position)  
+       - **Counter Increment**: Continue increasing the count if the number of insertions ≤ 2  
+       - **State Control**:  
+         - If count ≤ 2 → Set state to `STATUS_NOT_ENOUGH_VALUES`  
+         - If count > 2 → Trigger smoothing calculation  
+
+3. **Smoothing Value Calculation**  
+   - When the buffer contains 3 valid values:  
+     - Calculate the arithmetic mean: `(val1 + val2 + val3) / 3`  
+     - Update the state to `STATUS_SUBSEQUENT_CALL`  
+
+4. **Error Handling Mechanism**  
+   - Error flag `error` = Bit 15 (highest binary bit) of the state value  
+   - The state word is directly mapped to the `status` output  
+
+5. **Output Hold Logic**  
+   - When inactive or insufficient data:  
+     - Keep the smoothed value at 0.0  
+     - The error flag is automatically determined by the current state

@@ -1,0 +1,13 @@
+### LGF_MergeBytesToWord Algorithm Process Description  
+
+#### Core Logic Flow  
+1. **Memory Structure Preparation**  
+   - Create a temporary word variable (16-bit storage space), defaulting to little-endian storage mode  
+
+2. **Byte Data Assembly**  
+   - Directly write input byte1 to the high 8 bits of the temporary word (corresponding to address %W0.%B1)  
+   - Directly write input byte0 to the low 8 bits of the temporary word (corresponding to address %W0.%B0)  
+
+3. **Output Processing**  
+   - Assign the fully assembled temporary word as the function return value  
+   - Set ENO (Enable Output) to True

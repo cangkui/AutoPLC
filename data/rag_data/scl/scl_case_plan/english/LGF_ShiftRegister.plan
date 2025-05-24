@@ -1,0 +1,37 @@
+Natural Language Requirements:  
+
+1. **Command Trigger Detection (Edge Capture)**  
+- Use the `statEdgesMem` struct to remember previous states  
+- Detect rising edges of `shiftLeft`/`shiftRight`/`clear`  
+- Mutual exclusion check: Throw `ERR_MORE_THAN_ONE_COMMAND` if multiple commands are triggered simultaneously  
+- Return `STATUS_NO_CURRENT_JOBS` if no valid command is detected  
+
+2. **Input Parameter Validation Flow**  
+   ┌─ Type check → Not an array → `ERR_NO_ARRAY`  
+   ├─ Shift range → `shiftRange ≥ bufferSize` → `ERR_IN_SHIFT_RANGE`  
+   ├─ Clear operation → No `initialItem` → `ERR_CLEARING_WITHOUT_INITIAL_ITEM`  
+   └─ Fill operation → Type mismatch → `ERR_WRONG_TYPE_INITIAL_ITEM`  
+
+3. **Core Operation Execution Tree**  
+├─ Clear operation  
+│   └─ Traverse array → Replace all elements with `initialItem` → On error: `ERR_CLEAR_BUFFER`  
+│  
+├─ Left-shift operation chain  
+│   ├─ Block move: Copy subsequent elements from `shiftRange` position → On error: `ERR_SHIFT_BUFFER_LEFT`  
+│   └─ Fill phase (`fill=True`)  
+│       └─ Overwrite `[0, shiftRange)` range → On error: `ERR_SHIFT_BUFFER_LEFT_FILL`  
+│  
+└─ Right-shift operation chain  
+    ├─ Block move: Copy from start to `shiftRange` offset → On error: `ERR_SHIFT_BUFFER_RIGHT`  
+    └─ Fill phase (`fill=True`)  
+        └─ Overwrite `[shiftRange, end]` range → On error: `ERR_SHIFT_BUFFER_RIGHT_FILL`  
+
+4. **Memory Operation Characteristics**  
+- Use `MOVE_BLK_VARIANT` for type-safe block movement  
+- Buffer index management: Handle array boundaries via `BUFFER_SIZE_CORRECTION`  
+- Dual error propagation: Set both `error` flag and `subFunctionStatus`  
+
+5. **State Machine Characteristics**  
+- Strict precondition check sequence  
+- Single-execution guarantee: Avoid re-entry via command mutual exclusion detection  
+- Operation atomicity: Terminate immediately if any step fails

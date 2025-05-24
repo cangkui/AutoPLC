@@ -1,0 +1,24 @@
+**Natural Language Requirements: Algorithm Process Chain-of-Thought Description:**  
+
+1. **Input Validation**  
+   - Trigger the system's internal date validity check via `tempDate + TIME_ZERO_FORCE_UPDATE`  
+   - If invalid (ENO=FALSE):  
+     ✓ Set `error=True`, `status=ERR_LIM_DATE`  
+     ✓ Return 0 and exit  
+   - If valid: Extract year, month, and day fields into `Year`, `Month`, `Day`  
+
+2. **Leap Year Determination**  
+   - Logic: `(Year%4=0 AND Year%100≠0) OR Year%400=0`  
+   - Dynamically adjust February days:  
+     ✓ Leap year → 29 days  
+     ✓ Non-leap year → 28 days  
+
+3. **Day Accumulation Strategy**  
+   - Initialize `daysAccumulated=0`  
+   - **Prior Month Accumulation**: Iterate from January to `Month-1`  
+     ✓ Add the corresponding month's days from the `DAYS_IN_MONTH` array  
+   - **Current Day Addition**: `daysAccumulated += Day`  
+
+4. **Normal Output Handling**  
+   - Set `error=False`, `status=STATUS_NO_ERROR`  
+   - Return `daysAccumulated`

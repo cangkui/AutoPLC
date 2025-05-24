@@ -1,0 +1,34 @@
+Natural Language Requirements:  
+
+1. **Sampling Time Acquisition Phase**:  
+   - Call the `QRY_CINT` system function to query the cycle time of the cyclic interrupt OB.  
+   - Check the return value: If an error occurs (non-zero return code or OB unavailable)  
+     → Set `error=True`, populate the corresponding `status` code and `subFunctionStatus`.  
+     → Return immediately with the output value set to zero.  
+
+2. **Reset Handling Phase**:  
+   - When the `reset` signal is `True`:  
+     → Reset the internal counter `statCounter` to `0`.  
+     → Force the output value to zero.  
+
+3. **Normal Calculation Phase**:  
+   a) **Counter Management**:  
+      - Increment `statCounter` based on the acquired cycle time (convert units to seconds).  
+      - Apply modulo operation to the cycle value to maintain looping behavior.  
+
+   b) **Phase Processing**:  
+      - Convert the counter to a radian value within the range `[0, 2π)`.  
+      - Convert the user-input phase shift into the corresponding radian value.  
+
+   c) **Sine Calculation**:  
+      - Combine the total phase (base phase + offset phase).  
+      - Apply the sine function to compute the base value.  
+      - Apply amplitude scaling and offset adjustment.  
+
+   d) **Output Assignment**:  
+      - Update `value` with the computed result.  
+      - Set `error=False` and normal status codes.  
+
+4. **State Maintenance**:  
+   - After each execution, update intermediate state variables like `statRad` and `statPhaseShift`.  
+   - Maintain the continuity of `statCounter` until a reset is triggered.

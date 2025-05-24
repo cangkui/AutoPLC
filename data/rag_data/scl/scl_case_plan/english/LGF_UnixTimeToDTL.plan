@@ -1,0 +1,21 @@
+Natural Language Requirements:  
+
+1. Time Validity Check:  
+   - Verify if the input time is earlier than January 1, 1990 (time difference constant: 631,152,000 seconds).  
+   - If earlier than the base time → Set error flag and return status **ERR_TIME_BEFORE_1990**.  
+   - If equal to the base time → Set warning flag and return status **WARN_CONVERSION_LIMIT**.  
+
+2. Date Component Calculation:  
+   - Calculate days elapsed since January 1, 1990 = (Input time - Base time difference) / 86,400.  
+   - Convert to a basic date structure using **DATE_TO_DTL**.  
+
+3. Time Component Breakdown:  
+   - Calculate remaining seconds = Total seconds - (Days × 86,400).  
+   - Hours = Remaining seconds / 3,600.  
+   - Minutes = (Remaining seconds % 3,600) / 60.  
+   - Seconds = Remaining seconds % 60.  
+
+4. Result Assembly & Output:  
+   - Combine date-time components into the **DTL** structure.  
+   - Set normal status code **STATUS_NO_ERROR**.  
+   - Force **ENO** signal to remain **TRUE**.

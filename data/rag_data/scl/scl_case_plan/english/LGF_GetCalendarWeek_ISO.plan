@@ -1,0 +1,58 @@
+Natural Language Requirements:  
+
+1. **Data Initialization**  
+   - Extract the year from the input date and calculate the previous and next years.  
+   - Call the calendar day-count function to get the day-of-year for the current date.  
+
+2. **Leap Year Determination**  
+   ```python  
+   if (year is divisible by 4 and not divisible by 100) or divisible by 400:  
+        Mark as a leap year  
+   ```  
+
+3. **Key Date Weekday Calculation**  
+   - Calculate key dates for the current/previous/next year:  
+   ```python  
+   Current year January 1st: Weekday X  
+   Next year January 1st: Weekday Y  
+   Current year December 31st: Weekday Z  
+   Previous year December 31st: Weekday W  
+   ```  
+
+4. **53-Week Logic**  
+   - Conditions for the previous year having 53 weeks:  
+   ```python  
+   (Previous year Jan 1 == Thursday and Dec 31 == Thursday and not a leap year)  
+   OR  
+   (Leap year and (Jan 1 == Wednesday and Dec 31 == Thursday) OR (Thursday and Friday))  
+   ```  
+   - Similar logic applies to determine if the current year has 53 weeks.  
+
+5. **Day Adjustment Strategy**  
+   ```python  
+   switch(current year Jan 1 weekday):  
+       case Sunday: days -= 2  
+       case Monday: days -= 1  
+       case Tuesday: no change  
+       case Wednesday: days += 1  
+       case Thursday: days += 2  
+       case Friday: days -= 4  # Year-crossing adjustment  
+       case Saturday: days -= 3  # Year-crossing adjustment  
+   ```  
+
+6. **Week Number Logic**  
+   ```python  
+   if adjusted days < 0:  
+       if previous year has 53 weeks: return 53  
+       else: return 52  
+   else:  
+       week number = adjusted days // 7 + 1  
+       if week number == 53:  
+           if current year has 53 weeks: keep 53  
+           else: reset to 1 (belongs to next year's first week)  
+   ```  
+
+7. **Edge Case Handling**  
+   - Handle cases where the first 3 days of January may belong to the previous year.  
+   - Handle cases where the last 3 days of December may belong to the next year.  
+   - Account for leap year’s impact on February’s day count.

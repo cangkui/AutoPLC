@@ -1,0 +1,35 @@
+Natural Language Requirements:  
+
+1. Initialization Phase:  
+   - Maintain an internal state variable `statPrevOut` to store the previous output value  
+   - Prepare time conversion constants (conversion factors between seconds and microseconds)  
+
+2. Periodic Time Retrieval:  
+   - Call `QRY_CINT` to query the cycle time of the OB (in microseconds)  
+   - Convert it to real-number format in seconds (divide by 1,000,000)  
+
+3. Error Detection Process (in priority order):  
+   (1) Check the return status of `QRY_CINT` → If error, set `ERR_QRY_CINT`  
+   (2) Verify OB availability → If unavailable, set `ERR_OB_UNAVAILABLE`  
+   (3) Ensure the rate of change is non-negative → If negative, set `ERR_NEG_RATE_LIM`  
+   → If any error occurs, terminate processing immediately and return  
+
+4. Default Value Handling Branch:  
+   - When `enDefaultOutValue` is active:  
+     * Set both the internal state and output to `defaultOutValue`  
+     * Return a success status directly  
+
+5. Rate Limiting Core Algorithm:  
+   if current input value < previous output value:  
+     - Decrementally approach the target value in steps of (rate of change × cycle time)  
+     - Ensure it does not fall below the final target value (limit using MAX function)  
+   elif current input value > previous output value:  
+     - Incrementally approach the target value in steps of (rate of change × cycle time)  
+     - Ensure it does not exceed the final target value (limit using MIN function)  
+   else:  
+     - Keep the current output value unchanged  
+
+6. Output Update:  
+   - Write the computed result to `delayedValue`  
+   - Update the internal state variable to the latest output value  
+   - Set the normal completion status flag

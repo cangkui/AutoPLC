@@ -1,0 +1,15 @@
+Natural Language Requirements:  
+
+1. Input Byte Decomposition Operation:  
+   - Extract the lowest 4 bits directly to Byte0 (no shifting needed, apply mask 0x0F)  
+   - Right-shift the original number by 4 bits, then extract the lower 4 bits to Byte1  
+   - Right-shift again by 4 bits (total 8 bits), extract the lower 4 bits to Byte2  
+   - Finally, right-shift by another 4 bits (total 12 bits), extract the upper 4 bits to Byte3  
+
+2. Average Value Calculation Logic:  
+   - Initialize a temporary accumulator sum = 0 and a counter count = 0  
+   - For each decomposed byte, perform a zero-value check:  
+     * If non-zero: add the value to sum and increment count by 1  
+   - Final average calculation:  
+     * If non-zero values exist: average = (sum converted to float) / count  
+     * If all zeros: average = 0.0

@@ -1,0 +1,21 @@
+Natural Language Requirements:  
+
+1. **Input Parameter Validation**  
+   - If `maxValue < minValue`, trigger the `ERR_MAX_LESS_MIN` error, set the error flag, and terminate the process.  
+
+2. **System Time Retrieval**  
+   - Call `RD_SYS_T` to read the current system time (including nanosecond precision). If the read fails, trigger the `ERR_RD_SYS_T` error.  
+
+3. **Random Seed Generation**  
+   - Extract the `NANOSECOND` field (of type UDInt) from the system time and convert it to DWord type.  
+   - Reverse the order of the four bytes in the nanosecond value (B0↔B3, B1↔B2) to generate the initial random number `tempRandomValue`.  
+
+4. **Normalization**  
+   - Convert `tempRandomValue` to `Real` type and divide it by the maximum value of `UDInt` (4294967295) to obtain a floating-point number `tempNormReal` in the range [0.0, 1.0].  
+
+5. **Range Mapping**  
+   - Calculate the target range span: `maxValue - minValue`.  
+   - Use the formula: `random value = tempNormReal * span + minValue` to map the normalized value to the user-specified range.  
+
+6. **Output Handling**  
+   - Convert the final result to `UDInt`, clear the error flag, and set the success status code `STATUS_FINISHED_NO_ERROR`.

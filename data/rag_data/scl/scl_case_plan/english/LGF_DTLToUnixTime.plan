@@ -1,0 +1,19 @@
+Natural Language Requirements:  
+
+1. **Input Validation**  
+   - Force update the DTL value via `#timeDTL + #TIME_ZERO_FORCE_UPDATE` to trigger the ENO status.  
+   - If ENO=False (invalid DTL input format), return the error `ERR_DTL_INPUT_VALUE_INVALID`.  
+
+2. **Time Range Check**  
+   - Compare the input time with `D#1990-01-01`.  
+   - If the input time is earlier than 1990, return the error `ERR_TIME_BEFORE_1990`.  
+
+3. **UNIX Time Calculation**  
+   - **Date Part**: Extract the date using `DTL_TO_DATE()`, then convert it to the number of days since 1990 via `DATE_TO_DINT()`.  
+     ➔ Multiply the days by 86,400 (seconds/day).  
+   - **Time Part**: Extract the time using `DTL_TO_TOD()`, then convert it to milliseconds via `TOD_TO_DINT()`.  
+     ➔ Divide the milliseconds by 1,000 → convert to seconds.  
+   - **Compensation Offset**: Add the seconds between 1970 and 1990 (631,152,000 seconds).  
+
+4. **Result Output**  
+   - Upon success, return the calculated result and status `STATUS_EXECUTION_FINISHED_NO_ERROR`.

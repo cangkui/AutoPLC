@@ -1,0 +1,30 @@
+Natural Language Requirements:  
+
+1. **Input Validation**:  
+   - When the input frequency ≤ 0:  
+     * Immediately disable pulse output (`impulse = FALSE`).  
+     * Reset countdown to 0 (`countdown = 0`).  
+     * Skip subsequent processing logic.  
+
+2. **Dynamic Frequency Update Mechanism**:  
+   - Check if the frequency value has changed:  
+     * When the current frequency ≠ the last stored value (`statFrequencyOld`):  
+       1) Calculate the pulse period: **Period Time = 1000 sec / (Frequency × 1000)**.  
+       2) Use `TRUNC` to ensure time precision.  
+       3) Update the cached period value (`statTimePulse`).  
+       4) Record the current frequency value (`statFrequencyOld`).  
+
+3. **Pulse Generation Core Logic**:  
+   - Use a self-resetting timer (`TOF_TIME`):  
+     * Timer input signal is the inverted state of the current output (`NOT Q`).  
+     * Set the timer duration `PT` = the calculated period time.  
+     * Pulse output is the inverted state of the timer output (`tempImpulse = NOT Q`).  
+
+4. **Countdown Calculation**:  
+   - Calculate remaining time in real-time: **Remaining Time = Total Period Time – Elapsed Time (ET)**.  
+   - Store the result temporarily in `tempCountdown`.  
+
+5. **Output Handling**:  
+   - Assign the temporary pulse state to the `impulse` output.  
+   - Assign the temporary countdown value to the `countdown` output.  
+   - Force the enable output `ENO` to remain `TRUE`.

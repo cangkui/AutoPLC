@@ -1,0 +1,23 @@
+Here's the English translation of the natural language requirements:
+
+1. Matrix Dimension Detection Phase:
+   - Retrieve the row/column lower and upper bounds of both input and output matrices separately  
+   - Obtain the boundary values for all four dimensions using LOWER_BOUND/UPPER_BOUND instructions
+
+2. Error Detection Priority Logic:
+   (1) Input matrix row lower bound ≠ Output matrix column lower bound → ERR_MATR1_LOWBOUND_ROWS...  
+   (2) Input matrix column lower bound ≠ Output matrix row lower bound → ERR_MATR1_LOWBOUND_COLUMNS...  
+   (3) Input matrix row upper bound ≠ Output matrix column upper bound → ERR_MATR1_UPPBOUND_ROWS...  
+   (4) Input matrix column upper bound ≠ Output matrix row upper bound → ERR_MATR1_UPPBOUND_COLUMNS...  
+
+3. Transposition Core Logic:
+   - Use a double-loop structure where the outer loop iterates through input matrix row indices  
+   - The inner loop iterates through input matrix column indices  
+   - Key assignment operation: matrixTranspose[col,row] = matrix[row,col]  
+
+4. Status Feedback Mechanism:
+   - Immediately set error=true and return corresponding status code when any error is triggered  
+   - Set error=false and STATUS_NO_ERROR upon successful execution  
+   - Explicitly set ENO flag to TRUE  
+
+The translation maintains technical accuracy while using clear, natural English phrasing appropriate for software requirements documentation. Key programming concepts like bounds checking, error codes, and matrix operations are preserved with proper terminology.

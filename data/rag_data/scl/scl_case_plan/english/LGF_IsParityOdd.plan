@@ -1,0 +1,13 @@
+Natural Language Requirements:  
+
+1. **Bit Compression Phase** (Divide and Conquer Approach)  
+- Perform an XOR-right-shift operation (shift right by 1 bit) to compress 32-bit parity information into 16 bits of valid data.  
+- Perform another XOR-right-shift (shift right by 2 bits) to further compress the information down to 8 bits.  
+
+2. **Information Extraction Phase**  
+- Use the mask 0x11111111 to filter out the first bit in every 4-bit segment, retaining 4 critical bit positions.  
+- Utilize DWord multiplication properties to accumulate the parity information of the 4 key bits into the highest 4 bits.  
+
+3. **Result Determination Phase**  
+- Right-shift by 28 bits to move the highest 4 bits down to the lowest 4 bits.  
+- The parity of the final result is reflected in the Least Significant Bit (LSB). Read the state of this bit directly as the return value.

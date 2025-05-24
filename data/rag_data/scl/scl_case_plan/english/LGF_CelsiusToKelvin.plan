@@ -1,0 +1,13 @@
+Natural Language Requirements:  
+
+1. Define temperature conversion constant  
+- Declare an immutable physical constant `TEMPERATURE_OFFSET` with a value of 273.15  
+
+2. Perform linear conversion calculation  
+- Add the input Celsius value directly to the temperature offset  
+- Formula: K = °C + 273.15  
+
+3. Result output handling  
+- Use a temporary variable to store the intermediate calculation result  
+- Assign the final value to the function's return value  
+- Force set the ENO signal to TRUE

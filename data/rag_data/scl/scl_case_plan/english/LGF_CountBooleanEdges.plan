@@ -1,0 +1,25 @@
+**Natural Language Requirements:**  
+
+1. **Edge Detection**  
+   - Detect rising edges by comparing the current `trigger` signal with its state in the previous cycle (`statTriggerPrevious`).  
+   - If an edge is detected (current state is `TRUE` and previous state was `FALSE`), trigger subsequent processing.  
+
+2. **Timer Control**  
+   - Upon edge detection, start a TP-type timer (`instTimer`) with a duration of `monitorTime`.  
+   - While the timer is running (`Q=TRUE`), continue monitoring for edge events.  
+
+3. **Edge Counting**  
+   - Increment the counter `statTriggerCounter` each time an edge is detected.  
+   - Continue accumulating edge counts while the timer is active.  
+
+4. **State Determination (Timer Expiration)**  
+   - **When the timer expires (`Q=FALSE`):** Determine the output type based on the final state of `trigger` and the edge count:  
+     - **`trigger=FALSE` and timer expired** → Reset all outputs and counters.  
+     - **`trigger=TRUE` and edge count = 1** → Classify as `long` (sustained high level).  
+     - **Edge count = 1** → Output `single`.  
+     - **Edge count = 2** → Output `double`.  
+     - **Edge count ≥ 3** → Output `severalEdges`.  
+   - Record the final edge count in `noOfEdges`.  
+
+5. **Output Hold**  
+   - Pass the determination result to the output via a temporary variable to ensure the output remains valid for at least one cycle after expiration.

@@ -1,0 +1,21 @@
+Natural Language Requirements:  
+
+1. **Parameter Validation Phase**  
+   - Obtain dimension information (lower/upper bounds, total element count) for input array `values` and output array `derivatedValues`  
+   - Verify if both arrays have equal element counts → Otherwise throw `ERR_ARRAYS_DIFFERENT`  
+   - Verify if input array has ≥4 elements → Otherwise throw `ERR_NOT_ENOUGH_VALUES`  
+   - Verify if `deltaT` is non-zero → Otherwise throw `ERR_DELTA_T`  
+
+2. **Numerical Differentiation Calculation Phase**  
+   - **Midpoint Processing (Five-Point Central Difference Method)**  
+     For elements in index range `[n_lower+2, n_upper-2]`, apply formula:  
+     `ẏ(n) = 1/(12h) * [y(n-2) -8y(n-1) +8y(n+1) -y(n+2)]`  
+   - **Boundary Point Special Handling**  
+     - **First Element**: Use asymmetric 5-point formula  
+       `ẏ(0) = 1/(84h) * [-125y(0) +136y(1) +48y(2) -88y(3) +29y(4)]`  
+     - **Second Element**: Use asymmetric 5-point formula  
+       `ẏ(1) = 1/(84h) * [-38y(0) -2y(1) +24y(2) +26y(3) -10y(4)]`  
+     - **Second-to-Last Element**: Use trailing asymmetric 5-point formula  
+       `ẏ(n-1) = 1/(84h) * [10y(n-4) -26y(n-3) -24y(n-2) +2y(n-1) +38y(n)]`  
+     - **Last Element**: Use trailing asymmetric 5-point formula  
+       `ẏ(n) = 1/(84h) * [-29y(n-4) +88y(n-3) -48y(n-2) -136y(n-1) +125y(n)]`

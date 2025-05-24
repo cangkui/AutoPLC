@@ -1,0 +1,36 @@
+Natural Language Requirements:  
+
+1. **Initialization Phase**  
+   - Load initial CRC value (initValue)  
+   - Get array bounds (via LOWER_BOUND/UPPER_BOUND)  
+   - Adjust actual calculation range based on noOfElements parameter  
+
+2. **Parameter Validation**  
+   - When noOfElements > 0:  
+     → Verify if it exceeds actual array length  
+     → If exceeded, set ERR_NO_OF_ELEMENTS and return early  
+
+3. **Byte-by-Byte Processing**  
+   FOR loop iterating through array elements:  
+   a. **Input Preprocessing**  
+      - Based on reflectInput flag:  
+        → If reflection needed: Reverse bit order of current byte (X7↔X0, X6↔X1, etc.)  
+        → Otherwise: Use original value directly  
+
+   b. **CRC Core Calculation**  
+      - XOR the preprocessed byte (left-shifted by 8 bits) with current CRC  
+      - Perform 8-bit cyclic processing:  
+        FOR loop 0-7 bits:  
+        → Check if the highest bit is 1  
+        → If 1: Left-shift then XOR with mask polynomial  
+        → If 0: Only perform left-shift  
+
+4. **Result Postprocessing**  
+   - Based on reflectResult flag:  
+     → If reflection needed: Reverse all 16 CRC bits (X15↔X0)  
+     → Apply finalXorValue XOR operation  
+
+5. **Status Feedback**  
+   - Set STATUS_NO_ERROR on success  
+   - Maintain validation error state on failure  
+   - Synchronously update ENO flag

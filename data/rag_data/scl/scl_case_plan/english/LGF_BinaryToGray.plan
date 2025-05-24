@@ -1,0 +1,10 @@
+Natural Language Requirements:  
+1. Perform a bitwise XOR operation between the input binary value and its result after being right-shifted by 1 bit.  
+   - The right shift uses a logical right shift (high bits filled with 0s).  
+
+2. Mathematical Expression:  
+   Gray = Binary ^ (Binary >> 1)  
+
+3. Direct Output:  
+   - The conversion result does not require additional processing; directly return the value after the XOR operation.  
+   - No intermediate variables are needed; the conversion can be completed with a single-line operation.

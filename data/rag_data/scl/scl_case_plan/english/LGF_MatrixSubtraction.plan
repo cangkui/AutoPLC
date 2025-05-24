@@ -1,0 +1,44 @@
+### Chain of Thought for Matrix Subtraction Algorithm  
+
+#### Core Logic Flow  
+1. **Dimension Boundary Acquisition**  
+   - Get the `row/column lower bounds` and `row/column upper bounds` of the three matrices:  
+     ```plaintext  
+     matrix1_low_row = LOWER_BOUND(matrix1, ROWS)  
+     matrix2_low_row = LOWER_BOUND(matrix2, ROWS)  
+     result_low_row = LOWER_BOUND(matrixResult, ROWS)  
+     ... (similarly for column lower bounds and all upper bounds)  
+     ```  
+
+2. **Error Condition Detection**  
+   - First check row dimensions:  
+     ```plaintext  
+     IF matrix1 row lower bound ≠ matrix2 row lower bound → ERR_MATR1_LOWBOUND_ROWS_MATR2 (8200)  
+     IF matrix1 row lower bound ≠ result row lower bound → ERR_MATR1_LOWBOUND_ROWS_RESMATR (8201)  
+     ```  
+   - Then check column dimensions:  
+     ```plaintext  
+     IF matrix1 column lower bound ≠ matrix2 column lower bound → ERR_MATR1_LOWBOUND_COLUMNS_MATR2 (8202)  
+     IF matrix1 column lower bound ≠ result column lower bound → ERR_MATR1_LOWBOUND_COLUMNS_RESMATR (8203)  
+     ```  
+   - Finally, verify upper bound compatibility:  
+     ```plaintext  
+     matrix1 row upper bound ≠ matrix2 row upper bound → ERR_MATR1_UPPBOUND_ROWS_MATR2 (8204)  
+     matrix1 row upper bound ≠ result row upper bound → ERR_MATR1_UPPBOUND_ROWS_RESMATR (8205)  
+     ... (similarly for column upper bounds)  
+     ```  
+
+3. **Matrix Operation Execution**  
+   - Nested loop to traverse elements:  
+     ```plaintext  
+     FOR row FROM matrix1_low_row TO matrix1_upper_row:  
+       FOR col FROM matrix1_low_col TO matrix1_upper_col:  
+         result[row][col] = matrix1[row][col] - matrix2[row][col]  
+     ```  
+
+4. **Status Feedback**  
+   - On success, set:  
+     ```plaintext  
+     error = FALSE  
+     status = 16#0000  
+     ```

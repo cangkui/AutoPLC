@@ -1,0 +1,32 @@
+Here's the English translation of the natural language requirements:
+
+### 1. Input Validation & Initialization Phase  
+- **Array Validity Check**: Calculate the actual number of elements in the input array. If the element count exceeds 1000 or the array is empty, immediately set an error status code and exit.  
+- **Index Offset Handling**: When the starting index of the input array is not 1, calculate an offset for subsequent index mapping in the temporary array.  
+
+### 2. Data Preparation Phase  
+- **Create Temporary Buffer**: Fully copy input array elements into a fixed-size temporary array (maximum capacity: 1000), preserving the original array's index relationships.  
+
+### 3. Gap Sequence Generation Phase  
+- **Dynamic Initial Gap Calculation**: Generate the initial gap value using the 3n+1 sequence, iteratively doubling it until the gap exceeds the total element count.  
+- **Gap Reduction Strategy**: In each iteration, reduce the gap by dividing it by 3 until the gap decreases to 1.  
+
+### 4. Core Sorting Phase  
+- **Group Insertion Sort**: For each gap value, perform the following operations:  
+  - **Subsequence Traversal**: Scan forward starting from the (gap + 1) position.  
+  - **Element Caching**: Store the current element value in a temporary variable.  
+  - **Reverse Comparison**: Compare elements backward at gap intervals.  
+    - **Descending Mode**: Trigger element shifting when the current element > preceding element.  
+    - **Ascending Mode**: Trigger element shifting when the current element < preceding element.  
+  - **Insert Operation**: Insert the cached element into its correct position.  
+
+### 5. Data Writeback Phase  
+- **Result Output**: Write the sorted temporary array elements back to the input array variable according to their original index positions.  
+- **Status Code Setting**: Set status code 16#0000 when no errors occur, keeping the ENO signal active.  
+
+Key features preserved:  
+1. Technical accuracy for programming specifications  
+2. Clear phase segmentation matching the original structure  
+3. Precise algorithmic terminology (e.g., "3n+1 sequence", "index mapping")  
+4. Consistent formatting with numbered phases and bullet points  
+5. Action-oriented language ("trigger", "perform", "preserve") typical of technical requirements

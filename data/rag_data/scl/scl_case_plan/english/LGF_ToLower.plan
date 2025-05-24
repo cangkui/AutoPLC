@@ -1,0 +1,20 @@
+Natural Language Requirements:  
+
+1. **Initialization Phase**  
+   - Clear the result string buffer  
+   - Precompute the length of the input string (to avoid repeated calculations in the loop)  
+   - Set the starting position for character processing to the first character of the string (index starts from 1)  
+
+2. **Character Traversal and Conversion**  
+   **Loop Condition**: Current index does not exceed the string length  
+   **Processing Logic**:  
+   - **Character Range Check**: Verify if the current character falls within the ASCII range of `A` to `Z`  
+     - **Uppercase Conversion Condition**: If the range condition is met  
+       - Convert to lowercase by ASCII offset (+32)  
+     - **Non-Uppercase Character Handling**: Keep the original character unchanged  
+   - **Result Concatenation**: Append the processed character to the result string  
+   - **Index Increment**: Move to the next character position  
+
+3. **Result Return**  
+   - Return the final concatenated string as the function output  
+   - Set the ENO flag to True to indicate successful execution

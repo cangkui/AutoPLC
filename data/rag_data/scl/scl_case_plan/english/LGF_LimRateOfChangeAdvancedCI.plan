@@ -1,0 +1,65 @@
+**Natural Language Requirements:**
+
+### I. Initialization Phase  
+1. **Obtain OB Cycle Time**: Query the cycle time (in microseconds) of the loop interrupt OB using `QRY_CINT`.  
+2. **Convert Time Base**: Convert the cycle time to seconds (divide by 1,000,000).  
+
+### II. Parameter Validation Phase  
+1. **Validity Checks**:  
+   - Verify the relationship between high and low limits (`highLim` must be ≥ `lowLim`).  
+   - Ensure all rate limit parameters are non-negative.  
+   - Confirm the OB cycle time is retrieved successfully.  
+2. **Error Handling**:  
+   - Set an error status code immediately if parameter errors are detected.  
+   - Error types include:  
+     - `ERR_NEG_RATE_LIM` (invalid limit values).  
+     - `ERR_NEG_RATE_OF_CHANGE` (negative rate error).  
+
+### III. Mode Processing Phase  
+1. **Reset Mode (`reset = TRUE`)**:  
+   - Clear the manual mode flag.  
+   - Based on `enDefaultOutValue`:  
+     - If enabled: Initialize the output with `defaultOutValue` and apply high/low limits.  
+     - If disabled: Set the output to zero.  
+
+2. **Manual Mode (`manOp = TRUE`)**:  
+   - Output `manualValue` directly.  
+   - Set the manual flag `statManOp` until the output returns within the high/low limit range.  
+
+3. **Automatic Mode (`manOp = FALSE`)**:  
+   a. **Initialization Handling**:  
+      - If `enDefaultOutValue` is enabled, initialize with the default value.  
+      - If tracking mode (`track = TRUE`), pass `autoValue` directly.  
+
+   b. **Core Rate Limiting Logic**:  
+      * **Branch based on the previous output value (`statPrevOutputValue`)**:  
+      1. **Negative Range (`statPrevOutputValue < 0`)**:  
+         - **Upward Trend (target value is smaller)**: Apply `negUpRateLim`.  
+         - **Downward Trend (target value is larger)**:  
+           - If remaining in the negative range: Apply `negDownRateLim`.  
+           - If crossing zero: Calculate the remaining time to reach zero, then apply `posUpRateLim` for the remaining duration.  
+
+      2. **Positive Range (`statPrevOutputValue ≥ 0`)**:  
+         - **Upward Trend (target value is larger)**: Apply `posUpRateLim`.  
+         - **Downward Trend (target value is smaller)**:  
+           - If remaining in the positive range: Apply `posDownRateLim`.  
+           - If crossing zero: Calculate the remaining time to reach zero, then apply `negUpRateLim` for the remaining duration.  
+
+### IV. Clamping Phase  
+1. **High/Low Limit Check**:  
+   - Clamp the output to `highLim` if exceeded and set the `highLim` flag.  
+   - Clamp the output to `lowLim` if undershot and set the `lowLim` flag.  
+2. **Manual Mode Special Handling**:  
+   - Allow manual values to temporarily exceed limits but keep the `statManOp` flag until the output returns within the clamped range.  
+
+### V. Status Update Phase  
+1. **Save Current Output**: Store the current output value as a reference for the next calculation.  
+2. **Update Status Flags**:  
+   - Rate-limiting trigger states (`posUpRateLim`, `posDownRateLim`, etc.).  
+   - High/low limit trigger states.  
+   - Clear error flags (if the process completes normally).  
+
+### VI. Exception Handling Mechanism  
+1. **Error State Persistence**: Terminate subsequent processing if any validation phase fails.  
+2. **Substate Propagation**: Record the status of underlying function calls (e.g., `QRY_CINT`).  
+3. **Recovery Mechanism**: Reinitialize the output only when the `reset` signal is triggered.

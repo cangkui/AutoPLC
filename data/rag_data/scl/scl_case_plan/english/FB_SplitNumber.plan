@@ -1,0 +1,24 @@
+Natural Language Requirements:
+
+1. **Input Validation**
+   - If InputNumber < 0 or ≥ 10000:
+     - Set error=True, status=16#8001
+     - Skip subsequent processing and return immediately
+
+2. **Digit Decomposition**
+   - **Thousands place**: InputNumber divided by 1000 (automatically pads with zeros for numbers less than four digits)
+   - **Hundreds place**: Remainder of InputNumber divided by 1000, then divided by 100
+   - **Tens place**: Remainder of InputNumber divided by 100, then divided by 10
+   - **Units place**: Remainder of InputNumber directly divided by 10
+
+3. **Minimum Value Calculation Logic**
+   - Initialize temporary variable tempMin=255 (maximum Byte value)
+   - **Non-zero comparison** (in order from thousands to units place):
+     - When current digit ≠ 0, update tempMin if the digit is smaller
+   - **Zero handling**: If InputNumber=0, force tempMin=0
+
+4. **Result Output Phase**
+   - Assign tempMin to Min output
+   - When error status is normal (error=False):
+     - Maintain status=16#0000
+     - Output all decomposed digit values

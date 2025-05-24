@@ -1,0 +1,20 @@
+### SCL Algorithm Process Description  
+
+1. **Determine Valid Array Range**  
+   - Get the `LOWER_BOUND` and `UPPER_BOUND` of the first dimension of the array.  
+
+2. **Initialize Extreme Value Benchmarks**  
+   - Set the first element of the array as both the initial `tempMinValue` and `tempMaxValue`.  
+   - Record the initial index: `tempArrayIndexMin = tempArrayIndexMax = tempArrayLowerBound`.  
+
+3. **Single-Pass Extreme Value Detection**  
+   - Start looping from the second element of the array (`tempCounter = lower + 1`).  
+   - For each iteration:  
+     * Cache the current element value as `tempActValue`.  
+     * **Priority Check for Minimum**: If the current value is smaller than the temporary minimum, update `tempMinValue` and `tempArrayIndexMin`.  
+     * **Secondary Check for Maximum**: Otherwise, if the current value is larger than the temporary maximum, update `tempMaxValue` and `tempArrayIndexMax`.  
+
+4. **Result Output Mechanism**  
+   - Output the extreme values by accessing the original array.  
+   - Directly map the index values from temporary variables.  
+   - Force-set `ENO` to `True`.

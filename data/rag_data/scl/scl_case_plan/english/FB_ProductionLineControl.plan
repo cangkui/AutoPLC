@@ -1,0 +1,51 @@
+### Algorithm Process Description  
+
+#### Overall Structure  
+A dual-mode control structure is adopted, with a state machine implementing the automatic mode process control. Four states (STATE_A to STATE_D) represent the product's processing stages at different workstations.  
+
+#### Manual Mode Process  
+1. **Mode Determination**: Enters manual mode when the mode switch is FALSE.  
+2. **Operation Interlock**:  
+   - Activates forward rotation output when the forward button is active and the reverse button is inactive.  
+   - Activates reverse rotation output when the reverse button is active and the forward button is inactive.  
+3. **State Reset**: Resets the automatic mode state machine to the initial STATE_A.  
+
+#### Automatic Mode Process (State Machine)  
+**State Definitions**:  
+- **STATE_A**: Waits for Station A processing to complete.  
+- **STATE_B**: Waits for Station B processing to complete.  
+- **STATE_C**: Waits for Station C processing to complete.  
+- **STATE_D**: Finished product waits to be removed.  
+
+**State Transition Logic**:  
+1. **STATE_A Processing**:  
+   - **Condition Check**: SensorA (product in place) && ButtonA (operation complete).  
+   - **Action**: Starts forward motor rotation and transitions to STATE_B.  
+
+2. **STATE_B Processing**:  
+   - **Condition Check**: SensorB (product in place) && ButtonB (operation complete).  
+   - **Action**: Starts forward motor rotation and transitions to STATE_C.  
+
+3. **STATE_C Processing**:  
+   - **Condition Check**: SensorC (product in place) && ButtonC (operation complete).  
+   - **Action**: Activates the completion indicator light and transitions to STATE_D.  
+
+4. **STATE_D Processing**:  
+   - **Condition Check**: !SensorC (product removed).  
+   - **Action**: Turns off the indicator light and resets to STATE_A.  
+   - **Hold Condition**: The light remains on until the condition is met.  
+
+#### Output Control Rules  
+1. **Motor Control**:  
+   - In automatic mode, forward rotation is triggered only during state transitions.  
+   - In manual mode, the button interlock logic is maintained.  
+   - Reverse rotation output is forcibly disabled in automatic mode.  
+
+2. **Indicator Light Control**:  
+   - Activated only in STATE_D.  
+   - Automatically turns off when the product is removed.  
+
+#### Exception Handling  
+- The state machine automatically resets during mode switching.  
+- Ensures unidirectional motor operation during state transitions.  
+- Prohibits movement before workstation processing is complete.

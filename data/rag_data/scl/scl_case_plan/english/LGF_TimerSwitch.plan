@@ -1,0 +1,80 @@
+Natural Language Requirements:
+
+Below is the algorithm flow chain of thought summary based on requirements and code implementation:
+
+### 1. Initialization Phase  
+- Initialize hour/minute/second parameters for on/off times  
+- Clear nanosecond field to 0  
+
+### 2. Time Acquisition and Validation  
+- Call RD_LOC_T to read local time  
+- Detect time reading errors (when status code highest bit is 1)  
+- Error handling: Set error flag, assign ERR_RD_LOC_T status code  
+
+### 3. Mode Routing Logic  
+```plaintext
+         ┌───────────────┐  
+         │ Mode Selection │  
+         └───────┬───────┘  
+                 │  
+    ┌────────────┴────────────┐  
+    ▼                         ▼  
+Special Mode Handling      Scheduled Mode Handling  
+(Always On/Off)            (Daily/Weekly/Monthly/Yearly etc.)  
+```
+
+### 4. Core Processing Logic for Each Mode  
+
+#### Daily Mode (MODE_DAILY)  
+- Construct same-day on/off time structure  
+- Handle midnight crossover:  
+  - When on-time > off-time  
+  - Adjust next-day time range based on current time  
+
+#### Weekly Cycle Mode (MODE_WEEKLY)  
+- Build time structure based on current day of week  
+- Handle weekly boundaries:  
+  - When start day > end day  
+  - Add week compensation for cross-week scenarios  
+
+#### Monthly Cycle Mode (MODE_MONTHLY)  
+- Construct current month date-time structure  
+- Handle month-end boundaries:  
+  - When start date > end date  
+  - Adjust month field for cross-month handling  
+
+#### Yearly Cycle Mode (MODE_YEARLY)  
+- Construct current year time structure  
+- Handle year-end boundaries:  
+  - When start month > end month  
+  - Adjust year field for cross-year handling  
+
+#### Workday Mode (MODE_WEEK_DAYS)  
+- Restrict to Monday-Friday range  
+- Special handling for Friday night to Monday morning:  
+  - Force deactivation during weekend periods  
+
+#### Weekend Mode (MODE_WEEKEND_DAYS)  
+- Restrict to Saturday-Sunday range  
+- Handle weekend boundaries:  
+  - Auto-correct to next weekend period  
+  - Process Sunday night to next Saturday interval  
+
+### 5. Time Range Determination  
+- Final time comparison logic:  
+```plaintext
+signal = (Current Time ∈ [Adjusted On-Time, Adjusted Off-Time))  
+         AND Not Permanent Off Mode  
+         OR Permanent On Mode  
+```
+
+### 6. Error Handling Strategy  
+- Invalid mode detection: Set ERR_NO_MODE_SELECTED  
+- Time read exception: Set ERR_RD_LOC_T  
+- Force signal=false on errors  
+
+### 7. Output Processing  
+- Unified output of current local time  
+- Hierarchical status codes:  
+  - Main status code (status)  
+  - Sub-status code (subFunctionStatus)

@@ -1,0 +1,33 @@
+Natural Language Requirements:  
+
+1. Initialization Phase:  
+- Call the QRY_CINT function to obtain the current cycle time (tempCycleTime) and phase information (tempCyclePhase) of the loop interrupt OB.  
+- Check if the OB is available (determined by the QRY_CINT return value and tempCycleStatus).  
+
+2. Error Handling Branch:  
+- If time retrieval fails (tempReadTimeStatus ≠ 0) → Set QRY_CINT error status.  
+- If the OB is unavailable (tempCycleStatus abnormal) → Set OB unavailable error.  
+- In error state, set output value to zero and return immediately.  
+
+3. Operational Logic (No Errors):  
+   a. Reset Handling:  
+   - When the reset signal is active, reset the counter (statCounter) and output value.  
+
+   b. Cycle Accumulation:  
+   - Convert the OB call interval time to seconds and accumulate it into the counter.  
+   - Use MOD operation to keep the counter within the cycle range (0 ≤ statCounter < periode).  
+
+   c. Phase Compensation:  
+   - Convert the user-set phase offset to an integer and add it to the counter.  
+   - Apply MOD operation again to ensure the phase-adjusted value remains within the cycle range.  
+
+   d. Waveform Generation:  
+   - Calculate the instantaneous value of the triangular wave using a piecewise linear formula:  
+     1. Use slope (SLOPE=4) to build rising/falling edges.  
+     2. Use absolute value operation to achieve waveform inversion.  
+     3. Apply amplitude scaling and vertical offset adjustment.  
+
+4. Final Output:  
+- Add the user-set offset value (offset).  
+- Update the status flag to indicate normal completion.  
+- Always force ENO to true (standard error mechanism not used).

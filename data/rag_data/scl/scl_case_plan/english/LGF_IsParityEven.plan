@@ -1,0 +1,22 @@
+### Algorithm Logic Flow Description (Reverse-Engineered from Code)
+
+#### Core Objective:
+Quickly determine the parity (evenness) of set bits in 32-bit data through bitwise operations, avoiding sequential bit-by-bit checking.
+
+#### Operational Stages:
+1. **Bit Pattern Folding (2-Level XOR Compression)**
+   - Right-shift by 1 bit with XOR: Compresses adjacent bit parity into even positions (`X0 XOR X1`→`X1`)
+   - Right-shift by 2 bits with XOR: Compresses 4-bit group parity into the 3rd position (`X3 XOR X2 XOR X1 XOR X0`→`X3`)
+   - *At this stage, the highest bit in each 4-bit segment stores the group's parity information*
+
+2. **Valid Bit Filtering**
+   - Apply mask `0x11111111` to retain only the least significant bit (LSB) of each 4-bit segment (where compressed parity info resides)
+
+3. **Parity Aggregation**
+   - Multiply by the same mask `0x11111111` for bit superposition: Elevates each 4-bit parity to the high nibble (`X3 → X31`)
+   - *The highest 4 bits now contain the global parity information*
+
+4. **Result Extraction**
+   - Right-shift by 28 bits to move the highest 4 bits to the lowest positions
+   - Take the logical NOT of the LSB (`X0`) as final output
+   - *A final bit value of 0 indicates an even count of set bits*

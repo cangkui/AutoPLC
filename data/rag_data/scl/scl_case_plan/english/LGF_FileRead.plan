@@ -1,0 +1,38 @@
+Natural Language Requirements:
+
+1. Trigger Mechanism:
+   - Detect rising edge of the execute signal to initiate read operation  
+   - Initialize state machine (FB_STATE_INIT) and diagnostic information  
+   - Set busy flag, reset done/error status  
+
+2. Initialization Phase (FB_STATE_INIT):  
+   → Verify file path prefix starts with "UserFiles/"  
+   → Check if buffer lower bound is 0, calculate buffer capacity  
+   → Determine data type:  
+      ├─ For Byte arrays: Directly verify buffer capacity  
+      └─ Other types: Attempt serialization to buffer, verify results  
+
+3. File Reading Phase (FB_STATE_FILE_READ):  
+   → Call FileReadC system function block to read file  
+   → Process read results:  
+      ├─ Error: Record error code and file length  
+      └─ Success: Verify file length matches data length (based on dataLengthMustMatch flag)  
+
+4. Data Conversion Phase (FB_STATE_PARAMETER_TO_INTERFACE):  
+   → Process buffer content based on data type:  
+      ├─ Byte arrays: Directly copy to output parameters  
+      └─ Other types: Perform deserialization  
+   → Handle conversion errors (move block errors/deserialization errors)  
+
+5. Error Handling:  
+   - Path validation failure (ERR_FILE_PATH)  
+   - Insufficient buffer capacity (ERR_BUFFER_* series errors)  
+   - File length mismatch (ERR_FILE_SIZE_* errors)  
+   - Data conversion errors (ERR_MOVE_BLK_VARIANT etc.)  
+   - Record detailed error state (error code, substate, state machine location)  
+
+6. Output Control:  
+   - Set done/busy/error flags based on state machine results  
+   - Update diagnostic info (status/dataLength)  
+   - Auto-reset state machine upon completion  
+   - Maintain output signals until next trigger

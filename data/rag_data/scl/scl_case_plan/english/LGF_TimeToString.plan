@@ -1,0 +1,32 @@
+Natural Language Requirements:  
+
+1. **Initialization Processing**  
+   - Clear the temporary result string  
+
+2. **Time Decomposition Calculation**  
+   - Convert the input Time type to total milliseconds (in DINT format)  
+   - Decompose the time through successive modulo and division operations to extract:  
+     * Days (quotient after modulo with milliseconds per day)  
+     * Remaining milliseconds (result of modulo)  
+     * Hours (quotient after modulo with milliseconds per hour)  
+     * Remaining milliseconds (continued modulo)  
+     * Minutes (quotient after modulo with milliseconds per minute)  
+     * Remaining milliseconds (continued modulo)  
+     * Seconds (quotient after modulo with milliseconds per second)  
+     * Final milliseconds (result of modulo)  
+
+3. **Reverse String Construction** (Key Feature)  
+   - Process from the smallest time unit and concatenate step by step:  
+     1. Milliseconds: Format as "XMS" (if > 0)  
+     2. Seconds: Format as "XS" and prepend (if > 0)  
+     3. Minutes: Format as "XM" and prepend (if > 0)  
+     4. Hours: Format as "XH" and prepend (if > 0)  
+     5. Days: Format as "XD" and prepend (if > 0)  
+
+4. **String Optimization**  
+   - Use the DELETE function to remove the sign bit (first character) generated during DINT-to-string conversion  
+   - Automatically skip displaying time units with zero values  
+
+5. **Output Processing**  
+   - Assign the final combined string to the function return value  
+   - Also populate the individual time unit string output parameters

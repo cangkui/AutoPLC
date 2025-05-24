@@ -1,0 +1,14 @@
+Natural language requirements:  
+
+1. Create a temporary double-word storage structure  
+   - Allocate 1 DWord-type intermediate variable for data assembly  
+
+2. Data bit concatenation operation  
+   ┌─ Write input parameter word1 (high word) to the high-word section of the temporary variable  
+   └─ Write input parameter word0 (low word) to the low-word section of the temporary variable  
+
+3. Output result  
+   - Assign the assembled temporary variable value to the function return value  
+
+4. Status flag setting  
+   - Always set ENO to TRUE to indicate error-free execution

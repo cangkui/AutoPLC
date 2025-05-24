@@ -1,0 +1,12 @@
+Natural Language Requirements:  
+
+1. **Parameter Reception**  
+   - Receive the input Celsius value `value`  
+
+2. **Temperature Conversion Calculation**  
+   - Apply the formula `Fahrenheit = Celsius * 1.8 + 32`  
+   - Implement scaling using predefined constants `TEMPERATURE_GAIN` (1.8) and `TEMPERATURE_OFFSET` (32.0)  
+
+3. **Result Output**  
+   - Directly assign the calculation result to the function return value  
+   - Force the ENO signal to be set as TRUE

@@ -1,0 +1,15 @@
+### Algorithm Flow Description  
+
+1. **Initialize Indexes**  
+   - Set the starting index of the array (`LOWER_BOUND`) as the initial processing position `tempSwapIndex`.  
+   - Set the maximum index of the array (`UPPER_BOUND`) as the loop termination condition `tempUpperIndex`.  
+
+2. **Process All Elements in Loop**  
+   - **Loop Condition**: Continue iteration while `tempSwapIndex` is **less than** `tempUpperIndex`.  
+   - **Byte Swap Logic**:  
+     - Read the 4-byte value of the current element into a temporary variable.  
+     - Rewrite the bytes in the order **B3→B0, B2→B1, B1→B2, B0→B3** (i.e., complete byte reversal).  
+   - **Index Increment**: After each loop, increment the index by 1 to point to the next element.  
+
+3. **Termination Condition**  
+   - The loop automatically terminates when `tempSwapIndex` reaches `tempUpperIndex`, ensuring all valid elements are processed.

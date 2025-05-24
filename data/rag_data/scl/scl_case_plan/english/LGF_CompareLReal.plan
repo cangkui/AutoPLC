@@ -1,0 +1,7 @@
+Natural language requirements:  
+1. Initialize the return value to FALSE.  
+2. Perform a three-way condition check (OR logic):  
+   - Condition 1: When valueA is 0, verify that the absolute value of valueB ≤ precision.  
+   - Condition 2: When valueB is 0, verify that the absolute value of valueA ≤ precision.  
+   - Condition 3: Calculate the absolute difference between the two values ≤ (precision × |valueA|).  
+3. If any condition is met, return TRUE.

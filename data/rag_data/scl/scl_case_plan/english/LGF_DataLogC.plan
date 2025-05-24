@@ -1,0 +1,29 @@
+Natural Language Requirements:  
+
+1. **Enable Processing**  
+- Detect the rising edge of the enable signal for initialization  
+- Validate parameter legality (ring buffer/max entry limit)  
+- Initialize internal state (reset counters/flags)  
+- Select trigger mode based on parameters (immediate logging/wait for trigger)  
+
+2. **Core State Machine Flow**  
+```
+[IDLE]  
+  ├─Enable trigger → OPEN log file  
+  │   ├─Success → Jump to write or wait for trigger based on parameters  
+  │   └─File missing → CREATE new log  
+  │  
+  ├─Timed logging mode → Start timer → Periodic writes  
+  │  
+  ├─Triggered logging mode → Detect rising edge → Single write  
+  │  
+  ├─Write operation →  
+  │   ├─Success → Update counter  
+  │   │   ├─Reached limit (non-ring buffer) → Lock state  
+  │   │   └─Ring buffer → Reset pointer  
+  │   └─Failure → Record error code  
+  │  
+  ├─Clear command → Reset log content → Keep file  
+  │  
+  └─Delete command → Remove physical file → Full reset  
+```

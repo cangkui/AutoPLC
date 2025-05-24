@@ -1,0 +1,29 @@
+### Natural Language Requirements  
+
+#### Thought Chain Logic Flow Description  
+
+1. **Input Preprocessing**  
+   - Check if the input string is empty → If empty, set the error flag `error` to true, status code to `STATUS_NO_JOB`, and return the initial DTL value `1970-01-01-00:00:00.0`.  
+
+2. **Field Parsing and Validation**  
+   **Extract each time field in sequence, following ISO 8601 format position rules**:  
+   - **Year**  
+     - Position: Start 1, length 4 → Convert to numeric → Validate range [1970, 2262] → If invalid, report `ERR_FORMAT_YEAR`.  
+   - **Month**  
+     - Position: Start 6, length 2 → Convert → Validate [1, 12] → If invalid, report `ERR_FORMAT_MONTH`.  
+   - **Day**  
+     - Position: Start 9, length 2 → Convert → Validate [1, 31] → If invalid, report `ERR_FORMAT_DAY`.  
+   - **Hour**  
+     - Position: Start 12, length 2 → Convert → Validate [0, 23] → If invalid, report `ERR_FORMAT_HOUR`.  
+   - **Minute**  
+     - Position: Start 15, length 2 → Convert → Validate [0, 59] → If invalid, report `ERR_FORMAT_MINUTE`.  
+   - **Second**  
+     - Position: Start 18, length 2 → Convert → Validate [0, 59] → If invalid, report `ERR_FORMAT_SECOND`.  
+   - **Nanosecond**  
+     - Position: Start 21, length 9 → Padding strategy: Replace spaces with '0' → Convert → Validate [0, 999999999] → If invalid, report `ERR_FORMAT_NANOSECOND`.  
+
+3. **Data Correction**  
+   - Perform `+t#0ms` operation on the generated DTL structure → Force an update to the internal weekday calculation.  
+
+4. **Output Handling**  
+   - If all fields are valid → Populate the output DTL, set `error` to false, and status code to `STATUS_FINISHED_NO_ERROR`.

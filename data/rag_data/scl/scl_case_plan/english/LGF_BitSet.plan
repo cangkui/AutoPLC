@@ -1,0 +1,15 @@
+Natural Language Requirements:  
+
+1. Bit Number Validity Handling:  
+   - Use MOD 32 operation to constrain bitNo within the valid range of 0-31.  
+
+2. Mask Generation:  
+   - Initialize a DWORD constant with the least significant bit set to 1 (16#0001).  
+   - Perform a left shift operation on the constant, with the shift amount equal to the processed bitNo value.  
+
+3. Bit Setting Operation:  
+   - Perform a bitwise OR operation between the original value and the shifted mask.  
+   - The result includes all originally set bits of the original value plus the newly specified bit.  
+
+4. Return Result:  
+   - Output the combined DWORD value as the final result.

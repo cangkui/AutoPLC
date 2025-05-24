@@ -1,0 +1,16 @@
+### Algorithm Flow Description (SCL Thought Chain)  
+
+#### 1. Input Parameter Processing  
+- Accept the input variable `value` of type DInt  
+
+#### 2. Conversion Logic Implementation  
+- Call the system function `VAL_STRG` to perform numeric-to-string conversion  
+- Configure conversion parameters:  
+  - `SIZE = 0` (automatically determine string length)  
+  - `PREC = 0` (no decimal part)  
+  - `FORMAT = 16#0000` (force display of sign bit)  
+  - `P = 1` (write from the starting position of the string)  
+
+#### 3. Result Output  
+- Assign the temporary string variable `tempString` to the function return value  
+- Fixed setting `ENO := TRUE` (error handling not enabled)

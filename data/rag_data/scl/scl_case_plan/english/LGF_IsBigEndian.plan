@@ -1,0 +1,15 @@
+### Algorithm Flow Description  
+
+1. **Initialize Constants**:  
+   - Define the bit pattern `BIT_PATTERN_ONE` as `16#0001` (binary `00000000 00000001`).  
+   - Define the bit shift amount `MOVE_BIT_POS` as `15` (used for left-shift operations).  
+
+2. **Generate Detection Value via Bit Operation**:  
+   - Left-shift `BIT_PATTERN_ONE` by `15` bits to obtain `16#8000` (binary `10000000 00000000`).  
+   - Store the result in a temporary variable `tempSixteenBits`.  
+
+3. **Detect Byte Order via Bit Access**:  
+   - Check if the least significant bit (`%B0`) of `tempSixteenBits` is non-zero.  
+   - **Logical Decision**:  
+     - If the least significant bit is non-zero (`%B0 != 0`), return `TRUE` (indicating big-endian mode).  
+     - Otherwise, return `FALSE` (indicating little-endian mode).

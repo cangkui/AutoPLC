@@ -1,0 +1,41 @@
+Natural Language Requirements:  
+
+1. **Reset Signal Priority Handling**  
+- When the reset signal is active:  
+  • Clear historical values (`statInputOldValue`)  
+  • Reset the integral accumulator (`statIntegral`)  
+  • Initialize the time record (`statLastTime` to `CLEAR_TIME`)  
+  • Set output to zero and return immediately  
+
+2. **Function Enable Detection**  
+- If the `enable` signal is inactive:  
+  • Save the current integral value to the output  
+  • Clear the historical input value  
+  • Reset the time record  
+  • Return immediately without calculation  
+
+3. **Time Synchronization Handling**  
+- Call `RD_SYS_T` to get the current system time  
+- Error handling:  
+  • If time retrieval fails (`tempRetval ≠ 0`)  
+  • Lock the integral value to maintain the current state  
+  • Set the error flag (`error = true`)  
+  • Return the specific error code `16#8600`  
+
+4. **Time Difference Calculation**  
+- Calculate the difference between the current time and the last recorded time:  
+  • Compute time difference using `T_DIFF` (millisecond precision)  
+  • Convert to seconds (divide by 1000)  
+  • Store the current time as the baseline for the next calculation  
+
+5. **Trapezoidal Integration Calculation**  
+- Apply the trapezoidal rule:  
+  `(Current Value + Previous Value) / 2 × Time Difference`  
+- Accumulate into the integral register (`statIntegral += tempCalculation`)  
+- Save the current value as the previous value for the next calculation  
+
+6. **Output Handling**  
+- Output the current integral value  
+- Reset the error flag  
+- Set the normal completion status code (`16#0000`)  
+- Maintain the sub-function status flag

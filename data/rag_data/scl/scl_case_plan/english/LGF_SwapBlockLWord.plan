@@ -1,0 +1,22 @@
+Natural Language Requirements:  
+
+1. Array Boundary Determination Phase:  
+   - Get the starting index of the array (LOWER_BOUND)  
+   - Pre-calculate the ending index of the array (UPPER_BOUND) to avoid repeated calls  
+
+2. Traversal Control Phase:  
+   ￣￣￣￣￣￣￣￣  
+   | Initialize traversal index → Starting index  
+   | Loop condition → Index has not reached the end boundary  
+   | Index increment → Increase by 1 each time  
+   ￣  
+
+3. Byte Swap Core Operation (for each LWord element):  
+   ① Cache the original value → tempSwapValue  
+   ② Perform 8-byte position reversal:  
+      B0↔B7 | B1↔B6 | B2↔B5 | B3↔B4  
+   ③ In-place update → Directly modify the corresponding array element  
+
+4. Termination Conditions:  
+   - Natural termination → Index reaches the upper bound of the array  
+   - Forced flag → ENO set to TRUE indicates successful execution

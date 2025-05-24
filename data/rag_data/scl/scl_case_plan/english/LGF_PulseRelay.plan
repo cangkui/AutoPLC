@@ -1,0 +1,20 @@
+Natural Language Requirements:  
+
+#### Detailed Process  
+1. **Trigger Signal Handling**  
+   - Detect the rising edge of `trigger` (current value is true and previous cycle value was false)  
+   - If a rising edge is detected: Toggle the state of `statOut` (perform a NOT operation)  
+
+2. **Set Signal Handling**  
+   - Detect the rising edge of `set`  
+   - If a rising edge is detected: Force `statOut` to TRUE  
+
+3. **Reset Signal Handling**  
+   - Detect the rising edge of `reset`  
+   - If a rising edge is detected: Force `statOut` to FALSE  
+
+4. **State Storage**  
+   - Store the current input values (`trigger`, `set`, `reset`) into their corresponding `*Old` variables  
+
+5. **Output Update**  
+   - Map the internal state `statOut` to the output pin `out`

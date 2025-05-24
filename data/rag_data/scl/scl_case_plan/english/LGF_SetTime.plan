@@ -1,0 +1,35 @@
+Natural Language Requirements:  
+
+1. **Trigger Detection**  
+   - Detect the rising edge of the `execute` signal to initiate operation.  
+   - Initialize the state machine: `busy=TRUE`, `done=FALSE`, `error=FALSE`.  
+   - Validate the input timezone (range: -1200 to +1400).  
+
+2. **Timezone Configuration Phase**  
+   - Use a CASE structure to match predefined timezone templates.  
+   - Set the UTC offset (`Bias`) and timezone display name.  
+   - Invalid timezone → Immediately report error (`ERR_WRONG_TIMEZONE`).  
+   - Set daylight saving time offset (+60 or +0 minutes) based on `isDaylightSavingTime`.  
+
+3. **Time Setting Phase**  
+   - Branch selection:  
+     * `isLocalTime=TRUE` → Call `WR_LOC_T` to set local time.  
+     * `isLocalTime=FALSE` → Call `WR_SYS_T` to set UTC time.  
+   - Error detection: Check the high bit of the system function return status.  
+   - Failure → Set corresponding error code (`ERR_SET_TIME_LOCAL/UTC`).  
+
+4. **Timezone Application Phase**  
+   - Call the `SET_TIMEZONE` function block.  
+   - Monitor sub-function block status:  
+     * `DONE=TRUE` → Timezone setting completed.  
+     * `ERROR=TRUE` → Record submodule error (`ERR_SET_TIMEZONE`).  
+
+5. **State Loop Control**  
+   - Success flow: `STATUS_NO_CALL` → `FIRST` → `SUBSEQUENT` → `FINISHED`.  
+   - Error handling: Freeze the state machine immediately and propagate the underlying error code.  
+   - Upon completion, automatically reset the `busy` signal while maintaining `done/error` states until the `execute` signal falls.  
+
+6. **Output Management**  
+   - Map internal states to output pins in real time.  
+   - Maintain `lastSetTimeZone` to display the latest effective timezone.  
+   - Reset all output states upon the falling edge of the `execute` signal.

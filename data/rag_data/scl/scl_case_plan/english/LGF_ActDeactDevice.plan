@@ -1,0 +1,63 @@
+Here's the English translation of the natural language requirements:
+
+1. **Function Block Initialization**:  
+- When `enable` changes from False to True, initialize internal states  
+- Perform hardware address conversion (LOG2GEO gets geographic address, GEO2LOG gets IO system ID)  
+
+2. **Main State Machine Flow**:  
+```
+Enabling Phase  
+├─ Start device information acquisition mode (MODE_INFORMATION)  
+├─ Determine initial state based on parameters:  
+│   ├─ enableAndDeactivate=True ➔ Enter deactivation process  
+│   └─ enableAndActivate=True ➔ Enter activation process  
+
+Deactivation Process  
+├─ Call D_ACT_DP system function for deactivation  
+├─ Monitor operation completion status:  
+│   ├─ Success ➔ Enter deactivated state  
+│   ├─ Timeout ➔ Log ERR_DEVICE_DEACTIVATING_TIME_OUT  
+│   └─ Error retry mechanism (max 2 consecutive cycles)  
+
+Activation Process  
+├─ Call D_ACT_DP system function for activation  
+├─ Monitor device status:  
+│   ├─ DeviceStates system function continuously checks IO connection  
+│   ├─ Success with device online ➔ Enter activated state  
+│   ├─ Timeout ➔ Log ERR_DEVICE_ACTIVATING_TIME_OUT  
+│   └─ Error retry mechanism  
+
+Runtime Monitoring  
+├─ Activated state:  
+│   ├─ Cycle through information acquisition modes  
+│   └─ Continuous monitoring:  
+│       ├─ Device disconnection ➔ Trigger ERR_DEVICE_STATE_WHILE_ACTIVE  
+│       └─ Abnormal activation state ➔ ERR_READ_ACTIVATION_STATE_WHILE_ACTIVE  
+│  
+└─ Deactivated state:  
+    └─ Periodically verify deactivation status  
+
+Disabling Process  
+├─ Determine final deactivation based on parameters  
+├─ Clean up internal states  
+└─ Reset all output signals  
+```
+
+3. **Error Handling Mechanism**:  
+```mermaid
+graph TD  
+    ErrorDetection -->|System function returns error| RecordSubStatus  
+    ErrorDetection -->|State machine timeout| SetTimeoutError  
+    ErrorDetection -->|Illegal state transition| UndefinedStateError  
+    
+    RecordSubStatus --> UpdateDiagnostics[Update diagnostic structure]  
+    SetTimeoutError --> UpdateDiagnostics  
+    UndefinedStateError --> UpdateDiagnostics  
+    
+    UpdateDiagnostics --> ErrorClassification{Error type}  
+    
+    ErrorClassification -->|User clearable| SetUserClearedFlag  
+    ErrorClassification -->|Auto-recoverable| RetryProcedure  
+```  
+
+The translation maintains all technical terms while presenting the information in clear, natural English. I've preserved the original structure and formatting while ensuring the technical meaning is accurately conveyed.

@@ -1,0 +1,40 @@
+Natural Language Requirements:  
+
+1. Initialization Phase  
+   - Reset all error flags and status codes  
+   - Prepare temporary variables to store intermediate calculation results  
+
+2. Input Validation Process  
+   → Verify if the input is an array?  
+     ├─ No → Set ERR_NO_ARRAY error and return  
+     └─ Yes → Check if the array element types match the output variables?  
+             ├─ Mismatch → Set ERR_NOT_EQUAL_TYPES error and return  
+             └─ Match → Calculate the maximum array index (length - 1)  
+
+3. Core Search Logic (Branch by Element Type)  
+   → CASE statement matches element type:  
+     ├─ Integer series (Int/UInt/DInt, etc.):  
+     │   ├─ Initialize min/max temporary variables with the first element  
+     │   ├─ Traverse from the second element:  
+     │   │   ├─ Read the current element  
+     │   │   ├─ Compare and update the minimum value and its index  
+     │   │   └─ Compare and update the maximum value and its index  
+     ├─ Floating-point (Real/LReal):  
+     │   └─ Processing logic is the same as integers, but handle NaN during initialization  
+     └─ Unsupported type → Set ERR_WRONG_TYPE error  
+
+4. Data Transfer Process  
+   → For the found extreme value indices:  
+   ├─ Use MOVE_BLK_VARIANT to copy elements to output variables  
+   └─ Check the block move operation result?  
+       └─ Failure → Set ERR_MOVE_BLK_VARIANT error  
+
+5. Output Processing  
+   - Convert temporary indices to DInt output  
+   - Synchronously update the ENO signal  
+
+6. Error Handling Mechanism  
+   - Three-level status feedback:  
+     ├─ error: Boolean master error flag  
+     ├─ status: Main status code (16#xxxx)  
+     └─ subfunctionStatus: Underlying function return code

@@ -1,0 +1,28 @@
+### Algorithm Process Description (Thought Chain Analysis)  
+
+1. **Function Positioning**  
+   Combine 16 independent Boolean variables into a single WORD-type variable based on bit order (bit15 as the highest bit, bit0 as the lowest bit).  
+
+2. **Core Logic**  
+   - **Bit-to-Word Mapping**: Assign Boolean values to the binary bits of the WORD variable one by one.  
+   - **Memory Optimization**: Use a temporary variable to store intermediate results, avoiding direct operations on the output parameter.  
+
+3. **Execution Steps**  
+   ```python  
+   def LGF_MergeBitsToWord():  
+       # Initialize temporary variable  
+       tempWord = 0x0000  
+         
+       # Map from high to low bit order (bit15 corresponds to the 15th bit of WORD)  
+       tempWord.bit[15] = bit15  
+       tempWord.bit[14] = bit14  
+       ...  
+       tempWord.bit[0] = bit0  
+         
+       # Output result  
+       return tempWord  
+   ```  
+
+4. **Code Adaptation Points**  
+   - **Bit Order Alignment**: Use the %Xn bit addressing method to ensure bit15 corresponds to the highest bit of WORD.  
+   - **Variable Reuse**: Centralize operations via the temporary variable #tempWord and assign the final value to the function return result uniformly.

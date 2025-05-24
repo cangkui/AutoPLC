@@ -1,0 +1,27 @@
+Natural Language Requirements:  
+
+1. System Time Acquisition and Verification  
+   - Use RD_SYS_T instruction to obtain high-precision system time  
+   - Capture the status code of the system time read operation  
+   - If the status code is abnormal:  
+     * Set error flag to true  
+     * Set main status code to ERR_RD_SYS_T  
+     * Pass the underlying instruction return code as sub-status code  
+     * Return zero value and exit function early  
+
+2. Nanosecond-Level Time Processing  
+   - Extract the nanosecond field from the time structure  
+   - Convert the 32-bit nanosecond value to DWord type  
+   - Perform byte position swapping:  
+     * Original byte 0 → Target byte 3  
+     * Original byte 1 → Target byte 2  
+     * Original byte 2 → Target byte 1  
+     * Original byte 3 → Target byte 0  
+
+3. Result Generation Phase  
+   - Convert the processed DWord value to DInt type  
+   - Set normal return status:  
+     * Set error flag to false  
+     * Set main status code to success state  
+     * Synchronize sub-status code with success flag  
+   - Force activation of ENO mechanism

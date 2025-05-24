@@ -1,0 +1,45 @@
+Natural Language Requirements:  
+
+1. **Edge Detection and Initialization**  
+   - Detect the rising edge of the `execute` signal  
+   - Obtain the upper and lower bounds of the input array (automatically handling array dimensions)  
+   - Initialize all statistical variables to default values (0 or empty)  
+   - Check if the array lower bound is negative (error handling)  
+
+2. **Parameter Validity Verification**  
+   - Verify the legality of the `rangeOutlier` parameter (must be >1.0 or =0)  
+   - Set the `ERR_RANGE_NOT_OK` error if the parameter is invalid  
+
+3. **Data Preprocessing**  
+   - Call the `LGF_ShellSort_UDInt` function block to sort the array  
+   - Handle sorting errors (error propagation mechanism)  
+   - Retrieve the sorted min/max values (first and last elements of the array)  
+
+4. **Core Statistical Calculations**  
+   - **Median Calculation:**  
+     * For even-length arrays: average of the two middle elements  
+     * For odd-length arrays: the middle element value  
+   - **Quartile Calculation:**  
+     * Q25: Use the `(n+3)/4` formula for linear interpolation  
+     * Q75: Use the `(3n+1)/4` formula for reverse calculation  
+
+5. **Outlier Handling**  
+   - When `rangeOutlier` ≠ 0:  
+     * Calculate the interquartile range (IQR = Q75 - Q25)  
+     * Determine the upper and lower outlier boundaries:  
+       `Q25 - k*IQR` and `Q75 + k*IQR`  
+     * Traverse the array bidirectionally:  
+       - Forward traversal to find the first value not less than the lower bound (new min)  
+       - Reverse traversal to find the first value not greater than the upper bound (new max)  
+     * Calculate the outlier percentage  
+
+6. **Skewness Calculation**  
+   - Use the formula: `(Q75 + Q25 - 2*Median) / (Q75 - Q25)`  
+
+7. **Result Output and State Management**  
+   - Select either the original or adjusted min/max based on `rangeOutlier`  
+   - Output all statistical results to interface variables  
+   - State machine management:  
+     * First-call state (`STATUS_FIRST_CALL`)  
+     * Completion state (`STATUS_EXECUTION_FINISHED`)  
+     * Error state propagation mechanism

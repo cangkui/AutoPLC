@@ -1,0 +1,37 @@
+Natural Language Requirements:  
+
+1. Initialization Phase:  
+   - Initialize state to "No Error"  
+   - Copy input data to temporary variables  
+
+2. Latitude Conversion Process:  
+   (1) Direction Determination:  
+      - If latitude ≥ 0 → North 'N', else South 'S' (take absolute value)  
+   (2) Degree-Minute-Second Conversion:  
+      - Integer part → Degrees (convert to unsigned integer)  
+      - Decimal part × 60 → Integer portion as minutes  
+      - Remaining decimal × 60 → Integer portion as seconds  
+   (3) Validity Check:  
+      - Degrees > 90 → Set latitude error  
+      - Minutes/Seconds > 59 → Set latitude error  
+
+3. Longitude Conversion Process:  
+   (1) Direction Determination:  
+      - If longitude ≥ 0 → East 'E', else West 'W' (take absolute value)  
+   (2) Degree-Minute-Second Conversion:  
+      - Integer part → Degrees (convert to unsigned integer)  
+      - Decimal part × 60 → Integer portion as minutes  
+      - Remaining decimal × 60 → Integer portion as seconds  
+   (3) Validity Check:  
+      - Degrees > 180 → Set longitude error  
+      - Minutes/Seconds > 59 → Set longitude error  
+
+4. Final Error Handling:  
+   - Check error flag (highest bit of status code):  
+     ✓ If error exists → Reset latitude/longitude to 0  
+     ✓ If no error → Maintain normal state  
+
+5. Output Processing:  
+   - Return converted DMS structure  
+   - Set error boolean flag (based on highest bit of status code)  
+   - Return full status code

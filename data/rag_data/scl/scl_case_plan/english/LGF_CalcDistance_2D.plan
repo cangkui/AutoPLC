@@ -1,0 +1,19 @@
+Natural Language Requirements:
+
+1. Input Parameters:
+   - Accept coordinates of two 2D points: (x1,y1) and (x2,y2)
+   - All parameters are of LReal type
+
+2. Calculation Logic:
+   ① Calculate the difference in x-coordinates: Δx = x2 - x1
+   ② Calculate the difference in y-coordinates: Δy = y2 - y1
+   ③ Sum the squares of the x and y differences: sum_of_squares = (Δx)² + (Δy)²
+   ④ Calculate the square root of the sum: distance = √(sum_of_squares)
+
+3. Output Result:
+   - Return the calculated distance value (LReal type)
+   - Perform the calculation directly using a mathematical expression without storing intermediate variables
+
+4. Special Handling:
+   - Force set ENO to TRUE
+   - Skip numerical range validation

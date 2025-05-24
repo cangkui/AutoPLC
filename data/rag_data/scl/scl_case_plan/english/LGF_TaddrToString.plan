@@ -1,0 +1,26 @@
+**LGF_TaddrToString Function Processing Flow:**
+
+1. Initialization Phase:  
+   - Create and clear a temporary string buffer  
+
+2. IP Address Conversion:  
+   - Convert each of the 4 IP octets into fixed-length numeric strings in sequence  
+   - Insert dot separators (.) after each octet conversion  
+   - Conversion parameters:  
+     * Each octet uses 3-character width (auto-padded with spaces)  
+     * Convert using unsigned integer format  
+
+3. Port Number Handling:  
+   - Check if the port number is valid (>0)  
+   - If valid:  
+     a. Append a colon separator (:) after the IP address  
+     b. Convert the port number into a 5-character-wide numeric string  
+
+4. Space Cleanup:  
+   - Continuously check for space characters in the string  
+   - Iteratively remove all spaces until no spaces remain  
+   - Implemented using a find-delete loop mechanism  
+
+5. Result Output:  
+   - Assign the processed string to the function's return value  
+   - Forcefully set the ENO flag to True (no error handling performed)

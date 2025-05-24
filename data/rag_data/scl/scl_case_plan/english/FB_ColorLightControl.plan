@@ -1,0 +1,25 @@
+**Natural Language Requirements:**  
+
+### **Algorithm Flow Description**  
+
+1. **Rising Edge Detection Mechanism**  
+   - Continuously monitor the control button signal (`controlButton`).  
+   - When a **0-to-1 transition** is detected, it is considered a valid trigger, and a state switch is executed.  
+
+2. **State Loop Control**  
+   - Maintain a loop counter (range: 1–5), initialized to 1.  
+   - Increment the counter on each valid trigger.  
+   - When the counter exceeds 5, it automatically resets to 1, forming a cyclic sequence.  
+
+3. **State-Light Mapping Logic**  
+   | State | Green Light | Red Light | Yellow Light | Description          |  
+   |-------|-------------|-----------|--------------|---------------------|  
+   | 1     | ✅          | ❌        | ❌           | Only green light on |  
+   | 2     | ❌          | ✅        | ❌           | Only red light on   |  
+   | 3     | ❌          | ❌        | ✅           | Only yellow light on|  
+   | 4     | ✅          | ✅        | ✅           | All lights on       |  
+   | 5     | ❌          | ❌        | ❌           | All lights off      |  
+
+4. **Special Loop Handling**  
+   - After the 5th trigger, the system enters the "all-off" state.  
+   - On the 6th trigger, it directly jumps to State 1 (green light on), starting a new cycle.

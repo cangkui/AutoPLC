@@ -1,0 +1,52 @@
+### Algorithm Process Description  
+
+#### Overall Structure  
+- **Database Structure**: Uses a 20-byte array to simulate the database (indexes 1~20)  
+- **Status Tracking**: Records the end position of current valid data via `statLastItemIndex`  
+- **Error Mechanism**: Two-level error detection (abnormal data length / insufficient storage space)  
+
+#### Processing Priority  
+1. **Reset Signal Priority**: When both `resetTrigger` and `storeTrigger` are triggered simultaneously, the reset operation takes precedence  
+2. **Error State Override**: Once an error occurs, the error state persists until reset  
+
+#### Core Processing Flow  
+```plaintext
+Initialization:  
+    Set database capacity constant DATABASE_SIZE = 20  
+    Initialize storage pointer statLastItemIndex = 0  
+
+Upon receiving resetTrigger:  
+    Clear the database array (set all to 0)  
+    Reset the storage pointer to the initial position  
+    Clear all error states  
+    Update the space indicator  
+
+Upon receiving storeTrigger:  
+    Step 1 - Data Length Validation:  
+        Read dataInput[0] as data length  
+        IF length ≤ 0 OR length > 5 → Trigger error 16#8001  
+    Step 2 - Space Validation:  
+        IF remaining space < data length → Trigger error 16#8002  
+    Step 3 - Data Storage:  
+        Copy data starting from dataInput[1]  
+        Write sequentially to the next available position in the database  
+        Update the storage pointer and space indicator  
+
+Continuous Output:  
+    usedSpace = Current storage pointer position  
+    remainingSpace = Total capacity - usedSpace  
+    Error state and status codes update in real-time  
+```  
+
+#### Exception Handling Flow  
+```plaintext
+Error Trigger Conditions          → Error Code  
+Invalid data length (≤0 or >5)    → 16#8001  
+Insufficient remaining space      → 16#8002  
+Normal operation                 → 16#0000  
+
+Error State Retention Mechanism:  
+    Once an error is triggered, the state persists until:  
+    a) A successful reset operation is executed  
+    b) A new valid operation overrides the error state  
+```

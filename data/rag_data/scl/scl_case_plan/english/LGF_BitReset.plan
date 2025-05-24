@@ -1,0 +1,19 @@
+Natural Language Requirements:
+
+1. Preprocessing Phase:
+- Define constants:
+   - All-ones mask (BINARY_ONES = 16#FFFFFFFF)
+   - Unit mask (TRUE_BOOL_BIT = 16#0001)
+   - Maximum bit limit (MAX_NO_OF_BITS = 32)
+
+2. Input Validation:
+- Perform modulo operation on bitNo (bitNo MOD 32) to ensure operation stays within 0-31 bit range
+
+3. Core Bit Manipulation Logic:
+a) Use SHL instruction to left-shift the unit mask by the calculated effective bit number
+b) Apply XOR operation between the shifted result and all-ones mask to generate the reset mask for target bit
+c) Perform AND operation between the generated reset mask and input value to complete bit clearing
+
+4. Output Handling:
+- Directly return the bit operation result
+- Keep ENO always as TRUE

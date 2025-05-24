@@ -1,0 +1,32 @@
+**Natural Language Requirements:**  
+
+1. **Initialization Phase**  
+   - During first run or reset:  
+     a. Cache all input parameters into static variables (startValue, timeRange, incrementRange, numberSteps, endlessSteps).  
+     b. Reset the current value to the starting value and clear the step counter.  
+     c. Set the timer start flag.  
+
+2. **Step Control Logic**  
+   - When the timer completes and no reset is active:  
+     a. Current value += increment value.  
+     b. Step counter +1.  
+     c. Handle step limits:  
+        - **Finite mode:** If step count exceeds the set value, reset the current value and step counter.  
+        - **Infinite mode:** Force step counter to zero (but allow current value to keep increasing).  
+     d. Clear the timer start flag.  
+
+3. **Timer Management**  
+   - Force-start the timer (TON_TIME) in every cycle.  
+   - Use **timeRange** as the timer preset value.  
+   - Trigger step calculation via the timer completion flag.  
+
+4. **Output Handling**  
+   - Always output the current calculated value.  
+   - When a reset signal is forced:  
+     a. Immediately reset the current value to the latest **startValue**.  
+     b. Maintain parameter update capability (input parameters can still be modified during reset).  
+
+5. **State Retention Mechanism**  
+   - Static variables store runtime state (current value, step count, timer status).  
+   - Parameter changes take effect upon the next reset/initialization.  
+   - The **firstRun** flag ensures initialization executes only once.

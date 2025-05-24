@@ -1,0 +1,23 @@
+Natural Language Requirements:
+
+I. Initialization Phase:
+1. Set initial CRC value to the provided initValue parameter  
+2. Obtain valid index range of input array  
+3. Parameter validation checks:  
+   - When noOfElements > 0, verify it doesn't exceed actual array length  
+   - If parameters are invalid, immediately set ERR_NO_OF_ELEMENTS error and return initial value  
+
+II. Data Preprocessing Phase:  
+4. Adjust the upper processing index limit based on noOfElements parameter  
+
+III. Core Calculation Loop (Byte Processing):  
+5. Process each byte in array:  
+   a. XOR current byte (left-shifted by 24 bits) with CRC value  
+   b. Perform 8-bit processing cycles:  
+      i. Check CRC's highest bit  
+      ii. Left-shift CRC value by 1 bit  
+      iii. If highest bit is 1, XOR with mask polynomial  
+
+IV. Result Output:  
+6. Return final computed CRC value  
+7. Set success status flag or corresponding error code

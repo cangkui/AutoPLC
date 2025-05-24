@@ -1,0 +1,65 @@
+### Algorithm Process Chain of Thought  
+
+#### Operation Priority Handling  
+```text  
+Using ELSIF structure to ensure mutual exclusion of four operation types, with priority order: Add > Delete > Modify > Query  
+```  
+
+#### Common Logic  
+```text  
+1. Initialization Phase  
+   - Reset all output flags (error/status/recipeAdded, etc.)  
+   - Default error state set to no error (STATUS_OK)  
+
+2. Array Traversal Logic  
+   - Loop through indices 1..10  
+   - Use early exit mechanism (EXIT instruction)  
+   - Maintain a 'found' flag to record operation results  
+```  
+
+#### Add Recipe (addRecipe)  
+```text  
+┌── Dual-Objective Search: Find empty slot and check for duplicates  
+│   FOR 1..10:  
+│   ├── Find empty slot (recipeID=0) → Record first empty slot index  
+│   └── Find duplicate ID → Mark conflict  
+├── Decision Tree:  
+│   ├── Duplicate exists → Set error code 16#8002  
+│   ├── No empty slot → Set error code 16#8003  
+│   └── Normal addition → Fill first empty slot, set success flag  
+```  
+
+#### Delete Recipe (deleteRecipe)  
+```text  
+┌── Exact Match Search  
+│   FOR 1..10:  
+│   └── Match found → Set recipeID to 0  
+├── Exception Handling:  
+│   └── Not found → Set error code 16#8004  
+```  
+
+#### Modify Recipe (modifyRecipe)  
+```text  
+┌── Overwrite Update  
+│   FOR 1..10:  
+│   └── Match found → Overwrite all fields  
+├── Exception Handling:  
+│   └── Not found → Set error code 16#8005  
+```  
+
+#### Query Recipe (queryRecipe)  
+```text  
+┌── Exact Retrieval  
+│   FOR 1..10:  
+│   └── Match found → Copy structure to output  
+├── Exception Handling:  
+│   └── Not found → Set error code 16#8001  
+```  
+
+#### Error Handling Mechanism  
+```text  
+Unified Error Handling Framework:  
+1. Any operation fails to meet expectations → error=TRUE  
+2. Specific status codes correspond to different error types  
+3. Successful operation → Maintain error=FALSE and status=OK  
+```

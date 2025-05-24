@@ -1,0 +1,42 @@
+Natural Language Requirements:  
+
+1. **Basic Day Count Calculation**  
+   - Call `LGF_GetCalendarDay` to get the number of days `tempDays` from January 1st for the given date.  
+   - If failed, directly return error status (`error=TRUE`, `status=ERR_LIM_DATE`).  
+
+2. **Year and Leap Year Determination**  
+   - Extract the current year, previous year, and next year.  
+   - Current year is a leap year if: `(divisible by 4 and not divisible by 100) OR divisible by 400`.  
+   - Apply the same rule to the previous year.  
+
+3. **Key Date Weekday Calculation**  
+   - Calculate weekday values (Sunday=1, Monday=2, etc.) for:  
+     - January 1st of the current year  
+     - December 31st of the current year  
+     - January 1st of the next year  
+     - January 1st of the previous year  
+     - December 31st of the previous year  
+
+4. **Day Alignment with Week Start**  
+   - Adjust `tempDays` based on the weekday of January 1st of the current year:  
+     - Sunday: `tempDays -= 1`  
+     - Monday: No adjustment  
+     - Tuesday to Saturday: Add 1 to 5 days respectively  
+
+5. **Initial Week Number Calculation**  
+   - `tempWeek = (adjusted days / 7) + 1`  
+
+6. **53-Week Year Determination**  
+   - Non-leap year: January 1st and December 31st are both Saturdays.  
+   - Leap year:  
+     - January 1st is Saturday AND December 31st is Sunday  
+     - OR January 1st is Friday AND December 31st is Saturday  
+
+7. **Week Number Correction Logic**  
+   - If `tempWeek=53`:  
+     - Keep if the current year is a 53-week year; otherwise reset to Week 1.  
+   - If `tempWeek=54`: Forcefully set to Week 1.  
+
+8. **Output Handling**  
+   - Assign `calendarDay` the original day count.  
+   - On successful execution: `error=FALSE`, `status=STATUS_NO_ERROR`.

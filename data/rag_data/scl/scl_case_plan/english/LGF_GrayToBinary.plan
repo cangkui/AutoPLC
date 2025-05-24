@@ -1,0 +1,15 @@
+Natural Language Requirements:  
+
+1. **Initialization Phase**  
+   - Directly assign the input Gray code to a temporary binary variable (`tempBinaryBits := variableGray`)  
+
+2. **Step-by-Step XOR Conversion**  
+   - Use a divide-and-conquer approach for bit manipulation, gradually converting the Gray code through 5 levels of shift-XOR operations:  
+     1. Level 1: Right-shift by 16 bits, then XOR with the original value (processes the upper 16 bits)  
+     2. Level 2: Right-shift by 8 bits, then XOR (refines the high-order byte)  
+     3. Level 3: Right-shift by 4 bits, then XOR (processes the half-byte)  
+     4. Level 4: Right-shift by 2 bits, then XOR (processes the 2-bit pairs)  
+     5. Level 5: Right-shift by 1 bit, then XOR (final single-bit processing)  
+
+3. **Result Output**  
+   - Output the processed temporary variable directly as the return value

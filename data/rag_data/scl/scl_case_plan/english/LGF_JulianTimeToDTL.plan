@@ -1,0 +1,41 @@
+Natural Language Requirements:  
+
+1. **Input Preprocessing**  
+   - Determine the Julian day type based on the `isModifiedDate` flag:  
+     - If it's a Modified Julian Day (`TRUE`), convert it to a Standard Julian Day by adding the offset `2400000.5`.  
+     - If it's a Standard Julian Day (`FALSE`), use the original value directly.  
+
+2. **Time Base Conversion**  
+   - Convert the Standard Julian Day to a Unix timestamp using:  
+     ```math  
+     Unix Timestamp = (Julian Day - 2440587.5) × 86400  
+     ```  
+   - Force conversion to DInt type (truncate the decimal part).  
+
+3. **Validity Check**  
+   - Verify if the timestamp is earlier than the reference date 1990-01-01 (Unix timestamp `631152000` seconds):  
+     - **If less than the reference value**: Return error status `16#8000` and output the default time `DTL#1990-01-01-00:00:00`.  
+     - **If equal to the reference value**: Return warning status `16#6001`, output the same time but mark it as a normal conversion.  
+     - **If validation passes**: Proceed with further processing.  
+
+4. **Date Decomposition**  
+   - Calculate the number of days relative to 1990:  
+     ```math  
+     Days = (Unix Timestamp - 631152000) / 86400  
+     ```  
+   - Convert to DATE type and store in the DTL structure's base fields (year/month/day).  
+
+5. **Time Decomposition**  
+   - Calculate the remaining seconds of the day:  
+     ```math  
+     Remaining Seconds = Unix Timestamp - 631152000 - (Days × 86400)  
+     ```  
+   - Decompose time units step by step:  
+     - **Hours**: `Remaining Seconds ÷ 3600` (integer division).  
+     - **Minutes**: `(Remaining Seconds MOD 3600) ÷ 60`.  
+     - **Seconds**: `Remaining Seconds MOD 60`.  
+
+6. **Result Output**  
+   - Assemble the complete DTL structure.  
+   - Set the normal status code `16#0000`.  
+   - Force activation of the ENO mechanism (for compatibility).

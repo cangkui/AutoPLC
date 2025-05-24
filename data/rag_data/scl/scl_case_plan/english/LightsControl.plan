@@ -1,0 +1,35 @@
+Natural Language Requirements:  
+
+I. Mode Selection Logic  
+1. Core Branch: Divides into manual/auto modes based on #button1 state  
+   - FALSE (0): Execute manual control branch  
+   - TRUE (1): Execute auto cycle branch  
+
+II. Manual Mode Control Logic  
+1. Timer Interlock Configuration:  
+   - ManModeTimer1 starts when ManModeTimer2 completes  
+   - ManModeTimer2 starts when ManModeTimer1 is incomplete  
+   - Forms alternating 1-second pulses (generates 0.5Hz base frequency)  
+
+2. Button Combination Response:  
+   │ Combination State   │ Fixed Light │ Flashing Light & Mode    │  
+   ├─────────────────────┼─────────────┼──────────────────────────┤  
+   │ button2 & !button3  │ Green steady│ Red (0.5Hz)              │  
+   │ !button2 & button3  │ Red steady  │ Yellow (1Hz)             │  
+   │ button2 & button3   │ Yellow steady│ Green (1Hz)             │  
+   │ Other cases         │ All off      │ -                        │  
+
+III. Auto Mode Control Logic  
+1. State Machine Configuration:  
+   - Uses CycleStep (0-2) to mark current phase  
+   - State Transition Table:  
+   │ Current Phase │ Light State    │ Timer Completion Action     │  
+   ├───────────────┼────────────────┼────────────────────────────┤  
+   │ 0             │ Green          │ Jump to Phase 1, reset timer │  
+   │ 1             │ Red            │ Jump to Phase 2, reset timer │  
+   │ 2             │ Yellow         │ Jump to Phase 0, reset timer │  
+
+2. Timer Management:  
+   - AutoModeTimer runs continuously (IN always TRUE)  
+   - Hard reset during each state transition (IN set to FALSE)  
+   - Fixed 1-second timer cycle

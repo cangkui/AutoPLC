@@ -1,0 +1,25 @@
+Natural Language Requirements:  
+
+1. **Input Validation Phase**:  
+   - Check if `highLimit` is less than `lowLimit`.  
+   - If true:  
+     → Set `error=True` and `status=16#8401`.  
+     → Reset all output flags to `False`.  
+     → Immediately return `False`.  
+
+2. **Numerical Range Evaluation Phase**:  
+   - Calculate two intermediate states:  
+     * `TempHighFlag` = Input value > `highLimit`.  
+     * `TempLowFlag` = Input value < `lowLimit`.  
+
+3. **Output Decision Phase**:  
+   - Final range determination = NOT (`HighFlag` OR `LowFlag`).  
+   - Use intermediate values directly for high/low limit flags.  
+   - Ensure normal state has:  
+     * `error=False`.  
+     * `status=16#0000`.  
+
+4. **Error Handling Mechanism**:  
+   - Errors trigger only when high/low limit parameters conflict.  
+   - Skip regular checks if an error occurs.  
+   - Distinguish error types via the `status` field.
