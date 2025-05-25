@@ -45,7 +45,7 @@ def baseline_in_github_case(model):
     dataset_file = os.path.join(root_path, "data", "benchmarks", "githubcase.jsonl")
     run_baseline_in_github_case(model, dataset_file)
 
-def run_autoplc_scl(benchmark: str, config: Config):
+def run_autoplc_scl(benchmark: str, config: Config, checkpoint_dir: str = None):
     global root_path
     root_path = ROOTPATH
     benchmark_file_path = os.path.join(root_path, "data", "benchmarks", f"{benchmark}.jsonl")
@@ -53,15 +53,26 @@ def run_autoplc_scl(benchmark: str, config: Config):
         logger.error(f"Benchmark file {benchmark_file_path} not found.")
         return
 
+    if checkpoint_dir:
+        ## 从 checkpoint_dir 中加载配置
+        config_path = os.path.join(checkpoint_dir, "config", "config.yaml")
+        if os.path.exists(config_path):
+            config = Config.load_from_absolute_path(config_path)
+            logger.info(f"Loaded config from {config_path}.")
+        else:
+            raise ValueError(f"Checkpoint config file {config_path} not found.")
+
     # 输出config关键内容：
     logger.info(f"Benchmark:{benchmark} Model: {config.model} retriever: {config.RETRIEVE_DISABLED == False} planner: {config.MODELING_DISABLED == False} api_rec: {config.APIREC_DISABLED == False} debugger: {config.DEBUGGER_DISABLED == False} auto_learn: {config.AUTOLEARN_DISABLED == False}")
-
+        
     ClientManager().set_config(config)
     APIDataLoader.init_load(config = config)
-    base_folder = init_team_log_path()
+    base_folder = init_team_log_path(checkpoint=checkpoint_dir)
 
-    os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
-    shutil.copy(config.config_path, os.path.join(base_folder, "config", "config.yaml"))
+    if not checkpoint_dir:
+        # 如果没有提供 checkpoint_dir，则保存配置文件
+        os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
+        shutil.copy(config.config_path, os.path.join(base_folder, "config", "config.yaml"))
 
     all_agents_start_time = time.time()
 
@@ -70,6 +81,11 @@ def run_autoplc_scl(benchmark: str, config: Config):
         tasks = [json.loads(line) for line in lines]
 
     for task in tasks:
+        ## 检查 task是否已经完成，即是否存在dir名字是task["name"]的
+        task_name = task["name"]
+        if os.path.exists(os.path.join(base_folder, task_name)):
+            logger.info(f"Task {task_name} already completed. Skipping...")
+            continue
         autoplc_scl_workflow(task, base_folder, config)
 
     total_time = time.time() - all_agents_start_time

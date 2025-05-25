@@ -1,3 +1,4 @@
+import os
 import yaml
 from typing import List, Dict, Any
 from pathlib import Path
@@ -14,7 +15,22 @@ class Config:
         self._config = self._load_config(config_path)
         self.config_path = config_path
         self._resolve_environment_variables()
-    
+            
+    @classmethod
+    def load_from_absolute_path(cls, abs_path: str) -> "Config":
+        """
+        从给定的绝对路径加载配置，返回一个新的 Config 实例。
+        """
+        if not os.path.exists(abs_path):
+            raise FileNotFoundError(f"Configuration file not found: {abs_path}")
+        
+        instance = cls.__new__(cls)  # 不调用 __init__
+        instance.ROOTPATH = ROOTPATH
+        instance._config = instance._load_config(abs_path)
+        instance.config_path = abs_path
+        instance._resolve_environment_variables()
+        return instance
+
     def _load_config(self, config_path: str) -> Dict[str, Any]:
         with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)

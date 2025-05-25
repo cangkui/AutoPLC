@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--benchmark", type=str, default="oscat", help="benchmark name")
     parser.add_argument("--config", type=str, default="default_st", help="config name")
+    parser.add_argument("--checkpoint_dir", type=str, default=None, help="checkpoint where the task is saved")
     args = parser.parse_args()
     
-    run_autoplc_st(benchmark=args.benchmark, config=Config(config_file=args.config))
+    run_autoplc_st(benchmark=args.benchmark, config=Config(config_file=args.config), checkpoint_dir=args.checkpoint_dir)
