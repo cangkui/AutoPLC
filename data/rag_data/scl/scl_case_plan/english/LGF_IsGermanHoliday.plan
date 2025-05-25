@@ -1,0 +1,38 @@
+**Natural Language Requirements:**
+
+1. **Easter Calculation**:
+- Use the Gauss algorithm to calculate the date of Easter for the input year.
+- Determine the month of Easter (March or April) using modulo operations and coefficient adjustments.
+- Calculate the number of days between April 1st and Easter.
+
+2. **Fixed-Date Holiday Determination**:
+```
+January 1st (New Year's Day)
+May 1st (Labor Day)
+October 3rd (German Unity Day)
+December 25th/26th (Christmas)
+```
+
+3. **Conditional Fixed Holidays** (determined based on input parameters):
+```
+January 6th (Epiphany)
+August 8th (Augsburg Peace Festival)
+August 15th (Assumption of Mary)
+October 31st (Reformation Day)
+November 1st (All Saints' Day)
+```
+
+4. **Dynamic Holiday Calculation**:
+- Rose Monday (48 days before Easter, requires parameter activation)
+- Good Friday (2 days before Easter)
+- Easter and Easter Monday (+0/+1 day)
+- Ascension Day (+39 days, requires parameter activation)
+- Pentecost and Whit Monday (+49/+50 days)
+- Corpus Christi (+60 days, requires parameter activation)
+
+5. **Special Dynamic Holiday**:
+- Day of Prayer and Repentance (3rd Wednesday in November, requires parameter activation)
+→ Condition check: November, Wednesday, 15 < DAY < 23
+
+6. **Combined Determination**:
+All the above conditions are connected via logical OR. If any condition is met, return TRUE.

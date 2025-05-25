@@ -1,0 +1,12 @@
+Natural Language Requirements:  
+
+1. Initialize a mask constant (MASK=16#01) for bit extraction.  
+2. Process the least significant bit (bit0):  
+   - Directly perform a bitwise AND operation on the input byte to obtain it.  
+3. Process the middle bits (bit1-bit6):  
+   - Right-shift the input byte by 1-6 bits.  
+   - Perform a bitwise AND operation between the shifted result and the mask.  
+4. Process the most significant bit (bit7):  
+   - Right-shift the input byte by 7 bits.  
+   - Perform a bitwise AND operation between the shifted result and the mask.  
+5. Uniformly set the execution status flag (ENO) to normal.

@@ -1,0 +1,16 @@
+### Algorithm Process Chain of Thought  
+
+1. **Initialize Flag**  
+   - Set default return value to FALSE (indicating not equal)  
+
+2. **Handle Zero-Value Edge Cases**  
+   - When valueA is zero: Check if the absolute value of valueB ≤ given precision  
+   - When valueB is zero: Check if the absolute value of valueA ≤ given precision  
+
+3. **General Difference Comparison Logic**  
+   - When both values are non-zero: Calculate the absolute difference between the two values  
+   - Check if the difference ≤ (precision value × absolute value of valueA)  
+
+4. **Logical OR Comprehensive Judgment**  
+   - If any of the above conditions is met, return TRUE (approximately equal)  
+   - Otherwise, maintain the default FALSE (not equal)

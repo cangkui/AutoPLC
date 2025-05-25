@@ -1,0 +1,30 @@
+Natural Language Requirements:  
+
+1. **Initialization and Reset Handling**  
+- Detect reset signal or window size change → Clear historical data and counters  
+- Validate window size → Set error code 16#8200 if invalid  
+
+2. **Trigger Logic Judgment**  
+- Triggered by `cyclicExecution` or rising edge of `trigger` → Determine whether to execute the current calculation  
+- Implement edge detection to ensure each trigger is processed only once  
+
+3. **Window Filling Phase**  
+- When accumulated samples < window size:  
+   - Add new value to the circular buffer  
+   - Accumulate into the total sum and increment the counter  
+   - Calculate the average using the current total  
+
+4. **Sliding Window Phase**  
+- After the window is filled:  
+   - Perform circular buffer replacement (new value replaces the oldest value)  
+   - Update the total sum: `New Sum = Original Sum + New Value - Replaced Value`  
+   - Always calculate the average based on the full window size  
+
+5. **Index Management Mechanism**  
+- Use `MOD` operation for circular buffer index looping  
+- Special handling for modulo reset cases → Reset counters to maintain window integrity  
+
+6. **Status Output Control**  
+- Update the `windowSizeReached` flag in real time  
+- Automatically clear error status during normal execution  
+- Force ENO to remain TRUE → Errors are reported through dedicated channels

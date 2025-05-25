@@ -1,0 +1,42 @@
+Natural Language Requirements:  
+
+1. **Initialization Phase**  
+- Set initial CRC value as `initValue`  
+- Calculate the actual valid range of the input array (via LOWER_BOUND/UPPER_BOUND)  
+- Parameter validity check:  
+  * If `noOfElements > 0` and exceeds array capacity → Set error status `ERR_NO_OF_ELEMENTS` and return immediately  
+
+2. **Data Preprocessing Loop** (iterate through each array element)  
+- Input bit reversal processing:  
+  ```python  
+  if reflectInput:  
+      tempInput = reverse_bits(array[current_index])  
+  else:  
+      tempInput = array[current_index]  
+  ```  
+- Core CRC calculation:  
+  ```python  
+  tempCRC ^= tempInput  # XOR with current data  
+  for 8 iterations:     # Process each byte (8 bits)  
+      if tempCRC's highest bit is 1:  
+          tempCRC = (left shift by 1) ^ mask  
+      else:  
+          tempCRC = left shift by 1  
+  ```  
+
+3. **Result Postprocessing**  
+- Bit order reversal option:  
+  ```python  
+  if reflectResult:  
+      finalCRC = reverse_bits(tempCRC)  
+  else:  
+      finalCRC = tempCRC  
+  ```  
+- Perform final XOR:  
+  ```python  
+  return finalCRC ^ finalXorValue  
+  ```  
+
+4. **Status Feedback Mechanism**  
+- Return `STATUS_NO_ERROR` upon success  
+- Error handling is implemented via early return mechanism to maintain single exit point of the function

@@ -1,0 +1,20 @@
+Natural Language Requirements:  
+
+1. Initialization Phase:  
+   - Reset TRUE/FALSE bit counters to zero  
+   - Create a temporary copy of the input value (preserve the original input)  
+
+2. Bit Processing Loop:  
+   FOR loop iterations = specified bit length (numberOfBits)  
+   {  
+   a. Bit Detection Phase:  
+      - Check the state of the current least significant bit (%X0)  
+      - Increment the corresponding counter based on the detection result  
+
+   b. Data Shift Phase:  
+      - Right-shift the temporary value by 1 bit (using SHR instruction)  
+   }  
+
+3. Result Output Phase:  
+   - Write the temporary counter values to the output variables  
+   - Always set ENO to TRUE (no error handling mechanism)

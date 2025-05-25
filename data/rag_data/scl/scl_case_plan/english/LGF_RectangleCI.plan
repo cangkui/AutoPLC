@@ -1,0 +1,47 @@
+**Natural Language Requirements:**  
+
+1. **Obtain Sampling Time**  
+Call the QRY_CINT system function to retrieve the cycle time of the corresponding cyclic interrupt OB based on the callOB parameter. Handle three possible error states:  
+- If QRY_CINT return value ≠ 0 → Set ERR_QRY_CINT error  
+- If the returned OB status is unavailable → Set ERR_OB_UNAVAILABLE error  
+- Terminate execution immediately upon error and clear output values  
+
+2. **Phase Shift Processing**  
+Convert the Real-type phaseShift to an unsigned integer and use MOD operation to ensure the phase shift is always smaller than the cycle value:  
+```scala  
+tempPhaseShift = REAL_TO_UDINT(phaseShift) MOD periode  
+```  
+
+3. **Reset Handling Mechanism**  
+When the reset signal is active:  
+- Initialize the counter to the phase shift value  
+- Force the output value to zero  
+- Maintain error state as FALSE  
+
+4. **Core Waveform Generation Logic**  
+During normal operation, execute the following timing control:  
+```scala  
+statCounter += (Actual OB call interval / 1000)  // Convert milliseconds to seconds  
+statCounter = statCounter MOD periode            // Cycle loop control  
+
+IF statCounter ∈ [tempPhaseShift, periode/2 + tempPhaseShift) THEN  
+    value = offset + amplitude  
+ELSE  
+    value = offset - amplitude  
+END_IF  
+```  
+
+5. **Signal Output Rules**  
+The output waveform must always satisfy:  
+- High-level duration = cycle / 2  
+- Low-level duration = cycle / 2  
+- The entire waveform is shifted by the phase offset  
+- The final output is superimposed with the offset parameter  
+
+6. **Status Monitoring Mechanism**  
+During normal operation, continuously update:  
+```scala  
+error = FALSE  
+status = 16#0000  
+subFunctionStatus = 16#0000  
+```

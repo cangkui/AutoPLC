@@ -1,0 +1,12 @@
+Natural language requirements:  
+
+1. Core logic for string comparison (using SCL's native string comparison operators):  
+   - Directly compare the lexicographical order between the `left` and `right` strings  
+   - Use a step-by-step conditional structure:  
+     a. When `left` < `right` → Return `-1`  
+     b. When `left` > `right` → Return `1`  
+     c. When they are equal → Return `0`  
+
+2. Result handling:  
+   - Map the comparison result directly to predefined constant return values  
+   - Use a temporary variable to store the intermediate comparison result before assigning it to the function's return value

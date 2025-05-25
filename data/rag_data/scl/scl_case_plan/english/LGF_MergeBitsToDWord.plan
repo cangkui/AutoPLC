@@ -1,0 +1,8 @@
+Natural language requirements:  
+1. Create a temporary DWord variable for bit operations  
+2. Map boolean inputs according to DWord bit order (31→0):  
+   - The highest bit (bit31) corresponds to bit 31 of tempDWord (%X31)  
+   - Map sequentially downward until the lowest bit (bit0 corresponds to %X0)  
+3. Use direct bit addressing to assign values one by one (32 independent bit assignment operations)  
+4. Finally assign the temporary variable's value to the function's return value  
+5. Always set the ENO flag to True to indicate successful execution

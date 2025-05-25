@@ -1,0 +1,35 @@
+Natural Language Requirements:
+
+Based on the requirements and code implementation, the algorithmic thought chain can be summarized as follows:
+
+1. Initialization Phase:
+   - Create a temporary IP address structure and zero it out
+   - Copy the input string to a temporary processing variable
+
+2. Main Loop for IP Address Parsing (Processing 4 octets):
+   a. First 3 octets processing:
+      - Locate '.' delimiter → Validate delimiter position validity (1-3 characters)
+      - Extract substring → Check for empty string → Convert to numeric value → Validate 0-255 range
+      - Remove processed portion of string
+   
+   b. 4th octet processing:
+      - Check for ':' to determine port existence → If no port, take remaining characters
+      - Perform same substring extraction and numeric validation process
+
+3. Port Parsing Conditional Branch:
+   - When colon exists:
+     a. Validate port string length (1-5 characters)
+     b. Convert to numeric value → Validate 0-65535 range
+
+4. Error Handling Mechanism:
+   - Hierarchical checkpoints:
+     * Octet length exceeds limit → Error code 16#811x
+     * Empty octet → 16#812x 
+     * Numeric value out of range → 16#813x
+     * Port-related errors → 16#815x series
+   - Terminate processing immediately upon error and return current state
+
+5. Successful Processing Path:
+   - Populate temporary structure fields
+   - Set success status code 16#0000
+   - Return complete TADDR_Param structure

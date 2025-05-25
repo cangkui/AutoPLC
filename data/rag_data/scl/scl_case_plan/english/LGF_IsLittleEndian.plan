@@ -1,0 +1,17 @@
+### Algorithm Flow Description (SCL Implementation Logic)  
+
+#### Core Detection Principle  
+By constructing a 16-bit word with a typical bit pattern (0x0001), its most significant bit is shifted to the byte boundary. The memory storage order is determined by checking the value of the first stored byte.  
+
+#### Process Steps  
+1. **Construct Bit Pattern**:  
+   - Define the constant 0x0001 as the detection reference.  
+   - Use a bitwise left shift (SHL) to move the 1st bit to the highest bit (15-bit shift), generating 0x8000.  
+
+2. **Memory Access Detection**:  
+   - Store the generated 16-bit value in a temporary variable.  
+   - Access the lowest memory address byte of this variable (via the %B0 accessor).  
+
+3. **Result Determination**:  
+   - If the first byte is 0x00 → High-order byte stored at low address → Little-endian (returns TRUE).  
+   - If the first byte is 0x80 → Low-order byte stored at low address → Big-endian (returns FALSE).

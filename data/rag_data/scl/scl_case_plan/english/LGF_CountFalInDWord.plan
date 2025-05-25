@@ -1,0 +1,21 @@
+#### **Step Breakdown**  
+
+1. **Initialization Phase**  
+   - Reset temporary counter `tempCount` to zero  
+   - Copy input value `value` to temporary variable `tempDWord`  
+
+2. **Cross-Cycle Boundary Detection**  
+   - Check if the LSB of the previously saved DWORD (`statDWordPrevCycle.%X0`) and the MSB of the current DWORD (`tempDWord.%X31`) form a 1→0 transition  
+   - If true, increment the counter  
+
+3. **Internal Transition Detection Loop**  
+   - **Loop 31 times** (covering all adjacent bit pairs in the DWORD):  
+     - Check if the current bit (`%X0`) and its adjacent right bit (`%X1`) form a 1→0 transition  
+     - If true, increment the counter  
+     - Right-shift the DWORD by 1 bit (via `SHR` instruction)  
+
+4. **Save Current State**  
+   - Store the current input value `value` into `statDWordPrevCycle` for detection in the next cycle  
+
+5. **Output Result**  
+   - Write the final count value to `numberOfEdges`

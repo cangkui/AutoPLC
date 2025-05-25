@@ -1,0 +1,13 @@
+Natural Language Requirements:  
+
+1. **Data Extraction Sequence**  
+   Peel off layers from least significant to most significant byte (LSB to MSB):  
+   - **byte0** (LSB): Directly extract the lowest 8 bits of the DWord  
+   - **byte1**: Extract the lower 8 bits after right-shifting the DWord by 8 bits  
+   - **byte2**: Extract the lower 8 bits after right-shifting the DWord by 16 bits  
+   - **byte3** (MSB): Extract the lower 8 bits after right-shifting the DWord by 24 bits  
+
+2. **Core Operation Logic**  
+   - **Masking Mechanism**: Always use `0xFF` (binary `11111111`) to filter out non-target bits  
+   - **Bit Field Isolation**: Shift operations move target bytes to the lower 8-bit region  
+   - **Parallel Processing**: Byte extraction operations are independent and can be computed in parallel

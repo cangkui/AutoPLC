@@ -1,0 +1,22 @@
+Natural Language Requirements:  
+
+1. **Input Signal Processing Phase**:  
+   - Receive the input signal `in` as the trigger source for the TON timer.  
+   - Obtain the preset turn-on delay time `timeOnDelay` and turn-off delay time `timeOffDelay`.  
+
+2. **Timer Cascade Control**:  
+   - **TON Timer Phase**:  
+     a. When the `in` signal is TRUE, activate the turn-on delay timer.  
+     b. Continue timing until reaching the preset `timeOnDelay` value.  
+     c. The Q output of the TON timer becomes TRUE once the delay condition is met.  
+   - **TOF Timer Phase**:  
+     a. Use the Q output of the TON timer as the trigger source for the TOF timer.  
+     b. When the Q output of TON becomes FALSE, activate the turn-off delay timer.  
+     c. Sustain the output until the preset `timeOffDelay` time elapses.  
+
+3. **Output Signal Generation**:  
+   - The final output `out` directly maps to the Q state of the TOF timer.  
+
+4. **Special State Handling**:  
+   - The TON timer maintains its Q output as long as the input remains TRUE.  
+   - The TOF timer sustains its Q output after the input turns FALSE until the delay period ends.

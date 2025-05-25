@@ -1,0 +1,43 @@
+### Algorithm Process Chain-of-Thought Summary  
+
+#### **Key Process**  
+1. **Function Block Activation Detection**  
+   - **Trigger Condition**: Detect the rising edge of the `enable` signal (initial activation or reactivation).  
+   - **Action**:  
+     - Clear the historical value array `statValues` and fill it with zeros.  
+     - Reset the counter `statCount` to 0.  
+     - Update the status to `STATUS_FIRST_CALL` (first call).  
+
+2. **Input Value Insertion Logic**  
+   - **Trigger Condition**: `enable` is active and the `insert` signal has a rising edge.  
+   - **Data Storage**:  
+     - **FIFO Queue Mode**: New value `value` is stored in `statValues[4]`, while old values are shifted left (index 0←1←2←3←4).  
+     - The counter `statCount` increments until it exceeds `MINIMUM_NUMBER_OF_VALUES` (=4).  
+
+3. **Smoothed Value Calculation Condition**  
+   - **Calculation Condition**: `statCount > 4` (i.e., 5 valid values have been stored).  
+   - **Calculation Formula**:  
+     ```math  
+     smoothedValue = (1/35) * [ -3*y(n-2) + 12*y(n-1) +17*y(n) +12*y(n+1) -3*y(n+2) ]  
+     ```  
+     Corresponding code implementation:  
+     ```scala  
+     #statSmoothedValue := 0.028571 * (-3*#statValues[0] + 12*#statValues[1] +17*#statValues[2] +12*#statValues[3] -3*#statValues[4])  
+     ```  
+   - **Status Update**: Set to `STATUS_SUBSEQUENT_CALL`.  
+
+4. **Exception Handling**  
+   - **Insufficient Values Error**: When `statCount ≤ 4`, set the status to `STATUS_NOT_ENOUGH_VALUES`.  
+   - **Disabled State**: If `enable` is inactive, the status is `STATUS_NO_CALL`, and the output is reset to zero.  
+
+#### **State Machine Logic**  
+| Current Status          | Trigger Condition                  | Action                                |  
+|-------------------------|------------------------------------|---------------------------------------|  
+| STATUS_NO_CALL          | Rising edge of `enable`            | Initialize data → STATUS_FIRST_CALL   |  
+| STATUS_FIRST_CALL       | Rising edge of `insert` with insufficient data | Store data → STATUS_NOT_ENOUGH_VALUES |  
+| STATUS_SUBSEQUENT_CALL  | Rising edge of `insert` with sufficient data | Calculate new smoothed value → Maintain status |  
+| Any Status              | `enable` = false                   | Force transition → STATUS_NO_CALL     |  
+
+#### **Output Generation Rules**  
+- **Error Signal**: Directly maps to the 15th bit of the status word (`#statStatus.%X15`), used for quick error identification.  
+- **SmoothedValue**: Updated only when `statCount > 4`; otherwise, it retains the previous value or zero.

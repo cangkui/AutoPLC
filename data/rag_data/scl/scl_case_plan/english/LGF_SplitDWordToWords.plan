@@ -1,0 +1,8 @@
+Natural Language Requirements:  
+
+1. **Low-Order Bits Extraction**: Use bitmask 0xFFFF to directly extract the lower 16 bits of a double word.  
+   - Mask operation: `word0 = doubleWord AND 0xFFFF`  
+
+2. **High-Order Bits Extraction**:  
+   - Right-shift by 16 bits: Shift the entire double word right by 16 bits to move the high-order 16 bits into the lower bit positions.  
+   - Mask filtering: `word1 = (doubleWord >> 16) AND 0xFFFF`

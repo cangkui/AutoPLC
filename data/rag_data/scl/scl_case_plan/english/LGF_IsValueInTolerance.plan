@@ -1,0 +1,31 @@
+**Natural Language Requirements:**  
+
+1. **Tolerance Range Calculation Phase**  
+- Take the absolute value of the tolerance parameter.  
+- Dynamically adjust the upper and lower limit formulas based on the sign of the set value:  
+  * For positive set values:  
+    - **Upper Limit = Set Value × (1 + Tolerance %)**  
+    - **Lower Limit = Set Value × (1 – Tolerance %)**  
+  * For zero or negative set values:  
+    - **Upper Limit = Set Value × (1 – Tolerance %)**  
+    - **Lower Limit = Set Value × (1 + Tolerance %)**  
+
+2. **Safety Verification Phase**  
+- Check the PLC system flag **ENO**.  
+  * If a preceding operation exception is detected:  
+    - Set the **error flag**.  
+    - Write the **range error status code**.  
+    - Reset all **limit flags**.  
+    - Return **False**.  
+
+3. **Value Comparison Phase**  
+- Perform dual boundary checks in parallel:  
+  * If **value > calculated upper limit** → Set the **upper limit exceeded flag**.  
+  * If **value < calculated lower limit** → Set the **lower limit exceeded flag**.  
+
+4. **Result Synthesis Phase**  
+- Combine the limit-exceeded flags using a **logical OR**, then invert to get the final tolerance check result.  
+- Update output parameters:  
+  * Propagate the **limit-exceeded flags** to the corresponding output pins.  
+  * Clear the **error flag**.  
+  * Write the **normal status code**.

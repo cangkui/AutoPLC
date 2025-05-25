@@ -1,0 +1,50 @@
+### Chain-of-Thought Logic Flow Summary  
+
+---
+
+#### **1. Input Preprocessing**  
+- **Null Check**  
+  If input string is empty:  
+  → Set `error=False`, `status=STATUS_NO_CURRENT_JOBS`  
+  → Return default value `DTL#1970-01-01-00:00:00.0`  
+  → **Exit function immediately**  
+
+---
+
+#### **2. Time Field Parsing**  
+Extract and validate fields in fixed format **`DD-MM-YYYY HH:MM:SS.NNNNNNNNN`**:  
+
+| Field       | Start Pos | Length | Extraction Method        | Validation Rule                   | Error Code        |  
+|-------------|-----------|--------|--------------------------|-----------------------------------|-------------------|  
+| **Year**    | 7         | 4      | `MID(7,4)` → String to UInt | Range `1970 ≤ YEAR ≤ 2262`        | `ERR_FORMAT_YEAR` |  
+| **Month**   | 4         | 2      | `MID(4,2)` → String to USInt | Range `1 ≤ MONTH ≤ 12`            | `ERR_FORMAT_MONTH` |  
+| **Day**     | 1         | 2      | `MID(1,2)` → String to USInt | Range `1 ≤ DAY ≤ 31`              | `ERR_FORMAT_DAY` |  
+| **Hour**    | 12        | 2      | `MID(12,2)` → String to USInt | Range `0 ≤ HOUR ≤ 23`             | `ERR_FORMAT_HOUR` |  
+| **Minute**  | 15        | 2      | `MID(15,2)` → String to USInt | Range `0 ≤ MINUTE ≤ 59`           | `ERR_FORMAT_MINUTE` |  
+| **Second**  | 18        | 2      | `MID(18,2)` → String to USInt | Range `0 ≤ SECOND ≤ 59`           | `ERR_FORMAT_SECOND` |  
+| **Nanosecond** | 21     | 9      | `MID(21,9)` → **Replace spaces with '0'** → String to UDInt | Range `0 ≤ NANOSECOND ≤ 999,999,999` | `ERR_FORMAT_NANOSECOND` |  
+
+---
+
+#### **3. Key Processing Logic**  
+- **Field-Level Validation**  
+  Each field is range-checked immediately after extraction. If any field is invalid:  
+  → Set `error=True` with corresponding error code  
+  → Return default value and **terminate further processing**  
+
+- **Nanosecond Handling**  
+  Use a loop to replace spaces in the nanosecond part with `'0'` (e.g., `"1" → "100000000"`) to ensure fixed 9-digit length.  
+
+- **DTL Format Correction**  
+  After conversion, force-update the weekday field in `DTL` via `#tempDateAndTime + t#0ms` (avoiding manual calculation).  
+
+---
+
+#### **4. Output Handling**  
+- **Successful Output**  
+  If all fields pass validation:  
+  → Set `error=False`, `status=STATUS_FINISHED_NO_ERROR`  
+  → Return complete `DTL` struct  
+
+- **Error Prioritization**  
+  Any field error overrides subsequent processing to ensure error status and default value are returned first.

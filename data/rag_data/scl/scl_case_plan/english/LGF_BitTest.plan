@@ -1,0 +1,15 @@
+Natural Language Requirements:  
+
+1. **Effective Processing**:  
+   - Perform modulo operation on the input bit number: `bitNo % 32`  
+
+2. **Mask Generation**:  
+   - Left-shift the binary base value 1 (i.e., `0x00000001`) by the adjusted bit number  
+
+3. **Bit Detection Operation**:  
+   - Perform a bitwise AND operation between the input value and the generated mask  
+   - Compare whether the operation result is not equal to zero  
+
+4. **Result Output**:  
+   - If the AND operation result is non-zero → Return `TRUE`  
+   - If the AND operation result is zero → Return `FALSE`

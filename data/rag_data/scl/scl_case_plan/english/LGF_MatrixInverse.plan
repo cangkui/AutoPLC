@@ -1,0 +1,35 @@
+Natural Language Requirements:  
+
+1. Matrix Dimension Calculation Phase  
+   - Obtain the row and column lower/upper bound indices of the input matrix and result matrix  
+   - Calculate the actual row/column count of the input matrix (accounting for array index starting at 0 or 1)  
+
+2. Error Detection Phase (Returns immediately if any condition is triggered)  
+   - Verify if the input matrix is square → ERR_NOT_SQUARE_MATRIX  
+   - Verify row starting index consistency between input/result matrices → ERR_MATR1_LOWBOUND_ROWS...  
+   - Verify column starting index consistency → ERR_MATR1_LOWBOUND_COLUMNS...  
+   - Verify row ending index consistency → ERR_MATR1_UPPBOUND_ROWS...  
+   - Verify column ending index consistency → ERR_MATR1_UPPBOUND_COLUMNS...  
+
+3. Matrix Preprocessing Phase  
+   - Initialize the result matrix as an all-zero matrix  
+   - Copy negated elements from the input matrix to the result matrix (establish initial working matrix)  
+
+4. Core Inversion Algorithm Phase (Gauss-Jordan Elimination Variant)  
+   a) Iterate through each main diagonal element (pivot element):  
+      - Check if the pivot's absolute value is below precision threshold → Triggers ERR_ALGORITHM_NOT_POSSIBLE  
+      - Calculate the pivot's reciprocal and update the corresponding position in the result matrix  
+
+   b) Process the pivot's column:  
+      - Normalize other elements in this column (excluding the pivot) by multiplying them with the pivot's reciprocal  
+
+   c) Process non-pivot rows/columns:  
+      - Update non-pivot row/column elements through nested loops, performing matrix row transformation operations  
+
+   d) Process the pivot's row:  
+      - Normalize other elements in this row (excluding the pivot) by multiplying them with the pivot's reciprocal  
+
+5. Final State Setup  
+   - Set error flag to false  
+   - Set status code to STATUS_NO_ERROR  
+   - Activate ENO mechanism to indicate normal completion

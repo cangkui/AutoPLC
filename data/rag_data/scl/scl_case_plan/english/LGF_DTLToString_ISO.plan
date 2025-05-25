@@ -1,0 +1,34 @@
+Natural Language Requirements:  
+
+1. **Initialize Temporary String**  
+   - Create an empty string `tempString` to build the final result.  
+
+2. **Time Field Conversion**  
+   - Use the `VAL_STRG` function to sequentially convert the 7 time components of `DTL`:  
+     - Year (`YEAR`) → Fill into string positions 1-4  
+     - Month (`MONTH`) → Positions 6-7  
+     - Day (`DAY`) → Positions 9-10  
+     - Hour (`HOUR`) → Positions 12-13  
+     - Minute (`MINUTE`) → Positions 15-16  
+     - Second (`SECOND`) → Positions 18-19  
+     - Nanosecond (`NANOSECOND`) → Positions 21-29  
+
+3. **Separator Handling**  
+   - Date separator logic:  
+     - If the input separator is non-empty: Replace positions 5 and 8 with the user-specified character.  
+     - If empty: Use the default "-" as filler.  
+   - Fixed format processing:  
+     - Insert a colon (`:`) between time fields (positions 14 and 17).  
+     - Insert a dot (`.`) between seconds and nanoseconds (position 20).  
+
+4. **Format Correction**  
+   - Single-digit field zero-padding:  
+     - Check the starting positions of month/day/hour/minute/second (6/9/12/15/18).  
+     - If a space is found → Replace it with '0'.  
+   - Nanosecond special handling:  
+     - Loop through the first 9 characters in positions 21-29.  
+     - Stop replacing upon encountering the first non-space character.  
+
+5. **Result Output**  
+   - Return the processed `tempString` as the function result.  
+   - Set `ENO=True` by default to indicate no errors.

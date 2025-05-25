@@ -1,0 +1,41 @@
+Natural Language Requirements:  
+
+I. Initialization Phase  
+1. Define a 9-layer shelf status array (Layers 1-9)  
+2. Predefine three status constants:  
+   - Normal status (0000)  
+   - Full load error (8001)  
+   - Empty load error (8002)  
+
+II. Status Scanning Process (Executes every cycle)  
+1. Reset inventory counter (productNum = 0)  
+2. Reset free space counter (libFreeNum = 9)  
+3. Scan shelf layers 1-9:  
+   IF current layer is occupied → productNum +1, libFreeNum -1  
+
+III. Storage Handling Logic (Triggered by requestIn)  
+1. Scan shelf layers in reverse order (9→1)  
+2. Upon finding the first empty layer:  
+   a. Set the layer status  
+   b. productNum +1  
+   c. libFreeNum -1  
+   d. Return immediately (to prevent data overwrite)  
+3. If fully occupied:  
+   a. error = TRUE  
+   b. status = 8001  
+
+IV. Retrieval Handling Logic (Triggered by requestOut)  
+1. Scan shelf layers in order (1→9)  
+2. Upon finding the first occupied layer:  
+   a. Reset the layer status  
+   b. productNum -1  
+   c. libFreeNum +1  
+   d. Return immediately (to prevent interference)  
+3. If fully empty:  
+   a. error = TRUE  
+   b. status = 8002  
+
+V. Error Handling Mechanism  
+1. Successful operations automatically reset the error flag  
+2. Error status persists until the next valid operation  
+3. Error priority: Storage error > Retrieval error

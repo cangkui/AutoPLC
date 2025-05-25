@@ -1,0 +1,30 @@
+Natural Language Requirements:  
+
+1. **Dimension Information Retrieval Phase**  
+   - Retrieve the row/column lower and upper bounds of both matrices in parallel.  
+   - Store the row start index, column start index, row end index, and column end index for matrix1.  
+   - Store the corresponding four boundary index values for matrix2.  
+
+2. **Dimension Consistency Verification Phase**  
+   - Row dimension verification:  
+     * Check if the row lower bounds are equal.  
+     * Check if the row upper bounds are equal.  
+   - Column dimension verification:  
+     * Check if the column lower bounds are equal.  
+     * Check if the column upper bounds are equal.  
+
+3. **Element Traversal and Comparison Phase**  
+   - Use a nested loop structure to traverse each element:  
+     * Outer loop iterates by row (using matrix1's row index range).  
+     * Inner loop iterates by column (using matrix1's column index range).  
+   - Comparison strategy:  
+     * If any elements are not equal, terminate the function immediately and return `false`.  
+     * Use exact matching judgment (`<>` operator).  
+
+4. **Status Return Mechanism**  
+   - Exception path:  
+     * If dimension verification fails, set `error=true` and assign the corresponding error code to `status`.  
+     * If elements do not match, set `error=false` and assign `status=0x0000`.  
+   - Normal path:  
+     * Return `true` if all elements match.  
+     * Set `error=false` and `status=0x0000`.

@@ -1,0 +1,16 @@
+Natural Language Requirements:
+
+Algorithm Process Description Based on Requirements and Sample Code:
+
+1. Initialize Conversion Parameters  
+   - Set conversion format to integer mode (FORMAT=16#0000)  
+   - Configure character parsing start position as the 1st character (P=1)  
+
+2. Call System Conversion Function STRG_VAL  
+   - Pass string value as input parameter  
+   - Apply predefined conversion format and start position  
+   - Store output result in a temporary DInt variable  
+
+3. Output Processing  
+   - Directly assign temporary variable value to function return value  
+   - Rely on built-in error handling mechanism of system function, no additional status judgment required

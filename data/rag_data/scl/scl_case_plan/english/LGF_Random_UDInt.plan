@@ -1,0 +1,41 @@
+Natural Language Requirements:  
+
+1. **System Time Retrieval and Validation**  
+   - Call `RD_SYS_T` to obtain high-precision system time (including nanoseconds)  
+   - If time retrieval fails, immediately terminate execution and return an error status  
+   - Error flag, main status code, and sub-status code must be set synchronously  
+
+2. **Random Number Generation Strategy**  
+   - Use the `NANOSECOND` field of the system time as the random seed  
+   - Reverse the byte order of the 32-bit nanosecond value (B3←B0, B2←B1, B1←B2, B0←B3)  
+   - Ensure type conversion maintains validity within the UDInt range  
+
+```python  
+Process Start  
+│  
+├─ System Time Retrieval  
+│   ├─ Call RD_SYS_T(#tempTime)  
+│   └─ Capture return status code #tempTimeStatus  
+│  
+├─ Error Validation Branch  
+│   ├─ [if #tempTimeStatus ≠ 0]  
+│   │   ├─ Set error=True  
+│   │   ├─ status=0x8600 (ERR_RD_SYS_T)  
+│   │   ├─ subfunctionStatus=actual error code  
+│   │   └─ Return default value 0  
+│   │  
+│   └─ [else]  
+│       │  
+│       ├─ Data Conversion  
+│       │   ├─ Convert nanosecond field to DWORD type  
+│       │   └─ Perform byte order reversal  
+│       │  
+│       ├─ Status Marking  
+│       │   ├─ error=False  
+│       │   ├─ status=0x0000 (Success)  
+│       │   └─ subStatus=0x0000  
+│       │  
+│       └─ Return processed random value  
+│  
+Process End  
+```

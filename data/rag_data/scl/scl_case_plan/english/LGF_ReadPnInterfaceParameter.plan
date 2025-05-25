@@ -1,0 +1,45 @@
+Natural Language Requirements:  
+
+1. **Trigger Detection**:  
+- Detect the rising edge of the `execute` input while ensuring no ongoing task is being processed (`status == STATUS_NO_CALL`).  
+- Initialize all output parameters to default values (clear IP/MAC addresses, empty PN name).  
+
+2. **State Machine Control**:  
+```
+[Idle] → (Triggered) → [Read Record] → (Read Success) → [Process Record] → [Complete]  
+               ↑                                |  
+               +----------(Error Handling)------+  
+```  
+
+3. **RDREC Operation**:  
+- Access the specified interface using the hardware ID.  
+- Request to read record `0x8080` (a dedicated record number for Profinet interface parameters).  
+- Set up a 300-byte buffer to receive data.  
+
+4. **Key Data Parsing Steps**:  
+- **PN Name Extraction**:  
+  Starting from the 1st byte of the data block, parse the string based on the length specified in the first byte.  
+  Use the `Chars_TO_Strg` function to handle odd-byte alignment issues.  
+
+- **Address Offset Calculation**:  
+  Calculate the starting position of the MAC address: `Name Length + (4 - (Name Length + 2) % 4)`  
+  Ensure 32-bit aligned access.  
+
+- **Network Parameter Extraction**:  
+  ```
+  MAC Address → 6 bytes at offset +0  
+  IP Address → 4 bytes at offset +8  
+  Subnet Mask → 4 bytes at offset +12  
+  Gateway Address → 4 bytes at offset +16  
+  ```  
+
+5. **Status Management Logic**:  
+- Maintain `busy=TRUE` during execution.  
+- Set `done=TRUE` and reset `busy` upon completion.  
+- Set `error=TRUE` with a status code in case of errors.  
+- Auto-reset mechanism: Clear all status flags when `execute` becomes FALSE.  
+
+6. **Error Handling Hierarchy**:  
+- RDREC errors directly propagate the status code.  
+- Undefined state machine states trigger `ERR_UNDEFINED_STATE`.  
+- Error types are identified via the high byte of the `status` field (16#8xxx indicates system errors).

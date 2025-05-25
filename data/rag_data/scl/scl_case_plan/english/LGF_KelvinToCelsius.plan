@@ -1,0 +1,12 @@
+Natural Language Requirements:  
+
+1. **Define Constant Offset**  
+   Set the fixed constant `273.15` as the offset (the difference between Kelvin and Celsius).  
+
+2. **Temperature Conversion Calculation**  
+   Subtract the constant offset directly from the input Kelvin temperature value to obtain the Celsius temperature value.  
+   **Formula**: `Celsius = Kelvin - 273.15`  
+
+3. **Output Result and Status**  
+   - Assign the calculation result to the function's return value.  
+   - No error handling logic is included; always set `ENO = TRUE` to indicate successful execution.

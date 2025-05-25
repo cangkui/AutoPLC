@@ -1,0 +1,51 @@
+Natural Language Requirements:  
+
+1. **Execution Trigger Detection**  
+   - Detect the rising edge of the `execute` signal  
+   - On first trigger:  
+     ▪ Obtain the index range of the input array `values`  
+     ▪ Initialize all statistical arrays and status flags  
+     ▪ Set status to `STATUS_FIRST_CALL`  
+
+2. **Parameter Validity Check**  
+   - Verify `numberOfClasses` is within [1, 15] range  
+   - Set error code `ERR_WRONG_NO_CLASSES` for invalid values  
+
+3. **Data Preprocessing**  
+   - Call `LGF_ShellSort_DInt` to sort input array in ascending order  
+   - If sorting fails:  
+     ▪ Set error code `ERR_SHELL_SORT`  
+     ▪ Record sub-function status code  
+   - If successful:  
+     ▪ Determine data range: `min = first element, max = last element`  
+     ▪ Calculate class width `width = (max - min)/n`  
+
+4. **Frequency Counting Phase**  
+   - Create temporary array offset index (adapted for 0-based indexing)  
+   - Dynamic boundary detection:  
+     ▪ Use sliding window method to count elements per class  
+     ▪ Calculate absolute frequency `statHistFrequencyAbs`  
+     ▪ Calculate relative frequency `statHistFrequencyRel = absolute frequency/total count * 100%`  
+   - Record maximum frequency for Y-axis calibration  
+
+5. **Class Midpoint Calculation**  
+   - Iterate through all classes:  
+     ▪ Midpoint value = class lower bound + class width/2  
+     ▪ Store in `statHistMiddleOfClass`  
+
+6. **Result Output Phase**  
+   - Populate 2D output array:  
+     ▪ Row 0: Relative frequency percentage  
+     ▪ Row 1: Class midpoint values  
+   - Set axis parameters:  
+     ▪ X-axis range [min, max]  
+     ▪ Y-axis range [0, max_frequency]  
+   - Output class width `classWidth`  
+
+7. **Status Maintenance Mechanism**  
+   - Error flags:  
+     ▪ Error bit `error` maps to status code highest bit  
+     ▪ `status` stores main error code  
+     ▪ `subFunctionStatus` records sub-module status  
+   - Execution state machine:  
+     `STATUS_NO_CALL` ↔ `STATUS_FIRST_CALL` ↔ `STATUS_EXECUTION_FINISHED`

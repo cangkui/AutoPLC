@@ -1,0 +1,43 @@
+Here's the translation of the natural language requirements into English:
+
+1. **Execution Control**  
+   - Detect rising edges of enqueue/dequeue/clear signals  
+   - When no trigger signal is present:  
+     * Set status to "No current task" (16#7000)  
+     * Immediately terminate processing  
+
+2. **Input Validation**  
+   - Verify if buffer is an array → Error 16#8200  
+   - Check type consistency between item and buffer elements → Error 16#8201  
+   - Check type consistency between initialItem and item → Error 16#8202  
+   - Validate index range validity → Errors 16#8601/16#8602  
+
+3. **Buffer Initialization**  
+   - Upon receiving reset signal:  
+     * Reset head/tail pointers (head=-1, tail=0)  
+     * Reset element count to zero  
+   - Upon detecting clear signal's rising edge:  
+     * Fill entire buffer with initialItem  
+     * Perform same initialization operations as reset  
+
+4. **Dequeue Operation (dequeue rising edge)**  
+   - Check for empty buffer state → Error 16#8001  
+   - Read head element to item output  
+   - Replace dequeued position with initialItem  
+   - Circular index calculation:  
+     * New head pointer = (current head +1) mod buffer size  
+     * If new head equals tail pointer → Reset to empty state  
+   - Decrement element counter  
+
+5. **Enqueue Operation (enqueue rising edge)**  
+   - Check for full buffer state → Error 16#8002  
+   - Write item to tail pointer position  
+   - Circular index update:  
+     * Tail pointer = (current tail +1) mod buffer size  
+   - If first element enqueued → Initialize head pointer to 0  
+   - Increment element counter  
+
+6. **Status Updates**  
+   - Output current element count (elementCount)  
+   - Update isEmpty flag (set when count ≤ 0)  
+   - Set normal status code 16#0000

@@ -1,0 +1,45 @@
+Natural Language Requirements:  
+
+1. Initialization Phase  
+   - Set initial state to "No Error"  
+   - Prepare a temporary structure to store conversion results  
+
+2. Latitude Conversion Process  
+   a. Numerical Calculation  
+      - Seconds to decimal degrees: sec/3600  
+      - Minutes to decimal degrees: min/60  
+      - Sum degrees to form raw value  
+   b. Direction Handling  
+      - S (South) direction takes negative value  
+      - N (North) direction remains positive  
+      - Invalid direction marks an error  
+   c. Validity Check  
+      - Direction character must be N/S  
+      - Total degrees absolute value ≤ 90°  
+      - Minute/second values ≤ 59  
+
+3. Longitude Conversion Process  
+   a. Numerical Calculation  
+      - Seconds to decimal degrees: sec/3600  
+      - Minutes to decimal degrees: min/60  
+      - Sum degrees to form raw value  
+   b. Direction Handling  
+      - W (West) direction takes negative value  
+      - E (East) direction remains positive  
+      - Invalid direction marks an error  
+   c. Validity Check  
+      - Direction character must be E/W  
+      - Total degrees absolute value ≤ 180°  
+      - Minute/second values ≤ 59  
+
+4. Error Handling  
+   - If any error occurs:  
+     * Clear conversion results (set latitude/longitude to zero)  
+     * Retain the last occurred error code  
+   - If no errors:  
+     * Preserve calculation results  
+     * Mark success status  
+
+5. Output Handling  
+   - Error status indicated by bit15  
+   - Ensure ENO remains always valid

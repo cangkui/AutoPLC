@@ -1,0 +1,38 @@
+Natural Language Requirements:  
+
+1. **Input Validation**  
+   - If `frequency ≤ 0` or `pulsePauseRatio ≤ 0`:  
+     - Force `clock` output to `FALSE` and reset `countdown` to zero.  
+     - Skip all timing logic (proceed directly to the output phase).  
+
+2. **Dynamic Parameter Update Detection**  
+   - When `frequency` or `pulsePauseRatio` changes:  
+     - Reset both timers (to ensure the new cycle takes effect immediately).  
+     - Calculate pulse duty cycle:  
+       - `Pulse ratio = pulsePauseRatio / (1 + pulsePauseRatio)`  
+       - `Pause ratio = 1 - Pulse ratio`  
+     - Convert frequency to time:  
+       - Total cycle time = 1000ms / frequency  
+       - `Pulse time = Total cycle time × Pulse ratio` (convert to `Time` type)  
+       - `Pause time = Total cycle time × Pause ratio` (convert to `Time` type)  
+     - Save current parameter values for future change detection.  
+
+3. **Timer Interlock Control**  
+   - **Pulse Phase Timer (instTofTimePulse)**:  
+     - Start condition: Pause timer is inactive (`NOT instTofTimePause.Q`).  
+     - Keep `clock` as `TRUE` during operation.  
+     - Trigger pause phase upon timeout.  
+   - **Pause Phase Timer (instTofTimePause)**:  
+     - Start condition: Pulse timer has ended (`instTofTimePulse.Q` becomes `TRUE`).  
+     - Keep `clock` as `FALSE` during operation.  
+     - Trigger a new pulse cycle upon timeout.  
+
+4. **Remaining Time Calculation**  
+   - If in pulse phase:  
+     - `countdown = Pulse time - Elapsed time`.  
+   - If in pause phase:  
+     - `countdown = Pause time - Elapsed time`.  
+
+5. **Output Synchronization**  
+   - Map `clock` status to the output pin in real time.  
+   - Dynamically update the `countdown` value.

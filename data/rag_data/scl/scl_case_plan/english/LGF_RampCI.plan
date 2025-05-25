@@ -1,0 +1,60 @@
+Natural Language Requirements:  
+
+1. Cycle Time Acquisition & Error Handling  
+- Obtain OB cycle time via QRY_CINT  
+- Error handling branches:  
+  ∙ Set ERR_QRY_CINT if QRY_CINT fails  
+  ∙ Set ERR_OB_UNAVAILABLE if OB is unavailable  
+
+2. Array Boundary Check  
+- Verify array lower bound must be 0  
+- Set ERR_ARRAY_LOWER_BOUND if invalid  
+
+3. Initialization Phase (First Call)  
+- Detect rising edge of start signal  
+- Calculate total time: Sum all time values in the array  
+- Initialize:  
+  ∙ Current output = first interpolation point value  
+  ∙ Remaining time = first point’s time value  
+  ∙ Step counter initialized to 1  
+
+4. Reset Handling  
+- On rising edge of reset signal:  
+  ∙ Reset output value/step counter/time to initial state  
+  ∙ Recalculate total time  
+  ∙ Mark timetable as inactive  
+
+5. Core Logic (Operation)  
+a. Hold Mode  
+- Freeze output at current value  
+- On continue signal:  
+  ∙ Set target step and remaining time  
+  ∙ Recalculate remaining total time  
+
+b. Normal Operation Mode  
+- While time remains:  
+  ∙ Linear interpolation: output = oldValue + (Δvalue/total time) * cycle time  
+  ∙ Decrement remaining time and total remaining time  
+- When time expires:  
+  ∙ Move to next interpolation point  
+  ∙ Reset to first point in cyclic mode  
+
+6. Time Update Mechanism  
+- On rising edge of updateTime:  
+  ∙ Recalculate total time  
+  ∙ Update remaining total time based on current step  
+
+7. Output Handling  
+- Default override: Force preset output if enDefaultOutValue is active  
+- Final output includes:  
+  ∙ Current calculated value  
+  ∙ Active status flag  
+  ∙ State info (step counter/remaining time/total time)  
+
+8. Special Mode Handling  
+- Cyclic Mode (cyclicOP):  
+  ∙ Auto-reset step counter and parameters upon reaching endpoint  
+- Hold Mode (hold):  
+  ∙ Pause time decrement and step updates  
+- Continue Mode (continue):  
+  ∙ Resume execution from specified step/time

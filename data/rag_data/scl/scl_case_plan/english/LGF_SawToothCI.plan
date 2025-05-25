@@ -1,0 +1,36 @@
+Natural Language Requirements:  
+
+1. **Error Handling Phase (Highest Priority)**  
+   - Call `QRY_CINT` to retrieve the time parameters of the interrupt OB.  
+   - If the return status code is not 0:  
+     → Flag the error state (`16#8601`).  
+     → Clear output values.  
+     → Exit execution immediately.  
+   - If the OB is detected as unavailable:  
+     → Flag the OB unavailability error (`16#8600`).  
+     → Clear output values.  
+     → Exit execution immediately.  
+
+2. **Reset Control Phase**  
+   - When the `reset` signal is active:  
+     → Reset the internal counter to 0.  
+     → Clear temporary output values.  
+
+3. **Normal Operation Phase**  
+   - **Time Accumulation Calculation:**  
+     ① Convert the OB call interval time into seconds.  
+     ② Accumulate to form a time counter.  
+     ③ Apply modulo operation to keep it within the cycle range (auto-loop).  
+   - **Phase Calculation:**  
+     ① Convert the user phase offset into time units.  
+     ② Combine it with the accumulated time for phase synthesis.  
+     ③ Apply modulo operation again to ensure the phase stays within the cycle.  
+   - **Waveform Generation:**  
+     ① Calculate the linear rising slope: `2 * amplitude / period`.  
+     ② Compute the current instantaneous value using phase time.  
+     ③ Apply amplitude offset (`-amplitude` to achieve sawtooth wave characteristics).  
+
+4. **Result Output Phase**  
+   - Add the user-set offset.  
+   - Set the normal completion status code (`16#0000`).  
+   - Clear error flags.

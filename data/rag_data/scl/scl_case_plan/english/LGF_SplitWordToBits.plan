@@ -1,0 +1,19 @@
+Natural Language Requirements:  
+
+1. Bit Extraction Principle:  
+- Use a combination of shift + mask operations. Each time, shift the target bit to the least significant bit (LSB) position before converting it to a Boolean value.  
+- Use a fixed mask 16#0001 (binary bit 0 is 1) for bit isolation.  
+
+2. Execution Flow:  
+FOR bit index from 0 to 15:  
+   a. Right-shift the input word by the current bit index.  
+   b. Perform a logical AND operation between the shifted result and the mask.  
+   c. Assign the Boolean result to the corresponding output bit (bit0 corresponds to no shift, bit15 corresponds to a 15-bit right shift).  
+
+3. Special Handling:  
+- Use logical right shift (fill high bits with zeros) to ensure correct extraction of the sign bit.  
+- Output bits are named in big-endian format (bit15 is the most significant bit).  
+
+4. Error Handling:  
+- Since the input is a raw bit sequence, no range validation is required.  
+- Always set ENO to TRUE to indicate normal execution.

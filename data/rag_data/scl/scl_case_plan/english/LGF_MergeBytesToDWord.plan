@@ -1,0 +1,16 @@
+Natural Language Requirements:  
+
+1. **Initialize Temporary Storage**  
+   Create a temporary DWord variable for byte assembly operations.  
+
+2. **Merge Bytes from High to Low**  
+   ```text
+   MSB Byte Arrangement:  
+   [byte3] -> DWord.B3  // Most significant byte  
+   [byte2] -> DWord.B2  
+   [byte1] -> DWord.B1  
+   [byte0] -> DWord.B0  // Least significant byte  
+   ```  
+
+3. **Output Result**  
+   Directly map the temporary DWord to the function return value and set the execution success status bit.

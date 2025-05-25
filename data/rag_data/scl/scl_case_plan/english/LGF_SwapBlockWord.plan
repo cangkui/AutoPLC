@@ -1,0 +1,19 @@
+```python
+Algorithm Process Description (Chain of Thought version):
+1. Initialize swap starting point:
+   - Get the starting index of the array (LOWER_BOUND)
+
+2. Determine loop boundary:
+   - Get the maximum index of the array (UPPER_BOUND)
+
+3. Establish loop control:
+   - Continue processing while current index is less than maximum index
+
+4. Core swap logic:
+   a. Store current element in temporary variable
+   b. Place high-order byte (B1) into low-order byte position (B0)
+   c. Place low-order byte (B0) into high-order byte position (B1)
+
+5. Move pointer:
+   - Index increment step is fixed at 1 (NEXT_ELEMENT constant)
+```

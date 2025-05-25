@@ -1,0 +1,44 @@
+Natural Language Requirements:
+
+1. Edge Detection Phase:
+- Detect rising edge of 'execute' signal to trigger computation  
+- Initialize statistics array, status flags, and index values  
+- Get upper/lower bound indices of input array  
+- Return to waiting state when 'execute' goes inactive  
+
+2. Input Validation Phase:  
+- Verify numberOfClasses is within valid range (1-15)  
+- Set error code ERR_WRONG_NO_CLASSES if invalid  
+
+3. Data Preprocessing Phase:  
+- Call LGF_ShellSort_UDInt for array sorting  
+- Calculate actual count of data elements  
+- Determine dataset min/max values (convert UDInt to LReal)  
+
+4. Class Parameter Calculation:  
+- Compute class width: width = (max - min)/classes  
+- Initialize class boundary: bound = min + width  
+
+5. Frequency Counting Phase:  
+- Create sorted copy statArray  
+- Use two-pointer method to count elements per interval:  
+  - Outer loop iterates through all classes  
+  - Inner loop moves index pointer until exceeding current class boundary  
+  - Calculate absolute frequency and relative frequency (percentage)  
+  - Track max frequency value for Y-axis calibration  
+
+6. Result Processing Phase:  
+- Calculate midpoint value for each class  
+- Build 2D output array:  
+  [0,*] stores relative frequency percentages  
+  [1,*] stores class center coordinates  
+- Set axis parameters array:  
+  [0] X-axis start (min)  
+  [1] X-axis end (max)  
+  [2] Y-axis start (0)  
+  [3] Y-axis end (maxFrequency)  
+
+7. Error Handling Mechanism:  
+- Capture error states from sorting submodule  
+- Set error boolean flag via status.%X15 bit  
+- Preserve submodule state in subfunctionStatus

@@ -1,0 +1,71 @@
+**Natural Language Requirements:**  
+
+#### **1. Execution Trigger and Initialization**  
+- **Trigger Condition**: Rising edge of the `execute` signal (detected when `execute` changes from False to True).  
+- **Pre-checks**:  
+  - Calculate the lower and upper bounds (`LOWER_BOUND`/`UPPER_BOUND`) of the `values` array.  
+  - **Error Detection**:  
+    - If the array lower bound is negative → Set error `ERR_NEG_ARR_BOUND`.  
+    - If `rangeOutlier` is invalid (≠0 and ≤1.0) → Set error `ERR_RANGE_NOT_OK`.  
+- **Initialization Actions**:  
+  - Clear all statistical values (Q25, median, Q75, etc.).  
+  - Reset status code to `STATUS_FIRST_CALL`.  
+
+#### **2. Core Calculation Process**  
+##### **2.1 Data Preprocessing**  
+- **Sorting the Array**:  
+  - Call `LGF_ShellSort_LReal` to perform Shell sort on `values`.  
+  - **Error Handling**: If sorting fails → Set error `ERR_SHELL_SORT` and pass the substatus code.  
+
+##### **2.2 Basic Statistical Calculations**  
+- **Extreme Values**:  
+  - `min` = First element of the sorted array.  
+  - `max` = Last element of the sorted array.  
+- **Median**:  
+  - If array length `n` is even → Average of the two middle elements.  
+  - If array length `n` is odd → Middle element.  
+- **Quartiles**:  
+  - **Q25 Calculation**:  
+    - Position `k = (n + 3)/4`.  
+    - Interpolate adjacent elements based on integer and fractional parts.  
+  - **Q75 Calculation**:  
+    - Position `k = (3n + 1)/4`.  
+    - Similar interpolation method as Q25.  
+
+##### **2.3 Outlier Detection**  
+- **Condition**: `rangeOutlier ≠ 0`.  
+- **Calculate IQR**: `IQR = Q75 - Q25`.  
+- **Outlier Boundaries**:  
+  - Lower bound: `Q25 - rangeOutlier * IQR`.  
+  - Upper bound: `Q75 + rangeOutlier * IQR`.  
+- **Detection Logic**:  
+  - **Lower-bound Outliers**:  
+    - Traverse from front to back to find the first value ≥ lower bound → Update `min` and calculate outlier percentage.  
+  - **Upper-bound Outliers**:  
+    - Traverse from back to front to find the first value ≤ upper bound → Update `max` and calculate outlier percentage.  
+
+##### **2.4 Skewness Calculation**  
+- **Formula**: `Skewness = (Q25 + Q75 - 2*Median) / IQR`.  
+
+#### **3. Output Handling**  
+- **Extreme Value Selection**:  
+  - If `rangeOutlier ≠ 0` → Output adjusted `min`/`max` after outlier removal.  
+  - If `rangeOutlier = 0` → Output original extreme values.  
+- **Error Status Mapping**:  
+  - `error` = Highest bit of the status code (bit 15 in binary).  
+  - `status`/`subfunctionStatus` carry detailed status information.  
+
+#### **4. State Machine Control**  
+- **State Transition**:  
+  - `STATUS_FIRST_CALL` → Start calculation.  
+  - `STATUS_EXECUTION_FINISHED` → Normal completion.  
+  - Error state → Terminate calculation and latch the error code.  
+- **No-call Handling**:  
+  - If `execute = False` → Set status to `STATUS_NO_CALL`.  
+
+#### **Error Handling Logic**  
+| Error Code          | Trigger Condition                     | Action Taken                      |  
+|---------------------|---------------------------------------|-----------------------------------|  
+| `ERR_NEG_ARR_BOUND` | Array lower bound < 0                 | Terminate and lock error state.   |  
+| `ERR_SHELL_SORT`    | Sorting function block reports error  | Pass substatus code, mark failure.|  
+| `ERR_RANGE_NOT_OK`  | Invalid `rangeOutlier` value          | Terminate immediately.            |

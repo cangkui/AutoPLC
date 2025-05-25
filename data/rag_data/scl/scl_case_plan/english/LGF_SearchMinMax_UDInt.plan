@@ -1,0 +1,18 @@
+Natural Language Requirements:  
+
+1. **Input Validation and Boundary Determination**  
+   - Obtain the starting index (`tempArrayLowerBound`) and ending index (`tempArrayUpperBound`) of the array.  
+   - Implement using the `LOWER_BOUND` and `UPPER_BOUND` functions.  
+
+2. **Initial Value Setting**  
+   - Set the first element of the array as both the initial minimum value (`tempMinValue`) and maximum value (`tempMaxValue`).  
+
+3. **Traversing Array Elements**  
+   - **Traversal Range**: From the second element (`tempArrayLowerBound + 1`) to the last element.  
+   - **Logic Branches**:  
+     - If the current element `<` the current minimum → Update `tempMinValue` and `tempArrayIndexMin`.  
+     - Otherwise, if the current element `>` the current maximum → Update `tempMaxValue` and `tempArrayIndexMax`.  
+
+4. **Output Results**  
+   - Assign the array element values corresponding to `tempArrayIndexMin/Max` to `minValue`/`maxValue`.  
+   - Directly assign the index values to `minValueIndex`/`maxValueIndex`.

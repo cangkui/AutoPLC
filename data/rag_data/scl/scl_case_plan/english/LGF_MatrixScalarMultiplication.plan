@@ -1,0 +1,15 @@
+Natural Language Requirements:  
+
+1. **Dimension Validation Phase**  
+   - Obtain the row and column lower/upper bound indices (`LOWER_BOUND`/`UPPER_BOUND`) of the input matrix (`matrixInput`) and the result matrix (`matrixResult`).  
+   - Verify whether the dimensions of both matrices are completely identical:  
+     - Are the lower bounds of the rows the same?  
+     - Are the upper bounds of the rows the same?  
+     - Are the lower bounds of the columns the same?  
+     - Are the upper bounds of the columns the same?  
+   - **If any condition fails**: Immediately set the corresponding error code (e.g., `ERR_MATRICES_LOWER_BOUND_ROWS_DONT_MATCH`) and exit.  
+
+2. **Scalar Multiplication Phase**  
+   - If dimension validation passes, iterate through each element of the input matrix:  
+     - For each element position `[row, column]`, directly multiply the corresponding element in the result matrix by the scalar value (`matrixResult *= scalar`).  
+   - Set the success status code `STATUS_NO_ERROR` and return.

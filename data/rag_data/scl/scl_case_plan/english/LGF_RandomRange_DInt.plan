@@ -1,0 +1,29 @@
+Here's the English translation of the provided Python function:
+
+```python
+def LGF_RandomRange_DInt(minValue, maxValue):
+    # Input validation phase
+    if minValue > maxValue:
+        return error=True, status=0x8200, value=0
+    
+    # Time seed acquisition phase
+    time_status, nanoseconds = RD_SYS_T()
+    if time_status != 0:
+        return error=True, status=0x8600, value=0
+    
+    # Random number generation phase
+    random_seed = swap_bytes(nanoseconds)  # Byte order reversal
+    normalized = random_seed / MAX_UDINT   # Normalize to [0.0,1.0]
+    scaled_value = normalized * (maxValue - minValue) + minValue
+    
+    return error=False, status=0x0000, value=round(scaled_value)
+```
+
+Key translation notes:
+1. "输入验证阶段" → "Input validation phase"
+2. "时间种子获取阶段" → "Time seed acquisition phase"
+3. "随机数生成阶段" → "Random number generation phase"
+4. "字节逆序处理" → "Byte order reversal"
+5. "归一化到[0.0,1.0]" → "Normalize to [0.0,1.0]"
+
+The translation maintains all technical terms while making them understandable in English, and preserves the original code structure and comments format.

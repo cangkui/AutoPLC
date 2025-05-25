@@ -1,0 +1,17 @@
+Natural Language Requirements:  
+
+### Core Logic Flow  
+1. **Input Validity Check**  
+   - Verify if the input `value` is a negative number  
+   - If invalid:  
+     * Set the `error` flag to `true`  
+     * Set the status code to `ERR_NEG_VAR` (0x8200)  
+     * Return the default value `0.0` and exit the function early  
+
+2. **Nth Root Calculation**  
+   - Use the exponent operator `**` to compute the root (equivalent formula: `value^(1/root)`)  
+   - Assign the calculation result directly to the function's return value  
+
+3. **Normal Status Handling**  
+   - Reset the `error` flag to `false`  
+   - Set the status code to `STATUS_NO_ERROR` (0x0000)

@@ -1,0 +1,35 @@
+Natural Language Requirements:  
+
+1. **Parameter Validation Phase**  
+- Check if `startPos` is within the valid index range of the `byteStream`.  
+- When `count ≠ 0`, verify that `startPos + count` does not exceed the upper limit of the byte stream.  
+- Compare the `count` parameter with the maximum capacity limit of `WString`.  
+
+2. **Decoding Main Loop**  
+- Termination conditions:  
+  - Reaching the specified character count (`count ≠ 0`), or  
+  - End of the byte stream, or  
+  - Reaching the maximum length of `WString`.  
+- Byte type identification process:  
+  ① If the highest bit is 0 → Single-byte ASCII.  
+  ② If the highest bit is 1 and the second-highest bit is 0 → Illegal continuation byte (skip).  
+  ③ Check leading byte patterns:  
+     - `11110xxx` → 4-byte character (directly replace with `�` and skip 4 bytes).  
+     - `1110xxxx` → 3-byte character (combine and validate if it exceeds the `D7FF` range).  
+     - `110xxxxx` → 2-byte character (standard combination calculation).  
+     - Other patterns → Invalid character (replace with `�`).  
+
+3. **Code Point Processing Rules**  
+- For 3-byte combinations: left-shift by 6 bits and merge with subsequent byte data.  
+- Code points exceeding `D7FF` are forcibly replaced with a question mark (`?`).  
+- Upon encountering a 4-byte character, directly return a replacement character and flag a warning.  
+
+4. **Exception Handling Mechanism**  
+- Automatically replace invalid byte sequences with a replacement character and log a warning state.  
+- If the maximum length of `WString` is reached, retain the decoded content and return a truncation warning.  
+- Error status priority: Parameter error > Length warning > Character replacement warning.  
+
+5. **Result Output Strategy**  
+- In case of an error state, clear the output string.  
+- In normal state, copy the entire temporary string.  
+- Use the `ENO` signal to convey execution status (`FALSE` in case of an error).

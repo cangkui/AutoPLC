@@ -1,0 +1,17 @@
+Natural Language Requirements:  
+
+Step 1: Determine the Temperature Conversion Formula  
+Based on the physical relationship between Rankine and Kelvin, the conversion formula is: Kelvin = Rankine × (5/9)  
+
+Step 2: Define the Proportional Factor Constants  
+Declare two immutable constants:  
+- Numerator constant: 5.0  
+- Denominator constant: 9.0  
+
+Step 3: Perform the Linear Conversion Calculation  
+Execute the operations in the following order:  
+1. Divide the numerator by the denominator to obtain the proportional factor.  
+2. Multiply the input temperature value by this proportional factor.  
+
+Step 4: Output the Conversion Result  
+Assign the calculated result directly to the function return value without intermediate variable storage.

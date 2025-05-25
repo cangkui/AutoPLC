@@ -1,0 +1,8 @@
+Natural Language Requirements:  
+
+1. **Input Handling**: Receive the input Fahrenheit temperature value (`value`).  
+2. **Conversion Formula**:  
+   Apply the formula **°C = (°F - 32) / 1.8** by following these steps:  
+   - **Subtract Offset**: Subtract the fixed offset `32.0` from the input value.  
+   - **Divide by Gain**: Divide the result by the gain coefficient `1.8` to obtain the Celsius value.  
+3. **Output Result**: Directly output the calculated Celsius value as the function's return value.

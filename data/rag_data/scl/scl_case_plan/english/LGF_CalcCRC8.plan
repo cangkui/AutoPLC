@@ -1,0 +1,20 @@
+Natural Language Requirements:  
+
+1. **Initialization Phase**  
+   - Initialize the CRC register with the user-specified initial value.  
+   - Obtain the actual index range (LOWER/UPPER_BOUND) of the input array.  
+   - Validity check: If the user-specified number of elements exceeds the actual array capacity, immediately return the error status code 16#8400.  
+
+2. **Data Processing Loop**  
+   - **Iterate through the array**: Process each byte within the valid element range.  
+     - Perform an XOR operation between the current byte and the CRC register value.  
+     - **Bit processing loop**: Perform 8 bitwise operations for each byte.  
+       - Check the most significant bit (MSB).  
+       - Perform a left shift by 1 bit.  
+       - If MSB is 1: XOR with the generator polynomial mask.  
+       - If MSB is 0: Keep the shifted result unchanged.  
+
+3. **Result Output**  
+   - Store the final CRC value in the return register.  
+   - Set the status code to 16#0000 to indicate normal completion.  
+   - Set the error flag to False.

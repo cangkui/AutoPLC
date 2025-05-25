@@ -1,0 +1,22 @@
+Natural Language Requirements:
+
+Based on requirements and code analysis, the thought process of this string-to-time conversion algorithm can be divided into the following four logical stages:
+
+1. Initialization Phase:
+- Create a temporary string copy and a millisecond accumulator variable
+- Predefine millisecond base values for each time unit (D/H/M/S/MS)
+
+2. Sequential Parsing Phase (in descending order of time unit granularity):
+- Day (D) parsing: Locate "D" character → Extract prefix numeric value → Calculate corresponding milliseconds → Trim processed string portion
+- Hour (H) parsing: Apply same pattern but using H character and hour-to-millisecond base
+- Minute (M) parsing: Continue the same pattern
+- Second (S) parsing: Note the use of single-character identifier here
+- Millisecond (MS) parsing: Special handling for two-character identifier, no subsequent trimming needed
+
+3. Accumulation Characteristics:
+- Incremental accumulation approach: Use += operator to accumulate total milliseconds after each parsing
+- Dynamic string trimming: After successfully parsing each unit, remove processed portion to form new string
+
+4. Result Conversion Phase:
+- Convert final accumulated integer millisecond value to standard TIME type using DINT_TO_TIME function
+- Force ENO flag to True (following design constraint of no error handling)

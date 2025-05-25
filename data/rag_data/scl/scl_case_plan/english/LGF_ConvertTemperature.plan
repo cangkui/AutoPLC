@@ -1,0 +1,30 @@
+Natural Language Requirements:
+
+1. Mode Validation Phase:
+- Check if the input mode falls within the predefined range of 8 conversion types (1-8)
+- If out of range, immediately proceed to error handling
+
+2. Temperature Conversion Calculation Phase (select formula based on mode):
+
+| Mode Code | Conversion Formula                | Parameter Usage Rules          |
+|-----------|-----------------------------------|--------------------------------|
+| 1         | F = C×1.8 +32                     | Uses gain 1.8 and offset 32    |
+| 2         | C = (F-32)/1.8                    | Uses offset 32 and gain 1.8    |
+| 3         | K = C+273.15                      | Uses single offset parameter   |
+| 4         | C = K-273.15                      | Reverse offset operation       |
+| 5         | K = (F-32)/1.8 +273.15            | Uses two offset parameters stepwise |
+| 6         | F = (K-273.15)×1.8 +32            | Nested use of offset and gain  |
+| 7         | K = R×5/9                         | Fractional gain parameter      |
+| 8         | R = K×1.8                         | Direct gain coefficient application |
+
+3. Error Handling Phase:
+- Set error flag to TRUE (only triggered for mode exceptions)
+- Set status word to error code 16#8200
+- Force return result to 0.0
+- Exit function execution early
+
+4. Output Processing Phase:
+- Pass temporary calculation result to function return value
+- Reset error flag to FALSE
+- Set normal status code 16#0000
+- Enable ENO output

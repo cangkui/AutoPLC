@@ -1,0 +1,21 @@
+Natural Language Requirements:  
+
+1. **Input Validation Process (Short-circuit Logic):**  
+   - **Year validity check** → Highest priority for error codes  
+   - **Month validity check** → Executes only if the year is valid  
+   - **Leap year determination** → Adjusts February days based on valid year  
+   - **Date validity check** → Depends on month validity and leap year status  
+
+2. **Date Accumulation Logic:**  
+   - **Initialize total days as 0** → Prepares the accumulator  
+   - **Add preceding months' days** → Based on the adjusted month-day table  
+   - **Add current month's days** → Completes the final calculation  
+
+3. **Output Handling Strategy:**  
+   - **Error-first principle** → Terminates the process immediately if any validation fails  
+   - **Success state override** → Clears error flags only upon final correctness  
+   - **Direct result output** → Outputs a valid value only if all validations pass  
+
+4. **Leap Year Handling Mechanism:**  
+   - **Dual-condition check** → Divisible by 4 but not by 100 **OR** divisible by 400  
+   - **Dynamic February adjustment** → Modifies the day table instead of maintaining two datasets

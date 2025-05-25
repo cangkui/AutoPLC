@@ -1,0 +1,27 @@
+**Natural Language Requirements:**
+
+### I. Error Detection Phase  
+1. **Check Input/Output Array Dimension Consistency**  
+   - Retrieve the upper and lower bounds of the `values` and `smoothedValues` arrays.  
+   - Calculate the actual number of elements in both arrays.  
+   - If the counts do not match → **ERR_ARRAYS_DIFFERENT**.  
+
+2. **Verify Minimum Data Requirement**  
+   - If the input array has ≤5 elements → **ERR_NOT_ENOUGH_VALUES**.  
+
+### II. Core Processing Phase (After Validation)  
+1. **Intermediate Element Processing (Indices 2 to n-3)**  
+   - Apply the core polynomial formula:  
+     `y(n) = (-3yₙ₋₂ + 12yₙ₋₁ + 17yₙ + 12yₙ₊₁ - 3yₙ₊₂) / 35`.  
+   - Iterate through the 3rd element to the 3rd-to-last element.  
+
+2. **Special Handling for Boundary Elements**  
+   - **First Element**: Weighted average using `69y₀ + 4y₁ - 6y₂ + 4y₃ - y₄` (coefficient: 1/70).  
+   - **Second Element**: Weighted average using `2y₀ + 27y₁ + 12y₂ - 8y₃ + 2y₄` (coefficient: 2/70).  
+   - **Second-to-Last Element**: Weighted average using `2yₙ₋₄ - 8yₙ₋₃ + 12yₙ₋₂ + 27yₙ₋₁ + 2yₙ` (coefficient: 2/70).  
+   - **Last Element**: Weighted average using `-yₙ₋₄ + 4yₙ₋₃ - 6yₙ₋₂ + 4yₙ₋₁ + 69yₙ` (coefficient: 1/70).  
+
+### III. Post-Processing Phase  
+1. **Status Update**  
+   - On success, set `error = FALSE`.  
+   - Set status code to **STATUS_FINISHED_NO_ERROR**.

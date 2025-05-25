@@ -1,0 +1,40 @@
+### CRC-32 Advanced Calculation Algorithm Process Description  
+
+#### 1. Initialization Phase  
+- Set initial CRC value: `tempCRC = initValue`  
+- Determine the input array index range: `[tempLowerLimit, tempUpperLimit]`  
+- If `noOfElements > 0` and exceeds the actual array length → Set error status `ERR_NO_OF_ELEMENTS` and return immediately  
+
+#### 2. Data Preprocessing  
+- When `noOfElements` is valid, update `tempUpperLimit = tempLowerLimit + noOfElements - 1`  
+
+#### 3. Main Calculation Loop (Byte-by-Byte Processing)  
+```python  
+for each byte in array[tempLowerLimit..tempUpperLimit]:  
+    if reflectInput == True:  
+        Perform byte bit reversal (e.g., 0x01 → 0x80)  
+    else:  
+        Use the original byte value  
+    
+    tempCRC ^= (byte value << 24)  
+    
+    for 8-bit processing iterations:  
+        if the highest bit of tempCRC is 1:  
+            tempCRC = (tempCRC left-shifted by 1) XOR mask  
+        else:  
+            tempCRC = tempCRC left-shifted by 1  
+```  
+
+#### 4. Result Post-Processing  
+```python  
+if reflectResult == True:  
+    Fully reverse the 32 bits of tempCRC → store in tempInvCRC  
+    Final result = tempInvCRC XOR finalXorValue  
+else:  
+    Final result = tempCRC XOR finalXorValue  
+```  
+
+#### 5. Status Return  
+- Set `status = STATUS_NO_ERROR`  
+- `error = False`  
+- Return the calculated CRC value

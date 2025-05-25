@@ -1,0 +1,17 @@
+Natural Language Requirements:  
+
+1. **Effective Bit Number Calculation**:  
+   - Perform a modulo 32 operation on the input `bitNo` (ensuring the effective bit number is within the range 0 ≤ effective bit number ≤ 31).  
+
+2. **Mask Generation**:  
+   - Shift the binary value `1` left by the effective bit number.  
+   - Example: When `bitNo = 5`, the generated mask is `2#00000000_00000000_00000000_00100000`.  
+
+3. **Bit Toggle Operation**:  
+   - Perform an XOR (exclusive OR) operation between the original `value` and the generated mask.  
+   - XOR property: The result is `1` if the bits in the same position differ, otherwise `0`.  
+   - Effect achieved: The specified bit toggles (changes from `0` to `1` or from `1` to `0`).  
+
+4. **Result Output**:  
+   - Return the result of the XOR operation as the new `DWORD` value.  
+   - The status flag `ENO` is always set to `True`.

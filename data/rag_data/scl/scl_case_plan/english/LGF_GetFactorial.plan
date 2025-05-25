@@ -1,0 +1,19 @@
+Natural Language Requirements:  
+
+1. **Input Validation**  
+   - Check if the input value is within the range [0..12]  
+   - If out of range:  
+     * Return the default value 0  
+     * Set `error` to TRUE  
+     * Set the status code to `ERR_WRONG_VALUE_RANGE` (0x8101)  
+     * Exit the function immediately  
+
+2. **Fast Factorial Lookup**  
+   - Use predefined constants to directly map factorial values for 0-12 (lookup table method)  
+   - Assign the corresponding constant based on the input value (e.g., input 8 → 40320)  
+   - No loop/recursion calculations required (performance optimization)  
+
+3. **Normal Return Handling**  
+   - Assign the lookup result to the function's return value  
+   - Set `error` to FALSE  
+   - Set the status code to `STATUS_NO_ERROR` (0x0000)

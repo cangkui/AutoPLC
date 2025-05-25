@@ -1,0 +1,56 @@
+Here's the English translation of your natural language requirements in a clear and easy-to-understand manner:
+
+1. **Execution Control**  
+- Use edge detection (rising edge) to ensure each operation (push/pop/peek/clear) triggers only once  
+- Return "STATUS_NO_CURRENT_JOBS" when no operation signal is present  
+- Error states persist until the next operation  
+
+2. **Input Validation Sequence**  
+```
+[Buffer type check] → [Element type match check] → [Initial value type verification]
+    ↓                     ↓                         ↓
+ERR_NO_ARRAY       ERR_WRONG_TYPE_ITEM        ERR_WRONG_TYPE_INITIAL_ITEM
+```
+
+3. **Core Operation Flow**  
+```
+        [reset trigger]
+           ↓
+Reset index (-1) / counter (0)
+↓
+        [clear trigger]
+           ↓
+Fill buffer with initial values → ERR_CLEAR_BUFFER
+           ↓
+Reset index/counter
+↓
+        [peek/pop trigger]
+           ↓
+Check empty buffer → ERR_BUFFER_EMPTY
+           ↓
+Read last element → ERR_RETURN_LAST_ENTRY
+           ↓
+[For pop] Replace with initial value → ERR_POP_REPLACE_ITEM_BY_INIT_VALUE
+           ↓
+Decrement index
+↓
+        [push trigger]
+           ↓
+Check full buffer → ERR_BUFFER_FULL
+           ↓
+Write new element → ERR_WRITE_ENTRY
+           ↓
+Increment index
+```
+
+4. **Status Update Rules**  
+- Element count = last index + 1 (index starts at 0)  
+- Empty state = last index < 0  
+- Reset error flags after successful operations  
+- Internal error codes are passed through subFunctionStatus  
+
+5. **Special Handling Logic**  
+- Peek operation doesn't modify buffer state  
+- Clear operation initializes the entire buffer  
+- When multiple operations trigger simultaneously, follow this priority: reset > clear > pop/peek > push  
+- Force index range to stay within [-1, buffer_size-1]

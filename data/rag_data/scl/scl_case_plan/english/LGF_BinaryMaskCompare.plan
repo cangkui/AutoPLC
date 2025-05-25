@@ -1,0 +1,14 @@
+Natural Language Requirements:  
+
+1. Perform two bitmask operations on the input parameters:  
+   - Perform a bitwise AND between `source` and `mask` to retain data in the mask's valid bits.  
+   - Perform a bitwise AND between `compare` and `mask` to retain data in the same masked bits.  
+
+2. Execute an XOR comparison:  
+   - Perform a bitwise XOR between the two masked results. The XOR result will have a bit value of 0 if and only if the corresponding masked bits in the two input values are equal.  
+
+3. All-zero check:  
+   - Verify whether the XOR result equals all zeros (`16#00000000`), indicating that all masked bits in the two input values are identical.  
+
+4. Result output:  
+   - Return `TRUE` if the all-zero condition is met; otherwise, return `FALSE`.

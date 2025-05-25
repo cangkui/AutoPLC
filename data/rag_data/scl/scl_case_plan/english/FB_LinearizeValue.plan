@@ -1,0 +1,24 @@
+**Algorithm Process Description**  
+
+1. **Initialization State**  
+   - Default error-free settings: Error=FALSE, Status=0  
+
+2. **Boundary Error Handling**  
+   - If input value < 1200 **or** >7000:  
+     - Set error flag: Error=TRUE, Status=16#8001  
+     - Clamp output value:  
+       - If <1200, set to 150 (lower limit of first range)  
+       - If >7000, set to 720 (upper limit of third range)  
+
+3. **Range Linear Mapping** (evaluated in priority order)  
+   - **First Range [1200, 3600] → [150, 240]**  
+     - Calculate ratio: `(input value - 1200) / (3600-1200)`  
+     - Output value = 150 + ratio × (240-150)  
+
+   - **Second Range (3600, 4800] → [240, 560]**  
+     - Calculate ratio: `(input value - 3600) / (4800-3600)`  
+     - Output value = 240 + ratio × (560-240)  
+
+   - **Third Range (4800, 7000] → [560, 720]**  
+     - Calculate ratio: `(input value - 4800) / (7000-4800)`  
+     - Output value = 560 + ratio × (720-560)

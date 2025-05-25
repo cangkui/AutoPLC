@@ -1,0 +1,20 @@
+Natural Language Requirements: ### Algorithm Flow Description (SCL Implementation Logic)  
+
+#### Core Processing Logic  
+1. **Initialization Phase**:  
+   - XOR the initial CRC value `initValue` with the input data `value` as the starting point for temporary CRC calculation  
+   - `tempCRC = initValue XOR value`  
+
+2. **Bit Processing Loop** (8 iterations):  
+   ```plaintext  
+   FOR each bit (0 → 7):  
+     IF the highest bit (bit7) of the current tempCRC is 1:  
+         a. Perform a left shift by 1 bit  
+         b. XOR the shifted result with the generator polynomial mask  
+     ELSE:  
+         a. Perform only a left shift by 1 bit  
+   ```  
+
+3. **Result Output**:  
+   - Return the final calculated `tempCRC` as the function result  
+   - Fixed setting: ENO status is always TRUE (no error handling)

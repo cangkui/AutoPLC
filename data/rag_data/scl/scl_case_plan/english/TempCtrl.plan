@@ -1,0 +1,31 @@
+Natural Language Requirements:  
+
+#### Main Logic Flow  
+1. **State Initialization**  
+   - Continuously update the current temperature display and set temperature display  
+
+2. **Sensor Validity Check**  
+   - Mark sensor as faulty if temperature value exceeds the [0, 100] range  
+   - In fault state, forcibly turn off the heater and skip subsequent control logic  
+
+3. **Overheat Protection Subsystem**  
+   - (a) Heater Runtime Timer  
+     - Start a 5-second countdown when the heater is active  
+     - Trigger overheat protection flag upon timeout and immediately shut down the heater  
+   - (b) Cooldown Recovery Timer  
+     - Start a 3-second cooldown timer after overheat protection is triggered  
+     - Automatically clear protection status after cooldown completes  
+
+4. **Temperature Control Decision**  
+   - When no overheat protection is triggered and no sensor fault exists:  
+     - If temperature is below set value → Activate heater  
+     - If temperature is above set value → Turn off heater  
+   - Use state retention mechanism to avoid frequent switching (via HeaterState.IsEnabled flag)  
+
+5. **Exception Handling Mechanism**  
+   - Forcibly turn off the heater during sensor faults  
+   - All exception states take priority over regular control logic  
+
+6. **State Synchronization Output**  
+   - Continuously update heater operation status  
+   - Synchronize overheat protection trigger status

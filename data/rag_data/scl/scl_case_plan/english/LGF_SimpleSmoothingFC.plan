@@ -1,0 +1,18 @@
+Natural Language Requirements:  
+
+1. **Input/Output Array Validation**  
+   - Calculate the number of elements in the input array `values` and the output array `smoothedValues` (using the difference between upper and lower bounds +1).  
+   - Check if the two arrays have the same number of elements:  
+     - **If not equal** → Set `error=True`, `status=ERR_ARRAY_DIFFERENT`, and exit the function.  
+   - Check if the input array has at least 3 elements:  
+     - **If fewer than 3 elements** → Set `error=True`, `status=ERR_NOT_ENOUGH_VALUES`, and exit the function.  
+
+2. **Middle Element Smoothing Calculation**  
+   - Iterate through the **middle elements** of the input array (from the 2nd element to the second-to-last element):  
+     - For each position `i`, take the arithmetic average of `values[i-1]`, `values[i]`, and `values[i+1]`.  
+     - Write the result into `smoothedValues[i]`.  
+   - **First and last elements are not processed** (the output array's first and last elements may retain their original values or remain uninitialized).  
+
+3. **Success Status Handling**  
+   - Set `error=False`, `status=STATUS_FINISHED_NO_ERROR`.  
+   - Force `ENO=True` (to maintain compatibility with traditional PLC enable mechanisms).

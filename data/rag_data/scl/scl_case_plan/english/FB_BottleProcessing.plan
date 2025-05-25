@@ -1,0 +1,44 @@
+Natural Language Requirements:  
+
+1. State Machine Initialization Phase  
+   - Set initial state to "Waiting for Bottle Detection" (STATE_WAITING_FOR_BOTTLE)  
+   - Reset all actuator outputs (pumps/valves/mechanisms/indicator lights)  
+
+2. Bottle Detection Trigger Process  
+   ├─ When bottle sensor is activated  
+   └─ Transition to "Cleaning State" (STATE_CLEANING)  
+       ├─ Activate cleaning pump (Pump_Motor = TRUE)  
+       └─ Wait for operator's cleaning confirmation signal  
+
+3. Cleaning Confirmation Handling Phase  
+   ├─ Upon receiving cleaning confirmation button signal  
+   └─ Transition to "Filling State" (STATE_FILLING)  
+       ├─ Deactivate cleaning pump (Pump_Motor = FALSE)  
+       ├─ Open filling valve (Filling_Valve = TRUE)  
+       └─ Wait for operator's filling confirmation signal  
+
+4. Filling Confirmation Handling Phase  
+   ├─ Upon receiving filling confirmation button signal  
+   └─ Transition to "Capping State" (STATE_CAPPING)  
+       ├─ Close filling valve (Filling_Valve = FALSE)  
+       ├─ Activate capping machine (Capping_Machine = TRUE)  
+       └─ Wait for operator's capping confirmation signal  
+
+5. Capping Confirmation Handling Phase  
+   ├─ Upon receiving capping confirmation button signal  
+   └─ Transition to "Packing State" (STATE_PACKING)  
+       ├─ Deactivate capping machine (Capping_Machine = FALSE)  
+       ├─ Activate packing machine (Packing_Machine = TRUE)  
+       └─ Wait for operator's packing confirmation signal  
+
+6. Packing Completion Handling Phase  
+   ├─ Upon receiving packing confirmation button signal  
+   └─ Transition to "Completed State" (STATE_COMPLETED)  
+       ├─ Deactivate packing machine (Packing_Machine = FALSE)  
+       ├─ Turn on completion indicator light (Completion_Light = TRUE)  
+       └─ Wait for final pickup confirmation  
+
+7. System Reset Phase  
+   ├─ Upon receiving pickup completion button signal  
+   └─ Return to initial waiting state (STATE_WAITING_FOR_BOTTLE)  
+       └─ Turn off completion indicator light (Completion_Light = FALSE)

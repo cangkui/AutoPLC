@@ -1,0 +1,25 @@
+Natural Language Requirements: ### Algorithm Flow Chain-of-Thought Description  
+
+#### 1. **Parameter Validity Check**  
+   - Verify illegal input where `yMin > yMax`  
+   - If condition is met, immediately set error code `ERR_LOW_LIM_OVER_UP_LIM`  
+   - Force output value to `0.0`  
+
+#### 2. **Special Case Handling for Linear Equation**  
+   - Check if the difference between `x1` and `x2` is less than or equal to the floating-point precision threshold (`PRECISION`)  
+   - If true, directly use `y1` as the output value  
+   - Otherwise, compute the linear equation `y = m*(x-x1) + y1` using the two-point formula  
+
+#### 3. **Output Clipping and Warning Handling**  
+   - If the computed result is `< yMin`, force output to `yMin` and set `WARN_Y_LIMITED_TO_YMIN`  
+   - If the computed result is `> yMax`, force output to `yMax` and set `WARN_Y_LIMITED_TO_YMAX`  
+
+#### 4. **Status Code Mapping Mechanism**  
+   - The `error` flag is determined by the highest bit (bit15) of the status code  
+   - When the status code is `ERR_LOW_LIM_OVER_UP_LIM` (`16#8200`), `error`=True  
+   - For other warning status codes (e.g., `16#6xxx`), `error`=False  
+   - Regardless of warnings, as long as there is no fatal error, the computed/clipped `y` value is returned  
+
+#### 5. **Special Design Notes**  
+   - Use the `PRECISION` constant (`1.0E-06`) to avoid division-by-zero errors caused by floating-point calculation inaccuracies  
+   - Force set to `TRUE`, indicating this function does not rely on traditional ENO mechanisms for error propagation

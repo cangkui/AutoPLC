@@ -1,0 +1,46 @@
+Natural Language Requirements:  
+
+1. **Enable Detection Phase**  
+   - Detect rising edge of `enable` signal to trigger calculation  
+   - Initialize internal state to "BUSY"  
+   - Reset all states upon detecting falling edge of `enable`  
+
+2. **Time Reference Acquisition**  
+   - Simultaneously acquire system UTC time (`RD_SYS_T`) and local time (`RD_LOC_T`)  
+   - Calculate timezone offset: `(UTC time - Local time) / 3600000ms`  
+
+3. **Input Validation**  
+   - Verify latitude absolute value ≤ 90°  
+   - Verify longitude absolute value ≤ 180°  
+   - Set corresponding error codes (16#8204/16#8205) for exceptions  
+
+4. **Astronomical Calculation Core**  
+   **4.1 Day Sequence Calculation**  
+   - Calculate days elapsed since January 1st  
+
+   **4.2 Solar Position Calculation**  
+   - Iterative computation using approximate time formulas:  
+     * Solar mean anomaly: `(0.9856 * days) - 3.289`  
+     * True solar longitude: `mean anomaly + 282.634 + 1.916*sin() + 0.02*sin(2*)`  
+     * Right ascension correction: Handle 90° quadrant jumps  
+     * Declination calculation: `0.39782 * sin(true longitude)`  
+
+   **4.3 Hour Angle Calculation**  
+   - Based on observer latitude and solar position:  
+     * Compute twilight circle critical angle: `(cos(90.83°) - sin(declination)*sin(latitude)) / (cos(declination)*cos(latitude))`  
+     * Constrain value range to [-1,1] to prevent computational exceptions  
+
+5. **Time Conversion Phase**  
+   - Convert hour angle to UTC time:  
+     * Handle timezone offset and date line crossing  
+     * Apply user-defined offsets (`offsetSunrise/Sunset`)  
+   - Time format conversion: Convert hours to DTL format  
+
+6. **Day/Night Determination**  
+   - Compare current local time with adjusted sunrise/sunset times  
+   - Output boolean `isDaytime` indicating daylight status  
+
+7. **State Maintenance Mechanism**  
+   - Unified management of error status bit (bit15)  
+   - Transparent transmission of subroutine status codes  
+   - Automatic busy state management: Maintains TRUE during computation

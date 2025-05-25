@@ -1,0 +1,40 @@
+### Chain of Thought Summary (Shell Sort Algorithm Process)
+
+#### 1. Input Validation and Initialization  
+- **Array Boundary Calculation**  
+  Determine the actual index range of the array using LOWER_BOUND and UPPER_BOUND  
+  Calculate the total number of elements: `n = upper - lower + 1`  
+- **Error Condition Checks**  
+  ❌ `n > 1000` → Set ERR_TOO_MANY_ELEMENTS  
+  ❌ `n <= 0` → Set ERR_NO_ARRAY  
+- **Index Offset Calculation**  
+  Create a temporary array index mapping: `offset = -lower + 1`  
+
+#### 2. Data Preprocessing  
+- **Array Copying**  
+  Copy all elements from the input array to a fixed-size temporary array (`tempArray[1..1000]`)  
+  Preserve the original array's index mapping  
+
+#### 3. Core Shell Sort Logic  
+- **Dynamic Gap Generation**  
+  Initialize gap=1 → Expand dynamically using `gap = 3*gap +1` → Until gap exceeds n  
+  Reverse gap reduction: Shrink gap by a factor of 3 each loop (gap /= 3) until gap=1  
+- **Group Insertion Sort**  
+  **Outer Loop**: Traverse all subsequences based on the current gap value  
+  **Inner Loop**: Perform insertion sort on each subsequence  
+  **Sorting Direction Control**:  
+  ```python  
+  if descending: Swap when previous element < current value  
+  if ascending: Swap when previous element > current value  
+  ```  
+- **Shift Optimization**  
+  Use a shift-back strategy instead of direct swaps during element exchanges to reduce assignment operations  
+
+#### 4. Result Write-Back  
+- **Array Update**  
+  Write the sorted temporary array elements back to the input array using the original index mapping  
+  Ensure the memory address of the original array variable remains unchanged  
+
+#### 5. Status Return  
+- Set `error=false` and `STATUS_NO_ERROR` upon success  
+- No explicit error handling throughout the process (relies on status code mechanism)

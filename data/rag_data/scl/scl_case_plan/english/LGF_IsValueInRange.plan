@@ -1,0 +1,21 @@
+Natural Language Requirements:  
+
+1. **Parameter Initialization**  
+   - Calculate upper and lower limits based on `setpoint` and `range`:  
+     - **Upper Limit** = `setpoint + 0.5 * |range|`  
+     - **Lower Limit** = `setpoint - 0.5 * |range|`  
+   - Use `ABS(range)` to ensure the range calculation is unaffected by the sign of `range`.  
+
+2. **Error Detection**  
+   - If an error occurs during calculation (e.g., invalid input parameters causing the system to automatically set `ENO` to `false`):  
+     - Set `error = TRUE` with status code `ERR_RANGE_LIMIT_VALUES`.  
+     - Reset all output flags (`overHighLimit`/`belowLowLimit`) to `false` and return `false`.  
+
+3. **Range Judgment Logic**  
+   - **Exceeds Upper Limit**: If `value > Upper Limit` → `overHighLimit = TRUE`.  
+   - **Exceeds Lower Limit**: If `value < Lower Limit` → `belowLowLimit = TRUE`.  
+   - **Return Value**: Returns `TRUE` if neither limit is exceeded, otherwise `FALSE`.  
+
+4. **Normal State Handling**  
+   - If no error is detected, set `error = FALSE` with status code `STATUS_NO_ERROR`.  
+   - Explicitly set `ENO = TRUE` (even though comments indicate the `ENO` mechanism is not used).

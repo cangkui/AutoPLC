@@ -1,0 +1,39 @@
+Natural Language Requirements:  
+
+1. Input Validation Phase  
+   - Check if `searchIn` is an array with elements of type Char/Byte  
+   - If not, set `ERR_NO_ARRAY` status and return immediately  
+   - Get the total number of array elements `tempNumElements`  
+
+2. Initialization Phase  
+   - Calculate the lengths of the prefix and suffix texts (`tempLenTextBefore/After`)  
+   - Initialize the search start position `tempPosInArray` to 0  
+   - Clear the output string `extractedString`  
+
+3. Loop Search Process  
+   LOOP:  
+   a. Data Conversion  
+      - Extract up to 254 characters from the current search position into a temporary string  
+      - Search for `textBefore` in the temporary string  
+
+   b. Prefix Handling  
+      IF `textBefore` is found:  
+         - Update the search position to the expected start of `textAfter`  
+         - Extract the subsequent string and search for `textAfter`  
+
+         IF `textAfter` is found:  
+            Extract the middle text → Set success status → Exit loop  
+         ELSE:  
+            Take all remaining text → Set "prefix-only" warning → Exit loop  
+      ELSE:  
+         - Move the search position backward (254 chars - prefix length)  
+         - Prevent splitting the identifier text across chunks  
+
+   c. Termination Condition  
+      If the search position exceeds the array length → Set "not found" warning  
+
+4. Status Feedback  
+   - Set different status codes based on search results:  
+     16#0000 → Both prefix and suffix found  
+     16#9001 → Only prefix found  
+     16#9002 → No identifiers found

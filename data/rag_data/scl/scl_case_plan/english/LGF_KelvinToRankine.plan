@@ -1,0 +1,12 @@
+Natural Language Requirements: ### Algorithm Process Description  
+
+1. **Define Temperature Gain Constant**  
+   - Declare a fixed coefficient of 1.8 (the temperature scale ratio between Kelvin and Rankine).  
+
+2. **Perform Temperature Unit Conversion**  
+   - Multiply the input Kelvin temperature value by the fixed coefficient.  
+   - Calculation formula: `Rankine = Kelvin × 1.8`.  
+
+3. **Directly Output the Result**  
+   - Map the calculation result directly to the function return value.  
+   - Keep ENO always as TRUE (no error handling mechanism).

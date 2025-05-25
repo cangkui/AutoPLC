@@ -1,0 +1,38 @@
+Natural Language Requirements:  
+
+1. **Edge Detection Execution**  
+   - Detect the rising edge of the `execute` signal to trigger computation  
+   - Obtain the upper and lower bound indices of the input array  
+   - Initialize histogram-related arrays and statistical variables  
+   - Maintain the execution state machine (`NO_CALL`/`FIRST_CALL`/`EXECUTION_FINISHED`)  
+
+2. **Input Validation Phase**  
+   - Verify the valid range of `numberOfClasses` (1–15)  
+   - Set the `ERR_WRONG_NO_CLASSES` error status if invalid  
+
+3. **Data Preprocessing**  
+   - Calculate the total number of valid data elements  
+   - Create array index offsets for zero-based access  
+   - Call `ShellSort` to sort the input array  
+   - Set the `ERR_SHELL_SORT` status in case of errors  
+
+4. **Statistical Calculation**  
+   - Determine the minimum and maximum values of the dataset  
+   - Compute the class width: `(max - min) / numberOfClasses`  
+   - Initialize class boundary values  
+
+5. **Frequency Distribution Calculation**  
+   - Traverse the sorted array  
+   - Dynamically assign data to intervals based on class boundaries  
+   - Count the absolute frequency for each class  
+   - Calculate relative frequency (in percentage form)  
+   - Record the maximum frequency value for Y-axis scaling  
+
+6. **Class Midpoint Calculation**  
+   - For each class, compute the midpoint value: `min + (class index * class width) + class width / 2`  
+
+7. **Output Formatting**  
+   - Pack frequencies and midpoints into a 2D output array  
+   - Set axis data: `[min, max, 0, maxFrequency]`  
+   - Output the computed class width  
+   - Set error flags based on the status register
