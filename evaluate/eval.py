@@ -7,6 +7,9 @@ from typing import List, Optional, Dict, Set
 from tqdm import tqdm
 
 
+from logging import getLogger
+logger = getLogger("evaluate.eval")
+
 @dataclass
 class ErrorMessage:
     error_desc: str
@@ -66,6 +69,100 @@ class ResponseData:
         )
 
 
+class CodesysCompiler:
+    def extract_code_window(self, source_code: str, error_info: Dict, window_size: int = 3) -> str:
+        lines = source_code.splitlines()
+        path = error_info.get("Path", 0)
+        is_def = error_info.get("IsDef", False)
+
+        base_line_idx = 0
+        if not is_def:
+            begin_idx = next((i for i, line in enumerate(lines) if "BEGIN" in line.upper()), None)
+            if begin_idx is not None:
+                base_line_idx = begin_idx
+            else:
+                end_var_indices = [i for i, line in enumerate(lines) if "END_VAR" in line.upper()]
+                base_line_idx = end_var_indices[-1] + 1 if end_var_indices else 0
+
+        error_line_idx = base_line_idx + path
+        start_idx = max(0, error_line_idx - window_size)
+        end_idx = min(len(lines), error_line_idx + window_size + 1)
+
+        return "\n".join(f"{i + 1:>4}: {lines[i]}" for i in range(start_idx, end_idx))
+
+    def syntax_check(self, block_name: str, st_code: str) -> ResponseData:
+        API_KEY = "admin"  # Default API key, change in production
+        # Configure requests session
+        session = requests.Session()
+        session.headers.update({
+            'Authorization': 'ApiKey ' + API_KEY,
+            'Content-Type': 'application/json'
+        })
+        URL = "http://192.168.103.117:9000/api/v1/pou/workflow"
+        json_data = {"BlockName": block_name, "Code": st_code}
+        timeout = 30  # Set a reasonable timeout for the request
+        try:
+            resp = session.post(URL, json=json_data, timeout=timeout)  # Reasonable timeout
+            # resp = requests.post(
+            #     url="http://192.168.103.117:9000/api/v1/pou/workflow",
+            #     json={"BlockName": block_name, "Code": st_code}
+            # )
+            print(resp.json())
+        
+            if resp.status_code != 200:
+                return ResponseData.default_false()
+
+            raw_data = resp.json()
+            raw_errors = raw_data.get("Errors", [])
+            simplified_errors = []
+
+            for err in raw_errors:
+                code_window = self.extract_code_window(st_code, err, window_size=3)
+                simplified_errors.append(ErrorMessage(
+                    error_desc=err["ErrorDesc"],
+                    error_type="定义区错误" if err.get("IsDef", False) else "代码段错误",
+                    code_window=code_window
+                ))
+
+            return ResponseData(
+                success=raw_data.get("Success", True),
+                result=raw_data.get("Result", ""),
+                errors=simplified_errors
+            )
+        except Exception as e:
+            print(f"[Error] Codesys Compiler API failed: {e}")
+            return ResponseData.default_false()
+
+
+    def batch_test_exp_folder(self, exp_folder: str, save_dir: str):
+        os.makedirs(save_dir, exist_ok=True)
+        for case_name in os.listdir(exp_folder):
+            case_path = os.path.join(exp_folder, case_name)
+            if not os.path.isdir(case_path):
+                continue
+
+            st_files = [f for f in os.listdir(case_path) if f.endswith('.st')]
+            if not st_files:
+                print(f"[WARN] No ST file in {case_path}")
+                continue
+
+            st_file = st_files[0]
+            st_path = os.path.join(case_path, st_file)
+
+            with open(st_path, 'r', encoding='utf-8') as f:
+                scl_code = f.read()
+
+            print(f"Testing case: {case_name}")
+            response = self.syntax_check(case_name, scl_code)
+
+            # 保存结果
+            exp_folder_name = os.path.basename(os.path.abspath(exp_folder))
+            save_name = f"{exp_folder_name}_{case_name}.json"
+            save_path = os.path.join(save_dir, save_name)
+
+            with open(save_path, 'w', encoding='utf-8') as out_f:
+                out_f.write(response.to_json())
+
 class TIAPortalCompiler:
     def extract_code_window(self, source_code: str, error_info: Dict, window_size: int = 3) -> str:
         lines = source_code.splitlines()
@@ -87,7 +184,7 @@ class TIAPortalCompiler:
 
         return "\n".join(f"{i + 1:>4}: {lines[i]}" for i in range(start_idx, end_idx))
 
-    def scl_syntax_check(self, block_name: str, scl_code: str) -> ResponseData:
+    def syntax_check(self, block_name: str, scl_code: str) -> ResponseData:
         try:
             resp = requests.post(
                 url="http://192.168.103.245:9000/api/tiaapi/process",
@@ -95,7 +192,6 @@ class TIAPortalCompiler:
             )
             if resp.status_code != 200:
                 return ResponseData.default_false()
-
             raw_data = resp.json()
             raw_errors = raw_data.get("Errors", [])
             simplified_errors = []
@@ -136,7 +232,7 @@ class TIAPortalCompiler:
                 scl_code = f.read()
 
             print(f"Testing case: {case_name}")
-            response = self.scl_syntax_check(case_name, scl_code)
+            response = self.syntax_check(case_name, scl_code)
 
             # 保存结果
             exp_folder_name = os.path.basename(os.path.abspath(exp_folder))
@@ -147,10 +243,19 @@ class TIAPortalCompiler:
                 out_f.write(response.to_json())
 
 
-def eval_result(folder_path):
+
+def eval_result(folder_path, compiler_type='codesys'):
     from tqdm import tqdm
 
-    compiler = TIAPortalCompiler()
+    if compiler_type == 'codesys':
+        compiler = CodesysCompiler()
+        file_prefix = "st"
+    elif compiler_type == 'tiaportal':
+        compiler = TIAPortalCompiler()
+        file_prefix = "scl"
+    else:
+        raise ValueError("Unsupported compiler type. Use 'codesys' or 'tiaportal'.")
+    
     py_dir = os.path.dirname(os.path.abspath(__file__))
 
     # 创建 compile_results/{exp_name}/
@@ -159,12 +264,12 @@ def eval_result(folder_path):
     save_dir = os.path.join(save_root, exp_name)
     os.makedirs(save_dir, exist_ok=True)
 
-    # 预处理出所有.scl文件
+    # 预处理出所有文件
     case_list = []
     for case_name in os.listdir(folder_path):
         case_path = os.path.join(folder_path, case_name)
         if os.path.isdir(case_path):
-            scl_files = [f for f in os.listdir(case_path) if f.endswith('.scl')]
+            scl_files = [f for f in os.listdir(case_path) if f.endswith(f".{file_prefix}")]
             if scl_files:
                 case_list.append((case_name, os.path.join(case_path, scl_files[0])))
 
@@ -176,9 +281,9 @@ def eval_result(folder_path):
 
     for case_name, scl_path in tqdm(case_list, desc=f"Compiling ({exp_name})"):
         with open(scl_path, 'r', encoding='utf-8') as f:
-            scl_code = f.read()
+            st_code = f.read()
 
-        response = compiler.scl_syntax_check(case_name, scl_code)
+        response = compiler.syntax_check(case_name, st_code)
 
         if response.success:
             success_cases += 1
@@ -206,6 +311,7 @@ def eval_result(folder_path):
         "failed_files": failed_files
     }
 
+    print(f"Compiler {compiler_type.capitalize()} Results for {exp_name}:")
     print("\n=== Compilation Summary ===")
     for k, v in summary.items():
         print(f"{k}: {v}")
@@ -272,11 +378,13 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, choices=['compile', 'eval_api'], default='compile')
     parser.add_argument('--folder', type=str, default="data/eval_data")
     parser.add_argument('--gt_file', type=str, help="Path to ground truth API JSON file")
+    parser.add_argument('--compiler', type=str, choices=['codesys', 'tiaportal'], default='codesys',
+                        help="Compiler type to use for evaluation")
     args = parser.parse_args()
 
     if args.mode == 'compile':
         print(f"Start compiling folder: {args.folder}")
-        eval_result(args.folder)
+        eval_result(folder_path=args.folder, compiler_type=args.compiler)
     elif args.mode == 'eval_api':
         if not args.gt_file:
             raise ValueError("--gt_file is required for eval_api mode")

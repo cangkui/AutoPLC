@@ -7,7 +7,7 @@ from common import Config
 from autoplc_st.tools import APIDataLoader
 from autoplc_st.agents.clients import OpenAIClient
 import logging
-from autoplc_st.tools import callCodesys
+from autoplc_st.tools import CodesysCompiler
 logger = logging.getLogger("autoplc_st")
 
 class AutoDebugger():
@@ -66,6 +66,7 @@ class AutoDebugger():
 
         # 初始化验证计数器和编译器实例
         verify_count = 0
+        compiler = CodesysCompiler()
         start_time = time.time()
         
         # 构建验证器的系统提示信息
@@ -91,25 +92,33 @@ class AutoDebugger():
             }
             verify_count += 1
 
-            check_result = callCodesys.codesys_check(task['name'], st_code)
-            no_error = False
-            if len(check_result) == 0:
-                no_error = True
+            check_result = compiler.syntax_check(task['name'], st_code)
+            no_error = check_result.success
             
             if no_error:
                 logger.info(f"{task['name']} SUCCESS!")
                 break
             else:
-                error_list = check_result
+                error_list = []
                 
+                # 首选 Data Section 的错误，因为Data Section 的错误会引发级联错误
+                for error in check_result.errors:
+                    if error.error_type == "Declaration Section Error":
+                        logger.info(f"Declaration Error >>> {str(error)}")
+                        error_list.append(error.to_dict())
+
+                # 如果没有Data Section 的错误，则检查 Program Section 的错误
+                if not error_list:
+                    for error in check_result.errors:
+                        if error.error_type == "Implementation Section Error":
+                            logger.info(f'Implementation Error >>>> {str(error)}')
+                            error_list.append(error.to_dict())
 
                 error_log = '\n'.join([str(err) for err in error_list])
                 logger.info(f'{task["name"]} Start Verification!')
 
-                debugging_process_data["compiler"] = error_list
-                with open(syntax_output_file, "a+", encoding="utf-8") as fp:
-                    fp.write(error_log)
-                    fp.write('\n' + '='*20 + "\n")
+                # 记录所有错误信息
+                debugging_process_data["compiler"] = [error.to_dict() for error in check_result.errors]
             
             verifier_instance_prompt_with_data = verifier_instance_prompt.format(
                 static_analysis_results = error_log,

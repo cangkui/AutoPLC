@@ -100,15 +100,15 @@ class AutoDebugger():
                 
                 # 首选 Data Section 的错误，因为Data Section 的错误会引发级联错误
                 for error in check_result.errors:
-                    if error.error_type == "Data Section Error":
-                        logger.info(f"Data Section Error >>> {str(error)}")
+                    if error.error_type == "Declaration Section Error":
+                        logger.info(f"Declaration Section Error >>> {str(error)}")
                         error_list.append(error.to_dict())
 
                 # 如果没有Data Section 的错误，则检查 Program Section 的错误
                 if not error_list:
                     for error in check_result.errors:
-                        if error.error_type == "Program Section Error":
-                            logger.info(f'Program Section Error >>>> {str(error)}')
+                        if error.error_type == "Implementation Section Error":
+                            logger.info(f'Implementation Section Error >>>> {str(error)}')
                             error_list.append(error.to_dict())
 
                 error_log = '\n'.join([str(err) for err in error_list])
