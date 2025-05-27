@@ -1,0 +1,60 @@
+# 环境变量配置
+environment:
+  rag_data_dir: "{ROOTPATH}/data/rag_data"
+  shot_data_dir: "{ROOTPATH}/data/rag_data/few_shots"
+  log_dir: "{ROOTPATH}/logs"
+  scl_plan: "{ROOTPATH}/data/rag_data/scl/scl_case_plan"
+  instruction_dir: "{ROOTPATH}/data/rag_data/instructions"
+  scl_code_dir: "{ROOTPATH}/data/rag_data/scl/scl_case_code"
+
+# 模型配置
+model:
+  name: "claude-3-5-sonnet-20241022"  # 可选: gpt-4.1, claude-3-5-haiku-20241022, llama3.1-8b-instruct
+  max_tokens: 16384
+  temperature: 0.1
+  top_p: 0.9
+
+# 检索模型配置
+retrieve:
+  model: "glm-4-airx"
+  temperature: 0.1
+  top_p: 0.9
+
+# 模型器设置
+modeler:
+  plan_set_name: "english"
+
+# 验证代理配置
+verify:
+  count: 5
+  openness: "http://192.168.103.245:9000"
+
+# RAG检索配置
+retrieval:
+  case_alternatives:
+    - "LGF_CompareString"
+    - "LGF_BitCount"
+    - "LGF_SinusCI"
+  b25_model: "BM25Okapi"
+
+# 指令配置
+instruction:
+  path:
+    - "{ROOTPATH}/data/rag_data/instructions/scl_brief_keywords.jsonl"
+  score_threshold: 50
+  top_k: 2
+  function_usage_path: "{ROOTPATH}/data/rag_data/scl/scl_functions_usage.json"
+
+# 工作流实验设置
+workflow:
+  retrieve_disabled: true
+  modeling_disabled: false
+  debugger_disabled: true
+  api_rec_disabled : true
+  auto_learn_disabled : true
+  is_coding_fewshot: true
+  is_retrieve_fewshot: false
+  is_modeling_fewshot: false
+  is_debugger_fewshot: false
+  is_api_rec_fewshot: false
+  is_auto_learn_fewshot: false
