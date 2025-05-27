@@ -99,6 +99,8 @@ class CodesysCompiler:
             'Content-Type': 'application/json'
         })
         URL = "http://192.168.103.117:9000/api/v1/pou/workflow"
+        # URL = "http://192.168.103.130:9000/api/v1/pou/workflow"
+        # URL = "http://192.168.103.152:9001/api/v1/pou/workflow"
         json_data = {"BlockName": block_name, "Code": st_code}
         timeout = 30  # Set a reasonable timeout for the request
         try:
@@ -107,7 +109,7 @@ class CodesysCompiler:
             #     url="http://192.168.103.117:9000/api/v1/pou/workflow",
             #     json={"BlockName": block_name, "Code": st_code}
             # )
-            print(resp.json())
+            print(f"{block_name} : ", resp.json())
         
             if resp.status_code != 200:
                 return ResponseData.default_false()
@@ -243,10 +245,12 @@ class TIAPortalCompiler:
                 out_f.write(response.to_json())
 
 
+import os
+import json
+from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-def eval_result(folder_path, compiler_type='codesys'):
-    from tqdm import tqdm
-
+def eval_result(folder_path, compiler_type='codesys', thread_num=1):
     if compiler_type == 'codesys':
         compiler = CodesysCompiler()
         file_prefix = "st"
@@ -255,16 +259,14 @@ def eval_result(folder_path, compiler_type='codesys'):
         file_prefix = "scl"
     else:
         raise ValueError("Unsupported compiler type. Use 'codesys' or 'tiaportal'.")
-    
-    py_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # 创建 compile_results/{exp_name}/
+    py_dir = os.path.dirname(os.path.abspath(__file__))
     exp_name = os.path.basename(os.path.normpath(folder_path))
     save_root = os.path.join(py_dir, "compile_results")
     save_dir = os.path.join(save_root, exp_name)
     os.makedirs(save_dir, exist_ok=True)
 
-    # 预处理出所有文件
+    # 收集所有案例路径
     case_list = []
     for case_name in os.listdir(folder_path):
         case_path = os.path.join(folder_path, case_name)
@@ -279,23 +281,45 @@ def eval_result(folder_path, compiler_type='codesys'):
     total_errors = 0
     failed_files = []
 
-    for case_name, scl_path in tqdm(case_list, desc=f"Compiling ({exp_name})"):
-        with open(scl_path, 'r', encoding='utf-8') as f:
-            st_code = f.read()
+    results = []
 
-        response = compiler.syntax_check(case_name, st_code)
+    def compile_case(case_name, scl_path):
+        try:
+            with open(scl_path, 'r', encoding='utf-8') as f:
+                st_code = f.read()
+            response = compiler.syntax_check(case_name, st_code)
 
-        if response.success:
+            # 保存每个测试样例的 JSON
+            save_path = os.path.join(save_dir, f"{case_name}.json")
+            with open(save_path, 'w', encoding='utf-8') as out_f:
+                out_f.write(response.to_json())
+
+            return {
+                "case_name": case_name,
+                "success": response.success,
+                "error_count": len(response.errors or []) if not response.success else 0
+            }
+        except Exception as e:
+            print(f"[Error] {case_name} 编译失败: {e}")
+            return {
+                "case_name": case_name,
+                "success": False,
+                "error_count": 0
+            }
+
+    with ThreadPoolExecutor(max_workers=thread_num) as executor:
+        futures = {executor.submit(compile_case, name, path): name for name, path in case_list}
+        for future in tqdm(as_completed(futures), total=len(futures), desc=f"Compiling ({exp_name})"):
+            result = future.result()
+            results.append(result)
+
+    for res in results:
+        if res["success"]:
             success_cases += 1
         else:
             failed_cases += 1
-            failed_files.append(case_name)
-            total_errors += len(response.errors or [])
-
-        # 保存每个测试样例的 JSON
-        save_path = os.path.join(save_dir, f"{case_name}.json")
-        with open(save_path, 'w', encoding='utf-8') as out_f:
-            out_f.write(response.to_json())
+            failed_files.append(res["case_name"])
+            total_errors += res["error_count"]
 
     # 汇总信息
     pass_rate = (success_cases / total_cases) * 100 if total_cases else 0
@@ -311,15 +335,14 @@ def eval_result(folder_path, compiler_type='codesys'):
         "failed_files": failed_files
     }
 
-    print(f"Compiler {compiler_type.capitalize()} Results for {exp_name}:")
-    print("\n=== Compilation Summary ===")
+    print(f"\n=== Compilation Summary ({compiler_type}) ===")
     for k, v in summary.items():
         print(f"{k}: {v}")
 
-    # 保存统计信息
     summary_path = os.path.join(save_dir, f"{exp_name}_summary.json")
     with open(summary_path, 'w', encoding='utf-8') as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
+
 
 
 def eval_api_recommendation(task_folder: str, ground_truth_path: str):
@@ -380,11 +403,13 @@ if __name__ == "__main__":
     parser.add_argument('--gt_file', type=str, help="Path to ground truth API JSON file")
     parser.add_argument('--compiler', type=str, choices=['codesys', 'tiaportal'], default='codesys',
                         help="Compiler type to use for evaluation")
+    parser.add_argument('--thread_num', type=int, default=1,
+                        help="Number of threads to use for evaluation")
     args = parser.parse_args()
 
     if args.mode == 'compile':
         print(f"Start compiling folder: {args.folder}")
-        eval_result(folder_path=args.folder, compiler_type=args.compiler)
+        eval_result(folder_path=args.folder, compiler_type=args.compiler, thread_num=args.thread_num)
     elif args.mode == 'eval_api':
         if not args.gt_file:
             raise ValueError("--gt_file is required for eval_api mode")
