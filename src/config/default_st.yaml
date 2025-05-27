@@ -29,6 +29,10 @@ modeler:
 verify:
   count: 3
   openness: "http://192.168.103.152:9000"
+  codesys_ip:
+    - "http://192.168.103.117:9000/api/v1/pou/workflow"
+    - "http://192.168.103.130:9000/api/v1/pou/workflow"
+    - "http://192.168.103.152:9001/api/v1/pou/workflow"
 
 # RAG检索配置
 retrieval:

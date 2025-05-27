@@ -177,7 +177,7 @@ class CodesysCompiler:
         end_idx = min(len(lines), error_line_idx + window_size + 1)
 
         return "\n".join(f"{i + 1:>4}: {lines[i]}" for i in range(start_idx, end_idx))
-    def syntax_check(self, block_name: str, st_code: str) -> ResponseData:
+    def syntax_check(self, block_name: str, st_code: str, ip_port: str) -> ResponseData:
         API_KEY = "admin"  # Default API key, change in production
         # Configure requests session
         session = requests.Session()
@@ -185,7 +185,7 @@ class CodesysCompiler:
             'Authorization': 'ApiKey ' + API_KEY,
             'Content-Type': 'application/json'
         })
-        URL = "http://192.168.103.117:9000/api/v1/pou/workflow"
+        URL = ip_port
         json_data = {"BlockName": block_name, "Code": st_code}
         timeout = 80  # Set a reasonable timeout for the request
         try:

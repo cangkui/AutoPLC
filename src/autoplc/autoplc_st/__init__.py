@@ -101,7 +101,7 @@ def run_autoplc_st(benchmark: str, config: Config, checkpoint_dir: str = None, m
         )
         
         # 提交所有任务
-        future_to_task = {executor.submit(task_processor, task): task for task in tasks}
+        future_to_task = {executor.submit(task_processor, task, idx): (task, idx) for idx, task in enumerate(tasks) }
         
         # 等待所有任务完成
         for future in concurrent.futures.as_completed(future_to_task):
@@ -115,7 +115,7 @@ def run_autoplc_st(benchmark: str, config: Config, checkpoint_dir: str = None, m
     logger.info(f"Experiment completed in {total_time:.2f} seconds.")
 
 
-def _process_task(task: dict, base_folder: str, config: Config, logger):
+def _process_task(task: dict, idx, base_folder: str, config: Config, logger):
     task_name = task["name"]
     task_path = os.path.join(base_folder, task_name)
     
@@ -125,8 +125,10 @@ def _process_task(task: dict, base_folder: str, config: Config, logger):
         return
     
     try:
+
+        ip_port = config.CODESYS_IP[idx % len(config.CODESYS_IP)]
         # 执行任务工作流（注意这里调用的是autoplc_st_workflow）
-        autoplc_st_workflow(task, base_folder, config)
+        autoplc_st_workflow(task, base_folder, config, ip_port)
     except Exception as e:
         logger.error(f"Failed to process task {task_name}: {str(e)}")
         raise  # 重新抛出异常，让主函数知道任务失败
@@ -134,7 +136,8 @@ def _process_task(task: dict, base_folder: str, config: Config, logger):
 def autoplc_st_workflow(
         task: dict, 
         base_folder: str,
-        config:Config
+        config:Config,
+        ip_port: str
     ):
 
     # 检查是否存在对应的 st 文件
@@ -245,7 +248,8 @@ def autoplc_st_workflow(
                 st_code=st_code,
                 max_verify_count=config.VERIFY_COUNT,
                 openai_client=openai_client,
-                load_few_shots=config.IS_DEBUGGER_FEWSHOT
+                load_few_shots=config.IS_DEBUGGER_FEWSHOT,
+                ip_port = ip_port
             )
         else:
             # save st code to file
