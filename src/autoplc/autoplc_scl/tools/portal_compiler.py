@@ -186,7 +186,7 @@ class TIAPortalCompiler():
             error_lines = set()
 
             for err in raw_errors:
-                error_type = "Data Section Error" if err.get("IsDef", False) else "Program Section Error"
+                error_type = "Declaration Section Error" if err.get("IsDef", False) else "Implementation Section Error"
                 code_window = self.extract_code_window(
                     scl_code,
                     {"Path": err["Path"], "IsDef": err["IsDef"]},
