@@ -1,0 +1,85 @@
+Here's the English translation of the natural language requirements for the "IP_CONTROL2" function block:
+
+**Natural Language Requirements: IP_CONTROL2 Function Block**
+
+**Overview**  
+The function block named "IP_CONTROL2" is designed to manage and control TCP/UDP-based network communications. It handles connection establishment, data transmission/reception, and monitors timeout and error states. The function block uses a state machine to manage the network connection lifecycle and provides real-time feedback on connection status.
+
+**Variable Definitions**  
+The code defines the following variable categories:  
+- **Input/Output Variables**:  
+  - `IP_C` (IP control management structure)  
+  - `S_BUF` (external send buffer)  
+  - `R_BUF` (external receive buffer)  
+- **Input Variables**:  
+  - `IP` (IP address)  
+  - `PORT` (port number)  
+  - `TIME_OUT` (timeout duration for connection/send/receive operations)  
+- **Internal Variables**:  
+  - Tracks connection, send, and receive timings, states, buffer positions, etc.  
+- **Constants**:  
+  - Defines state machine states and error codes  
+
+**Main Logic Sections**  
+
+1. **Initialization Region**  
+   - Retrieves current system time (`tx := OSCAT_BASIC.T_PLC_MS()`).  
+   - Checks if the port in `IP_C.C_PORT` is set; if not, initializes it using the input `PORT`.  
+   - Verifies if `IP_C.C_IP` (IP address) is set and `IP_C.C_MODE` (connection mode) is <4; if not, initializes using input `IP`.  
+   - Detects new connection parameters by comparing current values (`c_ip`, `c_mode`, `c_port`) with `IP_C` structure values. If changes exist, sets `new_connection` to TRUE.  
+   - Enables connection (`c_enable`) if `IP_C.C_ENABLE` is TRUE and no new parameters exist.  
+   - If `IP_C.C_ENABLE` is TRUE, no errors (`IP_C.ERROR = 0`), and current state is "STOP":  
+     - Initializes connection parameters (`c_ip`, `c_mode`, `c_port`).  
+     - Sets initial state based on connection mode:  
+       - UDP mode (`C_MODE.0 = TRUE`) → `UDP_INIT` state.  
+       - TCP mode (`C_MODE = 0`) → `TC_INIT` state.  
+       - Otherwise → `TS_INIT` state (TCP server mode).  
+   - Initializes receive/send buffer sizes and sets `error_time` to the larger of `TIME_OUT` or 200ms.  
+
+2. **Timeout Reset Region**  
+   - Resets connection (`c_time`), send (`s_time`), and receive (`r_time`) timestamps to current time (`tx`) if `IP_C.TIME_RESET` is TRUE.  
+   - Clears status/error codes for connection, send, and receive operations (`c_status`, `s_status`, `r_status`).  
+
+3. **State Machine Region**  
+   - **UDP_INIT**:  
+     - Creates UDP socket. On failure (`socket < 0`), sets `c_status := 1` and transitions to `C_CLOSE`.  
+     - On success, configures socket options (`SysSockSetOption`, `SysSockIoctl`) and initializes `sockaddr`.  
+     - For UDP server mode (`c_mode >= 2`), binds socket (`SysSockBind`). On success, sets `c_ready := TRUE` and enters `C_WAIT`; otherwise, sets `c_status := 2` and enters `C_CLOSE`.  
+   - **TC_INIT**:  
+     - Creates TCP socket. On failure, sets `c_status := 1` and enters `C_CLOSE`.  
+     - On success, configures socket options and initializes `sockaddr`, then enters `TC_CONNECT`.  
+   - **TC_CONNECT**:  
+     - Attempts TCP connection (`SysSockConnect`). On success, sets `c_ready := TRUE` and enters `C_WAIT`; otherwise, enables non-blocking mode and waits.  
+   - **TS_INIT**:  
+     - Creates TCP server socket. On failure (`server_socket = SOCKET_INVALID`), sets `c_status := 1` and enters `C_CLOSE`.  
+     - On success, binds/listens socket. On bind/listen failure, sets `c_status := 2/3` and enters `C_CLOSE`; otherwise, enters `TS_OPEN`.  
+   - **TS_OPEN**:  
+     - Accepts client connection (`SysSockAccept`). On success (`socket <> SOCKET_INVALID`), sets `c_ready := TRUE` and enters `C_WAIT`.  
+   - **C_WAIT**:  
+     - Monitors connection validity. If disabled (`NOT c_enable`) or not ready (`NOT c_ready`), enters `C_CLOSE`.  
+   - **C_CLOSE**:  
+     - Closes sockets (`SysSockClose`) and returns to "STOP" state.  
+
+4. **Connection Status Feedback Region**  
+   - If connected (`c_ready = TRUE`), sets `IP_C.C_STATE := 254` (connected) and resets time (`IP_C.TIME_RESET := TRUE`).  
+   - If disconnected, sets `IP_C.C_STATE := 1` (not connected) and resets `IP_C.MAILBOX`/send buffer.  
+
+5. **Data Reception Region**  
+   - Receives data from socket to `R_BUF` if connected and no active send (`NOT s_active`).  
+   - Updates `r_time` and `IP_C.MAILBOX[1]` on success; on failure, sets `c_status := 253` and disconnects (`c_ready := FALSE`).  
+
+6. **Data Transmission Region**  
+   - Sends data from `S_BUF` if connected (`c_ready = TRUE`) and buffer non-empty (`S_BUF.SIZE > 0`).  
+   - Updates `s_time` on success; on failure, sets `c_status := 253` and disconnects.  
+
+7. **Timeout Monitoring Region**  
+   - Checks for timeouts in connection (`c_time`), send (`s_time`), or receive (`r_time`).  
+   - Sets respective error codes (`c_status`, `s_status`, `r_status := 255`) if timeout occurs (`tx - [operation]_time > error_time`).  
+
+8. **Error Handling Region**  
+   - Merges connection/send/receive error codes into `IP_C.ERROR` for external use:  
+     ```  
+     IP_C.ERROR := OSCAT_BASIC.DWORD_OF_BYTE(c_status, s_status, r_status, 0)  
+     ```  
+
+This translation maintains technical accuracy while ensuring clarity for English-speaking developers. Let me know if you'd like any refinements!

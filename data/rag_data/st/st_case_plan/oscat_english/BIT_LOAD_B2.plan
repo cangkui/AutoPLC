@@ -1,0 +1,26 @@
+Natural Language Requirement:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function `BIT_LOAD_B2` is designed for byte-level bit manipulation. Depending on the value of the input parameter `D`, the function performs different bit operations and ultimately returns a processed byte.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - Input variables:  
+    - `I`: A byte (BYTE), representing the raw data to be processed.  
+    - `D`: A Boolean value (BOOL), determining which bit operation to execute.  
+    - `P`: An integer (INT), specifying the number of rotation bits.  
+    - `N`: An integer (INT), specifying the number of shift bits.  
+
+- Main Logic  
+  - The core logic of the function selects different bit operations based on the input parameter `D`:  
+    - If `D` is `TRUE`, the following operations are performed:  
+      1. `SHR(BYTE#255, 8 - N)`: Shifts the byte `255` right by `8 - N` bits to generate a mask.  
+      2. `ROR(I, P)`: Rotates the input byte `I` right by `P` bits.  
+      3. Performs a bitwise OR operation (`OR`) on the results from steps 1 and 2 to produce a new byte.  
+      4. Finally, rotates the result left by `P` bits (`ROL`) to obtain the final output byte.  
+    - If `D` is `FALSE`, the following operations are performed:  
+      1. `SHL(BYTE#255, N)`: Shifts the byte `255` left by `N` bits to generate a mask.  
+      2. `ROR(I, P)`: Rotates the input byte `I` right by `P` bits.  
+      3. Performs a bitwise AND operation (`AND`) on the results from steps 1 and 2 to produce a new byte.  
+      4. Finally, rotates the result left by `P` bits (`ROL`) to obtain the final output byte.  
+
+  - Output  
+    - The function returns a byte processed through bit manipulation, with the specific result determined by the values of input parameters `D`, `P`, and `N`.", "name": "BIT_LOAD_B2"}

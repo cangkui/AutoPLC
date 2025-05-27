@@ -1,0 +1,21 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function is named `STRING_TO_URL` and is used to parse a string into a URL structure. It takes a string, a default protocol, and a default path as input, and returns a URL structure containing the protocol, user, password, domain, port, path, query, and anchor.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: `STR` (the string to be parsed), `DEFAULT_PROTOCOL` (default protocol), `DEFAULT_PATH` (default path).  
+ - Local variables: `pos` and `pos2` (used to store search positions), `x` (temporarily stores processed strings).  
+
+- Main Logic  
+ -- REGION Protocol Parsing:  
+    First, checks if the input string is empty. If empty, returns immediately. Otherwise, searches for `://` in the string. If found, extracts the protocol part and stores the remaining part in temporary variable `x`. If `://` is not found, uses the default protocol and stores the entire string in `x`.  
+ -- REGION User and Password Parsing:  
+    Searches for the `@` symbol in temporary variable `x`. If found, further checks for a colon `:` to distinguish between username and password. If a colon is found, extracts the username and password separately; otherwise, only extracts the username. If no `@` is found, sets both username and password to empty.  
+ -- REGION Anchor Parsing:  
+    Searches for the `#` symbol in temporary variable `x`. If found, extracts the anchor part and stores the remaining part back in `x`. If no `#` is found, sets the anchor to empty.  
+ -- REGION Query Parsing:  
+    Searches for the `?` symbol in temporary variable `x`. If found, extracts the query part and stores the remaining part back in `x`. If no `?` is found, sets the query to empty.  
+ -- REGION Path Parsing:  
+    Searches for the `/` symbol in temporary variable `x`. If found, extracts the path part and stores the remaining part back in `x`. If no `/` is found, uses the default path.  
+ -- REGION Domain and Port Parsing:  
+    Searches for the `:` symbol in temporary variable `x`. If found, extracts the port number and stores the domain part in the URL structure. If no `:` is found, sets the port to 0 and treats the entire `x` as the domain.", "name": "STRING_TO_URL"}

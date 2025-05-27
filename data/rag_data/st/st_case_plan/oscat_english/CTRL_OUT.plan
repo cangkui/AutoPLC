@@ -1,0 +1,19 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThis functional block is named `CTRL_OUT` and is used to control output signals. It generates an output signal based on input signals, manual input, an offset, and upper/lower limits, while also checking whether the output exceeds the defined range.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: `CI` (control input), `OFFSET` (offset value), `MAN_IN` (manual input), `LIM_L` (lower limit), `LIM_H` (upper limit), `MANUAL` (manual mode flag).  
+ - Output variables: `Y` (output value), `LIM` (flag indicating if limits are exceeded).  
+
+- Main Logic  
+-- REGION: Calculate Output Value  
+   - First, the `SEL` function is used to select the input signal based on the `MANUAL` flag. If `MANUAL` is true, `MAN_IN` is selected as the input; otherwise, `CI` is chosen.  
+   - The selected input value is then added to `OFFSET` to produce the output value `Y`.  
+
+-- REGION: Check Limit Range  
+   - The output value `Y` is checked to see if it lies between `LIM_L` and `LIM_H`. If `Y` is within bounds, the `LIM` flag is set to `FALSE`, indicating no limit violation.  
+   - If `Y` exceeds the range, the `LIMIT` function clamps `Y` to stay within `LIM_L` and `LIM_H`, and the `LIM` flag is set to `TRUE`, indicating a limit violation.  
+
+- Summary  
+The primary purpose of this functional block is to compute the output value based on manual mode and offset, then verify whether the output exceeds preset limits. If it does, the output is constrained within bounds, and a corresponding flag is set.", "name": "CTRL_OUT"}

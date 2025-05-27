@@ -1,0 +1,32 @@
+Natural Language Requirements:  
+
+```json
+{
+  "variables": [],  
+  "instructions": [],  
+  "planning": "- Overview\nThe function block `_BUFFER_INSERT` is used to insert a string into a buffer at a specified position and returns the result after insertion. It makes space for the new string by shifting existing data in the buffer and then inserts the string at the designated location.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - **Input Variables**:  
+   - `STR`: The string to be inserted, of type `STRING[STRING_LENGTH]`.  
+   - `POS`: The insertion position, of type `INT`.  
+   - `PT`: A pointer to the buffer, of type `POINTER TO ARRAY[0..32767] OF BYTE`.  
+   - `SIZE`: The size of the buffer, of type `UINT`.  
+ - **Internal Variables**:  
+   - `end`: The end position of insertion, of type `INT`.  
+   - `lx`: The length of the string, of type `INT`.  
+   - `i`: A loop counter, of type `INT`.  
+
+- Main Logic  
+-- **REGION: Shift Buffer Data**  
+   First, the length of the string `lx` is calculated, and the insertion end position `end` (i.e., `pos + lx`) is determined. Then, starting from the end of the buffer, data is shifted backward to create space for the new string. The loop runs from the last element of the buffer (`size - 1`) to the insertion end position `end`, assigning the value of the current element to the element at position `i - lx`.  
+-- **REGION: Insert String**  
+   The function `_STRING_TO_BUFFER` is called to insert the string `str` into the buffer `pt` at the specified position `pos`, with the buffer size `size` passed as an argument. The return value of this function serves as the return value of `_BUFFER_INSERT`.  
+
+- Output  
+The return value of the function block is the return value of `_STRING_TO_BUFFER`, indicating the result of the string insertion operation."
+}
+```  
+
+**Name**: `_BUFFER_INSERT`

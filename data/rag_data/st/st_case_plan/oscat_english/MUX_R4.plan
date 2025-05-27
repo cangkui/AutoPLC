@@ -1,0 +1,6 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\n  This is a function named `MUX_R4`, which selects one output from four real-number inputs (`IN0`, `IN1`, `IN2`, `IN3`) based on two selection signals (`A0` and `A1`). The function implements a 4-to-1 multiplexer.  
+
+- Variable Definitions\n  The code defines the following types of variables:\n  - Input variables: `IN0`, `IN1`, `IN2`, `IN3` (four real-number inputs), `A0`, `A1` (two Boolean selection signals).\n  - Output variable: `MUX_R4` (the function's return value, a real number).  
+
+- Main Logic\n  -- REGION Selection Logic\n     - First, check the value of selection signal `A1`:\n       - If `A1` is `TRUE`, further check the value of `A0`:\n         - If `A0` is `TRUE`, select `IN3` as the output.\n         - If `A0` is `FALSE`, select `IN2` as the output.\n       - If `A1` is `FALSE`, further check the value of `A0`:\n         - If `A0` is `TRUE`, select `IN1` as the output.\n         - If `A0` is `FALSE`, select `IN0` as the output.\n     - Finally, the selected value is assigned to `MUX_R4` as the function's return value.", "name": "MUX_R4"}

@@ -24,4 +24,4 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint_dir", type=str, default=None, help="checkpoint where the task is saved")
     args = parser.parse_args()
     
-    run_autoplc_st(benchmark=args.benchmark, config=Config(config_file=args.config), checkpoint_dir=args.checkpoint_dir)
+    run_autoplc_st(benchmark=args.benchmark, config=Config(config_file=args.config), checkpoint_dir=args.checkpoint_dir, max_workers=1)

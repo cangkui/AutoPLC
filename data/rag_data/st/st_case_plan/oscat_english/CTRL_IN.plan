@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\n  This code defines a function named `CTRL_IN` to calculate the control input value. It is based on the deviation between the setpoint (`SET_POINT`) and the actual value (`ACTUAL`), while the `DEAD_ZONE` function handles the impact of noise (`NOISE`).\n\n- Variable Definitions\n  The code defines the following types of variables:\n  - Input variables: `SET_POINT` (setpoint), `ACTUAL` (actual value), `NOISE` (noise threshold).\n  - Output variable: `CTRL_IN` (control input value).\n\n- Main Logic Section\n  -- REGION Main Logic:\n     - First, calculate the deviation between the setpoint and the actual value: `SET_POINT - ACTUAL`.\n     - Then, pass the deviation value to the `DEAD_ZONE` function along with the noise threshold `NOISE`. The `DEAD_ZONE` function eliminates portions of the deviation smaller than the noise threshold, preventing noise from interfering with the control input.\n     - Finally, assign the return value of the `DEAD_ZONE` function to `CTRL_IN` as the final control input value.\n\n- Summary\n  The core logic of this function involves filtering noise from the deviation using the `DEAD_ZONE` function, ensuring the control input remains unaffected by minor noise. This approach is common in control systems, improving stability and noise resistance.",
+  "name": "CTRL_IN"
+}
+```

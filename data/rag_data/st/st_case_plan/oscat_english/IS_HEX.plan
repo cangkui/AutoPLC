@@ -1,0 +1,10 @@
+Natural Language Requirements:  
+
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThis function, named `IS_HEX`, is used to check whether a string consists solely of valid hexadecimal characters (0-9, A-F, a-f). If all characters in the string are valid hexadecimal characters, the function returns `TRUE`; otherwise, it returns `FALSE`.\n\n- Variable Definitions\nThe code defines the following types of variables:\n  - Input variable: `str`, a string-type variable representing the string to be checked.\n  - Internal variables:\n    - `L`: An integer representing the length of the string.\n    - `pt`: A byte pointer used to traverse each character in the string.\n    - `pos`: An integer used for loop counting, indicating the current character position being processed.\n\n- Main Logic\n  -- REGION Initialization:\n    First, the pointer `pt` is initialized to the address of the string `str` to access each character. Then, the `LEN` function is used to obtain the string length, which is stored in the variable `L`.\n\n  -- REGION Character Check:\n    A `FOR` loop is used to iterate through each character in the string. The loop starts from 1 and continues until the string length `L`. In each iteration, the `ISC_HEX` function (a hypothetical existing function) checks whether the current character is a valid hexadecimal character (0-9, A-F, a-f).\n    If any character is found to be invalid, the function immediately returns `FALSE`, indicating that the string is not a valid hexadecimal string.\n\n  -- REGION Result Return:\n    If the loop completes without finding any invalid characters and the string length `L` is greater than 0, the function returns `TRUE`, confirming that the string is a valid hexadecimal string. If the string length is 0, the function also returns `FALSE` because an empty string contains no valid hexadecimal characters.\n\n- Summary\nThis function determines whether a string is a valid hexadecimal string by checking each character. If the string is empty or contains non-hexadecimal characters, it returns `FALSE`; otherwise, it returns `TRUE`.",
+  "name": "IS_HEX"
+}
+```

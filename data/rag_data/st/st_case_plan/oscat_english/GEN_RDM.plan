@@ -1,0 +1,23 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block is named `GEN_RDM` and is used to generate an output value based on a random number. It controls the update frequency of the output via a timer, generating a new random number each time the timer reaches the set interval. This random number is then scaled and offset before being output.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - Input variables: `PT` (timer period, type `TIME`), `AM` (amplitude, type `REAL`, default value 1), `OS` (offset, type `REAL`).  
+  - Output variables: `Q` (Boolean, indicates whether a new output is generated), `Out` (the generated random number output, type `REAL`).  
+  - Internal variables: `tx` (current time interval, type `TIME`), `last` (last update time, type `TIME`), `init` (initialization flag, type `BOOL`).  
+
+- Main Logic  
+  -- REGION Initialization  
+     When the function block runs for the first time, `init` is `FALSE`, triggering the initialization logic. It sets `init` to `TRUE`, records the current time in `last`, and resets `tx` to `t#0s`, indicating the time interval starts from zero.  
+
+  -- REGION Timer Logic  
+     Calculates the current time interval `tx`, which is the difference between `last` and the current time. If `tx` is greater than or equal to the set period `PT`, the following actions are performed:  
+     1. Updates `last` to `last + PT`, marking the next update time.  
+     2. Subtracts `PT` from `tx`, retaining the remaining time interval.  
+     3. Generates a random number `RDM(0)` (range 0 to 1) and computes the output using the formula `Out = AM * (RDM(0) - 0.5) + OS`. Here, `AM` controls the amplitude of the random number, and `OS` controls the offset.  
+     4. Sets `Q` to `TRUE`, indicating a new random number has been output.  
+     If `tx` is less than `PT`, `Q` is set to `FALSE`, indicating no new output was generated.  
+
+  -- REGION Output Result  
+     Each time the timer reaches the set interval, `Out` outputs the scaled and offset random number, and `Q` is set to `TRUE`. Otherwise, `Q` remains `FALSE`.", "name": "GEN_RDM"}

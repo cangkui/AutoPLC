@@ -1,0 +1,26 @@
+Natural Language Requirements:  
+
+{"variables": [], "instructions": [], "planning": "- Overview\nThis is a simple function block called `FUNCTION OFFSET2`, designed to adjust the input value `X` based on boolean conditions and offset values. If the default condition `D` is true, the function directly uses the default value `default`. Otherwise, it applies offset adjustments to `X` according to other boolean conditions `O1` to `O4` and their corresponding offset values `Offset_1` to `Offset_4`, ultimately producing the output.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: `X` (original value), `O1` to `O4` (boolean conditions), `D` (default condition), `Offset_1` to `Offset_4` (offset values), `default` (default value).  
+ - Output variable: `OFFSET2` (final result).  
+
+- Main Logic  
+-- REGION Default Value Handling  
+   First, the default condition `D` is checked. If `D` is true, the output `OFFSET2` is set directly to the default value `default`. If `D` is false, `OFFSET2` is initialized with the input value `X`.  
+
+-- REGION Offset Value Handling  
+   After handling the default condition, `OFFSET2` is further adjusted based on the boolean conditions `O1` to `O4`:  
+   - If `O4` is true, `OFFSET2` is increased by `Offset_4`.  
+   - If `O3` is true, `OFFSET2` is increased by `Offset_3`.  
+   - If `O2` is true, `OFFSET2` is increased by `Offset_2`.  
+   - If `O1` is true, `OFFSET2` is increased by `Offset_1`.  
+   These conditions are processed in order of priority, with `O4` having the highest priority and `O1` the lowest.  
+
+- Output  
+Finally, the value of `OFFSET2` is output after adjustments based on the default condition and offset conditions.  
+
+Summary:  
+The core logic of this function block involves adjusting the input value `X` using boolean conditions and offsets. The default condition `D` has the highest priority—if true, the default value `default` is used. Otherwise, offsets corresponding to conditions `O1` to `O4` are applied sequentially, and the final result is output.", "name": "OFFSET2"}

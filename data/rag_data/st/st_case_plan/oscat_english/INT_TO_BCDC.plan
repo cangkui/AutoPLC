@@ -1,0 +1,22 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThis code defines a function named `INT_TO_BCDC` that converts an integer (`INT`) into a Binary-Coded Decimal (BCD) formatted byte (`BYTE`). BCD is a method where each digit of a decimal number is individually encoded into binary.  
+
+- Variable Definitions  
+The code defines one type of variable:  
+ - Input variable: `IN`, of type `INT`, representing the integer to be converted.  
+
+- Main Logic Section  
+-- REGION Conversion Logic  
+   The function's logic is as follows:  
+   1. First, divide the input integer `IN` by 10 to obtain the tens digit value and convert it to a byte (`BYTE`). This is achieved via `INT_TO_BYTE(IN / INT#10)`.  
+   2. Then, left-shift the resulting tens digit byte by 4 bits (`SHL` operation) to make space for the units digit. In BCD encoding, the tens digit occupies the upper 4 bits of the byte.  
+   3. Next, compute the modulus of the input integer `IN` with 10 to obtain the units digit value and convert it to a byte (`BYTE`). This is done via `INT_TO_BYTE(IN MOD INT#10)`.  
+   4. Finally, perform a bitwise OR (`OR`) operation between the left-shifted tens digit byte and the units digit byte to merge them into a single byte. This byte is the BCD-encoded result, which the function returns.  
+
+   For example, if the input is `IN = 45`:  
+   - `45 / 10 = 4` (tens digit), converted to a byte as `00000100`.  
+   - After left-shifting by 4 bits, it becomes `01000000`.  
+   - `45 MOD 10 = 5` (units digit), converted to a byte as `00000101`.  
+   - The merged result is `01000101`, which is the BCD encoding for `45`.  
+
+   The function's return value is the computed result above.", "name": "INT_TO_BCDC"}

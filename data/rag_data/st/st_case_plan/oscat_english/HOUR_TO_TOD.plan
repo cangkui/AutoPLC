@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\n  This code implements a function called `HOUR_TO_TOD`, which converts hours (of type `REAL`) to a time-of-day type (`TOD`, Time of Day). `TOD` is a data type used in Siemens PLCs to represent time within a day, typically measured in milliseconds.\n\n- Variable Definitions\n  The code defines the following variables:\n  - Input variable: `IN`, of type `REAL`, representing the input hours.\n  - Output variable: `HOUR_TO_TOD`, of type `TOD`, representing the converted time.\n\n- Main Logic\n  -- REGION Main Logic\n     The function's logic is very straightforward and consists of the following steps:\n     1. Multiply the input hours (`IN`) by `3600000` to convert hours to milliseconds. Since `1 hour = 3600 seconds` and `1 second = 1000 milliseconds`, then `1 hour = 3600 * 1000 = 3600000 milliseconds`.\n     2. Convert the result from `REAL` type to `DWORD` type using the `REAL_TO_DWORD` function.\n     3. Convert the `DWORD` type result to `TOD` type using the `DWORD_TO_TOD` function.\n     4. Assign the final result to the output variable `HOUR_TO_TOD`.\n\n     For example, if the input is `IN = 1.5`, the calculation process is as follows:\n     - `1.5 * 3600000 = 5400000` (representing 1.5 hours = 5,400,000 milliseconds).\n     - Convert `5400000` to `DWORD` type.\n     - Convert the `DWORD` result to `TOD` type, representing a time of 1 hour and 30 minutes.\n\n     The core idea of this function is to represent time by converting hours to milliseconds and then converting that to the `TOD` type.",
+  "name": "HOUR_TO_TOD"
+}
+```

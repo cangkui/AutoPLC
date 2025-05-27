@@ -1,0 +1,10 @@
+Natural Language Requirements:  
+
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThe function named `FINDB_NUM` is used to search backward from the end of an input string to find the position of the first numeric digit or decimal point (`.`). If found, it returns the index of that position; if not found, it returns 0.\n\n- Variable Definitions\nThe code defines the following types of variables:\n  - Input variable: `str`, of type `STRING`, representing the input string.\n  - Local variables:\n    - `pos`, of type `INT`, used to record the current character position being checked.\n    - `pt`, of type `POINTER TO BYTE`, used to point to a character in the string.\n\n- Main Logic\n  -- REGION Initialization\n    - First, calculate the address of the last character in the string and assign it to the pointer `pt`. The implementation is `pt := ADR(str) + LEN(str) - 1`, where `ADR(str)` retrieves the starting address of the string, and `LEN(str)` retrieves the string's length.\n    - Initialize `pos` to the length of the string, indicating that the check starts from the last character.\n\n  -- REGION Search Logic\n    - Use a `FOR` loop to traverse the string backward from the last character to the first.\n    - In each iteration, check whether the character pointed to by `pt` is a digit (ASCII value between 47 and 58) or a decimal point (ASCII value 46).\n      - If a matching character is found, assign the current position `pos` to the function's return value `FINDB_NUM` and return immediately.\n      - If not found, move the pointer `pt` backward by one byte and continue checking the previous character.\n    - If no matching character is found after the loop completes, return 0.\n\n  -- REGION Return Result\n    - If a digit or decimal point is found, return its position index.\n    - If not found, return 0.\n\n- Summary\nThis function efficiently locates the first numeric digit or decimal point by traversing the string backward. This design is suitable for scenarios requiring backward searches, such as parsing version numbers in filenames or numeric segments in paths.",
+  "name": "FINDB_NUM"
+}
+```

@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThis code is a function block written in SCL, named 'FT_PID', which implements the Proportional-Integral-Derivative (PID) control algorithm. The PID controller adjusts its output through three components—proportional, integral, and derivative—to minimize the error between the input and the setpoint.\n\n- Variable Definitions\nThe code defines the following types of variables:\n - Input variables: Input value (IN), proportional gain (KP), integral time constant (TN), derivative time constant (TV), integral lower limit (ILIM_L), integral upper limit (ILIM_H), integral enable (IEN), and reset (RST).\n - Output variables: Output value (Y) and integral limit flag (LIM).\n - Internal variables: Integrator (integ) and differentiator (diff).\n\n- Main Logic Section\n-- REGION Integrator Handling\n   First, it checks whether the integral time constant (TN) is greater than 0. If true, it calls the integrator function block (FT_INT), using the input value (IN) divided by the integral time constant (TN) as the integral gain. It also passes the integral enable (IEN) and reset (RST) signals to the integrator while setting its output lower and upper limits. If the integral time constant (TN) is not greater than 0, the integrator is reset.\n-- REGION Differentiator Handling\n   It calls the differentiator function block (FT_DERIV), multiplying the input value (IN) by the derivative time constant (TV) as the derivative gain, and calculates the differentiator's output.\n-- REGION Output Calculation\n   It computes the PID controller's output value (Y) as the sum of the proportional gain (KP) multiplied by the integrator output, the differentiator output, and the input value (IN).\n-- REGION Integral Limit Flag\n   The integrator's limit flag (LIM) is passed to the output variable (LIM).",
+  "name": "FT_PID"
+}
+```

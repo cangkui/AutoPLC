@@ -1,0 +1,27 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block named `AIN1` is designed to process input signals and generate corresponding output signals. It is primarily used for analog signal conversion and processing, including error detection, overflow detection, sign bit handling, and linear mapping of signal ranges.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: Input signal, sign bit, error bit, error code enable, error code, overflow bit, overflow code enable, overflow code, start bit, end bit, output minimum, output maximum, code minimum, code maximum, error output value, overflow output value.  
+ - Output variables: Output signal, sign bit status, error status, overflow status.  
+ - Internal variables: Temporary variable `tB`, used to store intermediate calculation results.  
+
+- Main Logic  
+-- REGION Error Detection  
+First, the function block checks whether the input signal contains an error. By right-shifting the input signal by `error_bit` bits and performing a bitwise AND with `16#0000_0001`, it determines if the error bit is 1. If the error bit is 1 or if `error_code_en` is true and `error_code` matches the input signal, `error` is set to true, the output `out` is set to `error_output`, and the function returns immediately without executing subsequent logic.  
+
+-- REGION Temporary Variable Calculation  
+If no error is detected, the function block calculates the temporary variable `tB`. By left-shifting the input signal by `31 - Bit_N` bits and then right-shifting it by `31 - Bit_N + Bit_0` bits, it extracts the valid bits between `Bit_0` and `Bit_N` and stores them in `tB`.  
+
+-- REGION Overflow Detection  
+The function block checks for overflow in the input signal. By right-shifting the input signal by `overflow_bit` bits and performing a bitwise AND with `16#0000_0001`, it determines if the overflow bit is 1. If the overflow bit is 1, or if `overflow_code_en` is true and `overflow_code` matches the input signal, or if `tB` is less than `code_min` or greater than `code_max`, `overflow` is set to true, the output `out` is set to `overflow_output`, and the function returns immediately without further processing.  
+
+-- REGION Sign Bit Handling  
+If no overflow is detected, the function block processes the sign bit. By right-shifting the input signal by `sign_bit` bits and performing a bitwise AND with `16#0000_0001`, it checks if the sign bit is 1. If the sign bit is 1, `sign` is set to true.  
+
+-- REGION Output Signal Calculation  
+Finally, the function block converts `tB` into the output signal `out`. It linearly maps `tB` from the range `code_min` to `code_max` to the range `out_min` to `out_max` to generate the output signal. If `sign` is true, the output signal is inverted.  
+
+- Summary  
+Through a series of logical steps, this function block converts the input signal into an output signal while detecting errors and overflow, handling the sign bit, and ultimately producing the desired output signal.", "name": "AIN1"}

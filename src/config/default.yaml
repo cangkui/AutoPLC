@@ -28,7 +28,7 @@ modeler:
 # 验证代理配置
 verify:
   count: 5
-  openness: "http://192.168.103.245:9000"
+  openness: "http://192.168.103.152:9000"
 
 # RAG检索配置
 retrieval:

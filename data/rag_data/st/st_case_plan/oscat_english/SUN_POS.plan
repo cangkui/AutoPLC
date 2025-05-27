@@ -1,0 +1,34 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block is named `SUN_POS` and is used to calculate the position of the sun for a given geographic location (latitude and longitude) and Coordinated Universal Time (UTC). The outputs include the sun's azimuth angle (B), solar elevation angle (H), and the solar elevation angle adjusted for atmospheric refraction (HR).  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - Input variables: Latitude (`latitude`), longitude (`longitude`), and UTC time (`utc`).  
+  - Output variables: Solar azimuth angle (`B`), solar elevation angle (`H`), and refraction-adjusted solar elevation angle (`HR`).  
+  - Internal variables: Various intermediate calculation variables, such as Earth's rotation angle (`g`), solar declination (`d`), obliquity of the ecliptic (`e`), and hour angle (`tau`).  
+
+- Main Logic  
+  -- REGION Calculate Sun Position:  
+    1. **Time-Related Calculations**:  
+       - Calculate the number of days (`n`) from the reference time (January 1, 2000) to the current time.  
+       - Compute Earth's rotation angle (`g`) and solar declination (`d`). The solar declination calculation accounts for the Earth's elliptical orbit and seasonal variations.  
+       - Calculate the obliquity of the ecliptic (`e`), representing the tilt of Earth's rotational axis relative to the ecliptic plane.  
+
+    2. **Solar Declination and Right Ascension Calculations**:  
+       - Compute the sine and cosine of solar declination (`sin_d`, `cos_d`).  
+       - Calculate the sun's right ascension (`a`), indicating its position in the equatorial coordinate system.  
+       - Determine the sun's declination (`c`), representing its height in the equatorial coordinate system.  
+
+    3. **Hour Angle Calculation**:  
+       - Compute the hour angle (`tau`), representing the sun's angle relative to the local meridian. The calculation considers longitude and time effects.  
+
+    4. **Solar Elevation and Azimuth Angle Calculations**:  
+       - Calculate the solar elevation angle (`h`), indicating the sun's angle relative to the horizon.  
+       - Determine the solar azimuth angle (`B`), representing the sun's angle relative to true north.  
+       - If the solar elevation angle exceeds 180 degrees, adjust its range by subtracting 360 degrees.  
+
+    5. **Refraction-Adjusted Solar Elevation Calculation**:  
+       - Call the `REFRACTION` function to account for atmospheric refraction based on the solar elevation angle (`h`). Add this effect to the solar elevation angle to obtain the refraction-adjusted solar elevation angle (`HR`).  
+
+- Summary  
+This function block accurately calculates the sun's position for a given geographic location and time using a series of astronomical formulas and mathematical computations. The outputs include the sun's azimuth and elevation angles, with adjustments for atmospheric refraction. It is suitable for applications requiring solar position data, such as solar energy system design and astronomical observations.", "name": "SUN_POS"}

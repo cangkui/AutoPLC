@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\n  This code implements a function called `LIST_LEN`, which counts the occurrences of a specific separator `SEP` in the string `LIST`. The function returns the number of separators found.\n\n- Variable Definitions\n  The code defines the following types of variables:\n  - Input variable: `SEP`, representing the separator, of type `BYTE`.\n  - Input/output variable: `LIST`, the string to be processed, of type `STRING`, with a length of `LIST_LENGTH`.\n  - Internal variables:\n    - `pt`, a pointer to `LIST`, of type `^ARRAY[1..LIST_LENGTH] OF BYTE`.\n    - `pos`, the current processing position, of type `INT`, initialized to `1`.\n    - `c`, the currently processed character, of type `BYTE`.\n\n- Main Logic\n  -- REGION Initialization\n    First, the pointer `pt` is set to the address of the string `LIST`, and `LIST_LEN` is initialized to `0`, indicating no separators have been found yet.\n\n  -- REGION Traversing the String\n    A `REPEAT` loop is used to iterate through each character in the string `LIST`:\n    - The current character `c` is read from `LIST` as `pt^[pos]`.\n    - If `c` equals the separator `SEP`, `LIST_LEN` is incremented by `1`, indicating a separator has been found.\n    - `pos` is incremented by `1` to move to the next character.\n    The loop continues until encountering the string terminator `0` or exceeding the string length `LIST_LENGTH`.\n\n  -- REGION Returning the Result\n    After the loop ends, the value of `LIST_LEN` represents the number of separators `SEP` in the string `LIST`, and the function returns this value.",
+  "name": "LIST_LEN"
+}
+```

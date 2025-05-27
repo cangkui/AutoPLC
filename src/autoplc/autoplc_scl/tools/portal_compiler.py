@@ -172,7 +172,7 @@ class TIAPortalCompiler():
         """
         t1 = time.time()
         resp = requests.post(
-            url="http://192.168.103.245:9000/api/tiaapi/process",
+            url="http://192.168.103.152:9000/api/tiaapi/process",
             json={"BlockName": block_name, "Code": scl_code}
         )
         logger.info(f"TIA Compiler Time usage: {(time.time() - t1):.2f}")

@@ -1,0 +1,36 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function, named `DATE_ADD`, is designed to add a specified number of days, weeks, months, and years to a given date and return the newly calculated date. It achieves this by incrementally adjusting the year, month, and day of the date.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - **Input Variables**:  
+   - `IDATE`: The initial input date.  
+   - `D`: The number of days to add.  
+   - `W`: The number of weeks to add.  
+   - `M`: The number of months to add.  
+   - `Y`: The number of years to add.  
+ - **Internal Variables**:  
+   - `mo`: Stores the calculated month.  
+   - `yr`: Stores the calculated year.  
+   - `dm`: Stores the calculated day.  
+
+- Main Logic  
+1. **Adding Days and Weeks**:  
+   - First, the initial date `IDATE` is converted to the `UDINT` type for numerical calculations.  
+   - The days `D` and weeks `W` are converted to `UDINT`, and the total days (`D + W * 7`) are calculated.  
+   - The total days are converted to seconds (multiplied by `86400`, the number of seconds in a day) and added to the initial date's seconds.  
+   - The result is converted back to the `DATE` type and assigned to `DATE_ADD`.  
+
+2. **Adding Months and Years**:  
+   - The current year and month are extracted from `DATE_ADD`, and the input years `Y` and months `M` are added, with the results stored in `yr` and `mo`, respectively.  
+   - The current day is extracted from `DATE_ADD` using the `DAY_OF_MONTH` function and stored in `dm`.  
+
+3. **Month Adjustment**:  
+   - If the calculated month `mo` exceeds 12, it is reduced by 12, and the year `yr` is incremented until the month falls within the 1–12 range.  
+   - If the calculated month `mo` is less than 1, it is increased by 12, and the year `yr` is decremented until the month falls within the 1–12 range.  
+
+4. **Setting the Final Date**:  
+   - The adjusted year `yr`, month `mo`, and day `dm` are combined into a new date using the `SET_DATE` function, which is then assigned to `DATE_ADD`.  
+
+5. **Returning the Result**:  
+   - Finally, the function returns the newly calculated date `DATE_ADD`.", "name": "DATE_ADD"}

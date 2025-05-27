@@ -1,0 +1,23 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThis function `T_PLC_MS` is used to obtain the current PLC time in milliseconds and performs additional processing on the time based on the debug flag `debug`. The function returns a time value of type `DWORD`.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Constants: `debug` controls whether debug mode is enabled, `N` is used for bit manipulation, and `offset` is used to adjust the time in debug mode.  
+ - Variables: `tx` stores the current time value.  
+
+- Main Logic  
+-- REGION Get Current Time  
+   - First, the current time value is obtained using the `TIME()` function and stored in the variable `tx`.  
+   - Then, the `TIME_TO_DWORD` function converts the time value to the `DWORD` type, which is returned as the function's output.  
+
+-- REGION Debug Mode Processing  
+   - If `debug` is `TRUE`, additional processing is performed on the time value:  
+     - The `SHL` function shifts the time value left by `N` bits.  
+     - The `SHL` function shifts `DWORD#1` left by `N` bits, then subtracts 1 to create a mask.  
+     - The shifted time value is bitwise ORed with the mask.  
+     - Finally, the result is added to `offset` to produce the final time value returned.  
+
+- Output  
+   - If `debug` is `FALSE`, the function directly returns the `DWORD` value of the current time.  
+   - If `debug` is `TRUE`, the function returns the time value after bit manipulation and offset adjustment.", "name": "T_PLC_MS"}

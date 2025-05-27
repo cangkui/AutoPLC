@@ -6,6 +6,9 @@ import json
 from autoplc_st.agents.clients import ClientManager
 from autoplc_st.tools import APIDataLoader, PromptResultUtil
 import multiprocessing
+import shutil
+import concurrent.futures
+from functools import partial
 from autoplc_st.agents import (
     Retriever,
     Modeler,
@@ -46,7 +49,7 @@ def baseline_in_github_case(model):
     dataset_file = os.path.join(root_path, "data", "benchmarks", "githubcase.jsonl")
     run_baseline_in_github_case(model, dataset_file)
 
-def run_autoplc_st(benchmark: str, config: Config, checkpoint_dir: str = None):
+def run_autoplc_st(benchmark: str, config: Config, checkpoint_dir: str = None, max_workers: int = 1):
     global root_path
     root_path = ROOTPATH
     benchmark_file_path = os.path.join(root_path, "data", "benchmarks", f"{benchmark}.jsonl")
@@ -81,16 +84,52 @@ def run_autoplc_st(benchmark: str, config: Config, checkpoint_dir: str = None):
         lines = f.readlines()
         tasks = [json.loads(line) for line in lines]
 
-    for task in tasks:
-        task_name = task["name"]
-        if os.path.exists(os.path.join(base_folder, task_name)):
-            logger.info(f"Task {task_name} already completed. Skipping...")
-            continue        
-        autoplc_st_workflow(task, base_folder, config)
+    # for task in tasks:
+    #     task_name = task["name"]
+    #     if os.path.exists(os.path.join(base_folder, task_name)):
+    #         logger.info(f"Task {task_name} already completed. Skipping...")
+    #         continue        
+    #     autoplc_st_workflow(task, base_folder, config)
+    # 多线程执行任务
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # 创建偏函数，固定base_folder和config参数
+        task_processor = partial(
+            _process_task,
+            base_folder=base_folder,
+            config=config,
+            logger=logger
+        )
+        
+        # 提交所有任务
+        future_to_task = {executor.submit(task_processor, task): task for task in tasks}
+        
+        # 等待所有任务完成
+        for future in concurrent.futures.as_completed(future_to_task):
+            task = future_to_task[future]
+            try:
+                future.result()  # 获取任务结果（如果有异常会在这里抛出）
+            except Exception as e:
+                logger.error(f"Unexpected error processing task {task['name']}: {str(e)}")
 
     total_time = time.time() - all_agents_start_time
     logger.info(f"Experiment completed in {total_time:.2f} seconds.")
 
+
+def _process_task(task: dict, base_folder: str, config: Config, logger):
+    task_name = task["name"]
+    task_path = os.path.join(base_folder, task_name)
+    
+    # 检查任务是否已完成
+    if os.path.exists(task_path):
+        logger.info(f"Task {task_name} already completed. Skipping...")
+        return
+    
+    try:
+        # 执行任务工作流（注意这里调用的是autoplc_st_workflow）
+        autoplc_st_workflow(task, base_folder, config)
+    except Exception as e:
+        logger.error(f"Failed to process task {task_name}: {str(e)}")
+        raise  # 重新抛出异常，让主函数知道任务失败
 
 def autoplc_st_workflow(
         task: dict, 

@@ -1,0 +1,34 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block is named `BYTE_TO_STRH` and is used to convert a byte (BYTE) input value into its corresponding hexadecimal string (STRING). This function block processes the high and low nibbles of the byte individually, converting them into their respective ASCII characters, ultimately generating a two-digit hexadecimal string.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - Input variable: `IN`, of type BYTE, representing the byte value to be converted.  
+  - Local variables:  
+    - `temp`, of type BYTE, used to temporarily store the processed nibble value.  
+    - `PT`, of type POINTER TO BYTE, a pointer to the output string, used to write the converted result character by character.  
+
+- Main Logic  
+-- REGION Conversion Logic:  
+  1. **Initialize Pointer**:  
+     - Set the pointer `PT` to the starting address of the output string `BYTE_TO_STRH`.  
+  2. **Process High Nibble**:  
+     - Use the `SHR` instruction to right-shift the input byte `IN` by 4 bits, extracting the high nibble value, and store it in `temp`.  
+     - Evaluate `temp`:  
+       - If `temp` is less than or equal to 9, convert it to the corresponding ASCII character (`0` to `9`) by adding 48 (`temp + 48`).  
+       - Otherwise, convert it to the corresponding ASCII character (`A` to `F`) by adding 55 (`temp + 55`).  
+     - Write the converted ASCII character to the location pointed to by `PT`.  
+  3. **Process Low Nibble**:  
+     - Use the `AND` instruction to perform a bitwise AND operation between the input byte `IN` and the mask `2#00001111`, extracting the low nibble value, and store it in `temp`.  
+     - Evaluate `temp`:  
+       - If `temp` is less than or equal to 9, convert it to the corresponding ASCII character (`0` to `9`) by adding 48 (`temp + 48`).  
+       - Otherwise, convert it to the corresponding ASCII character (`A` to `F`) by adding 55 (`temp + 55`).  
+     - Move the pointer `PT` one position forward to the next character location and write the converted ASCII character there.  
+  4. **String Terminator**:  
+     - Move the pointer `PT` one position forward to the end of the string and write an ASCII character with a value of 0 (null terminator).  
+
+-- REGION Output Result:  
+  - The final output string `BYTE_TO_STRH` will contain a two-digit hexadecimal string. For example, if the input byte `IN` is `2#10101010` (hexadecimal `AA`), the output string will be `\"AA\"`.  
+
+- Summary  
+This function block converts a byte value into its corresponding hexadecimal string through bitwise processing and ASCII conversion. Such conversions are useful when binary data needs to be output in a human-readable format, such as for debugging or logging purposes.", "name": "BYTE_TO_STRH"}

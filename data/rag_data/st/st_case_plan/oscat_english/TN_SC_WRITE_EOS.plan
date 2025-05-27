@@ -1,0 +1,23 @@
+Natural Language Requirement:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block named `TN_SC_WRITE_EOS` is used to write string data to a specific screen position. It achieves this by calling another function block, `TN_SC_WRITE`, and passing the input parameters to it.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - `TN_SC_WRITE`: A derived-type variable used to invoke the `TN_SC_WRITE` function block.  
+ - `Iby_ATTR`: An input variable of type `BYTE`, representing the attributes (e.g., color, font) of the string to be written.  
+ - `Ist_STRING`: An input variable of type `STRING`, representing the content of the string to be written.  
+ - `Xus_TN_SCREEN`: An input-output variable of a derived type, representing screen-related information, including offsets.  
+
+- Main Logic  
+-- REGION Main Logic  
+  The primary logic of this function block involves calling the `TN_SC_WRITE` function block and passing the input parameters to it. The specific steps are as follows:  
+  1. Calculate screen position:  
+     - `Iin_Y`: The screen row position (Y-coordinate) is calculated using `Xus_TN_SCREEN.in_EOS_Offset / 80`.  
+     - `Iin_X`: The screen column position (X-coordinate) is calculated using `Xus_TN_SCREEN.in_EOS_Offset MOD 80`.  
+  2. Pass attributes:  
+     - `Iby_ATTR` is directly passed to `TN_SC_WRITE` to define the display attributes of the string.  
+  3. Pass string content:  
+     - `Ist_STRING` is directly passed to `TN_SC_WRITE`, representing the string content to be written.  
+  4. Pass screen information:  
+     - `Xus_TN_SCREEN` is passed as an input-output variable to `TN_SC_WRITE` to update screen status or retrieve screen information.  
+  Through these steps, `TN_SC_WRITE_EOS` accomplishes the task of writing a string to the specified screen position.", "name": "TN_SC_WRITE_EOS"}

@@ -1,0 +1,51 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block `CYCLE_TIME` is designed to calculate and monitor the program's cycle time while recording system runtime, days in operation, and cycle counts. It determines the cycle time by comparing the current time with the timestamp of the previous cycle, then updates the minimum, maximum, and last recorded cycle times. Additionally, it calculates the total system runtime and days in operation.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - **Input Variable**: `RST`, used to reset the function block's state.  
+ - **Output Variables**:  
+   - `ct_min` (minimum cycle time)  
+   - `ct_max` (maximum cycle time)  
+   - `ct_last` (last recorded cycle time)  
+   - `systime` (total system runtime)  
+   - `sysdays` (total days in operation)  
+   - `cycles` (cycle count)  
+ - **Internal Variables**:  
+   - `last_cycle` (timestamp of the previous cycle)  
+   - `tx` (current cycle time)  
+   - `init` (initialization flag)  
+
+- Main Logic  
+-- **REGION: Cycle Time Calculation and Update**  
+  1. **Calculate Current Cycle Time (`tx`)**:  
+     - Retrieve the current time in milliseconds using `T_PLC_MS()` and convert it to `TIME` type.  
+     - Subtract `last_cycle` (timestamp of the previous cycle) to obtain the current cycle time `tx`.  
+
+  2. **Reset Logic Handling**:  
+     - If `RST` is true, reset all output variables:  
+       - Set `ct_min` to `t#10h` (10 hours).  
+       - Set `ct_max` to `t#0ms` (0 milliseconds).  
+       - Reset `cycles` to `0`.  
+
+  3. **Update Minimum, Maximum, and Last Cycle Times**:  
+     - If `last_cycle` is greater than `t#0s` (i.e., not the first cycle):  
+       - If `tx` is less than `ct_min`, update `ct_min` to `tx`.  
+       - If `tx` is greater than `ct_max`, update `ct_max` to `tx`.  
+       - Set `ct_last` to `tx`.  
+     - If `ct_min` is `t#0s`, set it to `t#0s - t#1ms` (negative 1 millisecond, indicating uninitialized state).  
+
+  4. **Update System Runtime and Days in Operation**:  
+     - If `init` is true (i.e., the function block is initialized):  
+       - Increment `systime` by `tx`.  
+       - If `systime` is greater than or equal to `t#1d` (1 day):  
+         - Subtract `t#1d` from `systime`.  
+         - Increment `sysdays` by `1`.  
+
+  5. **Update Internal State**:  
+     - Set `init` to `TRUE` (indicating initialization is complete).  
+     - Update `last_cycle` with the current timestamp.  
+     - Increment `cycles` by `1` (indicating a completed cycle).  
+
+-- **REGION: Function Block Completion**  
+   The function block logic concludes and awaits the next invocation.", "name": "CYCLE_TIME"}

@@ -1,0 +1,31 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block is named `DLOG_REAL` and is used for handling real-value data logging. It employs a state machine (via a `CASE` statement) to manage different operations, including adding data columns, formatting data, and triggering data logging requests based on a delta (`DELTA`) condition.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - `VAR_IN_OUT`: `X`, a derived type `DLOG_DATA`, used to store data logging-related information.  
+  - `VAR_INPUT`: `VALUE` (real value), `N` (formatting parameter), `D` (decimal separator, defaulting to a comma), `COLUMN` (column name), `DELTA` (delta threshold).  
+  - `VAR`: `UCB` (derived type `UNI_CIRCULAR_BUFFER`, used for circular buffer operations), `id` (identifier), `delta_last` (last delta value), `value_last` (last recorded value).  
+
+- Main Logic  
+  -- REGION CASE x.ADD_COM  
+    This region uses a `CASE` statement to execute different operations based on the value of `x.ADD_COM`:  
+    - **01**:  
+      - Increment `X.ID_MAX` by 1.  
+      - Set `id` to a fixed value `WORD#16#0201`.  
+    - **02**:  
+      - Assign the value of `COLUMN` to `X.UCB.D_STRING`, representing the column name.  
+      - Set `X.UCB.D_HEAD` to `id`.  
+      - Set `X.UCB.D_MODE` to 1, indicating the mode.  
+      - Call the `UCB` function block with `X.UCB` as input to handle circular buffer operations.  
+    - **03**:  
+      - Use the `OSCAT_BASIC.REAL_TO_STRF` function to format `value_last` into a string and assign it to `X.UCB.D_STRING`.  
+      - Set `X.UCB.D_HEAD` to `id`.  
+      - Set `X.UCB.D_MODE` to 1.  
+      - Call the `UCB` function block with `X.UCB` as input to handle circular buffer operations.  
+      - Update `delta_last` to `value_last`.  
+    - **04**:  
+      - If `DELTA` is not 0, check whether `VALUE` exceeds the delta range (`delta_last - DELTA` to `delta_last + DELTA`).  
+      - If it exceeds the range, set `X.ADD_DATA_REQ` to `TRUE`, indicating a data logging request, and update `delta_last` to `VALUE`.  
+  -- REGION Update value_last  
+    After the `CASE` statement, update `value_last` to the current `VALUE` for use in the next cycle.", "name": "DLOG_REAL"}

@@ -1,0 +1,24 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block named `CONTROL_SET2` is used to calculate controller parameters, including proportional gain (KP), integral time (TN), derivative time (TV), integral gain (KI), and derivative gain (KD). Based on the input controller type (P, PI, PID) and system parameters (KS, TU, TG), it computes the corresponding control parameters.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: Include system gain (KS), time constant (TU), delay time (TG), controller type flags (PI, PID), as well as the gains and time constants for P, PI, and PID controllers (P_K, PI_K, PI_TN, PID_K, PID_TN, PID_TV).  
+ - Output variables: Include proportional gain (KP), integral time (TN), derivative time (TV), integral gain (KI), and derivative gain (KD).  
+ - Internal variables: Temporary variable (TX) is used to store intermediate calculation results.  
+
+- Main Logic  
+-- REGION Calculate Intermediate Variable TX  
+   If both system gain (KS) and time constant (TU) are greater than 0, compute the intermediate variable TX = TG / TU / KS. This variable is used for subsequent control parameter calculations.  
+-- REGION Calculate Control Parameters  
+   Based on the input controller type (P, PI, PID) and the intermediate variable TX, compute the corresponding control parameters:  
+   - If both PI and PID controllers are enabled, set KP, TN, and TV to 0, indicating an invalid state.  
+   - If the PID controller is enabled, calculate KP, TN, and TV based on the PID controller's gain and time constants.  
+   - If the PI controller is enabled, calculate KP and TN based on the PI controller's gain and time constants.  
+   - If only the P controller is enabled, calculate KP based on the P controller's gain.  
+-- REGION Calculate Integral Gain KI and Derivative Gain KD  
+   If the integral time (TN) is greater than 0, compute the integral gain KI = KP / TN; otherwise, set KI to 0.  
+   Compute the derivative gain KD = KP * TV.  
+
+- Output Results  
+The calculated KP, TN, TV, KI, and KD from the above logic will serve as the function block's outputs for external use.", "name": "CONTROL_SET2"}

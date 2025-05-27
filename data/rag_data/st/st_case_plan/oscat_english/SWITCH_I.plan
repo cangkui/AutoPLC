@@ -1,0 +1,27 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block is named `SWITCH_I` and is designed to handle switch logic, including debouncing, reconfiguration, and maximum on-time control. It controls the output signal `Q` through input signals `set`, `in`, and `rst`, and supports configuration of debounce time `T_debounce`, reconfiguration time `T_reconfig`, and maximum on-time `T_on_max`.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: `set` (set signal), `in` (input signal), `rst` (reset signal), `T_debounce` (debounce time), `T_reconfig` (reconfiguration time), `T_on_max` (maximum on-time).  
+ - Output variables: `Q` (output signal).  
+ - Internal variables: `state` (state machine status), `edge` (edge detection of input signal), `r_edge` (edge detection after reconfiguration), `T_on` (on-time record), `tx` (current time).  
+
+- Main Logic  
+-- REGION Initialization and Time Retrieval  
+   First, the current time is obtained via `OSCAT_BASIC.T_PLC_MS()` and converted to the `TIME` type, stored in `tx`.  
+
+-- REGION Set and Reset Logic  
+   If the `set` signal is true and the `rst` signal is false, the output `Q` is set to true, and the current time is recorded in `T_on`. If the `rst` signal is true, the output `Q` is set to false.  
+
+-- REGION Debounce Logic  
+   If the input signal `in` differs from `edge` (indicating an edge change) and the current state `state` is not 1, the state `state` is set to 1, and the current time is recorded in `T_on`. If the state `state` is 1 and the current time `tx` minus the debounce time `T_debounce` is greater than or equal to `T_on`, the state `state` is set to 2. In state 2, if `r_edge` differs from `in`, the output `Q` is toggled.  
+
+-- REGION Reconfiguration Logic  
+   If the state `state` is 2 and the current time `tx` minus the reconfiguration time `T_reconfig` is greater than or equal to `T_on`, `r_edge` is set to `in`, completing the reconfiguration.  
+
+-- REGION Maximum On-Time Control  
+   If the output `Q` is true, the maximum on-time `T_on_max` is greater than 0 milliseconds, and the current time `tx` is greater than or equal to `T_on + T_on_max`, the output `Q` is set to false, forcing the output to turn off.  
+
+-- REGION Edge Detection Update  
+   Finally, the value of the input signal `in` is updated to `edge` for edge detection in the next cycle.", "name": "SWITCH_I"}

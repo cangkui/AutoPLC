@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\n  The function block `BYTE_TO_GRAY` converts a binary number into Gray code. Gray code is a binary encoding system where two consecutive values differ by only one bit, commonly used to minimize errors in digital signal transmission.\n\n- Variable Definitions\n  The code defines one input variable:\n  - Input variable: `IN`, representing the input binary number of type `BYTE` (8-bit unsigned integer).\n\n- Main Logic\n  -- REGION Conversion Logic\n      This region implements the binary-to-Gray code conversion. The Gray code generation rule is: Perform a bitwise XOR operation between the binary number and its right-shifted version by one bit. Specific steps:\n      1. Right-shift the input `IN` by one bit to obtain `SHR(IN, 1)`.\n      2. Perform a bitwise XOR between `IN` and the right-shifted result to generate the Gray code.\n      3. Assign the result to `BYTE_TO_GRAY` as the output.\n\n  Example: If `IN` is `0b1101` (decimal 13):\n  - After right-shifting by one bit: `0b0110`.\n  - XOR operation: `0b1101 XOR 0b0110 = 0b1011`.\n  Thus, the output of `BYTE_TO_GRAY` is `0b1011` (decimal 11).\n\n  This conversion ensures that adjacent binary numbers differ by only one bit in their Gray code representation, adhering to Gray code properties.",
+  "name": "BYTE_TO_GRAY"
+}
+```

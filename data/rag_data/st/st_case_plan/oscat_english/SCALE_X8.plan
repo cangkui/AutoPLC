@@ -1,0 +1,30 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function named `SCALE_X8` is used to select the corresponding minimum or maximum values based on the input Boolean values (`in1` to `in8`), then perform a weighted summation of these values, and finally output a real-number result. The function uses a scaling factor `K` and an offset `O` to adjust the output.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables:  
+   - `in1` to `in8`: Boolean values used to select the minimum or maximum values.  
+   - `K`: Scaling factor for weighting the summed result.  
+   - `O`: Offset used to adjust the final output.  
+   - `in1_min` to `in8_min`: Minimum values corresponding to each input Boolean being false.  
+   - `in1_max` to `in8_max`: Maximum values corresponding to each input Boolean being true (default value is 1000.0).  
+ - Output variable:  
+   - `SCALE_X8`: The final output of the function, a real number.  
+
+- Main Logic  
+ -- REGION Main Logic:  
+    The core logic of the function uses the `SEL` function (selection function) to choose the corresponding minimum or maximum value based on each input Boolean (`in1` to `in8`). The specific logic is as follows:  
+    1. For each input Boolean `inX` (X from 1 to 8):  
+       - If `inX` is true, select `inX_max`.  
+       - If `inX` is false, select `inX_min`.  
+    2. Sum all the selected values to get a total.  
+    3. Multiply the total by the scaling factor `K`, then add the offset `O` to obtain the final result `SCALE_X8`.  
+    The formula is represented as:  
+    ```  
+    SCALE_X8 = (SEL(in1, in1_min, in1_max) + SEL(in2, in2_min, in2_max) + ... + SEL(in8, in8_min, in8_max)) * K + O  
+    ```  
+    Here, the `SEL` function selects one of two values based on the Boolean input.  
+
+- Output  
+The function outputs `SCALE_X8`, a real number representing the final result calculated from the input Booleans, scaling factor, and offset.", "name": "SCALE_X8"}

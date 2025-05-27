@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThis code implements a simple latch function block named `LTCH_4`. It controls the output signals `Q0` to `Q3` using input signals `D0` to `D3` and a latch signal `L`. Additionally, a reset signal `RST` can forcibly reset all outputs to `FALSE`.\n\n- Variable Definitions\nThe code defines the following types of variables:\n  - Input variables: `D0`, `D1`, `D2`, `D3` (data inputs), `L` (latch signal), `RST` (reset signal).\n  - Output variables: `Q0`, `Q1`, `Q2`, `Q3` (latched outputs).\n\n- Main Logic\n  -- REGION Reset Logic\n     - If the `RST` signal is `TRUE`, all outputs `Q0`, `Q1`, `Q2`, `Q3` are forcibly reset to `FALSE`. The reset signal has the highest priority and will execute regardless of the latch signal `L`'s state.\n  \n  -- REGION Latch Logic\n     - If the `RST` signal is `FALSE` and the latch signal `L` is `TRUE`, the input signals `D0`, `D1`, `D2`, `D3` are assigned to the output signals `Q0`, `Q1`, `Q2`, `Q3`, respectively. The latch signal `L` \"latches\" the input data to the outputs, maintaining their values until the next latch or reset operation.\n\n- Output Behavior\n  - The state of output signals `Q0`, `Q1`, `Q2`, `Q3` is determined by both the reset signal `RST` and the latch signal `L`:\n    - If `RST` is `TRUE`, all outputs are `FALSE`.\n    - If `RST` is `FALSE` and `L` is `TRUE`, the outputs equal the inputs.\n    - If `RST` is `FALSE` and `L` is `FALSE`, the outputs remain unchanged (retaining the last latched values).\n\n- Summary\nThe `LTCH_4` function block implements a simple 4-bit latch with reset and latch operations. The reset signal `RST` clears all outputs, while the latch signal `L` transfers input data to the outputs. This design is commonly used in scenarios requiring data state retention, such as state holding or signal synchronization.",
+  "name": "LTCH_4"
+}
+```

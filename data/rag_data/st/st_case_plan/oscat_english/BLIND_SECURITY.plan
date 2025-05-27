@@ -1,0 +1,23 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block named 'BLIND_SECURITY' is used to control the upward and downward movement of blinds and adjusts their state based on different safety conditions (such as fire, wind, alarm, door, and rain). The function block determines the output state according to input conditions and sets corresponding status codes.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: UP (up), DN (down), S_IN (status input), PI (position input), AI (angle input), FIRE (fire), WIND (wind), ALARM (alarm), DOOR (door), RAIN (rain), Alarm_UP (alarm-triggered up state), WIND_UP (wind-triggered up state), RAIN_UP (rain-triggered up state).  
+ - Output variables: QU (up output), QD (down output), STATUS (status output), PO (position output), AO (angle output).  
+
+- Main Logic Section  
+-- REGION Safety Condition Evaluation and Output Control  
+   This section determines the state of the blinds based on input safety conditions (fire, wind, alarm, door, and rain) and sets the corresponding status codes. The logic is as follows:  
+   - If a fire is detected (FIRE = TRUE), the blinds are forced to rise (QU = TRUE), descent is stopped (QD = FALSE), and the status code is set to 111.  
+   - If strong wind is detected (WIND = TRUE), the blinds' rise or descent state is determined by WIND_UP, and the status code is set to 112.  
+   - If an alarm is triggered (ALARM = TRUE), the blinds' rise or descent state is determined by Alarm_UP, and the status code is set to 113.  
+   - If a door is opened (DOOR = TRUE), the blinds are forced to rise (QU = TRUE), descent is stopped (QD = FALSE), and the status code is set to 114.  
+   - If rain is detected (RAIN = TRUE) and the blinds are neither rising nor descending (UP and DN are the same), the blinds' rise or descent state is determined by RAIN_UP, and the status code is set to 115.  
+   - If none of the above conditions are met, the blinds' rise and descent states are directly controlled by the UP and DN input values, the status code is set to S_IN, and the position output (PO) and angle output (AO) are set to PI and AI, respectively.  
+
+-- REGION Default Output  
+   If no safety conditions are triggered, the function block directly uses the UP and DN input values to control the blinds' rise and descent states, while setting the status code, position output, and angle output to the input values S_IN, PI, and AI, respectively.  
+
+- Summary  
+This function block prioritizes safety conditions (such as fire, wind, alarm, door, and rain) to control the blinds' state and uses direct input values for control when no safety conditions are triggered. This design ensures that the blinds automatically adjust to a safe state during emergencies while maintaining flexible manual control under normal conditions.", "name": "BLIND_SECURITY"}

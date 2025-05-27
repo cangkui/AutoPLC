@@ -29,11 +29,11 @@ def init_team_log_path(checkpoint:str = None) -> str:
         if not os.path.exists(base_folder):
             os.makedirs(base_folder)
 
-        Retriever.base_logs_folder = base_folder
-        Modeler.base_logs_folder = base_folder
-        LogicComposer.base_logs_folder = base_folder
-        AutoDebugger.base_logs_folder = base_folder
-        OpenAIClient.experiment_base_logs_folder = base_folder
-        ZhipuAIQAClient.experiment_base_logs_folder = base_folder
+    Retriever.base_logs_folder = base_folder
+    Modeler.base_logs_folder = base_folder
+    LogicComposer.base_logs_folder = base_folder
+    AutoDebugger.base_logs_folder = base_folder
+    OpenAIClient.experiment_base_logs_folder = base_folder
+    ZhipuAIQAClient.experiment_base_logs_folder = base_folder
         
     return str(base_folder)

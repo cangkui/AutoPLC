@@ -1,0 +1,38 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block `METER_STAT` is used to calculate and record cumulative values based on time periods. It takes input values `IN` (current value, type `REAL`) and `DI` (current date, type `DATE`), then computes and updates daily, weekly, monthly, and yearly cumulative values. It supports resetting all statistics via the `RST` (reset signal, type `BOOL`).  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: `IN` (current value, type `REAL`), `DI` (current date, type `DATE`), `RST` (reset signal, type `BOOL`).  
+ - Input/output variables: `Last_Day`, `Current_Day`, `Last_Week`, `Current_Week`, `Last_Month`, `Current_Month`, `Last_Year`, `Current_Year`, representing the previous and current cumulative values for day, week, month, and year.  
+ - Retained variables: `Year_Start`, `Month_Start`, `Week_Start`, `Day_Start` store the starting values for year, month, week, and day, while `last_run` records the date of the last execution.  
+
+- Main Logic  
+-- REGION Reset Logic  
+   If `RST` is `TRUE`, reset all statistics:  
+   - Set `Last_Day`, `Current_Day`, `Last_Week`, `Current_Week`, `Last_Month`, `Current_Month`, `Last_Year`, `Current_Year` to `0.0`.  
+   - Set `Day_Start`, `Week_Start`, `Month_Start`, `Year_Start` to the current input value `IN`.  
+
+-- REGION Calculate Current Cumulative Values  
+   If `RST` is `FALSE`, compute cumulative values:  
+   - `Current_Day` = `IN` - `Day_Start`.  
+   - `Current_Week` = `IN` - `Week_Start`.  
+   - `Current_Month` = `IN` - `Month_Start`.  
+   - `Current_Year` = `IN` - `Year_Start`.  
+
+-- REGION Time Period Update Logic  
+   Based on the current date `DI` and the last execution date `last_run`, check if updates are needed:  
+   - If the year changes (`YEAR_OF_DATE(DI) > YEAR_OF_DATE(last_run)`), update yearly, monthly, and daily stats:  
+     - Set `last_year` = `current_year`, reset `current_year` to `0.0`, and set `year_start` = `IN`.  
+     - Set `last_month` = `current_month`, reset `current_month` to `0.0`, and set `month_start` = `IN`.  
+     - Set `last_day` = `current_day`, reset `current_day` to `0.0`, and set `day_start` = `IN`.  
+   - If the month changes (`MONTH_OF_DATE(DI) > MONTH_OF_DATE(last_run)`), update monthly and daily stats:  
+     - Set `last_month` = `current_month`, reset `current_month` to `0.0`, and set `month_start` = `IN`.  
+     - Set `last_day` = `current_day`, reset `current_day` to `0.0`, and set `day_start` = `IN`.  
+   - If the day changes (`DAY_OF_YEAR(DI) > DAY_OF_YEAR(last_run)`), update daily stats:  
+     - Set `last_day` = `current_day`, reset `current_day` to `0.0`, and set `day_start` = `IN`.  
+   - If the week changes (`DAY_OF_WEEK(DI) < DAY_OF_WEEK(last_run)`), update weekly stats:  
+     - Set `last_week` = `current_week`, reset `current_week` to `0.0`, and set `week_start` = `IN`.  
+
+-- REGION Update Last Execution Date  
+   Update `last_run` to the current date `DI` for comparison in the next execution.", "name": "METER_STAT"}

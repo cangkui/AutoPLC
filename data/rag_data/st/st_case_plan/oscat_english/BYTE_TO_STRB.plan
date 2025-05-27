@@ -1,0 +1,10 @@
+Natural Language Requirement:  
+
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThis function is named `BYTE_TO_STRB`, and its purpose is to convert a byte (BYTE) input into a string (STRING) type. Specifically, it transforms each bit of the byte (from the most significant bit to the least significant bit) into a corresponding character `'1'` or `'0'`, then concatenates these characters into a string.\n\n- Variable Definitions\nThe code defines the following variables:\n  - Input variable: `IN`, of type `BYTE`, representing the byte to be converted.\n  - Local variables:\n    - `i`, of type `INT`, used for loop counting.\n    - `pt`, of type `POINTER TO BYTE`, used to point to each character in the string.\n\n- Main Logic\n  -- REGION Initialization\n    First, the pointer `pt` is set to point to the starting address of the function's output string `BYTE_TO_STRB`. This allows subsequent operations to directly modify the string content via the pointer.\n\n  -- REGION Byte-to-String Conversion\n    A `FOR` loop is used to process each bit of the byte from 1 to 8:\n    - In each iteration, the most significant bit (bit 7) of the byte is converted to a Boolean value via `BOOL_TO_BYTE(in.7)`, then transformed into the corresponding character `'1'` or `'0'` (by adding 48, which is the ASCII code for `'0'`).\n    - The converted character is stored at the location pointed to by `pt`.\n    - The byte is left-shifted by one bit using `SHL(in,1)` to process the next bit.\n    - The pointer `pt` is incremented to point to the next character position in the string.\n\n  -- REGION String Terminator\n    After the loop completes, the position pointed to by `pt` is set to `0`, indicating the string terminator.\n\n- Output Result\nThe function outputs an 8-character string representing the binary form of the input byte. For example, if the input byte is `0b10101010`, the output string will be `\"10101010\"`.",
+  "name": "BYTE_TO_STRB"
+}
+```

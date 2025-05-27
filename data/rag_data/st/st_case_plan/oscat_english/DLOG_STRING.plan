@@ -1,0 +1,23 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block is named `DLOG_STRING` and is used to log string data into a circular buffer. It processes input strings and column names, adds the data to the buffer, and updates the buffer's state.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - `VAR_IN_OUT`: `X`, used to pass and update the circular buffer's data.  
+  - `VAR_INPUT`: `STR`, representing the string to be logged; `COLUMN`, representing the column name with a maximum length of 40 characters.  
+  - `VAR`: `UCB`, representing an instance of the circular buffer; `id`, used to store the buffer's identifier; `str_last`, used to store the previously logged string.  
+
+- Main Logic Section  
+  -- REGION CASE Statement  
+    This region uses a `CASE` statement to handle the value of `X.ADD_COM`, performing different operations based on its value:  
+    - When `X.ADD_COM` is `01`:  
+      Increment `X.ID_MAX` by 1 and set `id` to `16#0101`. This indicates preparation to start logging new data.  
+    - When `X.ADD_COM` is `02`:  
+      Assign `COLUMN` to `X.UCB.D_STRING`, set `X.UCB.D_HEAD` to the current `id`, and set `X.UCB.D_MODE` to 1. Then, call the `UCB` function block to log the column name into the circular buffer.  
+    - When `X.ADD_COM` is `03`:  
+      Assign `str_last` to `X.UCB.D_STRING`, set `X.UCB.D_HEAD` to the current `id`, and set `X.UCB.D_MODE` to 1. Then, call the `UCB` function block to log the previously stored string `str_last` into the circular buffer.  
+  -- REGION String Update  
+    After the `CASE` statement, assign the current input string `STR` to `str_last` for use in the next cycle.  
+
+- Summary  
+The core logic of this function block involves using the `CASE` statement to log column names and string data step-by-step into the circular buffer. The value of `X.ADD_COM` determines the current operation step, while `str_last` stores the previous string data to ensure data continuity.", "name": "DLOG_STRING"}

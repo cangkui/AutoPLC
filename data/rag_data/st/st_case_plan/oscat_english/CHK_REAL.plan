@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThis function, named `CHK_REAL`, checks whether an input value `X` of type `REAL` is a valid floating-point number. Through bit manipulation and conditional checks, the function returns a `BYTE` value indicating the status of the input (valid, NaN, infinity, etc.).\n\n- Variable Definitions\nThe code defines two types of variables:\n - Input variable: `X`, a floating-point number of type `REAL`, serves as the function's input.\n - Internal variables: `pt` is a pointer to a `DWORD` type, storing the memory address of `X`; `tmp` is a temporary `DWORD` variable used to hold the result of bit operations.\n\n- Main Logic Section\n-- REGION Main Logic\n   1. **Get Address**: First, the memory address of input `X` is obtained using `ADR(X)` and assigned to pointer variable `pt`.\n   2. **Bit Manipulation**: The `DWORD` value pointed to by `pt` undergoes a 1-bit left rotation via `ROL(pt^, 1)`, with the result stored in `tmp`.\n   3. **Condition Checks**:\n      - If `tmp` is less than `16#FF000000`, `X` is a valid floating-point number, and the function returns `16#00`.\n      - If `tmp` equals `16#FF000000`, `X` is a NaN (Not a Number), and the function returns `16#20`.\n      - If `tmp` equals `16#FF000001`, `X` is an infinity (positive or negative), and the function returns `16#40`.\n      - Otherwise, `X` is an invalid floating-point number, and the function returns `16#80`.\n-- END_REGION Main Logic",
+  "name": "CHK_REAL"
+}
+```

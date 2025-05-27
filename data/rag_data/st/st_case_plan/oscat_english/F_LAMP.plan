@@ -1,0 +1,28 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block `F_LAMP` is used to control the behavior of a lamp, including functions such as on/off, dimming, reset, timing, and maintenance reminders. It adjusts the lamp's brightness based on input signals and timing logic, while also outputting status information.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - Input variables: `SWITCH` (on/off control), `DIMM` (dimming value), `RST` (reset signal), `T_NO_DIMM` (no-dimming time threshold), `T_MAINTENANCE` (maintenance time threshold).  
+  - Output variables: `LAMP` (lamp brightness value), `STATUS` (lamp status).  
+  - Input/output variables: `ONTIME` (lamp operating time), `CYCLES` (lamp operating cycles).  
+  - Internal variables: `runtime` (an instance for recording lamp operating time).  
+
+- Main Logic  
+  -- REGION Operating Time Recording  
+    The `runtime` instance is used to track the lamp's operating time and cycles. `runtime` is a timer function block that increments `ONTIME` (operating time) and `CYCLES` (operating cycles) when `SWITCH` is true.  
+
+  -- REGION Reset Logic  
+    If the `RST` signal is true, `ONTIME` and `CYCLES` are reset to 0, clearing the lamp's operating time and cycle records.  
+
+  -- REGION Lamp Control Logic  
+    If `SWITCH` is true, indicating the lamp is on:  
+      - If the operating time `ONTIME` is less than `T_NO_DIMM` multiplied by 3600 (converting hours to seconds), the lamp brightness `LAMP` is set to the maximum value of 255, and the `STATUS` is set to 111 (indicating the lamp is at full brightness).  
+      - If the operating time `ONTIME` is greater than or equal to `T_NO_DIMM` multiplied by 3600, the lamp brightness `LAMP` is set to the input value `DIMM`, and the `STATUS` is set to 112 (indicating the lamp is in dimming mode).  
+    If `SWITCH` is false, indicating the lamp is off, the lamp brightness `LAMP` is set to 0, and the `STATUS` is set to 110 (indicating the lamp is off).  
+
+  -- REGION Maintenance Reminder Logic  
+    If the operating time `ONTIME` is greater than or equal to `T_MAINTENANCE` multiplied by 3600, and `T_MAINTENANCE` is greater than 0, the `STATUS` is set to 120 (indicating the lamp requires maintenance).  
+
+- Summary  
+This function block implements lamp control features such as on/off, dimming, reset, and maintenance reminders using timers and state logic. It dynamically adjusts the lamp's brightness and status based on operating time and input signals while outputting relevant information. This design is suitable for scenarios requiring precise lamp control, such as industrial lighting or automated lighting management systems.", "name": "F_LAMP"}

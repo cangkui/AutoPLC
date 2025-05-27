@@ -1,0 +1,30 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block `DT_SIMU` is used to simulate the increment of date and time (DT). It controls the passage of time based on a specified speed (`SPEED`) by calculating elapsed time and adjusting the output date and time (`DTS`) accordingly.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: `START` (initial date and time), `SPEED` (time passage speed, default is 1.0).  
+ - Output variables: `DTS` (simulated current date and time).  
+ - Internal variables:  
+   - `tc`: Calculated time difference (in milliseconds).  
+   - `init`: Initialization flag to indicate whether initialization is complete.  
+   - `last`: Last recorded timestamp (in milliseconds).  
+   - `tx`: Current timestamp (in milliseconds).  
+   - `td`: Adjusted time difference (in milliseconds).  
+
+- Main Logic  
+-- REGION Initialization & Time Calculation  
+   1. Obtain the current timestamp `tx` and calculate the time difference `tc` from the last recorded time `last` to the current time `tx`, multiplied by the speed `SPEED`.  
+   2. If not initialized (`init = FALSE`), perform initialization:  
+      - Set `DTS` to the input `START`.  
+      - Reset `tc` to 0.  
+      - Record the current timestamp `last`.  
+      - Set `init` to `TRUE` to mark initialization as complete.  
+   3. If the speed `SPEED` is 0.0, directly increment `DTS` by 1 day (simulating time freeze).  
+   4. If the calculated time difference `tc` is greater than or equal to 1000 milliseconds (1 second):  
+      - Compute the adjusted time difference `td` (in seconds).  
+      - Increment `DTS` by the time corresponding to `td`.  
+      - Update `last` to `last + td / SPEED` to ensure time passage aligns with the speed.  
+
+-- REGION Output Result  
+   Finally, `DTS` is output as the simulated current date and time.", "name": "DT_SIMU"}

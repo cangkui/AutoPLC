@@ -10,7 +10,7 @@ environment:
 
 # 模型配置
 model:
-  name: "gpt-4.1-mini"  # 可选: claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022, llama3.1-8b-instruct
+  name: "claude-3-5-sonnet-20241022"  # 可选: claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022, llama3.1-8b-instruct
   max_tokens: 16384
   temperature: 0.1
   top_p: 0.9
@@ -23,11 +23,11 @@ retrieve:
 
 # 模型器设置
 modeler:
-  plan_set_name: "st_case_plan_origin"
+  plan_set_name: "oscat_english"
 
 # 验证代理配置
 verify:
-  count: 5
+  count: 3
   openness: "http://192.168.103.152:9000"
 
 # RAG检索配置
@@ -50,7 +50,7 @@ instruction:
 workflow:
   retrieve_disabled: false
   modeling_disabled: false
-  debugger_disabled: true
+  debugger_disabled: false
   api_rec_disabled : false
   auto_learn_disabled : false
   is_coding_fewshot: true

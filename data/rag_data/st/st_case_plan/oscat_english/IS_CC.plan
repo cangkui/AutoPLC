@@ -1,0 +1,15 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function `IS_CC` is used to check whether a string `str` is entirely contained within another string `cmp`. If `str` is a substring of `cmp`, it returns `TRUE`; otherwise, it returns `FALSE`.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: `str` and `cmp`, both of string type, used to store the strings to be compared.  
+ - Local variables: `L` and `pos`. `L` stores the length of `str`, and `pos` represents the current position being checked during the loop.  
+
+- Main Logic  
+-- REGION Main Logic:  
+   1. First, calculate the length of the string `str` and store it in the variable `L`.  
+   2. Use a `FOR` loop to iterate through each position of `str` from 1 to `L`.  
+   3. In each iteration, use the `MID` function to extract a substring from `str` starting from the first character up to the current `pos` position.  
+   4. Use the `FIND` function to check whether this substring exists in `cmp`. If `FIND` returns 0 (indicating not found), the function immediately returns with the result `FALSE`.  
+   5. If no mismatched substrings are found after the loop completes, check whether the length of `str` is greater than 0. If yes, return `TRUE`; otherwise, return `FALSE`.", "name": "IS_CC"}

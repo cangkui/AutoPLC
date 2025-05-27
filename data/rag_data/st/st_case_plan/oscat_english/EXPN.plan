@@ -1,0 +1,9 @@
+Natural Language Requirements:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThis code implements a function named `EXPN` to calculate the integer power `N` of a real number `X`. The function computes the power through iterative squaring and multiplication, and supports cases with negative exponents.\n\n- Variable Definitions\nThe code defines the following types of variables:\n - Input variables: `X` (real type, representing the base) and `N` (integer type, representing the exponent).\n - Local variable: `sign` (Boolean type, used to store the sign of the exponent, where `TRUE` indicates a negative exponent and `FALSE` indicates a positive exponent).\n\n- Main Logic\n-- REGION Sign Handling\n   First, the sign of the exponent is determined by checking the highest bit (bit 15) of `N`. If the highest bit is 1, it means `N` is negative, and `sign` is set to `TRUE`; otherwise, it is set to `FALSE`. Then, the `ABS` function is used to convert `N` to its absolute value, ensuring subsequent calculations use a positive exponent.\n\n-- REGION Initialization\n   If the lowest bit of `N` is 1, `EXPN` is initialized to `X`; otherwise, it is initialized to `1.0`. Next, the `SHR` (shift right) operation divides `N` by 2 to prepare for the loop.\n\n-- REGION Power Calculation\n   A `WHILE` loop is used to iteratively compute the power of `X`. In each iteration, `X` is first squared. If the lowest bit of `N` is 1, the current value of `X` is multiplied into `EXPN`. Then, `N` is divided by 2 again using the right shift operation, and the loop continues until `N` becomes 0.\n\n-- REGION Negative Exponent Handling\n   If `sign` is `TRUE`, indicating the original exponent was negative, the reciprocal of `EXPN` is taken to obtain the result for the negative power of `X`.\n\n- Output\nThe function ultimately returns the computed value of `EXPN`, which is `X` raised to the power of `N`.",
+  "name": "EXPN"
+}
+```

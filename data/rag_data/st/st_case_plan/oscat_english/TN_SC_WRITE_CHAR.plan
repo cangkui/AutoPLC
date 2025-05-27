@@ -1,0 +1,20 @@
+Natural Language Requirement:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function block is named `TN_SC_WRITE_CHAR` and is used to write a specified character to a designated position on a simulated screen (`Xus_TN_SCREEN`). The screen layout is assumed to be 80 columns wide, so position calculations are based on column and row offsets.  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+  - Input variables: `in_Offset` (offset), `Iin_Y` (row coordinate), `Iin_X` (column coordinate), `Iby_CHAR` (character to be written).  
+  - Internal variable: `Xus_TN_SCREEN`, representing a simulated screen structure that includes a character array `bya_CHAR` for storing characters on the screen.  
+
+- Main Logic  
+  -- REGION Error Checking  
+    First, the `TN_SC_XY_ERROR` function is called to verify whether the input column coordinate `Iin_X` and row coordinate `Iin_Y` are valid. If the coordinates are invalid (e.g., out of screen bounds), the function returns immediately without further execution.  
+
+  -- REGION Offset Calculation  
+    If the coordinates are valid, the offset for the character on the screen is calculated. The screen is assumed to be 80 columns wide, so the offset is computed using the formula: `in_Offset := (Iin_Y * 80) + Iin_X`. This formula converts the two-dimensional column and row coordinates into a one-dimensional array index.  
+
+  -- REGION Character Writing  
+    The input character `Iby_CHAR` is written to the specified offset position in the character array `bya_CHAR` of the simulated screen `Xus_TN_SCREEN`. This effectively "displays" the character at the designated screen position.  
+
+- Output Result  
+The function block does not have explicit output variables, but by modifying the `bya_CHAR` array within the `Xus_TN_SCREEN` structure, it indirectly achieves the functionality of writing characters to the screen.", "name": "TN_SC_WRITE_CHAR"}

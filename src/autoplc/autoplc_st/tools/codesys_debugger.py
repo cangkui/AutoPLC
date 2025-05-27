@@ -187,7 +187,7 @@ class CodesysCompiler:
         })
         URL = "http://192.168.103.117:9000/api/v1/pou/workflow"
         json_data = {"BlockName": block_name, "Code": st_code}
-        timeout = 30  # Set a reasonable timeout for the request
+        timeout = 80  # Set a reasonable timeout for the request
         try:
             resp = session.post(URL, json=json_data, timeout=timeout)  # Reasonable timeout
 

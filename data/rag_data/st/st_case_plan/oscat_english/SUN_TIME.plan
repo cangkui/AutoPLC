@@ -1,0 +1,22 @@
+Natural Language Requirements:  
+
+{"variables": [], "instructions": [], "planning": "- Overview\nThis functional block, named 'SUN_TIME', is used to calculate the solar noon time, sunrise time, sunset time, and the solar declination angle at noon for a given geographic location. It computes these values based on input parameters such as latitude, longitude, UTC (Coordinated Universal Time), and solar elevation angle (H).  
+
+- Variable Definitions  
+The code defines the following types of variables:  
+ - Input variables: Latitude (LATITUDE), Longitude (LONGITUDE), UTC time (UTC), and Solar Elevation Angle (H).  
+ - Output variables: Solar Noon Time (MIDDAY), Sunrise Time (SUN_RISE), Sunset Time (SUN_SET), and Solar Declination Angle (SUN_DECLINATION).  
+ - Local variables: Solar declination angle (dk), time difference between sunrise/sunset and solar noon (delta), and an intermediate calculation variable (b).  
+
+- Main Logic  
+-- REGION: Calculate Solar Noon Time  
+   First, the latitude is converted to radians and stored in variable `b`. Then, the `SUN_MIDDAY` function is called to compute the solar noon time, and the result is stored in `MIDDAY`.  
+
+-- REGION: Calculate Solar Declination Angle  
+   The solar declination angle is computed using the formula: `0.40954 * SIN(0.0172 * (INT_TO_REAL(DAY_OF_YEAR(utc)) - 79.35))`, and the result is stored in `dk`. Next, `dk` is converted to degrees and stored in `SUN_DECLINATION`. If the declination angle exceeds 180 degrees, 360 degrees is subtracted to keep it within the range of -180 to 180 degrees. Finally, the solar declination angle at noon is calculated using the formula: `90.0 - LATITUDE + sun_declination`.  
+
+-- REGION: Calculate Sunrise and Sunset Times  
+   The time difference between sunrise/sunset and solar noon is calculated using the formula: `ACOS((SIN(RAD(H)) - SIN(B) * SIN(DK)) / (COS(B) * COS(DK))) * 3.819718632`, and the result is stored in `delta`. The sunrise time (`SUN_RISE`) is then derived by subtracting `delta` from the solar noon time, while the sunset time (`SUN_SET`) is obtained by adding `delta` to the solar noon time.  
+
+- Output Results  
+Finally, the functional block outputs the calculated solar noon time, sunrise time, sunset time, and solar declination angle to their respective output variables.", "name": "SUN_TIME"}

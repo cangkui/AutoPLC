@@ -1,0 +1,25 @@
+Natural Language Requirements:  
+{"variables": [], "instructions": [], "planning": "- Overview\nThe function named `MIX` is used to calculate a blended value of two real numbers, `A` and `B`, with the blending ratio controlled by the parameter `M`. The output is a real number representing the linear interpolation result of `A` and `B` based on the ratio `M`.  
+
+- Variable Definitions  
+The code defines three types of variables:  
+ - Input variables: `A`, `B`, and `M`. `A` and `B` are two real numbers representing the values to be blended; `M` is a real number representing the blending ratio, typically ranging between 0 and 1.  
+ - Output variable: `MIX`, representing the blended result, which is a real number.  
+
+- Main Logic Section  
+-- REGION Main Logic:  
+   The core logic of the function is to compute the blended value of `A` and `B`. The formula is:  
+   ```  
+   MIX := (1.0 - M) * A + M * B  
+   ```  
+   This formula means:  
+   - `(1.0 - M) * A`: Calculates the weighted portion of `A`. When `M` is close to 0, `A` has a larger weight.  
+   - `M * B`: Calculates the weighted portion of `B`. When `M` is close to 1, `B` has a larger weight.  
+   The final result is the weighted sum of `A` and `B`, with weights determined by `M`.  
+
+   For example:  
+   - If `M = 0`, then `MIX = A`, and the output is entirely `A`.  
+   - If `M = 1`, then `MIX = B`, and the output is entirely `B`.  
+   - If `M = 0.5`, then `MIX` is the average of `A` and `B`.  
+
+   This function is simple and efficient, suitable for scenarios where two values need to be blended based on a given ratio.", "name": "MIX"}

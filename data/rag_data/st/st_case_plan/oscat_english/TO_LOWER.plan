@@ -1,0 +1,9 @@
+Natural Language Requirement:  
+```json
+{
+  "variables": [],
+  "instructions": [],
+  "planning": "- Overview\nThis is a function named `TO_LOWER` designed to convert input bytes to their lowercase form. It supports standard ASCII characters (A-Z) as well as extended ASCII characters (such as accented letters).\n\n- Variable Definitions\nThe code defines one type of variable:\n - Input variable: `IN`, representing the input byte value.\n\n- Main Logic Section\n-- REGION Main Logic\n   This region implements the logic for converting input bytes to lowercase:\n   1. First, it checks if the input value falls within the standard ASCII uppercase range (65 to 90, i.e., A-Z). If so, it performs a bitwise OR operation (`OR 16#20`) to set the 5th bit to 1, thereby converting it to the corresponding lowercase letter (97 to 122, i.e., a-z).\n   2. If the input value is not within the standard ASCII uppercase range, it further checks whether it falls within the extended ASCII uppercase range (192 to 222, excluding 215) and whether the system supports extended ASCII characters (`setup.EXTENDED_ASCII` is true). If both conditions are met, the same bitwise OR operation is applied to convert it to the corresponding lowercase letter.\n   3. If the input value is neither within the standard ASCII range nor the extended ASCII range, it is returned unchanged.\n   Finally, the function returns the converted byte value.",
+  "name": "TO_LOWER"
+}
+```
