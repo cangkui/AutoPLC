@@ -125,6 +125,10 @@ class Config:
         return self._config["verify"]["count"]
     
     @property
+    def CODESYS_IP(self) -> List[str]:
+        return self._config["verify"]["codesys_ip"]
+    
+    @property
     def openness_binding_base_url(self) -> int:
         return self._config["verify"]["openness"] \
             if self._config["verify"]["openness"] else "http://localhost:9000"

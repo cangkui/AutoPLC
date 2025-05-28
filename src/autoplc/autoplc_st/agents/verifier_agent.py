@@ -37,6 +37,7 @@ class AutoDebugger():
         st_code: str,
         max_verify_count: int,
         openai_client: OpenAIClient,
+        ip_port: str,
         load_few_shots: bool = True,
     ) -> str:
         """
@@ -92,7 +93,7 @@ class AutoDebugger():
             }
             verify_count += 1
 
-            check_result = compiler.syntax_check(task['name'], st_code)
+            check_result = compiler.syntax_check(task['name'], st_code, ip_port)
             no_error = check_result.success
             
             if no_error:
