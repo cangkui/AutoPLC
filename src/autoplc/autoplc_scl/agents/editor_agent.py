@@ -32,16 +32,12 @@ class LogicComposer():
         ```
         """
         import re
-
-        # 使用正则表达式提取实际的代码内容
-        match = re.search(r'```scl\n(.*?)\n```', text, re.DOTALL)
-
-        if match:
-            code_content = match.group(1).strip()  # 使用 strip 去除多余的空格和换行
+        matches = re.findall(r'```scl\n(.*?)\n```', text, re.DOTALL)
+        if matches:
+            # 拼接所有 ST 块，中间加换行隔开
+            return "\n\n".join(m.strip() for m in matches)
         else:
-            code_content = text
-            
-        return code_content
+            return text.strip()  # fallback: 直接返回原始文本
     
     @classmethod
     def run_gen_scl(cls,
@@ -158,9 +154,20 @@ class LogicComposer():
 sys_prompt = """
 Based on the information provided, write SCL code to meet the task requirements. Try to use loops, branches, and sequential structures instead of library functions whenever possible, and only use library functions when necessary. Follow the programming standards. Follow the provided code template to correctly construct SCL code. Refer to the example code of SCL library functions. 
 
-OutputFormat:
+IMPORTANT: If your implementation refers to any auxiliary blocks (e.g., user defined FUNCTION BLOCKs or FUNCTIONs), you must provide complete definitions for all of them. 
+
+Output blocks  **in sequence**, each wrapped as shown:
+
 ```scl
-// only your scl code is allowed here.
+FUNCTION_BLOCK <block_name>
+    // function block code here
+END_FUNCTION_BLOCK
+```
+
+```scl
+FUNCTION <function_name> : <return_type>
+    // function code here
+END_FUNCTION
 ```
 
 SCL Standard Library Documentation:
@@ -171,7 +178,16 @@ SCL programming guidances:
 
 """.strip()
 
-programming_guidance = "NO PROGRAMMING GUIDANCE PROVIDED"
+programming_guidance = """
+1. Do not use SCL syntax that is not allowed in the Siemens S7-1200/1500 PLC.
+2. Input and output formats must conform to task requirements.
+3. use loops, branches, and sequential structures to achieve objectives.
+4. avoid variable name conflicts with keywords and standard function names.
+5. define and initialize all loop variables used in FOR loops before use.
+6. It is necessary to fully define all the parameters provided in the requirements.
+"""
+
+# programming_guidance = "NO PROGRAMMING GUIDANCE PROVIDED"
 
 # programming_guidance = """
 # 1. Do not use SCL syntax that is not allowed in the Siemens S7-1200/1500 PLC.

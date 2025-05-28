@@ -33,16 +33,12 @@ class LogicComposer():
         ```
         """
         import re
-
-        # 使用正则表达式提取实际的代码内容
-        match = re.search(r'```ST\n(.*?)\n```', text, re.DOTALL)
-
-        if match:
-            code_content = match.group(1).strip()  # 使用 strip 去除多余的空格和换行
+        matches = re.findall(r'```ST\n(.*?)\n```', text, re.DOTALL)
+        if matches:
+            # 拼接所有 ST 块，中间加换行隔开
+            return "\n\n".join(m.strip() for m in matches)
         else:
-            code_content = text
-            
-        return code_content
+            return text.strip()  # fallback: 直接返回原始文本
     
     @classmethod
     def run_gen_st(cls,
@@ -109,6 +105,9 @@ class LogicComposer():
 
         st_code = cls.extract_code_from_response(raw_content)
 
+        # 去除BEGIN，偶尔会出现的非ST字符
+        st_code = st_code.replace("BEGIN", "")
+
         return st_code
     
     @classmethod
@@ -157,11 +156,22 @@ class LogicComposer():
         return formatted
 
 sys_prompt = """
-Based on the information provided, write ST code to meet the task requirements. Try to use loops, branches, and sequential structures instead of library functions whenever possible, and only use library functions when necessary. Follow the programming standards. Follow the provided code template to correctly construct ST code. Refer to the example code of ST library functions. 
+Based on the information provided, write ST blocks to meet the task requirements. Try to use loops, branches, and sequential structures instead of library functions whenever possible, and only use library functions when necessary. Refer to the example code of ST library functions. Follow the programming guidances.
 
-OutputFormat:
+IMPORTANT: If your implementation refers to any auxiliary blocks (e.g., user defined FUNCTION BLOCKs or FUNCTIONs), you must provide complete definitions for all of them. 
+
+Output blocks  **in sequence**, each wrapped as shown:
+
 ```ST
-// only your ST code is allowed here.
+FUNCTION_BLOCK <block_name>
+    // function block code here
+END_FUNCTION_BLOCK
+```
+
+```ST
+FUNCTION <function_name> : <return_type>
+    // function code here
+END_FUNCTION
 ```
 
 ST Standard Library Documentation:
@@ -172,7 +182,16 @@ ST programming guidances:
 
 """.strip()
 
-programming_guidance = "NO PROGRAMMING GUIDANCE PROVIDED"
+programming_guidance = """
+1. Do not use st syntax that is not allowed in the CODESYS V3.5 PATCH20.
+2. Input and output formats must conform to task requirements.
+3. use loops, branches, and sequential structures to achieve objectives.
+4. avoid variable name conflicts with keywords and standard function names.
+5. define and initialize all loop variables used in FOR loops before use.
+6. It is necessary to fully define all the parameters provided in the requirements.
+"""
+
+# programming_guidance = "NO PROGRAMMING GUIDANCE PROVIDED"
 
 # programming_guidance = """
 # 1. Do not use st syntax that is not allowed in the Siemens S7-1200/1500 PLC.
@@ -207,9 +226,6 @@ shot_prompt = """Here is the input, structured in XML format:
 </Task_Requirements>
 {algorithm_process}
 """
-
-
-
 
 # import os
 # from typing import Tuple, List
