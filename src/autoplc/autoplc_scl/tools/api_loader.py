@@ -34,13 +34,13 @@ class APIDataLoader():
     @classmethod
     def prettify_api(cls, data: dict) -> str:
         """
-        该方法用于将API数据字典格式化为可读的字符串格式。
+        This method is used to format the API data dictionary into a readable string format.
 
-        参数:
-        - data (dict): 包含API详细信息的字典。
+        parameter:
+        -data (dict): A dictionary containing API details.
 
-        返回:
-        - str: 格式化后的API信息字符串，包含指令名称、描述、参数和示例代码等信息。
+        return:
+        -str: The formatted API information string, including instruction name, description, parameters, and sample code.
         """
         output = f"{data['instruction_name']}()\n"
         output += f"- description : {data['generated_brief']['functional_summary']}\n"
@@ -59,14 +59,14 @@ class APIDataLoader():
     @classmethod
     def extract_apis_from_cases(cls, case_names: List[str]) -> List[str]:
         """
-        从案例中提取使用的 API 名称。
+        Extract the API name used from the case.
 
-        参数:
-        - case_names: 案例名称列表
-        - functions_usage: 每个案例使用的函数字典
+        parameter:
+        -case_names: Case name list
+        -functions_usage: The function dictionary used for each case
 
-        返回:
-        - 提取出的 API 名称列表(去重)
+        return:
+        -Extracted API name list (deduplication)
         """
         functions_usage = cls.functions_usage
         extracted_apis = []
@@ -78,13 +78,13 @@ class APIDataLoader():
     @classmethod
     def query_api_brief(cls, api_names: List[str]) -> List[dict]:
         """
-        根据 API 名称查询 API 简短信息。
+        Query API short messages by API name.
 
-        参数:
-        - api_names: API 名称列表
+        parameter:
+        -api_names: API name list
 
-        返回:
-        - 包含 API 名称和简短信息的字典列表
+        return:
+        -A dictionary list containing API names and short information
         """
         api_detail_dict = cls.api_detail_dict
         api_details = []
@@ -102,14 +102,14 @@ class APIDataLoader():
     @classmethod
     def format_api_details(cls, api_names: List[str]) -> Tuple[str, dict]:
         """
-        将 API 名称转换为格式化字符串，并返回详细信息字典。
+        Converts the API name to a formatted string and returns a dictionary of details.
 
-        参数:
-        - api_names: API 名称列表
-        - api_detail_dict: 每个 API 对应的详细信息字典
+        parameter:
+        -api_names: API name list
+        -api_detail_dict: Dictionary of details for each API
 
-        返回:
-        - 格式化API字符串
+        return:
+        -Format API strings
         """
         api_detail_dict = cls.api_detail_dict
         api_details = {}

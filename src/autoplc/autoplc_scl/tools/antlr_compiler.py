@@ -67,14 +67,14 @@ class CompilerFrontend():
 
     def extract_scl_functions_from_block(self, block_content: str) -> List[str]:
         """
-        该函数用于从给定的SCL代码块中提取所有的函数名称。
+        This function is used to extract all function names from the given SCL code block.
 
-        它通过递归地解析代码块中的函数调用，识别出所有的函数名称，并返回一个不重复的函数名称列表。
+        It recursively parses function calls in code blocks, recognizes all function names, and returns a list of non-repeat function names.
 
-        返回的函数列表中会去除名为'LGF'的函数，因为它被认为是一个特殊的标识符。
+        The returned function list will remove the function named 'LGF' because it is considered a special identifier.
 
         Returns:
-            List[str]: 提取出的函数名称列表。
+            List[str]: Extracted function names list.
         """
         pattern = r'\b([a-zA-Z_][a-zA-Z0-9_]*)\('    
         functions = []
@@ -102,20 +102,20 @@ class CompilerFrontend():
 
     def scl_syntax_check(self, scl_code: str) -> Tuple[str, bool]:
         """
-        检查给定的SCL代码的语法。
+        Check the syntax of the given SCL code.
 
-        解析SCL代码，识别所有函数调用，并验证这些函数是否在已知函数列表中。
-        如果发现未知函数调用，返回错误日志，指出这些未知函数的名称和上下文。
+        Parses the SCL code, recognizes all function calls, and verifys that these functions are in the list of known functions.
+        If unknown function calls are found, the error log is returned indicating the names and context of these unknown functions.
 
-        返回:
-            Tuple: 包含错误日志和布尔值的元组。
-            - 错误日志: 字符串，包含所有语法错误的详细信息。
-            - 布尔值: 如果没有发现错误则为True，否则为False。
+        return:
+            Tuple: A tuple containing error logs and boolean values.
+            -Error log: String, containing details of all syntax errors.
+            -Boolean: True if no error is found, otherwise False.
         """
         error_log = []
         success = True
 
-        # 初始化解析器和监听器
+        # Initialize parser and listener
         input_stream = InputStream(scl_code)
         lexer = sclLexer(input_stream)
         stream = CommonTokenStream(lexer)
@@ -125,26 +125,26 @@ class CompilerFrontend():
         parser.addErrorListener(error_logger)
         tree = parser.r()
 
-        # 解析树并提取函数
+        # Parse the tree and extract the function
         listener_pack = {}
         listener = MySCLListener(listener_pack)
         walker = ParseTreeWalker()
         walker.walk(listener, tree)
         function_list = self.extract_scl_functions_from_block(self.remove_double_slash_comments(scl_code))
 
-        # 检查函数有效性
+        # Check the validity of the function
         for func in function_list:
             if self._is_valid_function(func, listener_pack):
                 continue
             success = False
             error_log.append(self._generate_error_message(func, error_logger))
 
-        # 返回结果
+        # Return result
         combined_error_log = ''.join(error_log)
         return listener_pack['error_log'] + combined_error_log + error_logger.error_log, not listener_pack['has_error'] and success and error_logger.SUCCESS
 
     def _is_valid_function(self, func: str, listener_pack: dict) -> bool:
-        """检查函数是否有效"""
+        """Check if the function is valid"""
         if func in listener_pack.get('special_type_variable', []):
             return True
         if "_TO_" in func:
@@ -154,7 +154,7 @@ class CompilerFrontend():
         return func.lower() in self.all_funcs
 
     def _generate_error_message(self, func: str, error_logger: SCLGrammarErrorListener) -> str:
-        """生成错误信息"""
+        """Generate error message"""
         error_message = (
             f"\n---Error No.{error_logger.count} ---\n"
             f"-Unknown SCL FUNCTION : {func}() ! \n"

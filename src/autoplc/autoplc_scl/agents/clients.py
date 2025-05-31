@@ -93,19 +93,19 @@ class ExperimentStatistics:
 
 class _BaseClient:
     """
-    用于与LLM（大语言模型）交互的基类。
+    Base class for interacting with LLM
     
     Attributes:
-        config (Config): 本项目的配置类，包含了与LLM交互所需的配置信息。
+        config (Config): The configuration class of this project contains the configuration information required to interact with LLM.
     """
     def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
-        self.config = config # 本项目的配置类
-        self.experiment_base_logs_folder = 'default_logs' # 本次实验的日志文件夹，在init时重制
+        self.config = config # Configuration class of this project
+        self.experiment_base_logs_folder = 'default_logs' # The log folder of this experiment is remade during init
         self.statistics = ExperimentStatistics()
-        self.llm_client = llm_client # LLM客户端实例
+        self.llm_client = llm_client # LLM client instance
 
     def call(self, messages: str, task_name: str = "default", role_name: str = "default"):
-        # 调用LLM的接口，发送消息并获取响应
+        # Call the LLM interface, send a message and get a response
         pass
 
     def save_statistics(self, 
@@ -115,18 +115,18 @@ class _BaseClient:
             client_name: str = "default"
         ):
         """
-        保存使用统计信息。
+        Save usage statistics.
     
-        此函数负责将给定响应对象中的使用信息（如输入和输出令牌数量）记录到统计系统中，并将这些信息保存到指定的JSON文件中。
+        This function is responsible for recording usage information in a given response object (such as the number of input and output tokens) to the statistical system and saving this information to the specified JSON file.
     
-        参数:
-        - response: Completion或Message对象，包含响应数据，特别是使用信息。
-        - task_name: str，任务名称，用于标识统计信息关联的任务。
-        - role_name: str，默认为"default"，角色名称，用于进一步分类统计信息。
-        - client_name: str，默认为"default"，客户端名称，用于组织统计信息的存储位置。
+        parameter:
+        -response: Completion or Message object, containing response data, especially usage information.
+        -task_name: str, task name, used to identify the task associated with statistics.
+        -role_name: str, default is "default", role name, used for further classification statistics.
+        -client_name: str, default is "default", client name, storage location for organization statistics.
         """
 
-        # 将使用信息添加到统计系统中    
+        # Add usage information to the statistics system
         # print(response)
         # input_tokens = response.usage.prompt_tokens
         # output_tokens = response.usage.completion_tokens
@@ -140,7 +140,7 @@ class _BaseClient:
             output_tokens=output_tokens if output_tokens is not None else -1
         )
     
-        # 构建日志文件的路径
+        # The path to build the log file
         log_path = os.path.join(
             self.config.LOG_DIR, 
             self.experiment_base_logs_folder,
@@ -149,7 +149,7 @@ class _BaseClient:
         )
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
     
-        # 将统计信息序列化并保存到日志文件中
+        # Serialize and save statistics to log file
         with open(log_path, "w", encoding="utf-8") as log_file:
             json.dump(self._to_serializable(), log_file, indent=4)
 
@@ -165,7 +165,7 @@ class _BaseClient:
             else:
                 content = response.choices[0]['message']['content']
         except (IndexError, KeyError, AttributeError):
-            logger.error("无法从响应中提取内容，请检查响应结构。")
+            logger.error("Unable to extract content from the response, please check the response structure.")
             content = None        
         return content
 
@@ -176,27 +176,27 @@ class _BaseClient:
         role_name: str = "default"
     ):
         """
-        保存消息和响应到日志文件。
+        Save messages and responses to log files.
         Args:
-            messages (List[dict]): 消息列表，每个消息是一个字典。
-            response: LLM的响应对象，包含了生成的消息和使用信息。
-            task_name (str, optional): 任务名称，用于日志记录。
-            role_name (str, optional): 角色名称，用于日志记录。
+            messages (List[dict]): List of messages, each message is a dictionary.
+            response: LLM's response object, containing the generated message and usage information.
+            task_name (str, optional): task name, used for logging.
+            role_name (str, optional): role name, used for logging.
         """
-        # 构造日志文件路径
+        # Construct log file path
         log_path = os.path.join(self.config.LOG_DIR, self.experiment_base_logs_folder, task_name, f"{role_name}.log")
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
-        # 将响应添加到消息列表中
+        # Add a response to the message list
 
         content = self.extract_content(response)
 
         messages_with_response = messages + [{"role": "assistant", "content": content}]
 
-        # 从统计 POJO 中提取使用信息
+        # Extract usage information from statistical POJO
         usage = self.statistics.tasks[task_name].role_stats.get(role_name, None)
 
-        # 写入日志
+        # Write to log
         with open(log_path, "w", encoding="utf8") as f:
             f.write(PromptResultUtil.message_to_file_str(messages_with_response))
             if usage:
@@ -208,12 +208,12 @@ class _BaseClient:
 
 class OpenAIClient(_BaseClient):
     """
-    用于与LLM（大语言模型）交互的客户端类。
+    A client class for interacting with LLM (large language model).
     
     Attributes:
-        config (Config): 本项目的配置类，包含了与LLM交互所需的配置信息。
-        experiment_base_logs_folder (str): 本次实验的日志文件夹，在init时重制。
-        statistics ({}): 统计每个任务的input和output token的使用情况。
+        config (Config): The configuration class of this project contains the configuration information required to interact with LLM.
+        experiment_base_logs_folder (str): The log folder of this experiment is remade during init.
+        statistics ({}): Statistics the usage of input and output tokens for each task.
     """
     def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
         super().__init__(config, llm_client)
@@ -225,19 +225,19 @@ class OpenAIClient(_BaseClient):
         model: str = None
     ) -> Completion:
         """
-        调用LLM的接口，发送消息并获取响应。
+        Call the LLM's interface, send a message and get a response.
         
         Args:
-            messages (List[dict]): 消息列表，每个消息是一个字典，包含role和content两个键。
-            task_name (str, optional): 任务名称，用于日志记录。
-            role_name (str, optional): 角色名称，用于日志记录。
+            messages (List[dict]): message list, each message is a dictionary, containing role and content keys.
+            task_name (str, optional): task name, used for logging.
+            role_name (str, optional): role name, used for logging.
         
         Returns:
-            response: LLM的响应对象，包含了生成的消息和使用信息。
+            response: LLM's response object, containing the generated message and usage information.
         """
         if model is None:
             model = self.config.model
-        # 创建消息以获取响应
+
         response = self.llm_client.chat.completions.create(
             messages=messages,
             model=model,
@@ -250,18 +250,17 @@ class OpenAIClient(_BaseClient):
         self.save_statistics(response, task_name, role_name=role_name, client_name="llm")
         self.save_log(messages, response, task_name, role_name)
 
-        # 返回LLM的响应
         return response
 
 
 class ZhipuAIQAClient(_BaseClient):
     """
-    用于处理检索任务的客户端类，继承自_BaseClient。
+    The client class used to handle retrieval tasks, inherited from _BaseClient.
     
-    初始化时，接受一个Config对象作为配置参数。
+    During initialization, a Config object is accepted as a configuration parameter.
     """
     def __init__(self, config: Config,llm_client: Union[OpenAI, Anthropic]):
-        # 初始化基类_BaseClient，传入配置参数
+        # Initialize the base class_BaseClient, pass in the configuration parameters
         super().__init__(config, llm_client)
 
     def call_kbq(self, 
@@ -272,20 +271,20 @@ class ZhipuAIQAClient(_BaseClient):
         role_name: str = "retrieval"
     ) -> Completion:
         """
-        该方法用于调用ZhipuAI的知识库问答接口，发送消息并获取响应。
+        This method is used to call ZhipuAI's knowledge base question and answer interface, send messages and get responses.
 
-        参数:
-        - messages (str): 消息内容，通常是用户的问题。
-        - task_name (str): 任务名称，用于日志记录。
-        - qa_prompt (str): 问答提示模板，用于生成问答内容。
-        - knowledge_id (str): 知识库ID，用于检索相关信息。
-        - role_name (str, optional): 角色名称，用于日志记录，默认为"retrieval"。
+        parameter:
+        -messages (str): Message content, usually a user's problem.
+        -task_name (str): Task name, used for logging.
+        -qa_prompt (str): Q&A prompt template, used to generate Q&A content.
+        -knowledge_id (str): Knowledge Base ID, used to retrieve relevant information.
+        -role_name (str, optional): Role name, used for logging, default to "retrieval".
 
-        返回:
-        - response: ZhipuAI的响应对象，包含生成的消息和使用信息。
+        return:
+        -response: ZhipuAI's response object, containing generated messages and usage information.
         """
 
-        # 创建模型完成请求，包含特定的检索工具参数
+        # Create a model completion request, including specific retrieval tool parameters
         response = self.llm_client.chat.completions.create(
             model=self.config.retrieve_model,  
             temperature=self.config.retrieve_temperature,
@@ -303,7 +302,6 @@ class ZhipuAIQAClient(_BaseClient):
         self.save_statistics(response, task_name, role_name = role_name, client_name="retrieval")
         self.save_log(messages, response, task_name, role_name)
 
-        # 返回模型响应
         return response
 
 def read_jsonl(filename):
@@ -320,13 +318,13 @@ class BM25RetrievalInstruction:
         stop_path = config.INSTRUCTION_DIR.joinpath("stopwords_english.txt.")
         self.stopwords = set(open(stop_path, encoding="utf-8").read().splitlines())
 
-        # 加载指令数据
+        # Load instruction data
         self.instructions = []
         for inst_path in config.INSTRUCTION_PATH:
             self.instructions.extend(read_jsonl(inst_path))
         self.instruction_names = [api['instruction_name'] for api in self.instructions]
 
-        # 多通道文本构建
+        # Multi-channel text construction
         self.channel_texts = {
             'keywords': [],
             'summary': [],
@@ -340,7 +338,7 @@ class BM25RetrievalInstruction:
             self.channel_texts['summary'].append(self._tokenize(api['generated_brief']['functional_summary']))
             self.channel_texts['usage'].append(self._tokenize(api['generated_brief']['usage_context']))
         
-        # 初始化BM25模型
+        # Initialize the BM25 model
         self.bm25_models = {
             'keywords': BM25Okapi(self.channel_texts['keywords']),
             'summary': BM25Okapi(self.channel_texts['summary']),
@@ -454,15 +452,15 @@ class ClientManager:
 
     def get_openai_client(self):
         if self._openai_client is None:
-            raise Exception("OpenAIClient未初始化")
+            raise Exception("OpenAIClient Not initialized")
         return self._openai_client
 
     def get_zhipuai_client(self):
         if self._zhipuai_client is None:
-            raise Exception("ZhipuAIQAClient未初始化")
+            raise Exception("ZhipuAIQAClient Not initialized")
         return self._zhipuai_client
 
     def get_local_api_retriever(self):
         if self._local_api_retriever is None:
-            raise Exception("BM25RetrievalInstruction未初始化")
+            raise Exception("BM25RetrievalInstruction Not initialized")
         return self._local_api_retriever

@@ -12,7 +12,7 @@ logger = logging.getLogger("autoplc_scl")
 @dataclass
 class ErrorMessage:
     error_desc: str
-    error_type: str  # "定义区错误" 或 "代码段错误"
+    error_type: str  # "Definition Zone Error" or "Segment Error"
     code_window: Optional[str] = None
 
     def __str__(self):
@@ -86,13 +86,13 @@ class TIAPortalCompiler():
     
     def batch_test_scl_files(self, folder_path: str) -> dict:
         """
-        批量测试文件夹下的所有.scl文件，并总结通过率和错误数量等统计信息。
+        Test all .scl files in the folder in batches, and summarize statistical information such as the pass rate and the number of errors.
 
-        参数:
-        - folder_path: 包含.scl文件的文件夹路径。
+        parameter:
+        -folder_path: The folder path containing the .scl file.
 
-        返回:
-        - summary: 包含通过率、错误数量等信息的字典。
+        return:
+        -summary: A dictionary containing information such as pass rate, number of errors, etc.
         """
         import os
 
@@ -138,28 +138,28 @@ class TIAPortalCompiler():
 
         base_line_idx = 0
         if not is_def:
-            # 尝试找到 BEGIN 作为逻辑基准行
+            # Try to find BEGIN as the logical baseline
             begin_idx = next((i for i, line in enumerate(lines) if "BEGIN" in line.upper()), None)
             if begin_idx is not None:
                 base_line_idx = begin_idx
             else:
-                # fallback: 找最后一个 END_VAR
+                # fallback: Find the last END_VAR
                 end_var_indices = [i for i, line in enumerate(lines) if "END_VAR" in line.upper()]
                 if end_var_indices:
                     base_line_idx = end_var_indices[-1] + 1
                 else:
                     base_line_idx = 0  # fallback
 
-        # 如果path是-1，表示没有路径信息，返回空窗口
+        # If path is -1, it means there is no path information and returns to the empty window
         if path == -1:
             return ""
 
-        # 推测的错误行位置
+        # Predicted error line location
         error_line_idx = base_line_idx + path
         start_idx = max(0, error_line_idx - window_size)
         end_idx = min(len(lines), error_line_idx + window_size + 1)
 
-        # 输出窗口，不标记错误行
+        # Output window, no error line marked
         result = []
         for i in range(start_idx, end_idx):
             result.append(f"{i + 1:>4}: {lines[i]}")
@@ -168,7 +168,7 @@ class TIAPortalCompiler():
     
     def scl_syntax_check(self, block_name: str, scl_code: str) -> ResponseData:
         """
-        检查SCL代码语法，并输出简化后的错误信息（含类型、窗口）
+        Check the SCL code syntax and output simplified error information (including type and window)
         """
         t1 = time.time()
         resp = requests.post(
@@ -182,7 +182,7 @@ class TIAPortalCompiler():
             raw_errors = raw_data.get("Errors", [])
             
             simplified_errors = []
-            # 用于记录已经出现过错误的行号
+            # Used to record line numbers that have already occurred
             error_lines = set()
 
             for err in raw_errors:
@@ -193,7 +193,7 @@ class TIAPortalCompiler():
                     window_size=3
                 )
 
-                # 提取错误行号
+                # Extract the wrong line number
                 path = err.get("Path", -1)
                 is_def = err.get("IsDef", False)
                 lines = scl_code.splitlines()
@@ -210,7 +210,7 @@ class TIAPortalCompiler():
                             base_line_idx = 0
                 error_line_idx = base_line_idx + path
 
-                # 检查行号是否已存在于集合中
+                # Check if the line number already exists in the collection
                 if error_line_idx not in error_lines:
                     simplified_errors.append(ErrorMessage(
                         error_desc=err["ErrorDesc"],
@@ -220,9 +220,9 @@ class TIAPortalCompiler():
                     error_lines.add(error_line_idx)
 
             return ResponseData(
-                success=raw_data.get("Success", True),  # 如果没有 Success 字段，默认返回 True
-                result=raw_data.get("Result", ""),  # 如果没有 Result 字段，默认返回空字符串
-                errors=simplified_errors  # 返回简化后的错误信息
+                success=raw_data.get("Success", True),  # If there is no Success field, the default return is True
+                result=raw_data.get("Result", ""),  # If there is no Result field, the default return of an empty string
+                errors=simplified_errors  # Returns simplified error message
             )
 
         else:

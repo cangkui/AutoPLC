@@ -31,18 +31,18 @@ class RetrievedExample:
 
 class Retriever():
     """
-    Retriever类用于从知识库中检索与给定任务相关的示例。
+    The Retriever class is used to retrieve examples related to a given task from the knowledge base.
 
     Attributes:
-        alternatives (List[str]): 备用案例名称列表。
-        base_logs_folder (str): 用于存储基础日志文件夹的路径。
+        alternatives (List[str]): List of alternate case names.
+        base_logs_folder (str): The path used to store the base log folder.
 
     Methods:
         run_retrieve_case(task: dict) -> Tuple[List[RetrievedExample], int, int]:
-            运行检索代理以获取与任务相关的示例。
+            Run the search agent to get examples related to the task.
 
         get_result(response: str, task_name: str) -> List[dict]:
-            解析响应以提取检索到的示例，并进行反作弊处理。
+            The response is parsed to extract the retrieved examples and perform anti-cheating.
     """
 
     base_logs_folder = None
@@ -50,45 +50,45 @@ class Retriever():
     @classmethod
     def run_retrieve_case(cls, alternatives:List[str] , task: dict, zhipuai_client:ZhipuAIQAClient) -> List[RetrievedExample]:
         """
-        运行检索案例方法，用于从知识库中检索相关信息。
+        Run the search case method to retrieve relevant information from the knowledge base.
         
-        参数:
-        - alternatives: 一个字符串列表，包含可能的备选答案。
-        - task: 一个字典，包含任务的描述和名称。
-        - zhipuai_client: ZhipuAIQAClient 实例，用于调用知识库查询。
+        parameter:
+        -alternatives: A list of strings containing possible alternative answers.
+        -task: A dictionary containing the description and name of the task.
+        -zhipuai_client: ZhipuAIQAClient instance, used to call knowledge base queries.
     
-        返回:
-        - 一个 RetrievedExample 实例列表，包含检索到的示例。
+        return:
+        -A list of RetrievedExample instances containing retrieved examples.
         """
         
-        # 构建消息列表，包括系统和用户角色的消息
+        # Build a message list, including messages from the system and user roles
         messages=[
             {"role": "system", "content": retrieval_agent_prompt_sys_en},
             {"role": "user", "content": task["description"]}
         ]        
     
-        # 调用知识库查询，获取响应
+        # Call the knowledge base query to get the response
         response = zhipuai_client.call_kbq(messages, 
                                        task_name=task["name"], 
                                        role_name="retriever",
                                        qa_prompt=knowledgebase_qa_prompt,
                                        knowledge_id=knowledge_id)
         
-        # 调用 get_result 方法处理响应内容，返回结果列表
+        # Call the get_result method to process the response content and return the result list
         return cls.get_result(alternatives,response.choices[0].message.content, task["name"])
 
 
     @classmethod
     def get_result(cls, alternatives:List[str] , response: str, task_name: str) -> List[dict]:
         """
-        解析响应以提取检索到的示例，并进行反作弊处理。
+        The response is parsed to extract the retrieved examples and perform anti-cheating.
 
-        参数:
-        - response: 从知识库检索到的响应字符串。
-        - task_name: 当前任务的名称。
+        parameter:
+        -response: The response string retrieved from the knowledge base.
+        -task_name: The name of the current task.
 
-        返回:
-        - res: 包含检索到的示例的列表，每个示例是一个字典。
+        return:
+        -res: Contains a list of retrieved examples, each example is a dictionary.
         """
         res = []
         try:

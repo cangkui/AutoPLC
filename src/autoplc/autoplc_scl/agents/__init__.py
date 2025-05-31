@@ -14,7 +14,7 @@ from common import ROOTPATH
 def init_team_log_path(checkpoint:str = None) -> str:
 
     if checkpoint:
-        # 如果提供了 checkpoint，则使用该路径
+        # If checkpoint is provided, use this path
         base_folder = checkpoint
         if not os.path.exists(base_folder):
             raise ValueError(f"Checkpoint path {checkpoint} does not exist.")

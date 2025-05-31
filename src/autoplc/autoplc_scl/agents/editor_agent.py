@@ -7,20 +7,20 @@ logger = logging.getLogger("autoplc_scl")
 
 class LogicComposer():
     """
-    LogicComposer类用于生成SCL代码。它提供了从响应中提取代码的功能，并通过运行编辑器代理生成代码。
+    The LogicComposer class is used to generate SCL code. It provides the ability to extract code from the response and generate code by running the editor agent.
 
     Attributes:
-        base_logs_folder (str): 用于存储基础日志文件夹的路径。
+        base_logs_folder (str): The path used to store the underlying log folder.
 
     Methods:
         extract_code_from_response(text: str) -> str:
-            从给定的文本响应中提取SCL代码。
+            Extract SCL code from the given text response.
 
         run_gen_scl(task: dict, retrieved_examples: List[dict], related_algorithm: List[dict], algorithm_for_this_task: str, model: str) -> str:
-            运行编辑器代理以生成SCL代码。该方法使用任务信息、检索到的示例、相关算法和特定任务的算法描述来生成代码。
+            Run the editor agent to generate SCL code. The method generates code using task information, retrieved examples, related algorithms, and algorithm descriptions for specific tasks.
     """
 
-    # 定义一个类变量，用于存储基础日志文件夹的路径
+    # The path used to store the underlying log folder
     base_logs_folder: str = None
 
     @classmethod
@@ -34,10 +34,10 @@ class LogicComposer():
         import re
         matches = re.findall(r'```scl\n(.*?)\n```', text, re.DOTALL)
         if matches:
-            # 拼接所有 ST 块，中间加换行隔开
+            # Splice all ST blocks, separate them with line breaks in the middle
             return "\n\n".join(m.strip() for m in matches)
         else:
-            return text.strip()  # fallback: 直接返回原始文本
+            return text.strip()  # Fallback: Return to the original text directly
     
     @classmethod
     def run_gen_scl(cls,
@@ -50,30 +50,30 @@ class LogicComposer():
             load_few_shots: bool = True,
         ) -> str:
         """
-        运行编辑器代理以生成代码。
+        Run the editor agent to generate the code.
 
-        参数:
-        - task: 包含任务信息的字典。
-        - retrieved_examples: 检索到的示例列表，每个示例是一个字典。
-        - related_algorithm: 相关算法的列表，每个算法是一个字典。
-        - logic_for_this_task: 用于此任务的逻辑建模（算法）。
-        - apis_for_this_task: 用于此任务的API列表。
-        - openai_client : 用于调用的大模型客户端
-        - load_few_shots: 是否加载few-shot示例。
+        parameter:
+        -task: A dictionary containing task information.
+        -retrieved_examples: The retrieved list of examples, each example is a dictionary.
+        -related_algorithm: A list of related algorithms, each algorithm is a dictionary.
+        -logic_for_this_task: Logical modeling (algorithm) used for this task.
+        -apis_for_this_task: List of APIs used for this task.
+        -openai_client : The big model client used to call
+        -load_few_shots: Whether to load the few-shot example.
 
-        返回:
-        - scl_code: 生成的代码字符串。
+        return:
+        -scl_code: The generated code string.
         """
 
         requirement = str(task)
 
-        # 根据建议的API生成API描述
+        # Generate API description based on the recommended API
         if apis_for_this_task:
             api_description = APIDataLoader.format_api_details(apis_for_this_task)
         else:
             api_description = "No Control Instruction is recommended for this task. Please determine the required operations manually."
 
-        # 算法生成指导
+        # Algorithm generation guidance
         logic_for_this_task = f"<!-- A Control Logic that you can refer to when coding -->\n<ControlLogic>\n{logic_for_this_task}\n</ControlLogic>\n"
 
         editor_system_prompt = sys_prompt.format(
@@ -88,12 +88,10 @@ class LogicComposer():
 
         code_messages = [{"role": "system", "content": editor_system_prompt}]
 
-        # 加载Few-Shot示例
         if load_few_shots:
             fewshots = cls.load_code_gen_shots(retrieved_examples, related_algorithm)
             code_messages.extend(fewshots)
 
-        # 添加用户提示信息到消息列表中
         code_messages.append({"role": "user", "content": instance_prompt})
 
         logger.info("start generation")   
@@ -109,16 +107,16 @@ class LogicComposer():
     @classmethod
     def extract_content(cls,response) -> str:
         """
-        提取响应内容中的SCL代码。
+        Extract the SCL code in the response content.
 
-        该方法从AI模型的响应中提取生成的SCL代码。响应可能包含多个选择，
-        每个选择可能包含一个消息对象，该对象包含所需的内容。
+        This method extracts the generated SCL code from the response of the AI ​​model. The response may contain multiple choices,
+        Each selection may contain a message object that contains the required content.
 
-        参数:
-        - response: AI模型的响应对象。
+        parameter:
+        -response: The response object of the AI ​​model.
 
-        返回:
-        - scl_code: 提取出的SCL代码字符串。
+        return:
+        -scl_code: Extracted SCL code string.
         """
         if hasattr(response, 'choices'):
             choice = response.choices[0]

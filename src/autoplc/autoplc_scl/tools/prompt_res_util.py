@@ -98,7 +98,7 @@ class PromptResultUtil():
             return None
         with open(plan_path, 'r', encoding='utf8') as f:
             case_plan = f.read()
-        # [兼容性考虑]尝试加载case_plan为json并读取其中的planning字段
+        # [Compatibility Considerations] Try to load case_plan as json and read the planning field in it
         try:
             tmp_case_plan = json.loads(case_plan)["planning"]
             case_plan = tmp_case_plan

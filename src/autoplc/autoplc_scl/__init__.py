@@ -54,7 +54,7 @@ def run_autoplc_scl(benchmark: str, config: Config, checkpoint_dir: str = None):
         return
 
     if checkpoint_dir:
-        ## 从 checkpoint_dir 中加载配置
+        ## Load configuration from checkpoint_dir
         config_path = os.path.join(checkpoint_dir, "config", "config.yaml")
         if os.path.exists(config_path):
             config = Config.load_from_absolute_path(config_path)
@@ -62,7 +62,7 @@ def run_autoplc_scl(benchmark: str, config: Config, checkpoint_dir: str = None):
         else:
             raise ValueError(f"Checkpoint config file {config_path} not found.")
 
-    # 输出config关键内容：
+    # Output config key content:
     logger.info(f"Benchmark:{benchmark} Model: {config.model} retriever: {config.RETRIEVE_DISABLED == False} planner: {config.MODELING_DISABLED == False} api_rec: {config.APIREC_DISABLED == False} debugger: {config.DEBUGGER_DISABLED == False} auto_learn: {config.AUTOLEARN_DISABLED == False}")
         
     ClientManager().set_config(config)
@@ -70,7 +70,7 @@ def run_autoplc_scl(benchmark: str, config: Config, checkpoint_dir: str = None):
     base_folder = init_team_log_path(checkpoint=checkpoint_dir)
 
     if not checkpoint_dir:
-        # 如果没有提供 checkpoint_dir，则保存配置文件
+        # If checkpoint_dir is not provided, save the configuration file
         os.makedirs(os.path.join(base_folder, "config"), exist_ok=True)
         shutil.copy(config.config_path, os.path.join(base_folder, "config", "config.yaml"))
 
@@ -81,7 +81,7 @@ def run_autoplc_scl(benchmark: str, config: Config, checkpoint_dir: str = None):
         tasks = [json.loads(line) for line in lines]
 
     for task in tasks:
-        ## 检查 task是否已经完成，即是否存在dir名字是task["name"]的
+        ##Check whether the task has been completed, that is, whether there is a dir name that is task["name"]
         task_name = task["name"]
         if os.path.exists(os.path.join(base_folder, task_name)):
             logger.info(f"Task {task_name} already completed. Skipping...")
@@ -98,7 +98,7 @@ def autoplc_scl_workflow(
         config:Config
     ):
 
-    # 检查是否存在对应的 SCL 文件
+    # Check if the corresponding SCL file exists
     scl_file_path = os.path.join(config.SCL_CODE_DIR, f"{task['name']}.scl")
     if os.path.exists(scl_file_path):
         groundtruth_scl = open(scl_file_path, "r", encoding="utf8").read()
@@ -108,7 +108,7 @@ def autoplc_scl_workflow(
         logger.warning(f"Groundtruth scl for {task['name']} not found.")
 
 
-    # 获取大模型客户端
+    # Get the LLM client
     openai_client = ClientManager().get_openai_client()
     zhipuai_client = ClientManager().get_zhipuai_client()
     local_api_retriever = ClientManager().get_local_api_retriever()
@@ -117,7 +117,7 @@ def autoplc_scl_workflow(
 
     start_time = time.time()
 
-    # 初始化finally块中的变量
+    # Initialize variables in finally blocks
     sample_names = []
     logic_for_this_task = ""
     apis_for_this_task = []
@@ -140,7 +140,7 @@ def autoplc_scl_workflow(
 
         related_algorithm = []
         for name in sample_names:
-            # algo = PromptResultUtil.get_plan(name=name, code_type="scl")      #为了跑不同版本的plan 需要传plan的版本的名称
+            # algo = PromptResultUtil.get_plan(name=name, code_type="scl")      # In order to run different versions of plan, you need to pass the name of the plan version
             algo = PromptResultUtil.get_plan_diff(
                 name=name, 
                 plan_version = config.PLAN_SET_NAME
@@ -151,7 +151,7 @@ def autoplc_scl_workflow(
                 related_algorithm.append("")
 
         if sample_names:
-            #获取相似案例用到的api
+            # Get APIs used in similar cases
             api_from_similar_cases = APIDataLoader.extract_apis_from_cases(sample_names)    
         else:
             api_from_similar_cases = []
@@ -234,7 +234,7 @@ def autoplc_scl_workflow(
                 logger.info("Start auto learner from groundtruth scl.")
                 coding_feed_back = LearnAgent.run_learn_from_coding(
                     task=task,
-                    prediction_scl=first_gen_scl, # 这里用的是第一次生成的scl代码，因为我们希望模型提高首次生成效率
+                    prediction_scl=first_gen_scl, # Here is the scl code generated for the first time, because we hope that the model will improve the efficiency of the first generation.
                     openai_client=openai_client,
                     groundtruth_scl=groundtruth_scl,
                     debug_history=debug_history
