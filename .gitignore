@@ -1,8 +1,10 @@
 # ours
+*.zip
 .vscode/
 test/
 output/
 logs/
+experiment/
 experiment_result/
 *venv/
 .env
