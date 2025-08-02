@@ -1,0 +1,6 @@
+[submodule "compilation_tools/CODESYSCompileService"]
+	path = compilation_tools/CODESYSCompileService
+	url = https://github.com/cangkui/CODESYSCompileService.git
+[submodule "compilation_tools/TIACompileService"]
+	path = compilation_tools/TIACompileService
+	url = https://github.com/cangkui/TIACompileService.git
