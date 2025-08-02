@@ -11,7 +11,7 @@ environment:
 model:
   #name: "claude-3-5-sonnet-20241022"  # 可选: gpt-4.1, claude-3-5-haiku-20241022, llama3.1-8b-instruct
   name: "claude-3-5-sonnet-20241022"
-  max_tokens: 16384
+  max_tokens: 8192
   temperature: 0.1
   top_p: 0.9
 

@@ -89,8 +89,8 @@ class ApiAgent():
         try:
             response = openai_client.call(
                 messages=messages,
-                task_name='extract_complex_type',
-                role_name='api_agent',
+                task_name=task.get('name', 'unknown_task'),
+                role_name='extract_complex_type',
             )
             content = cls.extract_content(response)
             complex_types = json.loads(str(content))
@@ -165,8 +165,8 @@ class ApiAgent():
         try:
             response = openai_client.call(
                 messages=messages,
-                task_name='filter_relevant_functions',
-                role_name='api_agent'
+                task_name=task.get('name', 'unknown_task'),
+                role_name='filter_relevant_functions'
             )
             content = cls.extract_content(response)
             filtered = json.loads(content)

@@ -100,7 +100,7 @@ class _BaseClient:
     """
     def __init__(self, config: Config, llm_client: Union[OpenAI, Anthropic]):
         self.config = config # Configuration class of this project
-        self.experiment_base_logs_folder = 'default_logs' # The log folder of this experiment is remade during init
+        self.experiment_base_logs_folder = '0731_lgf_logs' # The log folder of this experiment is remade during init
         self.statistics = ExperimentStatistics()
         self.llm_client = llm_client # LLM client instance
 
@@ -127,11 +127,16 @@ class _BaseClient:
         """
 
         # Add usage information to the statistics system
-        # print(response)
-        # input_tokens = response.usage.prompt_tokens
-        # output_tokens = response.usage.completion_tokens
-        input_tokens = 1
-        output_tokens = 1
+        try:
+            input_tokens = response.usage.prompt_tokens
+            output_tokens = response.usage.completion_tokens
+            logging.info(f"Input tokens: {input_tokens}, Output tokens: {output_tokens}")
+        except AttributeError:
+            logger.error("Response object does not contain usage information. Please check the response structure.")
+            input_tokens = -1
+            output_tokens = -1
+            logger.info(response)
+
 
         self.statistics.add_usage(
             task_name=task_name,
@@ -152,6 +157,7 @@ class _BaseClient:
         # Serialize and save statistics to log file
         with open(log_path, "w", encoding="utf-8") as log_file:
             json.dump(self._to_serializable(), log_file, indent=4)
+            logging.info(f"Statistics saved to {log_path}")
 
     def _to_serializable(self):
         from dataclasses import asdict
