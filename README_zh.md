@@ -1,4 +1,4 @@
-# AutoPLC : Generating Vendor-Aware Structured Text for Programmable Logic Controllers
+# AutoPLC: Generating Vendor-Aware Structured Text for Programmable Logic Controllers
 
 本仓库包含AutoPLC相关研究的补充材料。AutoPLC是一个用于IEC 61131-3 ST 生成的自动编程框架。
 

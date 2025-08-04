@@ -1,4 +1,4 @@
-# AutoPLC : Generating Vendor-Aware Structured Text for Programmable Logic Controllers
+# AutoPLC: Generating Vendor-Aware Structured Text for Programmable Logic Controllers
 
 [👉中文版本](README_zh.md)
 
