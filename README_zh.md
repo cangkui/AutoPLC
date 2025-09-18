@@ -41,7 +41,7 @@
      (1) Windows 10 及以上系统，推荐使用专业版  
      (2) C# .NET Framework运行时  
      (3) 已安装TIA Portal V19
-   - CODESYS ST：基于CODESYS Python脚本引擎实现，详见[CODESYSCompileService](https://github.com/cangkui/CODESYSCompileService)，Release中提供了经过测试的CODESYS版本安装包。前置条件需满足：
+   - CODESYS ST：基于CODESYS Python脚本引擎实现，详见[CODESYSCompileService](https://github.com/cangkui/CODESYSCompileService)，Release中提供了经过测试的CODESYS版本安装包。前置条件需满足：  
      (1) Windows 10 及以上系统，推荐使用专业版  
      (2) Python 版本推荐>=3.9  
      (3) 已安装CODESYS V3.5 SP20
