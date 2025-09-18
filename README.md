@@ -2,7 +2,7 @@
 
 [👉中文版本](README_zh.md)
 
-This repository contains supplementary materials for our research on AutoPLC, a flexible framework for structured text (ST) generation. The materials are organized into the following main directories:
+This repository contains supplementary materials for our research on AutoPLC, a flexible framework for structured text (ST) generation.
 
 ## Directory Structure
 
@@ -42,15 +42,16 @@ pip install -r requirements.txt
 Prior to executing the scripts, please prepare the environment for AutoPLC, copy the `.env.example` file to `.env` and fill in the necessary information. This step is exclusively for testing purposes and does not involve any leakage of personal information. 
 
 3. Compiler Tools Setup  
-- For Siemens SCL: we used the openness api provided by Siemens, which requires 1) C# .Net Framework runtime; 2) TIA Portal V19 on Windows. See [TIACompileService](https://github.com/cangkui/TIACompileService). The repository provides source code, and a tested binary package is provided in Release for download.
-- For CODESYS ST: we used the codesys script engine, which requires CODESYS V3.5 SP20 on Windows. See [CODESYSCompileService](https://github.com/cangkui/CODESYSCompileService). A tested CODESYS installer is also provided in Release.
-
-> Openness compilation tools are developed by ourselves. For CODESYS compilation tool, we have referenced the implementation of this repository: [codesys-api](https://github.com/johannesPettersson80/codesys-api). Thanks very much for the contribution of the author of this repository.  
-> We encapsulate each tool as a standard http service for AutoPLC's calling. In order to reduce service load, we deploy multiple services based on multiple machines in the LAN, which can be configured in the configuration file.
-> The compilation service address can be modified in the yaml configuration file.
+- For Siemens SCL: we used the openness api provided by Siemens, which requires 1) C# .Net Framework runtime; 2) TIA Portal V19 on Windows 10 or above. See [TIACompileService](https://github.com/cangkui/TIACompileService). The repository provides source code, and a tested binary package is provided in Release.
+- For CODESYS ST: we used the codesys script engine, which requires 1) CODESYS V3.5 SP20; 2) python on Windows 10 or above. See [CODESYSCompileService](https://github.com/cangkui/CODESYSCompileService). A tested CODESYS installer is also provided in Release.
 
 4. Knowledge Base Setup  
 We use the online knowledge base provided by the Zhipu Team and integrated their glm-airx model for reranking. See [https://open.bigmodel.cn/dev/howuse/retrieval](https://open.bigmodel.cn/dev/howuse/retrieval).
+
+
+> Siemens SCL compilation tool is developed by ourselves. For CODESYS compilation tool, we have referenced the implementation of this repository: [codesys-api](https://github.com/johannesPettersson80/codesys-api). Thanks very much for the contribution of the author of this repository.  
+> We encapsulate each tool as a standard http service for AutoPLC's calling. In order to reduce service load, we deploy multiple services based on multiple machines in the LAN, which can be configured in the configuration file.
+> The compilation service address can be modified in the yaml configuration file.
 
 ### Running AutoPLC
 

@@ -33,21 +33,25 @@
    ```
 
 2. Bash环境配置  
-   执行脚本前，请先准备环境遍历：将`.env.example`复制为`.env`并填写必要信息。
+   执行脚本前，请先准备环境变量：将`.env.example`复制为`.env`并填写必要信息。
 
 3. 编译工具配置  
-   - Siemens SCL：使用西门子提供的TIA Openness API，需满足：  
-     1) C# .NET Framework运行时  
-     2) Windows系统上安装TIA Portal V19。详见[TIACompileService](https://github.com/cangkui/TIACompileService)，仓库提供源代码实现，并且Release中提供了经过测试的二进制包可用于下载。  
-   - CODESYS ST：使用CODESYS脚本引擎，需在Windows系统上安装CODESYS V3.5 SP20。详见[CODESYSCompileService](https://github.com/cangkui/CODESYSCompileService)，Release中提供了经过测试的CODESYS版本安装包。  
-
-   > 其中CODESYS编译工具参考了仓库[codesys-api](https://github.com/johannesPettersson80/codesys-api)的实现，特此感谢该仓库作者的贡献。  
-   > 每个工具均被封装为标准HTTP服务供AutoPLC调用。为减轻单个服务的负载，我们在局域网内的多台机器上部署了多个服务实例，可通过配置文件进行设置。
-   > 可在yaml配置文件当中修改编译服务地址。
+   - Siemens SCL：基于用西门子提供的TIA Openness实现，详见[TIACompileService](https://github.com/cangkui/TIACompileService)，该仓库提供源代码实现，Release中提供了经过测试的二进制包。
+     前置条件需满足：  
+     (1) Windows 10 及以上系统，推荐使用专业版  
+     (2) C# .NET Framework运行时  
+     (3) 已安装TIA Portal V19
+   - CODESYS ST：基于CODESYS Python脚本引擎实现，详见[CODESYSCompileService](https://github.com/cangkui/CODESYSCompileService)，Release中提供了经过测试的CODESYS版本安装包。前置条件需满足：
+     (1) Windows 10 及以上系统，推荐使用专业版  
+     (2) Python 版本推荐>=3.9  
+     (3) 已安装CODESYS V3.5 SP20
 
 4. 知识库配置  
    我们使用智谱AI团队提供的在线知识库，并集成其glm-airx模型用于重排序。详见[https://open.bigmodel.cn/dev/howuse/retrieval](https://open.bigmodel.cn/dev/howuse/retrieval)。
 
+> 其中CODESYS编译工具参考了仓库[codesys-api](https://github.com/johannesPettersson80/codesys-api)的实现，特此感谢该仓库作者的贡献。  
+> 每个工具均被封装为标准HTTP服务供AutoPLC调用。为减轻单个服务的负载，我们在局域网内的多台机器上部署了多个服务实例，可通过配置文件进行设置。
+> 可在yaml配置文件当中修改编译服务地址。
 
 ### 运行AutoPLC
 
