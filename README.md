@@ -24,7 +24,7 @@ The folder `src` contains the code used for our experiments and implementations.
 - **autoplc_st**: Represents the implementation of AutoPLC applied to CODESYS ST.
 
 ### 3. RAG Resource
-`data/rag_data` includes resources for RAG, such as the Rq2ST benchmark and the case library.
+`data/rag_data` Includes resources for RAG, such as the Rq2ST library and API library.
 
 ---
 

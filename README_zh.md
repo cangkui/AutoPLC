@@ -21,7 +21,7 @@
 
 ### 3. RAG 资源
 
-`data/rag_data`包括Rq2ST基准和案例库。
+`data/rag_data`包括Rq2ST案例库和API库。
 
 
 ## 使用指南
