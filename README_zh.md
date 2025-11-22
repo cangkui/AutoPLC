@@ -16,9 +16,12 @@
 ### 2. 源代码
 `src`目录包含AutoPLC代码实现：
 <!-- - **baselines**：用于对比实验的基准模型实现。 -->
-- **rag_data**：项目根目录下，RAG相关资源，包括Rq2ST基准和案例库。
 - **autoplc_scl**：AutoPLC在Siemens SCL中的实现。
 - **autoplc_st**：AutoPLC在CODESYS ST中的实现。
+
+### 3. RAG 资源
+
+`data/rag_data`包括Rq2ST基准和案例库。
 
 
 ## 使用指南

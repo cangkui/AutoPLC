@@ -16,13 +16,15 @@ The folder `data/benchmarks` includes 4 datasets used in our experiments:
 <!-- ### 2. **Experiment_Results**
 This folder `exps` holds the experimental results obtained from our study. The results demonstrate the performance of different baselines and configurations of AutoPLC on the provided benchmarks. -->
 
-### 3. Source Code
-This folder contains the code used for our experiments and implementations. It is further organized into the following subdirectories:
+### 2. Source Code
+The folder `src` contains the code used for our experiments and implementations. It is further organized into the following subdirectories:
 
 <!-- - **baselines**: Contains the baseline implementations used for comparison in our study. -->
-- **rag_data**: Includes resources for RAG, such as the Rq2ST benchmark and the case library.
 - **autoplc_scl**: Represents the implementation of AutoPLC applied to Siemens SCL.
 - **autoplc_st**: Represents the implementation of AutoPLC applied to CODESYS ST.
+
+### 3. RAG Resource
+`data/rag_data` includes resources for RAG, such as the Rq2ST benchmark and the case library.
 
 ---
 
